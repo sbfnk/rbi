@@ -6,9 +6,16 @@
   bi
 }
 \description{
-  R package to process the output of bi
+  R interface to bi
 }
 \details{
+
+The package requires the software bi (Bayesian Inference) to be installed on the system.
+Please follow the instructions on [URL] to install bi on your system.
+
+Then have a look at the demos, a list of which is available through 
+\code{demo(package="bi")}. For instance start by running \code{demo(package="launchPZ")}.
+
 \tabular{ll}{
 Package: \tab bi\cr
 Type: \tab Package\cr
