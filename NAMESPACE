@@ -1,0 +1,5 @@
+export(launcher, multilauncher, histogram_parameter, kde_parameter, getParameter, getEvidence, printVariables, plot_ess, plot_acceptrate,
+plot_evidence, plot_nx)
+exportClasses(settings)
+exportMethods(settings)
+

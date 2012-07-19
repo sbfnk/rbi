@@ -1,0 +1,13 @@
+Package: bi
+Version: 0.0-1
+Date: 2012-06-18
+Title: bi
+Author: Pierre E. Jacob <jacob@ceremade.dauphine.fr>
+Maintainer: Pierre E. Jacob <jacob@ceremade.dauphine.fr>
+Depends: R (>= 2.12.1), ggplot2, ncdf, gridExtra
+Suggests: 
+Description: R package to process the output of bi
+License: 
+URL: 
+BugReports: 
+LazyLoad: no
