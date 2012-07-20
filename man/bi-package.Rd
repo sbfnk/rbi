@@ -14,7 +14,7 @@ The package requires the software bi (Bayesian Inference) to be installed on the
 Please follow the instructions on [URL] to install bi on your system.
 
 Then have a look at the demos, a list of which is available through 
-\code{demo(package="bi")}. For instance start by running \code{demo(package="launchPZ")}.
+\code{demo(package="bi")}. For instance start by running \code{demo(launchPZ)}.
 
 \tabular{ll}{
 Package: \tab bi\cr

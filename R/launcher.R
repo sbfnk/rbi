@@ -14,7 +14,6 @@ launcher <- function(settings, args){
     print("... bi has finished!")
 }
 
-
 multilauncher <- function(settings, args = "", nruns = 1, seeds = 1:nruns, 
                   filenamefunction = function(i) return(paste("results/results", i, ".nc", sep =""))){
   if (!missing(args)){

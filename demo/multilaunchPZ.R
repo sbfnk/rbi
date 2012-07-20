@@ -11,7 +11,7 @@ settings@pathModel = "~/workspace/pz/"
 # Multiple runs of bi on the same settings but with different seeds.
 nruns <- 3
 filename <- function(i) paste("~/results", i, ".nc", sep = "")
-multilauncher(settings, args=" -T 5 -D 256 -P 1024", nruns = nruns, 
+multilauncher(settings, args=" -T 50 -D 256 -P 1024", nruns = nruns, 
               seeds = c(1, 10000, 23109241), filenamefunction=filename)
 
 
