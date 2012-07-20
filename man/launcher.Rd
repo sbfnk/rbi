@@ -7,12 +7,12 @@
   Launch bi using the specified settings and additional arguments.
 }
 \usage{
-  launcher(settings, Args)
+  launcher(settings, args)
 }
 \arguments{
   \item{settings}{
   }
-  \item{Args}{
+  \item{args}{
   }
 }
 \details{

@@ -1,9 +1,9 @@
-getParameter_ <- function(netCDFfile, variable, logweightname, verbose = FALSE){
+getParameter_ <- function(filename, variablename, logweightname, verbose = FALSE){
   if (missing(logweightname)){
     logweightname = "logweight"
   }
-  ncfile = open.ncdf(netCDFfile, verbose = verbose)
-  array <- as.matrix(get.var.ncdf(ncfile, variable))
+  ncfile = open.ncdf(filename, verbose = verbose)
+  array <- as.matrix(get.var.ncdf(ncfile, variablename))
   w <- try(as.matrix(get.var.ncdf(ncfile, logweightname)))
   if (class(w) == "try-error"){
     w = matrix(1, nrow = dim(array)[1], ncol = dim(array)[2])
@@ -17,7 +17,7 @@ getParameter_ <- function(netCDFfile, variable, logweightname, verbose = FALSE){
   } else {
     array = reshape::melt.array(array, varnames = c("ParticleIndex", "TimeIndex"))
   }
-  names(array)[3] <- variable
+  names(array)[3] <- variablename
   w = reshape::melt.array(w, varnames = c("ParticleIndex", "TimeIndex"))
   names(w)[3] <- "weight"
   variableDataFrame = cbind(array, w["weight"])
@@ -25,15 +25,15 @@ getParameter_ <- function(netCDFfile, variable, logweightname, verbose = FALSE){
   return(variableDataFrame)
 }
 
-getParameter <- function(files, variable, timeindex, logweightname, verbose = FALSE){
+getParameter <- function(filenames, variablename, timeindex, logweightname, verbose = FALSE){
   if (missing(logweightname)){
     logweightname = "logweight"
   }
   var = data.frame()
   indexrun = 0
-  for (file in files){
+  for (file in filenames){
     indexrun = indexrun + 1
-    var1 <- getParameter_(file, variable, logweightname, verbose = verbose)
+    var1 <- getParameter_(file, variablename, logweightname, verbose = verbose)
     var1$Run <- indexrun
     var = rbind(var, var1)
   }
@@ -45,6 +45,25 @@ getParameter <- function(files, variable, timeindex, logweightname, verbose = FA
     return(var)
   }
 }
+
+
+getParameters <- function(filenames, variablenames, logweightname, verbose = FALSE){
+  if (missing(logweightname)){
+    logweightname = "logweight"
+  }
+  res = data.frame()
+  for (indexparam in 1:length(variablenames)){
+    tmpdf <- getParameter(filenames, variablenames[indexparam], logweightname=logweightname, 
+                          verbose = verbose)
+    names(tmpdf)[names(tmpdf) == variablenames[indexparam]] <- "ParameterValue"
+    tmpdf$ParameterName <- variablenames[indexparam]
+    res <- rbind(res, tmpdf)
+  }
+  res$ParameterName <- factor(res$ParameterName)
+  return(res)
+}
+
+
 
 getEvidence <- function(files){
   Nfiles <- length(files)

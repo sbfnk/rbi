@@ -1,41 +1,41 @@
 setClass("settings",
          representation(
-                        Mode = "character",
-                        ConfigFile = "character",
-                        Args = "character",
-                        PathBi= "character",
-                        PathModel = "character",
-                        PathLibs = "character"))
+                        mode = "character",
+                        configfile = "character",
+                        args = "character",
+                        pathBi= "character",
+                        pathModel = "character",
+                        pathLibs = "character"))
 
 setGeneric("settings", function(...) standardGeneric("settings"))
-settings.constructor <- function(..., Mode, ConfigFile, Args, PathBi, PathModel, PathLibs){
-    if (missing(Args))
-        Args <- ""
-    if (missing(PathBi))
-        PathBi <- tools::file_path_as_absolute("~/PathToBiBin/")
-    if (missing(PathModel))
-        PathModel <- tools::file_path_as_absolute("~/PathToPZ/")
-    if (missing(PathLibs))
-        PathLibs <- tools::file_path_as_absolute("~/PathToBiLibs/")
-    new("settings", Mode = Mode, ConfigFile = ConfigFile, Args = Args, PathBi = PathBi,
-        PathModel = PathModel, PathLibs = PathLibs)
+settings.constructor <- function(..., mode, configfile, args, pathBi, pathModel, pathLibs){
+    if (missing(args))
+        args <- ""
+    if (missing(pathBi))
+        pathBi <- tools::file_path_as_absolute("~/PathToBiBin/")
+    if (missing(pathModel))
+        pathModel <- tools::file_path_as_absolute("~/PathToPZ/")
+    if (missing(pathLibs))
+        pathLibs <- tools::file_path_as_absolute("~/PathToBiLibs/")
+    new("settings", mode = mode, configfile = configfile, args = args, pathBi = pathBi,
+        pathModel = pathModel, pathLibs = pathLibs)
 }
 
 setMethod("settings",
-          definition = function(..., Mode, ConfigFile, Args, PathBi, PathModel, PathLibs){
-              settings.constructor(Mode = Mode, ConfigFile = ConfigFile, Args = Args, 
-                                    PathBi = PathBi, PathModel = PathModel, PathLibs = PathLibs)
+          definition = function(..., mode, configfile, args, pathBi, pathModel, pathLibs){
+              settings.constructor(mode = mode, configfile = configfile, args = args, 
+                                    pathBi = pathBi, pathModel = pathModel, pathLibs = pathLibs)
           })
 
 setMethod(f = "show", signature = "settings", 
           def = function(object){
             cat("Object of class ", class(object), ".\n", sep = "")
-            cat("* Mode: ", object@Mode, "\n")
-            cat("* Config file: ", object@ConfigFile, "\n")
-            cat("* Additional arguments:", object@Args, "\n")
-            cat("* (path to model file) PathModel=", object@PathModel, "\n")
-            cat("* (path to bi binary) PathBi=", object@PathBi, "\n")
-            cat("* (path to bi libs) PathLibs=", object@PathLibs, "\n")
+            cat("* mode: ", object@mode, "\n")
+            cat("* config file: ", object@configfile, "\n")
+            cat("* additional arguments:", object@args, "\n")
+            cat("* (path to model file) pathModel=", object@pathModel, "\n")
+            cat("* (path to bi binary) pathBi=", object@pathBi, "\n")
+            cat("* (path to bi libs) pathLibs=", object@pathLibs, "\n")
           })
 
 
