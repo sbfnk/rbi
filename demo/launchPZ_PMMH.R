@@ -10,7 +10,7 @@ settings <- bi::settings(mode = "sample", configfile = "sample.conf",
 print(settings)
 verbose = FALSE
 # Once happy with the settings, launch bi.
-bi::launcher(settings, args=" -T 50 -nsamples 500 -P 1024 --output-file results/launchPZ_PMMH.nc --filter-file results/launchPZ_PMMHf.nc")
+bi::launcher(settings, args=" -T 50 -nsamples 50 -P 256 --output-file results/launchPZ_PMMH.nc --filter-file results/launchPZ_PMMHf.nc")
 # Have a look at the posterior distribution
 
 bi::histogram_parameter(paste(settings@pathModel,"/results/launchPZ_PMMH.nc",sep=""),variablename = "EPg")

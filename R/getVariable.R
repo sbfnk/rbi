@@ -22,7 +22,7 @@ getParameter_ <- function(filename, variablename, logweightname, verbose = FALSE
     w <- exp(w - max(w))
     w = apply(w, 2, function(x) x / sum(x))
   }
-  print(dim(array))
+  
   if (dim(array)[2] == 1){
     array = reshape::melt.array(array, varnames = c("ParticleIndex", "TimeIndex"))
     array$TimeIndex <- length(get.var.ncdf(ncfile, "time"))

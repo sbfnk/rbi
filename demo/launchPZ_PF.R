@@ -10,7 +10,7 @@ settings <- bi::settings(mode = "filter", configfile = "filter.conf",
 print(settings)
 verbose = FALSE
 # Once happy with the settings, launch bi.
-bi::launcher(settings, args=" -T 300 -P 4096 --output-file results/launchPZ_PF.nc")
+bi::launcher(settings, args=" -T 50 -P 256 --output-file results/launchPZ_PF.nc")
 # Have a look at the filtering distributions
 
 bi::plot_filtering(filenames = paste(settings@pathModel,"/results/launchPZ_PF.nc",sep=""),
