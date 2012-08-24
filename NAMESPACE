@@ -1,6 +1,6 @@
 export(launcher, multilauncher, histogram_parameter, kde_parameter, interactive_kde_parameter, getParameter,
 getParameters, getEvidence, printVariables, plot_ess, plot_acceptrate,
-plot_evidence, plot_nx)
+plot_evidence, plot_nx, plot_filtering)
 exportClasses(settings)
 exportMethods(settings)
 

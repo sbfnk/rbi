@@ -4,8 +4,7 @@ setClass("settings",
                         configfile = "character",
                         args = "character",
                         pathBi= "character",
-                        pathModel = "character",
-                        pathLibs = "character"))
+                        pathModel = "character"))
 
 setGeneric("settings", function(...) standardGeneric("settings"))
 settings.constructor <- function(..., mode, configfile, args, pathBi, pathModel, pathLibs){
@@ -15,16 +14,14 @@ settings.constructor <- function(..., mode, configfile, args, pathBi, pathModel,
         pathBi <- tools::file_path_as_absolute("~/PathToBiBin/")
     if (missing(pathModel))
         pathModel <- tools::file_path_as_absolute("~/PathToPZ/")
-    if (missing(pathLibs))
-        pathLibs <- tools::file_path_as_absolute("~/PathToBiLibs/")
     new("settings", mode = mode, configfile = configfile, args = args, pathBi = pathBi,
-        pathModel = pathModel, pathLibs = pathLibs)
+        pathModel = pathModel)
 }
 
 setMethod("settings",
           definition = function(..., mode, configfile, args, pathBi, pathModel, pathLibs){
               settings.constructor(mode = mode, configfile = configfile, args = args, 
-                                    pathBi = pathBi, pathModel = pathModel, pathLibs = pathLibs)
+                                    pathBi = pathBi, pathModel = pathModel)
           })
 
 setMethod(f = "show", signature = "settings", 
@@ -35,7 +32,6 @@ setMethod(f = "show", signature = "settings",
             cat("* additional arguments:", object@args, "\n")
             cat("* (path to model file) pathModel=", object@pathModel, "\n")
             cat("* (path to bi binary) pathBi=", object@pathBi, "\n")
-            cat("* (path to bi libs) pathLibs=", object@pathLibs, "\n")
           })
 
 

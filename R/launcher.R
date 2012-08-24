@@ -4,12 +4,12 @@ launcher <- function(settings, args){
     }
     cdcommand <- paste("cd", settings@pathModel)
     exportPATHcommand <- paste("export PATH=", settings@pathBi, ":$PATH", sep = "")
-    exportLDcommand <- paste("export LD_LIBRARY_PATH=", settings@pathLibs, ":$LD_LIBRARY_PATH", sep = "")
-    exportLIBcommand <- paste("export LIBRARY_PATH=$LD_LIBRARY_PATH", sep = "")
+#    exportLDcommand <- paste("export LD_LIBRARY_PATH=", settings@pathLibs, ":$LD_LIBRARY_PATH", sep = "")
+#    exportLIBcommand <- paste("export LIBRARY_PATH=$LD_LIBRARY_PATH", sep = "")
     launchcommand <- paste("bi ", settings@mode, " @", settings@configfile, " ", settings@args, sep = "")
     print("Launching bi with the following commands:")
-    print(paste(c(cdcommand, exportPATHcommand, exportLDcommand, exportLIBcommand, launchcommand), sep = "\n"))
-    command <- paste(c(cdcommand, exportPATHcommand, exportLDcommand, exportLIBcommand, launchcommand), collapse = ";")
+    print(paste(c(cdcommand, exportPATHcommand, launchcommand), sep = "\n"))
+    command <- paste(c(cdcommand, exportPATHcommand, launchcommand), collapse = ";")
     system(command, intern = TRUE)
     print("... bi has finished!")
 }

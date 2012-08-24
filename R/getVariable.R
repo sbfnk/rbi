@@ -4,13 +4,25 @@ getParameter_ <- function(filename, variablename, logweightname, verbose = FALSE
   }
   ncfile = open.ncdf(filename, verbose = verbose)
   array <- as.matrix(get.var.ncdf(ncfile, variablename))
-  w <- try(as.matrix(get.var.ncdf(ncfile, logweightname)))
-  if (class(w) == "try-error"){
-    w = matrix(1, nrow = dim(array)[1], ncol = dim(array)[2])
-  } else {
-    w = exp(w - max(w))
+  data_format <- att.get.ncdf(ncfile, varid = 0, attname = "data_format")
+  if (data_format$value == "PMCMC") {
+    w <- matrix(1/length(array),length(array),1)
   }
-  w = apply(w, 2, function(x) x / sum(x))
+  if (data_format$value == "SMC2") {
+    array <- array[,1:(ncol(array)-1)]
+    w <- as.matrix(get.var.ncdf(ncfile, logweightname))
+    w <- w[,1:(ncol(w)-1)]
+    w <- exp(w - max(w))
+    w = apply(w, 2, function(x) x / sum(x))
+  }
+  if (data_format$value == "PF") {
+    # array <- array[,1:(ncol(array)-1)]
+    w <- as.matrix(get.var.ncdf(ncfile, logweightname))
+    # w <- w[,1:(ncol(w)-1)]
+    w <- exp(w - max(w))
+    w = apply(w, 2, function(x) x / sum(x))
+  }
+  print(dim(array))
   if (dim(array)[2] == 1){
     array = reshape::melt.array(array, varnames = c("ParticleIndex", "TimeIndex"))
     array$TimeIndex <- length(get.var.ncdf(ncfile, "time"))
