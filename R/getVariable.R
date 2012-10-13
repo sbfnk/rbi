@@ -1,3 +1,10 @@
+getVariable <- function(filename, variablename, verbose = FALSE) {
+  ncfile = open.ncdf(filename, verbose = verbose)
+  array <- as.matrix(get.var.ncdf(ncfile, variablename))
+  close.ncdf(ncfile)
+  return(array)
+}
+
 getParameter_ <- function(filename, variablename, logweightname, verbose = FALSE){
   if (missing(logweightname)){
     logweightname = "logweight"

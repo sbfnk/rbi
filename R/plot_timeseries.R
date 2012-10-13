@@ -1,5 +1,5 @@
-plot_filtering <- function(filenames, variablename, 
-                          timeindex, adjust = 1, logweightname, verbose = FALSE){
+get_filtering_means <- function(filenames, variablename,
+                                timeindex, adjust = 1, logweightname, verbose = FALSE) {
   if (missing(logweightname)){
     logweightname = "logweight"
   }
@@ -7,7 +7,7 @@ plot_filtering <- function(filenames, variablename,
   if (missing(timeindex)){
     var <- bi::getParameter(filenames, variablename, logweightname=logweightname, verbose = verbose)
     timeindex = max(var$TimeIndex)
-#     var <- subset(var, TimeIndex == timeindex)
+    #     var <- subset(var, TimeIndex == timeindex)
   } else {
     var <- bi::getParameter(filenames, variablename, timeindex, logweightname, verbose = verbose)
   }
@@ -15,9 +15,35 @@ plot_filtering <- function(filenames, variablename,
   
   for (i in 1:timeindex) {
     refac <- subset(var,TimeIndex==i)
-    var2$means[i] <- weighted.mean(refac$P,refac$weight)
-    var2$sdevs[i] <- sqrt(weighted.mean((refac$P)^2,refac$weight) - var2$means[i]^2)
+    var2$means[i] <- weighted.mean(refac[[variablename]],refac$weight)
+    var2$sdevs[i] <- sqrt(weighted.mean((refac[[variablename]])^2,refac$weight) - var2$means[i]^2)
   }
+  return(var2)
+}
+
+plot_filtering <- function(filenames, variablename, 
+                          timeindex, adjust = 1, logweightname, verbose = FALSE){
+#   if (missing(logweightname)){
+#     logweightname = "logweight"
+#   }
+#   theme_set(theme_bw())
+#   if (missing(timeindex)){
+#     var <- bi::getParameter(filenames, variablename, logweightname=logweightname, verbose = verbose)
+#     timeindex = max(var$TimeIndex)
+# #     var <- subset(var, TimeIndex == timeindex)
+#   } else {
+#     var <- bi::getParameter(filenames, variablename, timeindex, logweightname, verbose = verbose)
+#   }
+#   var2 <- data.frame(TimeIndex=1:timeindex,means=rep(0,timeindex),sdevs=rep(0,timeindex))
+#   
+#   for (i in 1:timeindex) {
+#     refac <- subset(var,TimeIndex==i)
+#     var2$means[i] <- weighted.mean(refac[[variablename]],refac$weight)
+#     var2$sdevs[i] <- sqrt(weighted.mean((refac[[variablename]])^2,refac$weight) - var2$means[i]^2)
+#   }
+#   print(var2$means)
+  var2 <- get_filtering_means(filenames, variablename, 
+                              timeindex, adjust = 1, logweightname, verbose = FALSE)
   graph <- ggplot() + geom_line(data=var2,aes(x = TimeIndex, y = means)) +
     geom_line(data=var2,aes(x = TimeIndex, y = means - sdevs), col="red") +
     geom_line(data=var2,aes(x = TimeIndex, y = means + sdevs), col="red")
