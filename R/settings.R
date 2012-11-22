@@ -8,6 +8,8 @@ setClass("settings",
 
 setGeneric("settings", function(...) standardGeneric("settings"))
 settings.constructor <- function(..., mode, configfile, args, pathBi, pathModel, pathLibs){
+    if (missing(configfile))
+        configfile <- ""
     if (missing(args))
         args <- ""
     if (missing(pathBi))
