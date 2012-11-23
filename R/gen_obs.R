@@ -18,7 +18,7 @@ gen_obs <- function(infile, invar, outfile, outvar, S, logn){
   # Open NetCDF file
   nci <- open.ncdf(infile, verbose = FALSE)
   # get desired trajectory
-  onetrajectory <- as.matrix(get.var.ncdf(nci, invar))[1,]
+  onetrajectory <- as.matrix(get.var.ncdf(nci, invar))[,1]
   T <- length(onetrajectory)
   nS <- length(S)
   # create the perturbed trajectories using the standard
