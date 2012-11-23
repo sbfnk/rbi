@@ -1,3 +1,6 @@
+### This demo shows how to generate data from a model
+### using bi simulate and then the gen_obs function provided in Rbi.
+
 rm(list = ls(all.names=TRUE))
 unlink(".RData")
 try(detach(package:bi, unload = TRUE), silent = TRUE)
