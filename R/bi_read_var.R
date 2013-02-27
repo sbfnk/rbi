@@ -23,34 +23,30 @@
 #
 bi_read_var <- function(nc, name, coord, ps, ts){
   # check arguments
-#   if (nargin < 2 || nargin > 5){
-#     print_usage ();
-#   }
-#   if (!ischar (name)){
-#   error ('name must be a string');
-#   }
-# if nargin < 3
-# coord = [];
-# end
-# if nargin < 4
-# ps = [];
-# end
-# if nargin < 5
-# ts = [];
-# end
-  
-  # defer to implementation for file schema
-#   if (nc_var_has_dim (nc, name, 'nrp')){
-#     f = @read_var_flexi_simulator;
-#   } else {
-  ############ How to get the global attributes in R? It doesn't seem to be in 
-  ############ the ncdf package -> use the C interface  
-#     if (isempty (nc.libbi_schema))
-#       f = @read_var_input;
-#     } else {
-#       f = @read_var_simulator;
-#     }
-#   }
-#   X = f (nc, name, coord, ps, ts);
-#   return(X)
+  if (!is.character (name)){
+    stop('name must be a string');
+  }
+  if (missing(coord)){
+    coord = c()
+  }
+  if (missing(ps)){
+    ps = c()
+  }
+  if (missing(ts)){
+    ts = c()
+  }
+  global_attributes = nc_get_attributes(nc)
+  if (nc_var_has_dim(nc, name, "nrp")){
+    myfunction = read_var_flexi_simulator
+  } else {
+    if ("libbi_schema" %in% names(global_attributes)){
+      if (length(global_attributes[["libbi_schema"]]) == 0){
+        myfunction = read_var_input
+      } else {
+        myfunction = read_var_simulator
+      }
+    }
+  }
+  X = myfunction(nc, name, coord, ps, ts)
+  return(X)
 }

@@ -15,7 +15,7 @@ nc_get_attributes <- function(nc){
   # end
   attributes = nc_get_attributes_from_path(nc$filename)
   refactorisedattributes = list()
-  for (j in 1:length(aa$names)){
+  for (j in 1:length(attributes$names)){
     refactorisedattributes[attributes$names[j]] = attributes$values[j]
   }
   return(refactorisedattributes)
