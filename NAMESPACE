@@ -1,6 +1,8 @@
+useDynLib(bi)
 export(launcher, multilauncher, histogram_parameter, kde_parameter, interactive_kde_parameter, getParameter,
 getParameters, getEvidence, printVariables, plot_ess, plot_acceptrate,
-plot_evidence, plot_nx, plot_filtering, gen_obs)
+plot_evidence, plot_nx, plot_filtering, gen_obs,
+       bi_read_var, nc_var_has_dim, nc_get_attributes)
 exportClasses(settings)
 exportMethods(settings)
 

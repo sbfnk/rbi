@@ -4,7 +4,8 @@ Date: 2012-06-18
 Title: bi
 Author: Pierre E. Jacob <pierre.jacob.work@gmail.com>, Anthony Lee <awllee@gmail.com>
 Maintainer: Pierre E. Jacob <pierre.jacob.work@gmail.com>
-Depends: R (>= 2.12.1), ggplot2, ncdf, gridExtra, reshape
+Depends: R (>= 2.12.1), ggplot2, ncdf, gridExtra, reshape, Rcpp (>= 0.10.2)
+LinkingTo: Rcpp
 Suggests: 
 Description: R package to process the output of bi
 License: 
