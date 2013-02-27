@@ -49,29 +49,17 @@ read_var_simulator <- function(nc, name, coord, ps, ts){
     ps = 1:P
   }
   if (nc_var_has_dim (nc, name, 'nr')){
-    T = length(nc$dim[["nr"]]$vals);
+    T = length(nc$dim[["nr"]]$vals)
+    if (length(ts) == 0){
+      ts = 1:T
+    }
   } else {
     T = 1
   }
-  if (length(ts) == 0){
-    ts = 1:T
-  }
-  # read
   values = get.var.ncdf(nc, name)
-  return(values)
-  
-  # args = {};
-  # if nc_var_has_dim (nc, name, 'nr')
-  # args{length (args) + 1} = ts;
-  # end
-  # if length (coord) > 0
-  # from = length (args) + 1;
-  # to = from + length (coord) - 1;
-  # args{from:to} = num2cell (coord){:};
-  # end
-  # if nc_var_has_dim (nc, name, 'np')
-  # args{length (args) + 1} = ps;
-  # end
-  # X = full_squeeze(nc{name}(args{:}));
-  # end
+  if (length(dim(values)) < 2){
+    return(values)
+  } else {
+    return(values[ps,ts])
+  }
 }

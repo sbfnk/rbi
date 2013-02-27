@@ -1,20 +1,30 @@
 setwd("~/workspace/pz/results/")
-ncfile = open.ncdf("sample.nc", verbose =T)
-ncfile
-names(ncfile)
-names(ncfile$dim)
-
-bi_read_var(ncfile, "EPg")
-
-P = get.var.ncdf(ncfile, "P")
-dim(P)
 
 
-ncfile2 = open.ncdf("adaptivefilter.nc", verbose = T)
-adaptiveP = bi_read_var(nc=ncfile2, name="P")
-close.ncdf(ncfile2)
-ncfile3 = open.ncdf("filter.nc", verbose = T)
-fixedP = bi_read_var(nc=ncfile3, name="P")
+file = open.ncdf("sample.nc", verbose =T)
+col = "red"
+name = "EPg"
+nbins = 100
+
+values = bi_read_var(file, name)
+global_attributes = nc_get_attributes(ncfile)
+
+
+# 
+# ncfile2 = open.ncdf("adaptivefilter.nc")
+# adaptiveP = bi_read_var(nc=ncfile2, name="P", ts = c(2, 54))
+# close.ncdf(ncfile2)
+# 
+# print(length(adaptiveP))
+# print(typeof(adaptiveP))
+
+
+ncfile3 = open.ncdf("filter.nc")
+# fixedP = bi_read_var(nc=ncfile3, name="P", ts = c(2, 54))
+# dim(fixedP)
+bi_read_var(nc= ncfile3, name= "time")
 close.ncdf(ncfile3)
 
-close.ncdf(ncfile)
+
+
+close.ncdf(ncfile2)

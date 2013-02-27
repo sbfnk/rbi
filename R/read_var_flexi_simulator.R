@@ -35,7 +35,9 @@ read_var_flexi_simulator <- function(nc, name, coord, ps, ts){
   } 
   if (missing(ps)){
     ps = c()
-  } 
+  } else {
+    stop("you specified particle indices but in this file the number of particles varies across time")
+  }
   if (missing(ts)){
     ts = c()
   } 
@@ -61,12 +63,16 @@ read_var_flexi_simulator <- function(nc, name, coord, ps, ts){
   len = get.var.ncdf(ncfile2, "len")
   start = get.var.ncdf(ncfile2, "start")
   
-  variable = list() 
+  variable = list()
+  counter = 0
   for (i in 1:length(start)){
-    from = start[i] + 1
-    to = (start[i] + 1) + len[i]
-    variable_t = values[from:to]
-    variable[[i]] = variable_t
+    if (i %in% ts){
+      counter = counter + 1
+      from = start[i] + 1
+      to = (start[i] + 1) + len[i]
+      variable_t = values[from:to]
+      variable[[counter]] = variable_t
+    }
   }
   return(variable)
   # args = {};
