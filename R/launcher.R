@@ -1,4 +1,4 @@
-launcher <- function(settings, args){
+launcher <- function(settings, args, saveStdOutputFile = ""){
     if (!missing(args)){
         settings@args = paste(settings@args, args)
     }
@@ -10,6 +10,9 @@ launcher <- function(settings, args){
     if (settings@configfile != "")
       launchcommand <- paste(launchcommand, " @", settings@configfile, sep = "")
     launchcommand <- paste(launchcommand, settings@args, sep = " ")
+    if (length(saveStdOutputFile) > 1){
+      launchcommand <- paste(launchcommand, "2>", saveStdOutputFile)
+    }
     print("Launching bi with the following commands:")
     print(paste(c(cdcommand, exportPATHcommand, launchcommand), sep = "\n"))
     command <- paste(c(cdcommand, exportPATHcommand, launchcommand), collapse = ";")
