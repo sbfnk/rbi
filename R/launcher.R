@@ -10,7 +10,7 @@ launcher <- function(settings, args, saveStdOutputFile = ""){
     if (settings@configfile != "")
       launchcommand <- paste(launchcommand, " @", settings@configfile, sep = "")
     launchcommand <- paste(launchcommand, settings@args, sep = " ")
-    if (length(saveStdOutputFile) > 1){
+    if (nchar(saveStdOutputFile) > 0){
       launchcommand <- paste(launchcommand, "2>", saveStdOutputFile)
     }
     print("Launching bi with the following commands:")

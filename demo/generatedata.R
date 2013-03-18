@@ -1,8 +1,6 @@
 ### This demo shows how to generate data from a model
 ### using bi simulate and then the gen_obs function provided in Rbi.
 
-## TO DO: a function that does both bi simulate and gen_obs, that'd be better
-
 rm(list = ls(all.names=TRUE))
 unlink(".RData")
 try(detach(package:bi, unload = TRUE), silent = TRUE)
@@ -26,10 +24,3 @@ logn <- FALSE
 
 gen_obs(settings, 1210, 1210, invar, outvar, outfile, S, logn)
 
-# gen_obs(infile, invar, outfile, outvar, S, logn)
-# 
-# settings <- bi::settings(mode = "sample", 
-#                          args = "--model-file LG.bi -T 100.0 --nsamples 100 -P 128 --obs-file data/obs.nc --output-file results/sample.nc",
-#                          pathModel = PathModel,
-#                          pathBi = paste(getwd(),"/../bi/script",sep=""))
-# bi::launcher(settings, args = "--verbose")
