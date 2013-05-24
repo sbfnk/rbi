@@ -61,7 +61,7 @@ LGmodel <- function(theta,ys) {
     return(dnorm(x=xi,mean=alpha*xim1,sd=svt,log=TRUE))
   }
   
-  # you can define a model without data, probably to simulate data from it
+  # you can define a model without data, probably to sample --target prior data from it
   if (missing(ys)) {
     n <- 0
     ys <- NULL

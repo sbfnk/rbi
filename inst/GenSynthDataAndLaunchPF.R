@@ -21,7 +21,7 @@ fsettings <- bi::settings(mode = "filter", configfile = "filter.conf",
                          args = paste("--init-file", initfile))
 
 obsfile <- tempfile(pattern = "obs", fileext = ".nc")
-gensettings <- bi::settings(mode = "simulate",
+gensettings <- bi::settings(mode = "sample --target prior",
                             args = paste("--model-file", modelFile,
                             "--seed ", 123, "--init-file", initfile), pathModel = pathToModel, 
                             pathBi = pathToBi)
@@ -33,6 +33,6 @@ bi::gen_obs(gensettings, TimeHorizon, TimeHorizon, invar, outvar, obsfile, S, lo
 print(settings)
 verbose = FALSE
 # Once happy with the settings, launch bi.
-fargs <- paste0("-T ", TimeHorizon, " --obs-file ", obsfile, 
-               " -P 256 --output-file results/launchPZ_PF.nc --verbose --threads 1" )
+fargs <- paste0("--end-time ", TimeHorizon, " --obs-file ", obsfile, 
+               " --nparticles 256 --output-file results/launchPZ_PF.nc --verbose --nthreads 1" )
 bi::launcher(fsettings, args=fargs)

@@ -6,18 +6,18 @@ launcher <- function(settings, args, saveStdOutputFile = ""){
     exportPATHcommand <- paste("export PATH=", settings@pathBi, ":$PATH", sep = "")
 #    exportLDcommand <- paste("export LD_LIBRARY_PATH=", settings@pathLibs, ":$LD_LIBRARY_PATH", sep = "")
 #    exportLIBcommand <- paste("export LIBRARY_PATH=$LD_LIBRARY_PATH", sep = "")
-    launchcommand <- paste("bi ", settings@mode, sep = "")
+    launchcommand <- paste("libbi ", settings@mode, sep = "")
     if (settings@configfile != "")
       launchcommand <- paste(launchcommand, " @", settings@configfile, sep = "")
     launchcommand <- paste(launchcommand, settings@args, sep = " ")
     if (nchar(saveStdOutputFile) > 0){
       launchcommand <- paste(launchcommand, "2>", saveStdOutputFile)
     }
-    print("Launching bi with the following commands:")
+    print("Launching libbi with the following commands:")
     print(paste(c(cdcommand, exportPATHcommand, launchcommand), sep = "\n"))
     command <- paste(c(cdcommand, exportPATHcommand, launchcommand), collapse = ";")
     system(command, intern = TRUE)
-    print("... bi has finished!")
+    print("... libbi has finished!")
 }
 
 multilauncher <- function(settings, args = "", nruns = 1, seeds = 1:nruns, 

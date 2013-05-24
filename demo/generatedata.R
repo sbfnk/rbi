@@ -1,5 +1,5 @@
 ### This demo shows how to generate data from a model
-### using bi simulate and then the gen_obs function provided in Rbi.
+### using bi sample --target prior and then the gen_obs function provided in Rbi.
 
 rm(list = ls(all.names=TRUE))
 unlink(".RData")
@@ -10,17 +10,16 @@ library(bi, quietly = TRUE)
 PathModel <- tools::file_path_as_absolute(normalizePath(paste(getwd(),"/../lg", sep = "")))
 
 # Settings
-settings <- bi::settings(mode = "simulate",
-                         args = "--model-file LG.bi -T 10000.0 -K 10000 -P 1 --output-file data/obs_from_simulate.nc",
+settings <- bi::settings(mode = "sample --target prior",
+                         args = "--model-file LG.bi --end-time 10000.0 --noutputs 10000 --nparticles 1 --output-file data/obs_from_sample --target prior.nc",
                          pathModel = PathModel,
                          pathBi = paste(getwd(),"/../bi/script",sep=""))
-# bi::launcher(settings)
 
-# infile <-  paste(PathModel, "/data/obs_from_simulate.nc", sep = "")
+# infile <-  paste(PathModel, "/data/obs_from_sample --target prior.nc", sep = "")
 outfile <- paste(PathModel, "/data/obs.nc", sep = "")
 invar <- "X"; outvar <- "Y"
 S <- c(0.1, 1)
 logn <- FALSE
 
-gen_obs(settings, 1210, 1210, invar, outvar, outfile, S, logn)
+gen_obs(settings, 100, 100, invar, outvar, outfile, S, logn)
 

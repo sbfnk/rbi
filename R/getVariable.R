@@ -1,6 +1,6 @@
 getVariable <- function(filename, variablename, verbose = FALSE) {
   ncfile = open.ncdf(filename, verbose = verbose)
-  array <- as.matrix(get.var.ncdf(ncfile, variablename))
+  array <- bi_read_var(nc=ncfile, name=variablename)
   close.ncdf(ncfile)
   return(array)
 }

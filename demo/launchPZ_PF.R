@@ -12,11 +12,21 @@ settings <- bi::settings(mode = "filter", configfile = "filter.conf",
 print(settings)
 verbose = FALSE
 # Once happy with the settings, launch bi.
-bi::launcher(settings, args=" -T 50 -P 256 --output-file results/launchPZ_PF.nc --verbose --threads 1")
+bi::launcher(settings, args=" --end-time 50 --nparticles 256 --output-file results/launchPZ_PF.nc --verbose --nthreads 1")
 # Have a look at the filtering distributions
+resultfilename <- paste0(settings@pathModel,"/results/launchPZ_PF.nc")
+logw <- getVariable(resultfilename, "logweight")
+P <- getVariable(resultfilename, "P")
+Z <- getVariable(resultfilename, "Z")
 
-bi::plot_filtering(filenames = paste(settings@pathModel,"/results/launchPZ_PF.nc",sep=""),
-                   variablename = "P")
+normaliselogweight <- function(lw){
+  w <- exp(lw - max(lw))
+  return(w / sum(w))
+}
+w = apply(X=logw, MARGIN=2, FUN=normaliselogweight)
+Pmeans = apply(X = P*w, MARGIN=2, FUN=sum)
+Zmeans = apply(X = Z*w, MARGIN=2, FUN=sum)
+qplot(x=seq_along(Pmeans), y=Pmeans, geom = "line", col = "P") +
+geom_line(aes(y=Zmeans, col = "Z")) + scale_color_discrete(name = "") +
+  xlab("time") + ylab("Hidden state")
 
-# bi::interactive_kde_parameter(filenames = paste(settings@pathModel,"/results/launchPZ_PF.nc",sep=""),
-#                               variablenames = c("P","Z"))

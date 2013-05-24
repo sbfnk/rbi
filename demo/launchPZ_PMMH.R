@@ -4,19 +4,16 @@ try(detach(package:bi, unload = TRUE), silent = TRUE)
 library(bi, quietly = TRUE)
 
 # Settings
-settings <- bi::settings(mode = "sample", configfile = "sample.conf",
+settings <- bi::settings(mode = "sample", configfile = "posterior.conf",
                          pathModel = paste(getwd(),"/../pz",sep=""),
                          pathBi = paste(getwd(),"/../bi/script",sep=""))
 print(settings)
-verbose = FALSE
 # Once happy with the settings, launch bi.
-bi::launcher(settings, args=" -T 50 -nsamples 50 -P 256 --output-file results/launchPZ_PMMH.nc")
+bi::launcher(settings, args=" --end-time 50 -nsamples 50 --nparticles 128 --output-file results/launchPZ_PMMH.nc")
+resultfilename <- paste0(settings@pathModel,"/results/launchPZ_PMMH.nc")
+
 # Have a look at the posterior distribution
-
-bi::histogram_parameter(paste(settings@pathModel,"/results/launchPZ_PMMH.nc",sep=""),variablename = "EPg")
-bi::kde_parameter(paste(settings@pathModel,"/results/launchPZ_PMMH.nc",sep=""),variablename = "EPg")
-bi::histogram_parameter(paste(settings@pathModel,"/results/launchPZ_PMMH.nc",sep=""),variablename = "VPg")
-bi::kde_parameter(paste(settings@pathModel,"/results/launchPZ_PMMH.nc",sep=""),variablename = "VPg")
-
-
-histogram_parameter("/home/pierre/workspace/pz/results/sample.nc", "EPg")
+mu <- getVariable(resultfilename, "mu")
+qplot(x = mu, y = ..density.., geom = "histogram")
+sigma <- getVariable(resultfilename, "sigma")
+qplot(x = sigma, y = ..density.., geom = "histogram")

@@ -33,7 +33,7 @@ setMethod(f = "show", signature = "settings",
             cat("* config file: ", object@configfile, "\n")
             cat("* additional arguments:", object@args, "\n")
             cat("* (path to model file) pathModel=", object@pathModel, "\n")
-            cat("* (path to bi binary) pathBi=", object@pathBi, "\n")
+            cat("* (path to libbi binary) pathBi=", object@pathBi, "\n")
           })
 
 

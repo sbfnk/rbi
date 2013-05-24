@@ -1,6 +1,6 @@
 gen_obs_from_simulated <- function(infile, invar, outfile, outvar, S, logn){
   #   % @itemize
-  #   % @item @var{infile} Input file. Name of a NetCDF file output by simulate.
+  #   % @item @var{infile} Input file. Name of a NetCDF file output by sample --target prior.
   #   %
   #   % @item @var{invar} Name of variable from input file to disturb.
   #   %
