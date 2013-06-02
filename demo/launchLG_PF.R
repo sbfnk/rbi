@@ -4,23 +4,20 @@ try(detach(package:bi, unload = TRUE), silent = TRUE)
 library(bi, quietly = TRUE)
 
 # Settings
-settings <- bi::settings(mode = "filter", configfile = "filter.conf",
-                         pathModel = paste(getwd(),"/../lg",sep=""),
-                         pathBi = paste(getwd(),"/../bi/script",sep=""))
+settings <- bi_settings(client = "filter", 
+                        config = "filter.conf",
+                        path_to_model = "~/workspace/lg")
 print(settings)
-verbose = FALSE
 # Once happy with the settings, launch bi.
-bi::launcher(settings, args=" --end-time 100 --nparticles 1000 --output-file results/launchLG_PF.nc --verbose --nthreads 1")
+bi_result <- bi(bi_settings=settings, args="--verbose --nthreads 1",
+   outputfile = "results/launchLG_PF.nc", stdoutputfile = "diagnostics.txt")
+# It can be a good idea to look at the result file
+bi_file_summary(bi_result$outputfile)
+# Then we can plot some variable
+logw <- bi_read_var(bi_result$outputfile, "logweight")
+X <- bi_read_var(bi_result$outputfile, "X")
+w <- apply(X=logw, MARGIN=2, FUN=log2normw)
 
-resultfilename <- paste0(settings@pathModel,"/results/launchLG_PF.nc")
-logw <- getVariable(resultfilename, "logweight")
-X <- getVariable(resultfilename, "X")
-
-normaliselogweight <- function(lw){
-  w <- exp(lw - max(lw))
-  return(w / sum(w))
-}
-w = apply(X=logw, MARGIN=2, FUN=normaliselogweight)
 Xmeans = apply(X = X*w, MARGIN=2, FUN=sum)
 qplot(x=seq_along(Xmeans), y=Xmeans, geom = "line", col = "X") +
   scale_color_discrete(name = "") +

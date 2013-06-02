@@ -1,9 +1,10 @@
-getVariable <- function(filename, variablename, verbose = FALSE) {
-  ncfile = open.ncdf(filename, verbose = verbose)
-  array <- bi_read_var(nc=ncfile, name=variablename)
-  close.ncdf(ncfile)
-  return(array)
-}
+# getVariable <- function(filename, variablename, verbose = FALSE) {
+#   filename <- tools::file_path_as_absolute(filename)
+#   ncfile = open.ncdf(filename, verbose = verbose)
+#   array <- bi_read_var(resultfile==ncfile, name=variablename)
+#   close.ncdf(ncfile)
+#   return(array)
+# }
 
 getParameter_ <- function(filename, variablename, logweightname, verbose = FALSE){
   if (missing(logweightname)){

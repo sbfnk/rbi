@@ -1,28 +1,26 @@
-# Copyright (C) 2011-2013-2013
-# Author: Lawrence Murray <lawrence.murray@csiro.au>
-#  % $Rev: 3064 $
-#  % $Date: 2012-09-09 15:01:02 +0800 (Sun, 09 Sep 2012) $
-#  
-#  % -*- texinfo -*-
-#  % @deftypefn {Function File} {@var{X} = } bi_read_var (@var{nc}, @var{name}, @var{coord}, @var{ps}, @var{ts})
+#' @rdname bi_read_var
+#' @name bi_read_var
+#' @title Bi Read Variable
+#' @description
+#' This function reads a variable from a NetCDF file.
+#' The file can be specified as a string to the filepath, in which
+#' case a NetCDF connection is opened, or directly as a NetCDF connection.
+#' 
+#' @param resultfile either a path to a NetCDF file, or a NetCDF connection created using open.ncdf(filename)
+#' @param name name of the variable to read (use \code{\link{bi_file_summary}} to learn about the variable names of a specific file)
+#' @param coord dimension indices (not implemented yet)
+#' @param ts time indices (not implemented yet)
+#' @export
 #
-# Read variable from NetCDF file.
-#
-# @itemize
-# @item @var{nc} NetCDF file.
-#
-# @item @var{name} Name of the variable.
-#
-# @item @var{coord} (optional) Dimension indices.
-#
-# @item @var{ps} (optional) Path indices.
-#
-# @item @var{ts} (optional) Time indices.
-# @end itemize
-# @end deftypefn
-#
-bi_read_var <- function(nc, name, coord, ps, ts){
+bi_read_var <- function(resultfile, name, coord, ps, ts){
   # check arguments
+  # if the result file is provided as a string representing the path
+  # then open a ncdf connection
+  if (typeof(resultfile) == "character"){
+    nc <- open.ncdf(tools::file_path_as_absolute(resultfile))
+  } else {
+    nc <- resultfile
+  }
   if (!is.character (name)){
     stop('name must be a string');
   }
@@ -48,5 +46,8 @@ bi_read_var <- function(nc, name, coord, ps, ts){
     }
   }
   X = myfunction(nc, name, coord, ps, ts)
+  if (typeof(resultfile) == "character"){
+    close.ncdf(nc)
+  }
   return(X)
 }
