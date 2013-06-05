@@ -32,9 +32,32 @@ bi_settings.constructor <- function(..., client, config, args, path_to_libbi, pa
     if (missing(args))
       args <- ""
     if (missing(path_to_libbi)){
-      path_to_libbi <- absolute_path("~/PathToBiBin/libbi")
+      # That's a bit tricky then because we really need to know where libbi is.
+      # Maybe the system knows where libbi is
+      path_to_libbi <- suppressWarnings(system("which libbi", TRUE))
+      if (length(path_to_libbi) == 0){
+        # Else try to get the path to libbi from a folder called PathToBiBin
+        # created by the user with a command like 'ln -s actual_path ~/PathToBiBin'.
+        path_to_libbi <- try(tools::file_path_as_absolute("~/PathToBiBin/libbi"), TRUE)
+        if (inherits(path_to_libbi, "try-error")){
+          # then we can try to find libbi if there's a path in the bashrc file
+          bashrc <- try(system("cat ~/.bashrc", intern = TRUE), TRUE)
+          if (length(bashrc) > 0){
+            # there is a bashrc file so we will read the exports from it
+            lineswithPATH <- bashrc[stringr::str_detect(bashrc, "PATH")]
+            exportPath <- lineswithPATH[stringr::str_detect(lineswithPATH, "export")]
+            exportPath <- lineswithPATH[stringr::str_sub(exportPath, start=1, end=1) != "#"]
+            exportPathcmd <- paste(exportPath, collapse=";")
+            # then we execute the export commands and try to locate libbi
+            path_to_libbi <- system(gsub(";;", ";", 
+                                     paste(exportPathcmd, "which libbi", sep = ";")),
+                                      intern<-TRUE)
+          }
+        }
+      }
     } else {
-      path_to_libbi <- absolute_path(path_to_libbi)
+      # check that the user provided a path to an existing file
+      path_to_libbi <- tools::file_path_as_absolute(path_to_libbi)
     }
     if (missing(path_to_model)){
       path_to_model <- getwd()
