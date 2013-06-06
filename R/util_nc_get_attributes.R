@@ -1,13 +1,3 @@
-# Copyright (C) 2011-2012-2013
-# Author: 
-#-*- texinfo -*-
-# Get all the global attributes
-#
-# @itemize
-# @item @var{nc} NetCDF file handle.
-#
-# @end itemize
-#
 nc_get_attributes <- function(nc){
   # check arguments
   # if nargin != 3

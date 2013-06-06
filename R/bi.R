@@ -11,7 +11,6 @@
 #' @param outputfile path to the result file (which will be overwritten)
 #' @param stdoutputfile path to a file to text file to report the output of \code{libbi}
 #' @return a list containing the absolute paths to the results
-#' @useDynLib bi
 #' @export
 
 bi <- function(bi_settings, args, outputfile = "", stdoutputfile = ""){

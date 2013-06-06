@@ -5,6 +5,17 @@
 
 using namespace Rcpp;
 
+// nc_create_init_file_
+void nc_create_init_file_(std::string filename, List variables);
+RcppExport SEXP bi_nc_create_init_file_(SEXP filenameSEXP, SEXP variablesSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope __rngScope;
+    std::string filename = Rcpp::as<std::string >(filenameSEXP);
+    List variables = Rcpp::as<List >(variablesSEXP);
+    nc_create_init_file_(filename, variables);
+    return R_NilValue;
+END_RCPP
+}
 // nc_get_attributes_from_path
 List nc_get_attributes_from_path(std::string path);
 RcppExport SEXP bi_nc_get_attributes_from_path(SEXP pathSEXP) {

@@ -6,6 +6,7 @@
 #' of a NetCDF file, as well as its creation time. You can
 #' then retrieve variables of interest using \code{\link{bi_read_var}}.
 #' @param filename path to a NetCDF file
+#' @return None
 #' @export
 #' 
 bi_file_summary <- function(filename){
