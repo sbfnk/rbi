@@ -1,7 +1,7 @@
-export(bi)
 export(bi_file_ncdump)
 export(bi_file_summary)
 export(bi_init_file)
+export(bi_libbi)
 export(bi_read_var)
 exportClasses(bi_settings)
 export(log2normw)

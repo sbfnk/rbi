@@ -1,13 +1,14 @@
 \docType{package}
 \name{RBi-package}
+\alias{bi}
 \alias{Rbi,}
 \alias{RBi,}
-\alias{RBI}
+\alias{RBI,}
 \alias{RBi-package}
 \title{RBi - R nterface for \code{libbi}}
 \description{
   RBi is an interface to \code{libbi}, a library for
-  Bayesian Inference.
+  Bayesian Inference
 }
 \details{
   The package includes a wrapper for the \code{libbi}

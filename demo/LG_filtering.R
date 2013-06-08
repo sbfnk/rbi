@@ -9,7 +9,7 @@ settings <- bi_settings(client = "filter",
                         path_to_model = "~/workspace/lg")
 print(settings)
 # Once happy with the settings, launch bi.
-bi_result <- bi(bi_settings=settings, args="--verbose --nthreads 1",
+bi_result <- bi_libbi(bi_settings=settings, args="--verbose --nthreads 1",
    outputfile = "results/launchLG_PF.nc", stdoutputfile = "diagnostics.txt")
 # It can be a good idea to look at the result file
 bi_file_summary(bi_result$outputfile)

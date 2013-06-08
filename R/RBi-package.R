@@ -1,4 +1,4 @@
-#' RBi is an interface to \code{libbi}, a library for Bayesian Inference.
+#' RBi is an interface to \code{libbi}, a library for Bayesian Inference
 #' 
 #' The package includes a wrapper for the \code{libbi} script, allowing
 #' to launch the \code{libbi} command from within R. 
@@ -18,7 +18,7 @@
 #' 
 #'
 #'@name RBi-package
-#'@aliases Rbi, RBi, RBI
+#'@aliases Rbi, RBi, RBI, bi
 #'@docType package
 #'@title RBi - R nterface for \code{libbi}
 #'@author Pierre E. Jacob <pierre.jacob.work@@gmail.com>

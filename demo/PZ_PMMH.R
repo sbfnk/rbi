@@ -11,7 +11,7 @@ settings <- bi_settings(client = "sample",
 print(settings)
 
 # Once happy with the bi_settings, launch bi.
-bi_result <- bi(bi_settings=settings, args=" --end-time 50 -nsamples 50 --nparticles 128 --verbose --nthreads 1",
+bi_result <- bi_libbi(bi_settings=settings, args=" --end-time 50 -nsamples 50 --nparticles 128 --verbose --nthreads 1",
  outputfile = "results/launchPZ_PMMH.nc")
 # It can be a good idea to look at the result file
 bi_file_summary(bi_result$outputfile)

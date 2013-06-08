@@ -7,7 +7,6 @@ bi_hist <- function(file, name, coord, ps, t, bins){
     t <- c()
   if (missing(bins))
     bins = 20
-#   if (missing(col))
   col = "blue"
   values = bi_read_var(file, name, coord, ps, ts)
   global_attributes = nc_get_attributes(ncfile)

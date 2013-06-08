@@ -14,7 +14,7 @@ settings <- bi_settings(client = "sample",
 T <- 1000
 # First launch libbi without specifying an init-file,
 # so the parameters and initial conditions are drawn from the prior distribution.
-bi_result <- bi(bi_settings=settings, 
+bi_result <- bi_libbi(bi_settings=settings, 
                 args = paste("--end-time", T, "--noutputs", T, "--verbose --nthreads 1"),
                 outputfile="results/joint.nc")
 bi_file_summary(bi_result$outputfile)
@@ -32,7 +32,7 @@ bi_init_file(initfilepath, parameters)
 # Check the init file
 bi_file_ncdump(initfilepath)
 # Launch bi
-bi_result <- bi(bi_settings=settings, 
+bi_result <- bi_libbi(bi_settings=settings, 
                 args = paste("--end-time", T, "--noutputs", T, "--init-file", initfilepath,
                              "--verbose --nthreads 1"),
                 outputfile="results/joint.nc")

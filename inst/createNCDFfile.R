@@ -12,7 +12,3 @@ nco <- create.ncdf("/tmp/test.nc", list(variable))
 put.var.ncdf(nco, "variable", c(0.2, 0.3), start = 1)
 close.ncdf(nco)
 bi_file_ncdump("/tmp/test.nc")
-
-
-parameters <- list(a = rep(12, 324), b = rep(2033, 324))
-bi_create_parameters("/tmp/test.nc", parameters)

@@ -1,8 +1,9 @@
-#' @rdname bi
-#' @name bi
+#' @rdname bi_libbi
+#' @name bi_libbi
+#' @aliases bi_libbi libbi
 #' @title R interface to libbi
 #' @description
-#' \code{bi} allows to launch \code{libbi} with a particular set of command line
+#' \code{bi_libbi} allows to launch \code{libbi} with a particular set of command line
 #' arguments. This allows the user to perform the entire analysis
 #' without exiting R.
 #'
@@ -13,7 +14,7 @@
 #' @return a list containing the absolute paths to the results
 #' @export
 
-bi <- function(bi_settings, args, outputfile = "", stdoutputfile = ""){
+bi_libbi <- function(bi_settings, args, outputfile = "", stdoutputfile = ""){
     if (missing(args)){
       args <- ""
     }
