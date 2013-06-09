@@ -1,5 +1,5 @@
-RBi
-===
+RBi -- README
+=============
 
 [RBi] (https://github.com/libbi/RBi) is an interface to [libbi] (https://github.com/libbi/LibBi), a library for Bayesian Inference.
 
