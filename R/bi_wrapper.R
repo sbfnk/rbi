@@ -3,14 +3,41 @@
 #' @title Bi Wrapper
 #' @description
 #' \code{bi_wrapper} allows to call \code{libbi}.
-#'
+#' Upon creating a new bi_wrapper object, the following arguments can be given.
+#' Once the instance is created, \code{libbi} can be run through the \code{run}
+#' method documented in \code{\link{bi_wrapper_run}}.
+#' 
 #' @param client is either "draw", "filter", "sample"... see LibBi documentation.
 #' @param config path to a configuration file, containing multiple arguments
 #' @param global_options additional arguments to pass to the call to \code{libbi}, on top of the ones in the config file
 #' @param path_to_libbi path to the libbi binary; default to "~/PathToBiBin/libbi", so the easiest might be to create a symbolic link
 #' @param path_to_model path to the model folder, from which libbi binary will be executed
-
+#' @examples
+#' # bi_object <- bi_wrapper$new(client = "sample", global_options = "--sampler smc2")
 #' @export bi_wrapper
+NULL 
+#' @rdname bi_wrapper_run
+#' @name bi_wrapper_run
+#' @aliases bi_wrapper_run  bi_run  libbi
+#' @title Using the Bi Wrapper to Launch LibBi
+#' @description
+#' The method \code{run} of an instance of \code{\link{bi_wrapper}}
+#' allows to launch \code{libbi} with a particular set of command line
+#' arguments. 
+#'
+#' @param add_options additional arguments to pass to the call to \code{libbi}
+#' @param outputfile path to the result file (which will be overwritten)
+#' @param stdoutputfile path to a file to text file to report the output of \code{libbi}
+#' @return a list containing the absolute paths to the results; it is stored in the 
+#' \code{result} field of the instance of \code{\link{bi_wrapper}}.
+#' @examples
+#' # bi_object <- bi_wrapper$new(client = "sample", global_options = "--sampler smc2",
+#' #                             config = "posterior.conf",
+#' #                             path_to_model = "~/workspace/pz")
+#' # bi_object$run(add_options=" --verbose --nthreads 1",
+#' #               outputfile = "results/launchPZ_SMC2.nc")
+#' # bi_file_summary(bi_object$result$outputfile)
+NULL 
 
 bi_wrapper <- setRefClass("bi_wrapper",
       fields = c("client", "config", "global_options", "path_to_libbi", 
@@ -66,7 +93,7 @@ bi_wrapper <- setRefClass("bi_wrapper",
             path_to_libbi <<- tools::file_path_as_absolute(.self$path_to_libbi)
           }
         },
-        libbi = function(add_options, outputfile = "", stdoutputfile = ""){
+        run = function(add_options, outputfile, stdoutputfile){
           if (missing(add_options)){
             add_options <- ""
           }
@@ -76,10 +103,11 @@ bi_wrapper <- setRefClass("bi_wrapper",
           if (.self$config != "")
             launchcommand <- paste0(launchcommand, " @", .self$config)
           launchcommand <- paste(launchcommand, fullargs)
-          if (nchar(outputfile) > 0){
-            launchcommand <- paste(launchcommand, "--output-file", outputfile)
+          if (missing(outputfile)){
+            outputfile <- tempfile(pattern="outputfile")
           }
-          if (nchar(stdoutputfile) > 0){
+          launchcommand <- paste(launchcommand, "--output-file", outputfile)
+          if (!missing(stdoutputfile)){
             launchcommand <- paste(launchcommand, "2>", stdoutputfile)
           }
           print("Launching LibBi with the following commands:")
@@ -89,13 +117,13 @@ bi_wrapper <- setRefClass("bi_wrapper",
           print("... LibBi has finished!")
           libbi_result <- list(outputfile = absolute_path(filename=outputfile, dirname=.self$path_to_model),
                          path_to_model = .self$path_to_model)
-          if (nchar(stdoutputfile) > 0){
+          if (!missing(stdoutputfile)){
             libbi_result["stdoutputfile"] = absolute_path(filename=stdoutputfile, dirname=.self$path_to_model)
           }
           result <<- libbi_result
         },
         show = function(){
-          cat("settingsRef for LibBi\n")
+          cat("Wrapper around LibBi\n")
           cat("* client: ", .self$client, "\n")
           cat("* config file: ", .self$config, "\n")
           cat("* additional arguments:", .self$global_options, "\n")

@@ -1,9 +1,8 @@
 \docType{package}
 \name{RBi-package}
-\alias{bi}
-\alias{Rbi,}
-\alias{RBi,}
-\alias{RBI,}
+\alias{Rbi}
+\alias{RBi}
+\alias{RBI}
 \alias{RBi-package}
 \title{RBi - R nterface for \code{libbi}}
 \description{
@@ -18,16 +17,12 @@
   the results.
 
   The package will ultimately be made of various
-  components. \itemize{ \item First there are two functions
-  to use for launching the \code{libbi} command. After
-  having specified the settings using
-  \code{\link{bi_settings}}, the command is launched using
-  \code{\link{bi}} which simply asks the system to launch
-  \code{libbi}. \item Then there are funtions to manipulate
-  the results of the \code{libbi} command, which are stored
-  in NetCDF files. Those functions allow to extract
-  variables of interest, and to plot them in various ways.
-  }
+  components. \itemize{ \item First there is a wrapper
+  around \code{libbi} called \code{\link{bi_wrapper}}.
+  \item Then there are funtions to manipulate the results
+  of the \code{libbi} command, which are stored in NetCDF
+  files. Those functions allow to extract variables of
+  interest, and to plot them in various ways. }
 }
 \examples{
 demo(LG_filtering.R)
@@ -40,7 +35,7 @@ demo(LG_filtering.R)
   \url{http://libbi.org/}
 }
 \seealso{
-  \code{\link{bi_settings}}, \code{\link{bi}}
+  \code{\link{bi_wrapper}}
 }
 \keyword{package}
 

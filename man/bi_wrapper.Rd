@@ -20,6 +20,13 @@
   libbi binary will be executed}
 }
 \description{
-  \code{bi_wrapper} allows to call \code{libbi}.
+  \code{bi_wrapper} allows to call \code{libbi}. Upon
+  creating a new bi_wrapper object, the following arguments
+  can be given. Once the instance is created, \code{libbi}
+  can be run through the \code{run} method documented in
+  \code{\link{bi_wrapper_run}}.
+}
+\examples{
+# bi_object <- bi_wrapper$new(client = "sample", global_options = "--sampler smc2")
 }
 
