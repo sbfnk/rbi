@@ -27,7 +27,7 @@ bi_generate_dataset <- function(endtime, modelfile, path_to_model,
   if (missing(path_to_model)){
     path_to_model <- ""
   }
-  modelfile <- tools::file_path_as_absolute(absolute_path(filename=modelfile, dirname=path_to_model))
+#   modelfile <- tools::file_path_as_absolute(absolute_path(filename=modelfile, dirname=path_to_model))
   if (missing(outputfile)){
     outputfile <- tempfile(pattern="outputfile")
   }

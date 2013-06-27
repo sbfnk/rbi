@@ -3,7 +3,7 @@
 \title{Bi Generate Dataset}
 \usage{
   bi_generate_dataset(endtime, modelfile, path_to_model,
-    outputfile, parameters, initfile, noutputs)
+    outputfile, parameters, initfile, noutputs, args)
 }
 \arguments{
   \item{endtime}{final time index, so that data is

@@ -16,6 +16,18 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
+// nc_create_obs_file_
+void nc_create_obs_file_(std::string filename, std::string dimension_name, List variables);
+RcppExport SEXP bi_nc_create_obs_file_(SEXP filenameSEXP, SEXP dimension_nameSEXP, SEXP variablesSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope __rngScope;
+    std::string filename = Rcpp::as<std::string >(filenameSEXP);
+    std::string dimension_name = Rcpp::as<std::string >(dimension_nameSEXP);
+    List variables = Rcpp::as<List >(variablesSEXP);
+    nc_create_obs_file_(filename, dimension_name, variables);
+    return R_NilValue;
+END_RCPP
+}
 // nc_get_attributes_from_path
 List nc_get_attributes_from_path(std::string path);
 RcppExport SEXP bi_nc_get_attributes_from_path(SEXP pathSEXP) {

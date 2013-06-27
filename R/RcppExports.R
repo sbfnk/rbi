@@ -5,6 +5,10 @@ nc_create_init_file_ <- function(filename, variables) {
     invisible(.Call('bi_nc_create_init_file_', PACKAGE = 'bi', filename, variables))
 }
 
+nc_create_obs_file_ <- function(filename, dimension_name, variables) {
+    invisible(.Call('bi_nc_create_obs_file_', PACKAGE = 'bi', filename, dimension_name, variables))
+}
+
 nc_get_attributes_from_path <- function(path) {
     .Call('bi_nc_get_attributes_from_path', PACKAGE = 'bi', path)
 }
