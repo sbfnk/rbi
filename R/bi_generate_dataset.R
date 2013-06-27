@@ -12,12 +12,13 @@
 #' @param parameters a list of parameters to be used for the generation of synthetic dataset; 
 #' by default parameters are generated from the prior;
 #' @param initfile if no parameters are specified, a NetCDF init file can be given directly.
-#' @noutputs number of output points to be extracted from the hidden process; default is noutputs = endtime.
+#' @param noutputs number of output points to be extracted from the hidden process; default is noutputs = endtime.
+#' @param args additional arguments to be passed to libbi.
 #' @return path to the output file.
 #' @export
 #' 
 bi_generate_dataset <- function(endtime, modelfile, path_to_model, 
-                                outputfile, parameters, initfile, noutputs){
+                                outputfile, parameters, initfile, noutputs, args){
   if (missing(endtime)){
     stop("please specify the final time index!")
   }
@@ -27,7 +28,6 @@ bi_generate_dataset <- function(endtime, modelfile, path_to_model,
   if (missing(path_to_model)){
     path_to_model <- ""
   }
-#   modelfile <- tools::file_path_as_absolute(absolute_path(filename=modelfile, dirname=path_to_model))
   if (missing(outputfile)){
     outputfile <- tempfile(pattern="outputfile")
   }
@@ -46,8 +46,11 @@ bi_generate_dataset <- function(endtime, modelfile, path_to_model,
     #noutputs missing, default to endtime
     noutputs <- endtime
   }
+  if (missing(args)){
+    args <- ""
+  }
   bi_object <- bi_wrapper$new(client = "sample", 
-        global_options = paste("--target joint --model-file", modelfile, "--nsamples 1"),
+        global_options = paste("--target joint --model-file", modelfile, "--nsamples 1", args),
         path_to_model = path_to_model)
   if (with_init){
     bi_object$run(add_options = paste("--end-time", endtime, "--noutputs", noutputs,

@@ -23,6 +23,11 @@
 
   \item{initfile}{if no parameters are specified, a NetCDF
   init file can be given directly.}
+
+  \item{noutputs}{number of output points to be extracted
+  from the hidden process; default is noutputs = endtime.}
+
+  \item{args}{additional arguments to be passed to libbi.}
 }
 \value{
   path to the output file.
