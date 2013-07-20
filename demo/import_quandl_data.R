@@ -23,6 +23,6 @@ for (i in 2:length(SP500)){
 }
 # create a NetCDF file from the data
 bi_obs_file(filename="~/bla.nc", variable=logreturns, name="LogReturns")
-bi_file_summary("~/bla.nc")
+# bi_file_summary("~/bla.nc")
 
 # this data file can now be given to LibBi with the '--obs-file' option.

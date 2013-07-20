@@ -9,10 +9,12 @@ using namespace Rcpp;
 void nc_create_init_file_(std::string filename, List variables);
 RcppExport SEXP bi_nc_create_init_file_(SEXP filenameSEXP, SEXP variablesSEXP) {
 BEGIN_RCPP
-    Rcpp::RNGScope __rngScope;
-    std::string filename = Rcpp::as<std::string >(filenameSEXP);
-    List variables = Rcpp::as<List >(variablesSEXP);
-    nc_create_init_file_(filename, variables);
+    {
+        Rcpp::RNGScope __rngScope;
+        std::string filename = Rcpp::as<std::string >(filenameSEXP);
+        List variables = Rcpp::as<List >(variablesSEXP);
+        nc_create_init_file_(filename, variables);
+    }
     return R_NilValue;
 END_RCPP
 }
@@ -20,11 +22,13 @@ END_RCPP
 void nc_create_obs_file_(std::string filename, std::string dimension_name, List variables);
 RcppExport SEXP bi_nc_create_obs_file_(SEXP filenameSEXP, SEXP dimension_nameSEXP, SEXP variablesSEXP) {
 BEGIN_RCPP
-    Rcpp::RNGScope __rngScope;
-    std::string filename = Rcpp::as<std::string >(filenameSEXP);
-    std::string dimension_name = Rcpp::as<std::string >(dimension_nameSEXP);
-    List variables = Rcpp::as<List >(variablesSEXP);
-    nc_create_obs_file_(filename, dimension_name, variables);
+    {
+        Rcpp::RNGScope __rngScope;
+        std::string filename = Rcpp::as<std::string >(filenameSEXP);
+        std::string dimension_name = Rcpp::as<std::string >(dimension_nameSEXP);
+        List variables = Rcpp::as<List >(variablesSEXP);
+        nc_create_obs_file_(filename, dimension_name, variables);
+    }
     return R_NilValue;
 END_RCPP
 }
@@ -32,9 +36,14 @@ END_RCPP
 List nc_get_attributes_from_path(std::string path);
 RcppExport SEXP bi_nc_get_attributes_from_path(SEXP pathSEXP) {
 BEGIN_RCPP
-    Rcpp::RNGScope __rngScope;
-    std::string path = Rcpp::as<std::string >(pathSEXP);
-    List __result = nc_get_attributes_from_path(path);
-    return Rcpp::wrap(__result);
+    SEXP __sexp_result;
+    {
+        Rcpp::RNGScope __rngScope;
+        std::string path = Rcpp::as<std::string >(pathSEXP);
+        List __result = nc_get_attributes_from_path(path);
+        PROTECT(__sexp_result = Rcpp::wrap(__result));
+    }
+    UNPROTECT(1);
+    return __sexp_result;
 END_RCPP
 }

@@ -11,7 +11,6 @@ List nc_get_attributes_from_path(std::string path) {
   int natts = ncfile.num_atts();
   StringVector attributenames(natts);
   StringVector attributevalues(natts);
-  
   for (int i = 0; i < natts; i++){
     NcAtt* attribute = ncfile.get_att(i);
     attributenames(i) = (string) attribute->name();
