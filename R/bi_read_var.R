@@ -43,6 +43,8 @@ bi_read_var <- function(resultfile, name, coord, ps, ts){
       } else {
         myfunction = read_var_simulator
       }
+    } else {
+      myfunction = read_var_input
     }
   }
   X = myfunction(nc, name, coord, ps, ts)
