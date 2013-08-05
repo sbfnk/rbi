@@ -13,6 +13,7 @@
 #' @return None, but creates a NetCDF file at the specified path.
 #' @export
 bi_init_file <- function(filename, variables){
+  filename <- normalizePath(filename, "/", FALSE)
   if (length(variables) == 0){
     stop("please provide a non-empty list to bi_init_file")
   }

@@ -25,29 +25,30 @@ bi_read_var <- function(resultfile, name, coord, ps, ts){
     stop('name must be a string');
   }
   if (missing(coord)){
-    coord = c()
+    coord <- c()
   }
   if (missing(ps)){
-    ps = c()
+    ps <- c()
   }
   if (missing(ts)){
-    ts = c()
+    ts <- c()
   }
-  global_attributes = nc_get_attributes(nc)
+  global_attributes <- nc_get_attributes(nc)
   if (nc_var_has_dim(nc, name, "nrp")){
-    myfunction = read_var_flexi_simulator
+    myfunction <- read_var_flexi_simulator
   } else {
     if ("libbi_schema" %in% names(global_attributes)){
       if (length(global_attributes[["libbi_schema"]]) == 0){
-        myfunction = read_var_input
+        myfunction <- read_var_input
       } else {
-        myfunction = read_var_simulator
+#         myfunction <- read_var_simulator
+        myfunction <- read_var_input
       }
     } else {
-      myfunction = read_var_input
+      myfunction <- read_var_input
     }
   }
-  X = myfunction(nc, name, coord, ps, ts)
+  X <- myfunction(nc, name, coord, ps, ts)
   if (typeof(resultfile) == "character"){
     close.ncdf(nc)
   }

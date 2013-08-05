@@ -40,23 +40,28 @@ read_var_input <- function(nc, name, coord, ps, ts){
     ts = c()
   }
   # check dimensions
-  if (nc_var_has_dim (nc, name, 'np')){
-    P = length(nc$dim[["np"]]$vals)
-  } else {
-    P = 1
-  }
-  if (length(ps) == 0){
-    ps = 1:P
-  }
-  if (nc_var_has_dim (nc, name, 'nr')){
-    T = length(nc$dim[["nr"]]$vals);
-  } else {
-    T = 1
-  }
-  if (length(ts) == 0){
-    ts = 1:T
-  }
+#   if (nc_var_has_dim (nc, name, 'np')){
+#     P = length(nc$dim[["np"]]$vals)
+#   } else {
+#     P = 1
+#   }
+#   if (length(ps) == 0){
+#     ps = 1:P
+#   }
+#   if (nc_var_has_dim (nc, name, 'nr')){
+#     T = length(nc$dim[["nr"]]$vals);
+#   } else {
+#     T = 1
+#   }
+#   if (length(ts) == 0){
+#     ts = 1:T
+#   }
   # read
   values = get.var.ncdf(nc, name)
-  return(values)
+  if (is.null(dim(values))){
+    return(values)
+  } else {
+    values_permutated <- aperm(a=values, perm=rev(1:length(dim(values))))  
+    return(values_permutated)
+  }
 }
