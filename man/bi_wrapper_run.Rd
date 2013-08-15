@@ -24,11 +24,13 @@
   with a particular set of command line arguments.
 }
 \examples{
-# bi_object <- bi_wrapper$new(client = "sample", global_options = "--sampler smc2",
-#                             config = "posterior.conf",
-#                             path_to_model = "~/workspace/pz")
-# bi_object$run(add_options=" --verbose --nthreads 1",
-#               output_file_name = "results/launchPZ_SMC2.nc")
-# bi_file_summary(bi_object$result$output_file_name)
+bi_object <- bi_wrapper$new(client = "sample",
+                            model_file_name = system.file(package="bi", "PZ.bi"),
+                            global_options = "--sampler smc2")
+bi_object$run(add_options=" --verbose --nthreads 1")
+bi_file_summary(bi_object$result$output_file_name)
+}
+\seealso{
+  \code{\link{bi_wrapper}}
 }
 

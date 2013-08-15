@@ -14,7 +14,7 @@
 ## The data is provided in the data folder of RBi for conveniency.
 library(bi)
 # Import data
-load("data/SP500.RData")
+load(system.file(package="bi", "data/SP500.RData"))
 SP500 <- mydata$Close
 # do some calculation on the data
 logreturns <- rep(0, length(SP500))

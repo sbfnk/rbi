@@ -2,18 +2,15 @@
 \alias{bi_generate_dataset}
 \title{Bi Generate Dataset}
 \usage{
-  bi_generate_dataset(endtime, modelfile, path_to_model,
-    output_file_name, parameters, init_file_name, noutputs,
-    args)
+  bi_generate_dataset(endtime, model_file_name,
+    output_file_name, parameters, init_file_name,
+    working_folder, noutputs, args)
 }
 \arguments{
   \item{endtime}{final time index, so that data is
   generated from time 0 to time "endtime".}
 
-  \item{modelfile}{path to a model .Bi file.}
-
-  \item{path_to_model}{path to the folder in which there is
-  the modelfile; default to "".}
+  \item{model_file_name}{path to a model .Bi file.}
 
   \item{output_file_name}{path to the output file on which
   to write the output; default to a random name.}
@@ -21,6 +18,10 @@
   \item{parameters}{a list of parameters to be used for the
   generation of synthetic dataset; by default parameters
   are generated from the prior;}
+
+  \item{working_folder}{path to a folder from which to run
+  \code{libbi}; default to the folder where model_file_name
+  is.}
 
   \item{init_file_name}{if no parameters are specified, a
   NetCDF init file can be given directly.}
