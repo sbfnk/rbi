@@ -26,8 +26,8 @@ NULL
 #' arguments. 
 #'
 #' @param add_options additional arguments to pass to the call to \code{libbi}
-#' @param outputfile path to the result file (which will be overwritten)
-#' @param stdoutputfile path to a file to text file to report the output of \code{libbi}
+#' @param output_file_name path to the result file (which will be overwritten)
+#' @param stdoutput_file_name path to a file to text file to report the output of \code{libbi}
 #' @return a list containing the absolute paths to the results; it is stored in the 
 #' \code{result} field of the instance of \code{\link{bi_wrapper}}.
 #' @examples
@@ -35,8 +35,8 @@ NULL
 #' #                             config = "posterior.conf",
 #' #                             path_to_model = "~/workspace/pz")
 #' # bi_object$run(add_options=" --verbose --nthreads 1",
-#' #               outputfile = "results/launchPZ_SMC2.nc")
-#' # bi_file_summary(bi_object$result$outputfile)
+#' #               output_file_name = "results/launchPZ_SMC2.nc")
+#' # bi_file_summary(bi_object$result$output_file_name)
 NULL 
 
 bi_wrapper <- setRefClass("bi_wrapper",
@@ -93,7 +93,7 @@ bi_wrapper <- setRefClass("bi_wrapper",
             path_to_libbi <<- tools::file_path_as_absolute(.self$path_to_libbi)
           }
         },
-        run = function(add_options, outputfile, stdoutputfile){
+        run = function(add_options, output_file_name, stdoutput_file_name){
           if (missing(add_options)){
             add_options <- ""
           }
@@ -103,22 +103,22 @@ bi_wrapper <- setRefClass("bi_wrapper",
           if (.self$config != "")
             launchcommand <- paste0(launchcommand, " @", .self$config)
           launchcommand <- paste(launchcommand, fullargs)
-          if (missing(outputfile)){
-            outputfile <- tempfile(pattern="outputfile")
+          if (missing(output_file_name)){
+            output_file_name <- tempfile(pattern="output_file_name")
           }
-          launchcommand <- paste(launchcommand, "--output-file", outputfile)
-          if (!missing(stdoutputfile)){
-            launchcommand <- paste(launchcommand, "2>", stdoutputfile)
+          launchcommand <- paste(launchcommand, "--output-file", output_file_name)
+          if (!missing(stdoutput_file_name)){
+            launchcommand <- paste(launchcommand, "2>", stdoutput_file_name)
           }
           print("Launching LibBi with the following commands:")
           print(paste(c(cdcommand, launchcommand), sep = "\n"))
           command <- paste(c(cdcommand, launchcommand), collapse = ";")
           system(command, intern = TRUE)
           print("... LibBi has finished!")
-          libbi_result <- list(outputfile = absolute_path(filename=outputfile, dirname=.self$path_to_model),
+          libbi_result <- list(output_file_name = absolute_path(filename=output_file_name, dirname=.self$path_to_model),
                          path_to_model = .self$path_to_model)
-          if (!missing(stdoutputfile)){
-            libbi_result["stdoutputfile"] = absolute_path(filename=stdoutputfile, dirname=.self$path_to_model)
+          if (!missing(stdoutput_file_name)){
+            libbi_result["stdoutput_file_name"] = absolute_path(filename=stdoutput_file_name, dirname=.self$path_to_model)
           }
           result <<- libbi_result
         },

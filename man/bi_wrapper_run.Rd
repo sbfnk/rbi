@@ -7,10 +7,10 @@
   \item{add_options}{additional arguments to pass to the
   call to \code{libbi}}
 
-  \item{outputfile}{path to the result file (which will be
-  overwritten)}
+  \item{output_file_name}{path to the result file (which
+  will be overwritten)}
 
-  \item{stdoutputfile}{path to a file to text file to
+  \item{stdoutput_file_name}{path to a file to text file to
   report the output of \code{libbi}}
 }
 \value{
@@ -28,7 +28,7 @@
 #                             config = "posterior.conf",
 #                             path_to_model = "~/workspace/pz")
 # bi_object$run(add_options=" --verbose --nthreads 1",
-#               outputfile = "results/launchPZ_SMC2.nc")
-# bi_file_summary(bi_object$result$outputfile)
+#               output_file_name = "results/launchPZ_SMC2.nc")
+# bi_file_summary(bi_object$result$output_file_name)
 }
 

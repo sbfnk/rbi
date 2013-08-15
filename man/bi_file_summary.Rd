@@ -1,6 +1,6 @@
 \name{bi_file_summary}
 \alias{bi_file_summary}
-\title{Bi File Summary}
+\title{NetCDF File Summary}
 \usage{
   bi_file_summary(filename)
 }

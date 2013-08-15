@@ -1,0 +1,54 @@
+\documentclass{article}
+\usepackage{Sweave}
+\usepackage{hyperref}
+\usepackage{times}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{xspace}
+\usepackage{titlesec}
+\usepackage{graphicx}
+\usepackage{natbib}
+\usepackage{url}
+\usepackage{booktabs} 
+\usepackage{enumerate}
+\usepackage{alltt}
+\usepackage{multirow}
+\usepackage{makeidx}
+\usepackage{verbatimbox}
+\newcommand{\R}{R\xspace}
+\newcommand{\RBi}{RBi\xspace}
+\newcommand{\LibBi}{LibBi\xspace}
+
+\newcommand{\code}[1]{{\tt #1}}
+
+\newcommand{\strong}[1]{\texorpdfstring%
+{{\normalfont\fontseries{b}\selectfont #1}}%
+{#1}}
+\let\pkg=\strong
+\newcommand{\CRANpkg}[1]{\href{http://cran.r-project.org/package=#1}{\pkg{#1}}}%
+\let\cpkg=\CRANpkg
+
+
+\title{\RBi: the \R interface to LibBi} 
+
+\author{Pierre E. Jacob}
+
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+\maketitle
+
+\begin{abstract}
+In this vignette we present the \RBi package \pkg{bi} for using \LibBi in \R. 
+\LibBi is a package for Bayesian state-space modelling on high-performance hardware.
+\end{abstract}
+
+\section{Introduction}
+
+The \LibBi library for Bayesian inference in state-space models has recently been proposed 
+(REF) 
+
+\section{An example of using \pkg{\RBi}}
+
+
+
+\end{document}

@@ -8,17 +8,17 @@
 #' @param endtime final time index, so that data is generated from time 0 to time "endtime".
 #' @param modelfile path to a model .Bi file.
 #' @param path_to_model path to the folder in which there is the modelfile; default to "".
-#' @param outputfile path to the output file on which to write the output; default to a random name.
+#' @param output_file_name path to the output file on which to write the output; default to a random name.
 #' @param parameters a list of parameters to be used for the generation of synthetic dataset; 
 #' by default parameters are generated from the prior;
-#' @param initfile if no parameters are specified, a NetCDF init file can be given directly.
+#' @param init_file_name if no parameters are specified, a NetCDF init file can be given directly.
 #' @param noutputs number of output points to be extracted from the hidden process; default is noutputs = endtime.
 #' @param args additional arguments to be passed to libbi.
 #' @return path to the output file.
 #' @export
 #' 
 bi_generate_dataset <- function(endtime, modelfile, path_to_model, 
-                                outputfile, parameters, initfile, noutputs, args){
+                                output_file_name, parameters, init_file_name, noutputs, args){
   if (missing(endtime)){
     stop("please specify the final time index!")
   }
@@ -28,18 +28,18 @@ bi_generate_dataset <- function(endtime, modelfile, path_to_model,
   if (missing(path_to_model)){
     path_to_model <- ""
   }
-  if (missing(outputfile)){
-    outputfile <- tempfile(pattern="outputfile")
+  if (missing(output_file_name)){
+    output_file_name <- tempfile(pattern="output_file_name")
   }
   if (missing(parameters)){
-    if (missing(initfile)){
+    if (missing(init_file_name)){
       with_init <- FALSE
     } else {
       with_init <- TRUE
     }
   } else {
-    initfile <- tempfile(pattern="initfile")
-    bi_init_file(initfile, parameters)
+    init_file_name <- tempfile(pattern="init_file_name")
+    bi_init_file(init_file_name, parameters)
     with_init <- TRUE
   }
   if (missing(noutputs)){
@@ -54,14 +54,14 @@ bi_generate_dataset <- function(endtime, modelfile, path_to_model,
         path_to_model = path_to_model)
   if (with_init){
     bi_object$run(add_options = paste("--end-time", endtime, "--noutputs", noutputs,
-                                      "--init-file", initfile,
+                                      "--init-file", init_file_name,
                                       "--verbose --nthreads 1"),
-                  outputfile = outputfile)
+                  output_file_name = output_file_name)
   } else {    
     bi_object$run(add_options = paste("--end-time", endtime, "--noutputs", noutputs,
                                       "--verbose --nthreads 1"),
-                  outputfile = outputfile)
+                  output_file_name = output_file_name)
   }
-  return(bi_object$result$outputfile)
+  return(bi_object$result$output_file_name)
 }
 

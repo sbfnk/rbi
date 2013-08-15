@@ -18,7 +18,7 @@ bi_object <- bi_wrapper$new(client = "filter",
 outputPF <- tempfile(pattern="pfilter", fileext=".nc")
 outputKF <- tempfile(pattern="kfilter", fileext=".nc")
 bi_object$run(add_options = "--verbose --nthreads 1 --init-ns=1 --nparticles 2 --end-time 2",
-              outputfile = outputPF)
+              output_file_name = outputPF)
 T <- 100
 Nparticles <- 1024
 Nsim <- 25
@@ -27,16 +27,16 @@ Particle_filter_LL <- matrix(0, nrow = length(rhos), ncol = Nsim)
 for (index in 1:length(rhos)){
   for (isim in 1:Nsim){
     bi_object$run(add_options = paste0("--nthreads=1 --init-ns=", index-1, " --nparticles=", Nparticles, " --end-time=", T, " --dry-parse"),
-                outputfile = outputPF)
+                output_file_name = outputPF)
     Particle_filter_LL[index, isim] <- bi_read_var(resultfile=outputPF, name="LL")
   }
 }
 Kalman_LL <- rep(0, length(rhos))
 bi_object$run(add_options = paste0("--verbose --nthreads 1 --filter=kalman --init-ns=", index-1, " --end-time=", 2),
-              outputfile = outputKF)
+              output_file_name = outputKF)
 for (index in 1:length(rhos)){
   bi_object$run(add_options = paste0("--verbose --nthreads 1 --filter=kalman --init-ns=", index-1, " --end-time=", T, " --dry-parse"),
-                outputfile = outputKF)
+                output_file_name = outputKF)
   Kalman_LL[index] <- bi_read_var(resultfile=outputKF, name="LL")
 }
 # save(Kalman_LL, Particle_filter_LL, file="~/likelihoods.RData")

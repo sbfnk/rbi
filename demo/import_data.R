@@ -22,7 +22,10 @@ for (i in 2:length(SP500)){
   logreturns[i+1] <- log(SP500[i+1]) - log(SP500[i])
 }
 # create a NetCDF file from the data
-bi_obs_file(filename="~/bla.nc", variable=logreturns, name="LogReturns")
-# bi_file_summary("~/bla.nc")
-
+obs_file_name <- tempfile(pattern="obs", fileext=".nc")
+bi_obs_file(filename=obs_file_name, 
+            variable=logreturns, 
+            name="LogReturns")
+bi_file_summary(obs_file_name)
+bi_file_ncdump(obs_file_name)
 # this data file can now be given to LibBi with the '--obs-file' option.

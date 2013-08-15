@@ -1,8 +1,8 @@
 \name{bi_file_ncdump}
 \alias{bi_file_ncdump}
-\title{Bi File ncdump}
+\title{NetCDF File Print}
 \usage{
-  bi_file_ncdump(ncdf_file)
+  bi_file_ncdump(filename)
 }
 \arguments{
   \item{filename}{path to a NetCDF file}

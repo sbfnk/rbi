@@ -3,7 +3,8 @@
 \title{Bi Generate Dataset}
 \usage{
   bi_generate_dataset(endtime, modelfile, path_to_model,
-    outputfile, parameters, initfile, noutputs, args)
+    output_file_name, parameters, init_file_name, noutputs,
+    args)
 }
 \arguments{
   \item{endtime}{final time index, so that data is
@@ -14,15 +15,15 @@
   \item{path_to_model}{path to the folder in which there is
   the modelfile; default to "".}
 
-  \item{outputfile}{path to the output file on which to
-  write the output; default to a random name.}
+  \item{output_file_name}{path to the output file on which
+  to write the output; default to a random name.}
 
   \item{parameters}{a list of parameters to be used for the
   generation of synthetic dataset; by default parameters
   are generated from the prior;}
 
-  \item{initfile}{if no parameters are specified, a NetCDF
-  init file can be given directly.}
+  \item{init_file_name}{if no parameters are specified, a
+  NetCDF init file can be given directly.}
 
   \item{noutputs}{number of output points to be extracted
   from the hidden process; default is noutputs = endtime.}

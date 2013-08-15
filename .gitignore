@@ -4,3 +4,7 @@
 src/*.o
 src/*.so
 src/*.dll
+vignettes/*.gz
+vignettes/*.log
+vignettes/*.tex
+Rplots.pdf

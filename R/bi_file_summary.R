@@ -1,6 +1,6 @@
 #' @rdname bi_file_summary
 #' @name bi_file_summary
-#' @title Bi File Summary
+#' @title NetCDF File Summary
 #' @description
 #' This function prints a little summary of the content
 #' of a NetCDF file, as well as its creation time. You can
@@ -10,7 +10,7 @@
 #' @export
 #' 
 bi_file_summary <- function(filename){
-  print("File summary")
+  cat("Summary of file", filename, "\n")
   print(file.info(tools::file_path_as_absolute(filename))[,c("mtime")])
   ncfile = open.ncdf(tools::file_path_as_absolute(filename), verbose = FALSE)
   print(ncfile)

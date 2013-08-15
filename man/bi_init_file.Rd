@@ -1,15 +1,13 @@
 \name{bi_init_file}
 \alias{bi_init_file}
-\alias{bi_init_file,}
-\alias{initfile}
-\alias{init_file,}
-\title{Bi Init File}
+\title{Create Init Files for LibBi}
 \usage{
   bi_init_file(filename, variables)
 }
 \arguments{
   \item{filename}{a path to a NetCDF file to write the
-  variables into (will be overwritten!)}
+  variables into, which will be overwritten if it already
+  exists.}
 
   \item{variables}{a \code{list} object, which names should
   be the variable names and values should be vectors of

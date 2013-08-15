@@ -1,0 +1,6 @@
+source("demo/import_data.R")
+source("demo/init_files.R")
+source("demo/PZ_filtering.R")
+source("demo/PZ_generate_dataset.R")
+source("demo/PZ_PMMH.R")
+source("demo/PZ_SMC2.R")
