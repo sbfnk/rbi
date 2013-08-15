@@ -6,30 +6,37 @@
 #' synthetic dataset from a model. Parameters can be passed, otherwise
 #' they are generated from the prior specified in the model file.
 #' @param endtime final time index, so that data is generated from time 0 to time "endtime".
-#' @param modelfile path to a model .Bi file.
-#' @param path_to_model path to the folder in which there is the modelfile; default to "".
+#' @param model_file_name path to a model .Bi file.
 #' @param output_file_name path to the output file on which to write the output; default to a random name.
 #' @param parameters a list of parameters to be used for the generation of synthetic dataset; 
 #' by default parameters are generated from the prior;
+#' @param working_folder path to a folder from which to run \code{libbi}; default to the folder where model_file_name is.
 #' @param init_file_name if no parameters are specified, a NetCDF init file can be given directly.
 #' @param noutputs number of output points to be extracted from the hidden process; default is noutputs = endtime.
 #' @param args additional arguments to be passed to libbi.
 #' @return path to the output file.
 #' @export
 #' 
-bi_generate_dataset <- function(endtime, modelfile, path_to_model, 
-                                output_file_name, parameters, init_file_name, noutputs, args){
+bi_generate_dataset <- function(endtime, model_file_name, 
+                                output_file_name, parameters, 
+                                init_file_name, 
+                                working_folder,
+                                noutputs, args){
   if (missing(endtime)){
     stop("please specify the final time index!")
   }
-  if (missing(modelfile)){
+  if (missing(model_file_name)){
     stop("please specify a model file!")
+  } else {
+    model_file_name <- absolute_path(model_file_name)
   }
-  if (missing(path_to_model)){
-    path_to_model <- ""
+  if (missing(working_folder)){
+    working_folder <- dirname(model_file_name)
+  } else {
+    working_folder <- working_folder
   }
   if (missing(output_file_name)){
-    output_file_name <- tempfile(pattern="output_file_name")
+    output_file_name <- tempfile(pattern="output_file_name", fileext=".nc")
   }
   if (missing(parameters)){
     if (missing(init_file_name)){
@@ -50,8 +57,9 @@ bi_generate_dataset <- function(endtime, modelfile, path_to_model,
     args <- ""
   }
   bi_object <- bi_wrapper$new(client = "sample", 
-        global_options = paste("--target joint --model-file", modelfile, "--nsamples 1", args),
-        path_to_model = path_to_model)
+                              model_file_name = model_file_name,
+                              working_folder = working_folder,
+                              global_options = paste("--target joint --nsamples 1", args))
   if (with_init){
     bi_object$run(add_options = paste("--end-time", endtime, "--noutputs", noutputs,
                                       "--init-file", init_file_name,
