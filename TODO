@@ -1,5 +1,4 @@
 ## TODO
-
 - try the rerun method of bi_wrapper (experimental)
 - think about how to create data frame easily from NetCDF files
 (kinda the opposite of netcdf_create_from_list ?!)
@@ -7,5 +6,4 @@
 - clean the inst/ subfolder 
 - remove all dependencies from ncdf, and rely only on NetCDF C++ interface ? (partially done already)
 - rethink about the names bi_*... bi_wrapper ...
-- create Jarvis like in Iron Man to improve general workflow
 - when no stdoutput_file_name is given to run(), the results should not include a meaningless path
