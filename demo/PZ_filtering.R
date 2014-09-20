@@ -26,7 +26,7 @@ bi_object <- bi_wrapper$new(client="filter",
                                                  "--init-file", init_file_name))
 print(bi_object)
 # Once happy with the settings, launch bi.
-bi_object$run(add_options= paste("--nparticles 8192 --verbose --nthreads 1 --end-time", T))
+bi_object$run(add_options= paste("--nparticles 8192 --verbose --nthreads 1 --end-time", T, "--noutputs", T))
 # It can be a good idea to look at the result file
 bi_file_summary(bi_object$result$output_file_name)
 bi_read_var(bi_object$result$output_file_name, "mu")

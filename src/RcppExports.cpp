@@ -11,8 +11,8 @@ RcppExport SEXP bi_nc_create_netcdf_from_list_(SEXP filenameSEXP, SEXP variables
 BEGIN_RCPP
     {
         Rcpp::RNGScope __rngScope;
-        std::string filename = Rcpp::as<std::string >(filenameSEXP);
-        List variables = Rcpp::as<List >(variablesSEXP);
+        Rcpp::traits::input_parameter< std::string >::type filename(filenameSEXP );
+        Rcpp::traits::input_parameter< List >::type variables(variablesSEXP );
         nc_create_netcdf_from_list_(filename, variables);
     }
     return R_NilValue;
@@ -25,7 +25,7 @@ BEGIN_RCPP
     SEXP __sexp_result;
     {
         Rcpp::RNGScope __rngScope;
-        std::string path = Rcpp::as<std::string >(pathSEXP);
+        Rcpp::traits::input_parameter< std::string >::type path(pathSEXP );
         List __result = nc_get_attributes_from_path(path);
         PROTECT(__sexp_result = Rcpp::wrap(__result));
     }

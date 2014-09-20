@@ -27,7 +27,7 @@ bi_object <- bi_wrapper$new(client="sample",
 print(bi_object)
 
 # Once happy with the settings, launch bi.
-bi_object$run(add_options = paste("--end-time", T, "--nsamples 128 --nparticles 128 --verbose --nthreads 1"), 
+bi_object$run(add_options = paste("--end-time", T, "--noutputs", T, "--nsamples 128 --nparticles 128 --verbose --nthreads 1"), 
               stdoutput_file_name = tempfile(pattern="pmmhoutput", fileext=".txt"))
 # It can be a good idea to look at the result file
 bi_file_summary(bi_object$result$output_file_name)
