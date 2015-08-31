@@ -127,16 +127,16 @@ bi_wrapper <- setRefClass("bi_wrapper",
             output_file_name <<- output_file_name 
           }
           if (missing(stdoutput_file_name)){
-            stdoutput_file_name <- ""
+            stdoutput_redir_name <- ""
           } else {
-            stdoutput_file_name <- paste("2>", stdoutput_file_name)
+            stdoutput_redir_name <- paste("2>", stdoutput_file_name)
           }
           cdcommand <- paste("cd", .self$working_folder)
           launchcommand <- paste(.self$base_command_string, add_options,
                                  "--output-file", .self$output_file_name)
           print("Launching LibBi with the following commands:")
-          print(paste(c(cdcommand, launchcommand, stdoutput_file_name), sep = "\n"))
-          command <<- paste(c(cdcommand, paste(launchcommand, stdoutput_file_name)), collapse = ";")
+          print(paste(c(cdcommand, launchcommand, stdoutput_redir_name), sep = "\n"))
+          command <<- paste(c(cdcommand, paste(launchcommand, stdoutput_redir_name)), collapse = ";")
 #           command_dryparse <<- paste(c(cdcommand, paste(launchcommand, "--dry-parse")), collapse = ";")
           system(command, intern = TRUE)
           print("... LibBi has finished!")
