@@ -17,7 +17,7 @@
 #' @return path to the output file.
 #' @export
 #' 
-bi_generate_dataset <- function(endtime, model_file_name, 
+bi_generate_dataset <- function(endtime, model, model_file_name, 
                                 output_file_name, parameters, 
                                 init_file_name, 
                                 working_folder,
@@ -25,11 +25,24 @@ bi_generate_dataset <- function(endtime, model_file_name,
   if (missing(endtime)){
     stop("please specify the final time index!")
   }
-  if (missing(model_file_name)){
-    stop("please specify a model file!")
-  } else {
-    model_file_name <- absolute_path(model_file_name)
+  if (missing(model)){
+    if (!missing(model_file_name)) {
+      warning("'model_file_name' is deprecated, use 'model' instead")
+      model <- model_file_name
+    } else
+      stop("you need to provide 'model', either a 'bi_model' object or a path to a valid model file in LibBi's syntax")
   }
+
+  if (is.character(model)){
+    model_file_name <- model
+    model <- bi_model(filename = model_file_name)
+  } else if (class(model) == "bi_model"){
+    model_file_name <- tempfile(pattern=model$name, fileext=".bi")
+    model$write_model_file(model_file_name)
+  } else {
+    stop("'model' must be either a character vector or a 'bi_model' object")
+  }
+  
   if (missing(working_folder)){
     working_folder <- dirname(model_file_name)
   } else {
@@ -57,7 +70,7 @@ bi_generate_dataset <- function(endtime, model_file_name,
     args <- ""
   }
   bi_object <- bi_wrapper$new(client = "sample", 
-                              model_file_name = model_file_name,
+                              model = model,
                               working_folder = working_folder,
                               global_options = paste("--target joint --nsamples 1", args))
   if (with_init){

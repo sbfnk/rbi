@@ -8,7 +8,7 @@
 #' method documented in \code{\link{bi_wrapper_run}}.
 #' 
 #' @param client is either "draw", "filter", "sample"... see LibBi documentation.
-#' @param model_file_name path to a model file (typically ending in ".bi"); libbi will be executed from within the same folder.
+#' @param model either a character vector giving the path to a model file (typically ending in ".bi"), or a \code{bi_model} object; if it is a file name, libbi will be executed from within the same folder, if a \code{bi_model} object in a temporary folder (both unless \code{working_folder} is given)
 #' @param config path to a configuration file, containing multiple arguments
 #' @param global_options additional arguments to pass to the call to \code{libbi}, on top of the ones in the config file
 #' @param working_folder path to a folder from which to run \code{libbi}; default to the folder where model_file_name is.
@@ -17,7 +17,7 @@
 #' if unsuccessful it tries "~/PathToBiBin/libbi"; if unsuccessful again it fails.
 #' @examples
 #' bi_object <- bi_wrapper$new(client = "sample",
-#'                             model_file_name = system.file(package="bi", "PZ.bi"), 
+#'                             model = system.file(package="bi", "PZ.bi"), 
 #'                             global_options = "--sampler smc2")
 #' @seealso \code{\link{bi_wrapper_run}}
 #' @export bi_wrapper
@@ -51,7 +51,7 @@ bi_wrapper <- setRefClass("bi_wrapper",
                  "base_command_string", "command", "command_dryparse", "result",
                  "working_folder", "output_file_name"),
       methods = list(
-        initialize = function(client, model_file_name,
+        initialize = function(client, model, model_file_name,
                               config, global_options, path_to_libbi,
                               working_folder, result){
           result <<- list()
@@ -61,13 +61,26 @@ bi_wrapper <- setRefClass("bi_wrapper",
           } else {
             client <<- client
           }
-          if (missing(model_file_name)){
-            stop("you need to provide 'model_file_name', a path to a valid model file in LibBi's syntax")
-          } else {
-            model_file_name <<- absolute_path(model_file_name)
-            model_folder <<- dirname(model_file_name)
-            rel_model_file_name <<- basename(model_file_name)
+          if (missing(model)){
+            if (!missing(model_file_name)) {
+              warning("'model_file_name' is deprecated, use 'model' instead")
+              model <- model_file_name
+            } else
+              stop("you need to provide 'model', either a 'bi_model' object or a path to a valid model file in LibBi's syntax")
           }
+
+          if (is.character(model)){
+            model_file_name <<- absolute_path(model_file_name)
+          } else if (class(model) == "bi_model"){
+            model_file_name <<- tempfile(pattern=model$name, fileext=".bi")
+            model$write_model_file(.self$model_file_name)
+          } else {
+            stop("'model_file' must be either a character vector or a 'bi_model' object")
+          }
+
+          model_folder <<- dirname(.self$model_file_name)
+          rel_model_file_name <<- basename(.self$model_file_name)
+          
           if (missing(working_folder)){
             working_folder <<- model_folder
           } else {
