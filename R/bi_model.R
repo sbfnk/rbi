@@ -187,7 +187,7 @@ bi_model <- setRefClass("bi_model",
             grep("sub[[:space:]]*proposal_parameter[[:space:]]", prior_model)
           if (length(propose_parameter) > 0) {
             end_propose_parameter <- propose_parameter - 1 +
-              min(grep("\\}", prior_model[propose_parameter:length(model)]))
+              min(grep("\\}", prior_model[propose_parameter:length(prior_model)]))
             prior_model <- prior_model[-(propose_parameter:end_propose_parameter)]
           }
 
@@ -196,7 +196,7 @@ bi_model <- setRefClass("bi_model",
                                   prior_model)
           if (length(prior_parameter) > 0) {
             end_prior_parameter <- prior_parameter - 1 + 
-              min(grep("\\}", prior_model[prior_parameter:length(model)]))
+              min(grep("\\}", prior_model[prior_parameter:length(prior_model)]))
             prior_model <-
               c(prior_model[1:end_prior_parameter],
                 sub("sub[[:space:]]+parameter",
@@ -210,7 +210,7 @@ bi_model <- setRefClass("bi_model",
             grep("sub[[:space:]]*proposal_initial[[:space:]]", prior_model)
           if (length(propose_initial) > 0) {
             end_propose_initial <- propose_initial - 1 + 
-              min(grep("\\}", prior_model[propose_initial:length(model)]))
+              min(grep("\\}", prior_model[propose_initial:length(prior_model)]))
             prior_model <- prior_model[-(propose_initial:end_propose_initial)]
           }
 
@@ -218,7 +218,7 @@ bi_model <- setRefClass("bi_model",
           prior_initial <- grep("sub[[:space:]]*initial[[:space:]]", prior_model)
           if (length(prior_initial) > 0) {
             end_prior_initial <- prior_initial - 1 + 
-              min(grep("\\}", prior_model[prior_initial:length(model)]))
+              min(grep("\\}", prior_model[prior_initial:length(prior_model)]))
             prior_model <-
               c(prior_model[1:end_prior_initial],
                 sub("sub[[:space:]]+initial",
