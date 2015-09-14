@@ -11,16 +11,16 @@ option_string <- function(options){
     string <- option
   } else if (is.list(options)) {
     string <-
-      paste(sapply(names(add_options),
+      paste(sapply(names(options),
                    function(option) {
-                     if (is.logical(add_options[[option]])) {
-                       if (add_options[[option]] == TRUE)
+                     if (is.logical(options[[option]])) {
+                       if (options[[option]] == TRUE)
                          paste0("--enable-", option)
                        else
                          paste0("--disable-", option)
                      } else {
                        paste0("--", option, " ",
-                              format(add_options[[option]], scientifi = FALSE))
+                              format(options[[option]], scientifi = FALSE))
                      }
                    }
                    ), collapse = " ")
