@@ -96,7 +96,7 @@ bi_wrapper <- setRefClass("bi_wrapper",
           if (missing(global_options))
             global_options <<- ""
           else 
-            global_options <<- global_options
+            global_options <<- option_string(global_options)
           if (missing(path_to_libbi)){
             # That's a bit tricky then because we really need to know where libbi is.
             # Maybe the system knows where libbi is
@@ -134,9 +134,10 @@ bi_wrapper <- setRefClass("bi_wrapper",
           }
         },
         run = function(add_options, output_file_name, stdoutput_file_name){
-          if (missing(add_options)){
+          if (missing(add_options))
             add_options <- ""
-          }
+          else
+            add_options <- option_string(add_options)
           if (missing(output_file_name)){
             output_file_name <<- tempfile(pattern="output_file_name", fileext=".nc")
           } else {
@@ -167,6 +168,8 @@ bi_wrapper <- setRefClass("bi_wrapper",
         rerun = function(add_options){
           if (missing(add_options)){
             add_options <- ""
+          } else {
+            add_options <- option_string(add_options)
           }
           cdcommand <- paste("cd", .self$working_folder)
           launchcommand <- paste(.self$base_command_string, add_options,
