@@ -53,7 +53,7 @@ bi_wrapper <- setRefClass("bi_wrapper",
       methods = list(
         initialize = function(client, model, model_file_name,
                               config, global_options, path_to_libbi,
-                              working_folder, result){
+                              working_folder, result, run, ...){
           result <<- list()
           if (missing(client)){
             print("you didn't provide a 'client' to bi_wrapper, it's kinda weird; default to 'sample'.")
@@ -129,6 +129,9 @@ bi_wrapper <- setRefClass("bi_wrapper",
                                         "--model-file", .self$rel_model_file_name,
                                         .self$config,
                                         .self$global_options)
+          if (!missing(run) & run == TRUE) {
+            .self$run(...)
+          }
         },
         run = function(add_options, output_file_name, stdoutput_file_name){
           if (missing(add_options)){
