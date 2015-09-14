@@ -146,8 +146,11 @@ bi_model <- setRefClass("bi_model",
           indent <- sub("^([[:space:]]*).*$", "\\1", fix_model[noise_line_nbs[1]])
 
           if (length(noise_line_nbs) > 0) {
+            ## remove "noise" term
             noises <- sub("^[[:space:]]*noise[[:space:]]", "",
                           fix_model[noise_line_nbs])
+            ## remove dimensions
+            noises <- sub("\\[.*\\]", "", noises)
             noise_vec <- unlist(strsplit(noises, ","))
 
             unmatched_names <- setdiff(names(fixed), noise_vec)
@@ -170,9 +173,16 @@ bi_model <- setRefClass("bi_model",
                                fixed_lines, 
                                fix_model[(noise_line_nbs[1]):length(fix_model)])
                 
-                this_noise_assignment <- grep(paste0(noise, "[[:space:]]*~"),
-                                              fix_model)
-                fix_model <- fix_model[-this_noise_assignment]
+                this_noise_assignment <-
+                  grep(paste0(noise, "[[:space:]]*\\[[^]]*\\][[:space:]]*~"),
+                       fix_model)
+                if (length(this_noise_assignment) > 0) {
+                  fix_model <- fix_model[-this_noise_assignment]
+                }
+
+                ## remove dimensions
+                fix_model <-
+                  sub(paste0(noise, "[[:space:]]*\\[[^]]*\\]"), noise, fix_model)
               }
             }
           }
