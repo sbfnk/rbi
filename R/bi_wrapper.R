@@ -133,17 +133,25 @@ bi_wrapper <- setRefClass("bi_wrapper",
             .self$run(...)
           }
         },
-        run = function(add_options, output_file_name, stdoutput_file_name){
+        run = function(add_options, output_file_name, stdoutput_file_name, verbose){
           if (missing(add_options))
             add_options <- ""
           else
             add_options <- option_string(add_options)
+
+          if (!missing(verbose) && verbose == TRUE)
+            add_options <- paste("--verbose", add_options)
+
           if (missing(output_file_name)){
             output_file_name <<- tempfile(pattern="output_file_name", fileext=".nc")
           } else {
             output_file_name <<- output_file_name 
           }
-          if (missing(stdoutput_file_name)){
+          if (missing(stdoutput_file_name) && !verbose) {
+            stdoutput_file_name <- tempfile(pattern="output", fileext=".txt")
+          }
+
+          if (verbose) {
             stdoutput_redir_name <- ""
           } else {
             stdoutput_redir_name <- paste("2>", stdoutput_file_name)
@@ -151,12 +159,14 @@ bi_wrapper <- setRefClass("bi_wrapper",
           cdcommand <- paste("cd", .self$working_folder)
           launchcommand <- paste(.self$base_command_string, add_options,
                                  "--output-file", .self$output_file_name)
-          print("Launching LibBi with the following commands:")
-          print(paste(c(cdcommand, launchcommand, stdoutput_redir_name), sep = "\n"))
+          if (verbose) print("Launching LibBi with the following commands:")
+          if (verbose)
+            print(paste(c(cdcommand, launchcommand, stdoutput_redir_name),
+                        sep = "\n"))
           command <<- paste(c(cdcommand, paste(launchcommand, stdoutput_redir_name)), collapse = ";")
 #           command_dryparse <<- paste(c(cdcommand, paste(launchcommand, "--dry-parse")), collapse = ";")
           system(command, intern = TRUE)
-          print("... LibBi has finished!")
+          if (verbose) print("... LibBi has finished!")
           libbi_result <- list(output_file_name = absolute_path(filename=.self$output_file_name, 
                                                   dirname=.self$working_folder),
                                model_file_name = .self$model_file_name)
@@ -165,20 +175,22 @@ bi_wrapper <- setRefClass("bi_wrapper",
           }
           result <<- libbi_result
         },
-        rerun = function(add_options){
+        rerun = function(add_options, verbose){
           if (missing(add_options)){
             add_options <- ""
           } else {
             add_options <- option_string(add_options)
           }
+          if (!missing(verbose) && verbose == TRUE)
+            add_options <- paste("--verbose", add_options)
           cdcommand <- paste("cd", .self$working_folder)
           launchcommand <- paste(.self$base_command_string, add_options,
                                  "--output-file", .self$output_file_name)
           command_dryparse <<- paste(c(cdcommand, paste(launchcommand, "--dry-parse")), collapse = ";")
-          print("Launching LibBi with the following commands:")
-          print(.self$command_dryparse)
+          if (verbose) print("Launching LibBi with the following commands:")
+          if (verbose) print(.self$command_dryparse)
           system(.self$command_dryparse, intern = TRUE)
-          print("... LibBi has finished!")
+          if (verbose) print("... LibBi has finished!")
         },
         show = function(){
           cat("Wrapper around LibBi\n")
