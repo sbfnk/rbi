@@ -20,14 +20,14 @@ bi_read_file <- function(file, dims, missval.threshold, variables)
   res <- list()
 
   if (typeof(file) == "character"){
-    nc <- nc_open(tools::file_path_as_absolute(file))
+    nc <- open.ncdf(tools::file_path_as_absolute(file))
   } else {
     nc <- resultfile
   }
   
   for (var in nc$var) {
     if (missing(variables) || var$name %in% variables) {
-      all_values <- ncvar_get(nc, var$name)
+      all_values <- read_var_input(nc, var$name)
       
       dim_names <- sapply(var$dim, function(x) {
         ifelse(x$len > 1, x$name, "") # ncvar_get ignores dimensions of length 1
@@ -69,7 +69,7 @@ bi_read_file <- function(file, dims, missval.threshold, variables)
     }
   }
 
-  if (typeof(file) == "character") nc_close(nc)
-  
+  if (typeof(file) == "character") close.ncdf(nc)
+
   return(res)
 }
