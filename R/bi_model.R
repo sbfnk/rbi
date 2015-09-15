@@ -183,10 +183,10 @@ bi_model <- setRefClass("bi_model",
 
           ## remove parameter proposal
           prior_parameter <- new_model$get_block("parameter")
-          new_model$add_block("propose_parameter", lines = prior_parameter)
+          new_model$add_block("proposal_parameter", lines = prior_parameter)
 
           prior_initial <- new_model$get_block("initial")
-          new_model$add_block("propose_initial", lines = prior_initial)
+          new_model$add_block("proposal_initial", lines = prior_initial)
 
           return(new_model)
         },
@@ -375,7 +375,8 @@ bi_model <- setRefClass("bi_model",
           model <<- c(.self$model[seq_len(length(.self$model) - 1)],
                       ifelse(missing(options), paste("sub", name,"{"),
                              paste("sub", name, paste0("(", options, ")", "{"))), 
-                      lines, "}", "}")
+                      paste(lines, sep = "\n"), "}", "}")
+          clean_model()
         },
         get_vars = function(type) {
           line_nbs <- grep(paste0("^[[:space:]]*", type, "[[:space:]]"), .self$model)
