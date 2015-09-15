@@ -9,7 +9,6 @@
 #' @param filename is the file name of the model file
 #' @examples
 #' bi_sir <- bi_model$new(filename = "sir.bi")
-#' @family bi_model methods
 #' @seealso \code{\link{bi_model_fix_noise}}, \code{\link{bi_model_propose_prior}}, \code{\link{insert_lines}}, \code{\link{update_lines}}, \code{\link{delet_lines}}, \code{\link{write_model_file}}, 
 #' #' @export bi_model
 NULL 
@@ -22,7 +21,6 @@ NULL
 #' @param fixed a vector of values to be assigned to the (usually) noise value
 #' @param default an optional default value to give to all noises not specified in \code{fixed}
 #' @return a bi model object of the new model
-#' @family bi_model methods
 #' @seealso \code{\link{bi_model}}
 #' @examples
 #' model_file_name <- system.file(package="bi", "PZ.bi")
@@ -36,7 +34,6 @@ NULL
 #' Generates a version of the model where the proposal blocks are replaced by the prior blocks. This is useful for exploration of the likelihood surface.
 #'
 #' @return a bi model object of the new model
-#' @family bi_model methods
 #' @seealso \code{\link{bi_model}}
 #' @examples
 #' model_file_name <- system.file(package="bi", "PZ.bi")
@@ -53,7 +50,6 @@ NULL
 #' @param after line number after which to insert line(s)
 #' @param lines vector or line(s)
 #' @return the updated bi model
-#' @family bi_model methods
 #' @seealso \code{\link{bi_model}}
 #' @examples
 #' model_file_name <- system.file(package="bi", "PZ.bi")
@@ -69,7 +65,6 @@ NULL
 #' @param num line number(s) to update
 #' @param lines vector of iline(s)
 #' @return the updated bi model
-#' @family bi_model methods
 #' @seealso \code{\link{bi_model}}
 #' @examples
 #' model_file_name <- system.file(package="bi", "PZ.bi")
@@ -84,7 +79,6 @@ NULL
 #'
 #' @param num line number(s) to delete
 #' @return the updated bi model
-#' @family bi_model methods
 #' @seealso \code{\link{bi_model}}
 #' @examples
 #' model_file_name <- system.file(package="bi", "PZ.bi")
@@ -99,7 +93,6 @@ NULL
 #'
 #' @param filename name of the file to be written
 #' @return the return value of the \code{\link{writeLines}} call.
-#' @family bi_model methods
 #' @seealso \code{\link{bi_model}}
 #' @examples
 #' model_file_name <- system.file(package="bi", "PZ.bi")
