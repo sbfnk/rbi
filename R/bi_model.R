@@ -377,6 +377,19 @@ bi_model <- setRefClass("bi_model",
                              paste("sub", name, paste0("(", options, ")", "{"))), 
                       lines, "}", "}")
         },
+        get_vars = function(type) {
+          line_nbs <- grep(paste0("^[[:space:]]*", type, "[[:space:]]"), .self$model)
+          if (length(line_nbs) > 0) {
+            ## remove "noise" term
+            names <- sub(paste0("^[[:space:]]*", type, "[[:space:]]"), "",
+                         .self$model[line_nbs])
+            ## remove dimensions
+            names <- sub("\\[.*\\]", "", names)
+            names_vec <- unlist(strsplit(names, ","))
+            return(names_vec)
+          } else {
+            return(NA)
+          }
         }, 
         show = function() {
           if (!is.null(name)) {
