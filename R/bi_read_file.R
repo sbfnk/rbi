@@ -13,7 +13,6 @@
 #' @param quiet suppress progress bar
 #' @param flat flatten results
 #' @return list of results (or a data.frame, if \code{flat} has been set to TRUE)
-#' @import ncdf4 reshape2
 #' @export
 bi_read_file <- function(file, dims, missval.threshold, variables)
 {
