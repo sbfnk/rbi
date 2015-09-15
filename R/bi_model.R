@@ -140,11 +140,7 @@ bi_model <- setRefClass("bi_model",
 
           if (length(noise_line_nbs) > 0) {
             ## remove "noise" term
-            noises <- sub("^[[:space:]]*noise[[:space:]]", "",
-                          fix_model[noise_line_nbs])
-            ## remove dimensions
-            noises <- sub("\\[.*\\]", "", noises)
-            noise_vec <- unlist(strsplit(noises, ","))
+            noise_vec <- .self$get_vars("noise")
 
             unmatched_names <- setdiff(names(fixed), noise_vec)
             if (length(unmatched_names) > 0) {
@@ -183,54 +179,16 @@ bi_model <- setRefClass("bi_model",
           return(bi_model(lines = fix_model))
         },
         propose_prior = function() {
-          prior_model <- model
+          new_model <- bi_model(lines = .self$model)
 
           ## remove parameter proposal
-          propose_parameter <-
-            grep("sub[[:space:]]*proposal_parameter[[:space:]]", prior_model)
-          if (length(propose_parameter) > 0) {
-            end_propose_parameter <- propose_parameter - 1 +
-              min(grep("\\}", prior_model[propose_parameter:length(prior_model)]))
-            prior_model <- prior_model[-(propose_parameter:end_propose_parameter)]
-          }
+          prior_parameter <- new_model$get_block("parameter")
+          new_model$add_block("propose_parameter", lines = prior_parameter)
 
-          ## insert parameter prior
-          prior_parameter <- grep("sub[[:space:]]*parameter[[:space:]]",
-                                  prior_model)
-          if (length(prior_parameter) > 0) {
-            end_prior_parameter <- prior_parameter - 1 + 
-              min(grep("\\}", prior_model[prior_parameter:length(prior_model)]))
-            prior_model <-
-              c(prior_model[1:end_prior_parameter],
-                sub("sub[[:space:]]+parameter",
-                    "sub proposal_parameter",
-                    prior_model[prior_parameter:end_prior_parameter]),
-                prior_model[(end_prior_parameter + 1):length(prior_model)])
-          }
-          
-          ## remove initial proposal
-          propose_initial <-
-            grep("sub[[:space:]]*proposal_initial[[:space:]]", prior_model)
-          if (length(propose_initial) > 0) {
-            end_propose_initial <- propose_initial - 1 + 
-              min(grep("\\}", prior_model[propose_initial:length(prior_model)]))
-            prior_model <- prior_model[-(propose_initial:end_propose_initial)]
-          }
+          prior_initial <- new_model$get_block("initial")
+          new_model$add_block("propose_initial", lines = prior_initial)
 
-          ## insert initial prior
-          prior_initial <- grep("sub[[:space:]]*initial[[:space:]]", prior_model)
-          if (length(prior_initial) > 0) {
-            end_prior_initial <- prior_initial - 1 + 
-              min(grep("\\}", prior_model[prior_initial:length(prior_model)]))
-            prior_model <-
-              c(prior_model[1:end_prior_initial],
-                sub("sub[[:space:]]+initial",
-                    "sub proposal_initial",
-                    prior_model[prior_initial:end_prior_initial]),
-                prior_model[(end_prior_initial + 1):length(prior_model)])
-          }
-
-          return(bi_model(lines = prior_model))
+          return(new_model)
         },
         clean_model = function() {
           ## strip comments
@@ -361,6 +319,64 @@ bi_model <- setRefClass("bi_model",
           model_name <- sub("\\.bi$", "", basename(filename))
           
           writeLines(.self$get_lines(), con = filename, sep = "\n")
+        },
+        find_block = function(name) {
+          lines <- .self$model
+          sub_line <-
+            grep(paste0("[[:space:]]*sub[[:space:]]+", name, "[[:space:]]*\\{"),
+                 lines)
+          if (length(sub_line) == 1) {
+            lines[sub_line] <- sub(paste0("[[:space:]]*sub[[:space:]]+", name,
+                                          "[[:space:]]*\\{"), "", 
+                                   lines[sub_line])
+            open_braces <- 1
+            line <- sub_line - 1
+            while(open_braces > 0) {
+              line <- line + 1
+              braces <- grep("[\\{\\}]", lines[line], value = TRUE)
+              line_brace <- 1
+              while (open_braces > 0 & line_brace <= length(braces)) {
+                if (braces[line_brace] == "{")
+                  open_braces <- open_braces + 1
+                else (braces[line_brace] == "}")
+                  open_braces <- open_braces - 1
+              }
+            }
+            return(sub_line:line)
+          } else {
+            return(integer(0))
+          }
+        }, 
+        get_block = function(name) {
+          block <- .self$find_block(name)
+          if (length(block) > 0) {
+            lines <- .self$model[block]
+            lines[1] <-
+              sub(paste0("^[[:space:]]*sub[[:space:]]+", name, "[[:space:]]*\\{"),
+                  "", lines[1])
+            lines[length(lines)] <- sub("\\}[[:space:]]*$", "", lines[length(lines)])
+            empty_lines <- grep("^[[:space:]]*$", lines)
+            if (length(empty_lines) > 0) {
+              lines <- lines[-empty_lines]
+            }
+            return(lines)
+          } else {
+            return(NA)
+          }
+        }, 
+        remove_block = function(name) {
+          block <- find_block(name)
+          if (length(block) > 0) {
+            model <<- .self$model[-block]
+          }
+        },
+        add_block = function(name, options, lines) {
+          .self$remove_block(name)
+          model <<- c(.self$model[seq_len(length(.self$model) - 1)],
+                      ifelse(missing(options), paste("sub", name,"{"),
+                             paste("sub", name, paste0("(", options, ")", "{"))), 
+                      lines, "}", "}")
+        },
         }, 
         show = function() {
           if (!is.null(name)) {
