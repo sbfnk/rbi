@@ -21,7 +21,7 @@ bi_read_file <- function(file, dims, missval.threshold, variables)
   if (typeof(file) == "character"){
     nc <- open.ncdf(tools::file_path_as_absolute(file))
   } else {
-    nc <- resultfile
+    nc <- file
   }
   
   for (var in nc$var) {
@@ -42,7 +42,7 @@ bi_read_file <- function(file, dims, missval.threshold, variables)
       
       if (prod(dim(all_values)) > 1) {
         ## more than just one value
-        mav <- data.frame(melt(all_values, varnames = c(dim_names)))
+        mav <- data.frame(melt(all_values, varnames = rev(dim_names)))
       } else {
         ## fixed value
         mav <- data.frame(value = all_values)
