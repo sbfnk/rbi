@@ -391,6 +391,9 @@ bi_model <- setRefClass("bi_model",
           } else {
             return(NA)
           }
+        },
+        clone = function() {
+          return(bi_model(lines = .self$model))
         }, 
         show = function() {
           if (!is.null(name)) {
