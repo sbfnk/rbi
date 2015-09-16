@@ -49,12 +49,13 @@ bi_wrapper <- setRefClass("bi_wrapper",
       fields = c("client", "config", "global_options", "path_to_libbi", 
                  "model_file_name", "model_folder", "rel_model_file_name", 
                  "base_command_string", "command", "command_dryparse", "result",
-                 "working_folder", "output_file_name"),
+                 "working_folder", "output_file_name", "run_flag"),
       methods = list(
         initialize = function(client, model, model_file_name,
                               config, global_options, path_to_libbi,
                               working_folder, result, run, ...){
           result <<- list()
+          run_flag <<- FALSE
           if (missing(client)){
             print("you didn't provide a 'client' to bi_wrapper, it's kinda weird; default to 'sample'.")
             client <<- "sample"
@@ -173,11 +174,16 @@ bi_wrapper <- setRefClass("bi_wrapper",
           if (!missing(stdoutput_file_name)){
             libbi_result["stdoutput_file_name"] = absolute_path(filename=stdoutput_file_name, dirname=.self$model_file_name)
           }
+          run_flag <<- TRUE
           result <<- libbi_result
         },
         rerun = function(add_options, verbose){
           if (missing(add_options)){
             add_options <- ""
+          if (!run_flag) {
+            stop("The model should be run before running 'rerun'")
+          }
+          
           } else {
             add_options <- option_string(add_options)
           }
