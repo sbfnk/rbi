@@ -370,7 +370,7 @@ bi_model <- setRefClass("bi_model",
             model <<- .self$model[-block]
           }
         },
-        add_block = function(name, options, lines) {
+        add_block = function(name, lines, options) {
           .self$remove_block(name)
           model <<- c(.self$model[seq_len(length(.self$model) - 1)],
                       ifelse(missing(options), paste("sub", name,"{"),
