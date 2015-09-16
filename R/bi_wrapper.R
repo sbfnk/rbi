@@ -158,7 +158,7 @@ bi_wrapper <- setRefClass("bi_wrapper",
           if (verbose) {
             stdoutput_redir_name <- ""
           } else {
-            stdoutput_redir_name <- paste("2>", stdoutput_file_name)
+            stdoutput_redir_name <- paste(">", stdoutput_file_name, "2>&1")
           }
           cdcommand <- paste("cd", .self$working_folder)
           launchcommand <- paste(.self$base_command_string, options,
