@@ -53,7 +53,7 @@ bi_wrapper <- setRefClass("bi_wrapper",
       methods = list(
         initialize = function(client, model, model_file_name,
                               config, global_options, path_to_libbi,
-                              working_folder, result, run, ...){
+                              working_folder, run, ...){
           result <<- list()
           run_flag <<- FALSE
           if (missing(client)){
