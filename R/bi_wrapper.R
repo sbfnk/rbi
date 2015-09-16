@@ -125,7 +125,7 @@ bi_wrapper <- setRefClass("bi_wrapper",
             }
           } else {
             # check that the user provided a path to an existing file
-            path_to_libbi <<- tools::file_path_as_absolute(.self$path_to_libbi)
+            path_to_libbi <<- tools::file_path_as_absolute(path_to_libbi)
           }
           base_command_string <<- paste(.self$path_to_libbi, .self$client,
                                         "--model-file", .self$rel_model_file_name,
