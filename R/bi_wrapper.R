@@ -203,6 +203,25 @@ bi_wrapper <- setRefClass("bi_wrapper",
           system(.self$command_dryparse, intern = TRUE)
           if (verbose) print("... LibBi has finished!")
         },
+        clone = function(model, ...) {
+          if (missing(model)) {
+            new_wrapper <- bi_wrapper(client = .self$client,
+                                      model_file_name = .self$model_file_name,
+                                      config = .self$config,
+                                      global_options = .self$global_options,
+                                      path_to_libbi = .self$path_to_libbi,
+                                      working_folder = .self$working_folder,
+                                      ...)
+          } else {
+            new_wrapper <- bi_wrapper(client = .self$client,
+                                      model = model,
+                                      config = .self$config,
+                                      global_options = .self$global_options,
+                                      path_to_libbi = .self$path_to_libbi,
+                                      working_folder = .self$working_folder,
+                                      ...)
+          }
+        }, 
         show = function(){
           cat("Wrapper around LibBi\n")
           cat("* client: ", .self$client, "\n")
