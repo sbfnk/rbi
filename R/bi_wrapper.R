@@ -95,9 +95,10 @@ bi_wrapper <- setRefClass("bi_wrapper",
             config <<- paste0(" @", absolute_path(filename=config, dirname=model_folder))
           }
           if (missing(global_options))
-            global_options <<- ""
-          else 
-            global_options <<- option_string(global_options)
+            global_options <<- list()
+          else
+            global_options <<- global_options
+
           if (missing(path_to_libbi)){
             # That's a bit tricky then because we really need to know where libbi is.
             # Maybe the system knows where libbi is
@@ -128,20 +129,22 @@ bi_wrapper <- setRefClass("bi_wrapper",
           }
           base_command_string <<- paste(.self$path_to_libbi, .self$client,
                                         "--model-file", .self$rel_model_file_name,
-                                        .self$config,
-                                        .self$global_options)
+                                        .self$config)
           if (!missing(run) & run == TRUE) {
             .self$run(...)
           }
         },
         run = function(add_options, output_file_name, stdoutput_file_name, verbose){
-          if (missing(add_options))
-            add_options <- ""
-          else
-            add_options <- option_string(add_options)
-
-          if (!missing(verbose) && verbose == TRUE)
-            add_options <- paste("--verbose", add_options)
+          if (missing(add_options)) {
+            options <- option_string(global_options)
+          } else {
+            options <- option_string(global_options, add_options)
+          }
+            
+          if (missing(verbose)) verbose <- FALSE
+          
+          if (verbose)
+            options <- paste("--verbose", options)
 
           if (missing(output_file_name)){
             output_file_name <<- tempfile(pattern="output_file_name", fileext=".nc")
@@ -158,7 +161,7 @@ bi_wrapper <- setRefClass("bi_wrapper",
             stdoutput_redir_name <- paste("2>", stdoutput_file_name)
           }
           cdcommand <- paste("cd", .self$working_folder)
-          launchcommand <- paste(.self$base_command_string, add_options,
+          launchcommand <- paste(.self$base_command_string, options,
                                  "--output-file", .self$output_file_name)
           if (verbose) print("Launching LibBi with the following commands:")
           if (verbose)
@@ -178,19 +181,21 @@ bi_wrapper <- setRefClass("bi_wrapper",
           result <<- libbi_result
         },
         rerun = function(add_options, verbose){
-          if (missing(add_options)){
-            add_options <- ""
           if (!run_flag) {
             stop("The model should be run before running 'rerun'")
           }
           
+          if (missing(add_options)) {
+            options <- option_string(global_options)
           } else {
-            add_options <- option_string(add_options)
+            options <- option_string(global_options, add_options)
           }
-          if (!missing(verbose) && verbose == TRUE)
-            add_options <- paste("--verbose", add_options)
+
+          if (missing(verbose)) verbose <- FALSE
+
+          if (verbose) options <- paste("--verbose", options)
           cdcommand <- paste("cd", .self$working_folder)
-          launchcommand <- paste(.self$base_command_string, add_options,
+          launchcommand <- paste(.self$base_command_string, options,
                                  "--output-file", .self$output_file_name)
           command_dryparse <<- paste(c(cdcommand, paste(launchcommand, "--dry-parse")), collapse = ";")
           if (verbose) print("Launching LibBi with the following commands:")
