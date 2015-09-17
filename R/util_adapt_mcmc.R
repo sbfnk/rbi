@@ -11,10 +11,11 @@
 #' @param scale scale multiplier for the proposal
 #' @param add_options list of additional options
 #' @param samples number of samples to generate each iteration
+#' @param max_iter maximum of iterations
 #' @param ... parameters for bi_wrapper$run
-#' @return a bi_model with the desired proposal distribution
+#' @return a \code{bi_wrapper} with the desired proposal distribution
 #' @export
-adapt_mcmc <- function(wrapper, min = 0, max = 1, scale, add_options, samples, ...) {
+adapt_mcmc <- function(wrapper, min = 0, max = 1, scale, add_options, samples, max_iter = 10, ...) {
 
   if (missing(add_options)) {
     add_options <- list()
@@ -32,15 +33,26 @@ adapt_mcmc <- function(wrapper, min = 0, max = 1, scale, add_options, samples, .
 
   accRate <- 0
   add_options[["nsamples"]] <- samples
+  add_options[["init-file"]] <- init_file
+  add_options[["init-np"]] <- init_np
   adapt_wrapper <-
     wrapper$clone(model = model, run = TRUE, add_options = add_options, ...)
   add_options[["init-file"]] <- adapt_wrapper$output_file_name
   add_options[["init-np"]] <- samples - 1
+  iter <- 1
   while (min(accRate) < min | max(accRate) > max) {
-    model <- output_to_proposal(adapt_wrapper, scale = scale)
-    adapt_wrapper$run(add_options = add_options, ...)
+    model <- output_to_proposal(adapt_wrapper, scale)
+    add_options[["init-file"]] <- adapt_wrapper$output_file_name
+    adapt_wrapper <-
+      adapt_wrapper$clone(model = model, run = TRUE, add_options = add_options, ...)
     mcmc_obj <- mcmc(get_traces(adapt_wrapper))
     accRate <- 1 - rejectionRate(mcmc_obj)
+    if (iter == max_iter) {
+      stop("Maximum of iterations reached")
+    } else {
+      iter <- iter + 1
+    }
   }
-  return(model)
+  
+  return(adapt_wrapper)
 }
