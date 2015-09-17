@@ -10,7 +10,7 @@
 #' @export
 get_traces <- function(wrapper, ...) {
 
-  model <- bi_model(wrapper$model_file_name)
+  model <- wrapper$model
   res <- bi_read_file(wrapper$output_file_name, ...)
 
   params <- model$get_vars("param")

@@ -11,7 +11,7 @@
 #' @export
 output_to_proposal <- function(wrapper, scale) {
 
-  model <- bi_model(wrapper$model_file_name)
+  model <- wrapper$model
   params <- model$get_vars("param")
   res <- bi_read_file(wrapper$output_file_name, variables = params)
 

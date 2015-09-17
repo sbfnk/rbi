@@ -47,13 +47,13 @@ NULL
 
 bi_wrapper <- setRefClass("bi_wrapper",
       fields = c("client", "config", "global_options", "path_to_libbi", 
-                 "model_file_name", "model_folder", "rel_model_file_name", 
+                 "model", "model_file_name", "model_folder", 
                  "base_command_string", "command", "command_dryparse", "result",
                  "working_folder", "output_file_name", "run_flag"),
       methods = list(
         initialize = function(client, model, model_file_name,
                               config, global_options, path_to_libbi,
-                              working_folder, run, ...){
+                              working_folder, run = FALSE, overwrite = FALSE, ...){
           result <<- list()
           run_flag <<- FALSE
           if (missing(client)){
@@ -62,37 +62,50 @@ bi_wrapper <- setRefClass("bi_wrapper",
           } else {
             client <<- client
           }
-          if (missing(model)){
-            if (!missing(model_file_name)) {
-              warning("'model_file_name' is deprecated, use 'model' instead")
-              model <- model_file_name
-            } else
+          if (missing(model) && missing(model_file_name)) {
               stop("you need to provide 'model', either a 'bi_model' object or a path to a valid model file in LibBi's syntax")
           }
 
-          if (is.character(model)){
-            model_file_name <<- absolute_path(model_file_name)
-          } else if (class(model) == "bi_model"){
-            model_file_name <<- tempfile(pattern=model$name, fileext=".bi")
-            model$write_model_file(.self$model_file_name)
+          if (missing(model_file_name)){
+            model_file_name <<- ""
+            model_folder <<- ""
+            model <<- model
           } else {
-            stop("'model_file' must be either a character vector or a 'bi_model' object")
+            model_file_name <<- model_file_name
+            model_folder <<- dirname(model_file_name)
+            if (missing(model)) {
+              model <<- bi_model(model_file_name)
+            } else {
+              if (file.exists(model_file_name)) {
+                if (overwrite) {
+                  model$write_modeL_file(model_file_name)
+                } else {
+                  stop("existing 'model_file_name' and 'model' given,  but overwrite is FALSE. Cowardly refusing to overwrite ", model_file_name)
+                }
+              } else {
+                model$write_modeL_file(model_file_name)
+              }
+            }
           }
 
-          model_folder <<- dirname(.self$model_file_name)
-          rel_model_file_name <<- basename(.self$model_file_name)
-          
           if (missing(working_folder)){
-            working_folder <<- model_folder
+            if (model_folder == "") {
+              working_folder <<- tempdir()
+            } else {
+              working_folder <<- model_folder
+            }
           } else {
             working_folder <<- working_folder
-            # then we have to change rel_model_file_name again
-            rel_model_file_name <<- .self$model_file_name
           }
+
           if (missing(config)){
             config <<- ""
           } else {
-            config <<- paste0(" @", absolute_path(filename=config, dirname=model_folder))
+            if (model_folder == "") {
+              config <<- config
+            } else {
+              config <<- paste0(" @", absolute_path(filename=config, dirname=model_folder))
+            }
           }
           if (missing(global_options))
             global_options <<- list()
@@ -128,9 +141,8 @@ bi_wrapper <- setRefClass("bi_wrapper",
             path_to_libbi <<- tools::file_path_as_absolute(path_to_libbi)
           }
           base_command_string <<- paste(.self$path_to_libbi, .self$client,
-                                        "--model-file", .self$rel_model_file_name,
                                         .self$config)
-          if (!missing(run) & run == TRUE) {
+          if (run == TRUE) {
             .self$run(...)
           }
         },
@@ -160,9 +172,24 @@ bi_wrapper <- setRefClass("bi_wrapper",
           } else {
             stdoutput_redir_name <- paste(">", stdoutput_file_name, "2>&1")
           }
+
+          if (.self$model_file_name == "") {
+            run_model_file <- tempfile(pattern=model$name, fileext=".bi")
+            model$write_model_file(run_model_file)
+          } else {
+            run_model_file <- .self$model_file_name
+          }
+
+          if (.self$model_folder == .self$working_folder) {
+            rel_model_file <- basename(run_model_file)
+          } else {
+            rel_model_file <- run_model_file
+          }
+          
           cdcommand <- paste("cd", .self$working_folder)
           launchcommand <- paste(.self$base_command_string, options,
-                                 "--output-file", .self$output_file_name)
+                                 "--output-file", .self$output_file_name,
+                                 "--model-file", rel_model_file)
           if (verbose) print("Launching LibBi with the following commands:")
           if (verbose)
             print(paste(c(cdcommand, launchcommand, stdoutput_redir_name),
@@ -194,9 +221,24 @@ bi_wrapper <- setRefClass("bi_wrapper",
           if (missing(verbose)) verbose <- FALSE
 
           if (verbose) options <- paste("--verbose", options)
+
+          if (.self$model_file_name == "") {
+            run_model_file <- tempfile(pattern=model$name, fileext=".bi")
+            model$write_model_file(run_model_file)
+          } else {
+            run_model_file <- .self$model_file_name
+          }
+
+          if (.self$model_folder == .self$working_folder) {
+            rel_model_file <- basename(run_model_file)
+          } else {
+            rel_model_file <- run_model_file
+          }
+          
           cdcommand <- paste("cd", .self$working_folder)
           launchcommand <- paste(.self$base_command_string, options,
-                                 "--output-file", .self$output_file_name)
+                                 "--output-file", .self$output_file_name,
+                                 "--model-file", rel_model_file)
           command_dryparse <<- paste(c(cdcommand, paste(launchcommand, "--dry-parse")), collapse = ";")
           if (verbose) print("Launching LibBi with the following commands:")
           if (verbose) print(.self$command_dryparse)
@@ -226,7 +268,9 @@ bi_wrapper <- setRefClass("bi_wrapper",
           cat("Wrapper around LibBi\n")
           cat("* client: ", .self$client, "\n")
           cat("* path to working folder:", .self$working_folder, "\n")
-          cat("* path to model file:", .self$model_file_name, "\n")
+          if (.self$model_file_name != "") {
+            cat("* path to model file:", .self$model_file_name, "\n")
+          }
           cat("* path to LibBi binary:", .self$path_to_libbi, "\n")
         }
         )
