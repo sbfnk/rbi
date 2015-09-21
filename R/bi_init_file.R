@@ -12,7 +12,7 @@
 #' @param variables a \code{list} object, which names should be the variable names and values should
 #' be vectors of equal length (or simply one value per key)
 #' @return None, but creates a NetCDF file at the specified path.
-#' @export
+#' @export
 bi_init_file <- function(filename, variables){
   filename <- normalizePath(filename, "/", FALSE)
   if (length(variables) == 0){
