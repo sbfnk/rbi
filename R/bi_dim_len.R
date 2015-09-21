@@ -8,8 +8,8 @@
 #' @export
 #' 
 bi_dim_len <- function(filename, dim){
-  ncfile <-  open.ncdf(tools::file_path_as_absolute(filename), verbose = FALSE)  
+  ncfile <-  nc_open(tools::file_path_as_absolute(filename), verbose = FALSE)  
   len <- ncfile$dim[[which(names(ncfile$dim) == dim)]]$len
-  close.ncdf(ncfile)
+  nc_close(ncfile)
   return(len)
 }

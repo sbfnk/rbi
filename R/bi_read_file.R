@@ -6,7 +6,7 @@
 #' The file can be specified as a string to the filepath, in which
 #' case a NetCDF connection is opened, or directly as a NetCDF connection.
 #' 
-#' @param file either a path to a NetCDF file, or a NetCDF connection created using open.ncdf(filename)
+#' @param file either a path to a NetCDF file, or a NetCDF connection created using \code{nc_open}
 #' @param dims factors for dimensions
 #' @param missval.threshold upper threshold for the likelihood
 #' @param variables only extract given variables (for space saving)
@@ -19,7 +19,7 @@ bi_read_file <- function(file, dims, missval.threshold, variables)
   res <- list()
 
   if (typeof(file) == "character"){
-    nc <- open.ncdf(tools::file_path_as_absolute(file))
+    nc <- nc_open(tools::file_path_as_absolute(file))
   } else {
     nc <- file
   }
@@ -68,7 +68,7 @@ bi_read_file <- function(file, dims, missval.threshold, variables)
     }
   }
 
-  if (typeof(file) == "character") close.ncdf(nc)
+  if (typeof(file) == "character") nc_close(nc)
 
   return(res)
 }

@@ -59,9 +59,9 @@ read_var_flexi_simulator <- function(nc, name, coord, ps, ts){
     ts = 1:T
   }
   # read
-  values = get.var.ncdf(nc, name)
-  len = get.var.ncdf(ncfile2, "len")
-  start = get.var.ncdf(ncfile2, "start")
+  values = ncvar_get(nc, name)
+  len = ncvar_get(ncfile2, "len")
+  start = ncvar_get(ncfile2, "start")
   
   variable = list()
   counter = 0

@@ -12,7 +12,7 @@
 bi_file_summary <- function(filename){
   cat("Summary of file", filename, "\n")
   print(file.info(tools::file_path_as_absolute(filename))[,c("mtime")])
-  ncfile = open.ncdf(tools::file_path_as_absolute(filename), verbose = FALSE)
+  ncfile <- nc_open(tools::file_path_as_absolute(filename), verbose = FALSE)
   print(ncfile)
-  close.ncdf(ncfile)
+  nc_close(ncfile)
 }

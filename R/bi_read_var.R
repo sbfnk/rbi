@@ -6,7 +6,7 @@
 #' The file can be specified as a string to the filepath, in which
 #' case a NetCDF connection is opened, or directly as a NetCDF connection.
 #' 
-#' @param resultfile either a path to a NetCDF file, or a NetCDF connection created using open.ncdf(filename)
+#' @param resultfile either a path to a NetCDF file, or a NetCDF connection created using \code{nc_open}
 #' @param name name of the variable to read (use \code{\link{bi_file_summary}} to learn about the variable names of a specific file)
 #' @param coord dimension indices (not implemented yet)
 #' @param ts time indices (not implemented yet)
@@ -17,7 +17,7 @@ bi_read_var <- function(resultfile, name, coord, ps, ts){
   # if the result file is provided as a string representing the path
   # then open a ncdf connection
   if (typeof(resultfile) == "character"){
-    nc <- open.ncdf(tools::file_path_as_absolute(resultfile))
+    nc <- nc_open(tools::file_path_as_absolute(resultfile))
   } else {
     nc <- resultfile
   }
@@ -33,7 +33,7 @@ bi_read_var <- function(resultfile, name, coord, ps, ts){
   if (missing(ts)){
     ts <- c()
   }
-  global_attributes <- nc_get_attributes(nc)
+  global_attributes <- ncatt_get(nc, 0)
   if (nc_var_has_dim(nc, name, "nrp")){
     myfunction <- read_var_flexi_simulator
   } else {
@@ -50,7 +50,7 @@ bi_read_var <- function(resultfile, name, coord, ps, ts){
   }
   X <- myfunction(nc, name, coord, ps, ts)
   if (typeof(resultfile) == "character"){
-    close.ncdf(nc)
+    nc_close(nc)
   }
   return(X)
 }

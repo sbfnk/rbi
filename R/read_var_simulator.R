@@ -56,7 +56,7 @@ read_var_simulator <- function(nc, name, coord, ps, ts){
   } else {
     T = 1
   }
-  values = get.var.ncdf(nc, name)
+  values = ncvar_get(nc, name)
 #   if (length(dim(values)) < 2){
   return(values)
 #   } else {

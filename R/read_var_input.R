@@ -57,7 +57,7 @@ read_var_input <- function(nc, name, coord, ps, ts){
 #     ts = 1:T
 #   }
   # read
-  values = get.var.ncdf(nc, name)
+  values = ncvar_get(nc, name)
   if (is.null(dim(values))){
     return(values)
   } else {
