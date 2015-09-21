@@ -28,5 +28,4 @@
 #'  demo(LG_filtering.R)
 #'  demo(PZ_PMMH.R)
 #'
-#' @useDynLib bi
 NULL
