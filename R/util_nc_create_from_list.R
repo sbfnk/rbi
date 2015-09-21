@@ -8,19 +8,33 @@
 #' if it already exists.
 #' @param variables a \code{list}
 #' @details
-#' The list must follow the following rules. Each element of the list must itself be a list with two keys.
-#' The first key must be named "values" and contains a numeric vector. The second key must be named "dimension"
-#' and contains a string giving the dimension name. The name of the element itself is used to create the corresponding
-#' variable in the NetCDF file.
-#' @note
-#' Two elements of the given list can possibly have the same dimension name.
+#'
+#' The list must follow the following rules. Each element of the list
+#' must itself be one of:
+#'
+#' 1) a list with two keys; the first key must be named "values" and
+#' contains a numeric vector; the second key must be named "dimension"
+#' and contains a string giving the dimension name.
+#'
+#' 2) a data frame with a "value" column and any number of other
+#' columns indicating one or more dimensions
+#'
+#' 3) a numeric vector of length one, with no dimensions
+#'
+#' The name of the list elements itself is used to create the
+#' corresponding variable in the NetCDF file.
+#' 
+#' @note Two elements of the given list can possibly have the same
+#'   dimension name.
 #' @return None, but creates a NetCDF file at the specified path.
 #' @examples
 #' filename <- tempfile(pattern="dummy", fileext=".nc")
 #' a <- list(values = 1:3, dimension = "dim_a")
 #' b <- list(values = 1:5, dimension = "dim_b")
 #' c <- list(values = 5:9, dimension = "dim_b")
-#' variables <- list(a=a, b=b, c=c)
+#' d <- 3
+#' e <- data.frame(dim_a = rep(1:3, time = 2), dim_c = rep(1:2, each = 3), value = 1:6)
+#' variables <- list(a=a, b=b, c=c, d=d, e=e)
 #' netcdf_create_from_list(filename, variables)
 #' bi_file_ncdump(filename)
 #' @export
@@ -29,34 +43,78 @@ netcdf_create_from_list <- function(filename, variables){
   if (class(variables) != "list"){
     stop("'variables' should be a list")
   }
-  dim_size <- list()
+  if (is.null(names(variables)) || any(names(variables) == "")) {
+    stop("'variables' must be named")
+  }
+  dims <- list()
+  vars <- list()
+  values <- list()
   for (name in names(variables)){
     element <- variables[[name]]
-    if (class(element) != "list"){
-      stop("each element of 'variables' should itself be a list")
-    }
-    element_names <- names(element)
-    if ("dimension" %in% element_names){
-      if (class(element[["dimension"]]) != "character"){
-        stop("the key 'dimension' of each element of 'variables' should be of type 'character'")
+    if (class(element) == "list") {
+      element_names <- names(element)
+      if ("dimension" %in% element_names){
+        if (class(element[["dimension"]]) != "character"){
+          stop("the key 'dimension' of each element of 'variables' should be of type 'character'")
+        }
+      } else {
+        stop("if an element of 'variables' is a list, it should have an element called 'dimension'")
       }
-    } else {
-      stop("each element of 'variables' should have an element called 'dimension'")
-    }
-    if ("values" %in% element_names){
-      if (!(class(element[["values"]]) %in% c("numeric", "integer"))){
-        stop("the key 'values' of each element of 'variables' should be of type 'numeric' or 'integer'")
+      if ("values" %in% element_names){
+        if (!(class(element[["values"]]) %in% c("numeric", "integer"))){
+          stop("the key 'values' of each element of 'variables' should be of type 'numeric' or 'integer'")
+        }
+      } else {
+        stop("each element of 'variables' should have an element called 'values'")
       }
-    } else {
-      stop("each element of 'variables' should have an element called 'values'")
-    }
-    if (element[["dimension"]] %in% names(dim_size)){
-      if (length(element[["values"]]) != dim_size[[element[["dimension"]]]]){
-        stop("two elements of 'variables' with same dimension name should have equal size")
+      if (element[["dimension"]] %in% names(dims)){
+        if (length(element[["values"]]) != dims[[element[["dimension"]]]]$len){
+          stop("two elements of 'variables' with same dimension name should have equal size")
+        }
+      } else {
+        new_dim <- ncdim_def(element[["dimension"]], "", seq_along(element[["values"]]) - 1)
+        dims[[element[["dimension"]]]] <- new_dim
       }
+      vars[[name]] <- ncvar_def(name, "", dims[[element[["dimension"]]]])
+      values[[name]] <- element[["values"]]
+    } else if (length(intersect(class(element), c("data.frame"))) > 0) {
+      if (!("value" %in% colnames(element))) {
+        stop("any elements of 'variables' that are a data frame must have a 'value' column")
+      }
+      var_dims <- list()
+      for (col in rev(setdiff(colnames(element), "value"))) {
+        dim_values <- seq_along(unique(element[, col])) - 1
+        if (col %in% names(dims)) {
+          if (length(dim_values) != dims[[col]]$len){
+            stop("two elements of 'variables' with same dimension name (", col, ") should have equal size")
+          }
+        } else {
+          new_dim <- ncdim_def(col, "", dim_values)
+          dims[[col]] <- new_dim
+        }
+        var_dims[[col]] <- dims[[col]]
+      }
+      vars[[name]] <- ncvar_def(name, "", var_dims)
+      values[[name]] <- element[do.call(order, element[rev(names(var_dims))]), "value"]
+    } else if (class(element) %in% c("numeric", "integer")) {
+      if (length(element) > 1) {
+        stop("any elements of 'variables' that are a vector must be of length 1")
+      }
+      vars[[name]] <- ncvar_def(name, "", list())
+      values[[name]] <- element
     } else {
-      dim_size[[element[["dimension"]]]] <- length(element[["values"]])
+      stop("each element of 'variables' should itself be a list or a data frame, or a numeric vector of length 1")
     }
   }
-  nc_create_netcdf_from_list_(filename, variables)
+          
+  nc <- nc_create(filename, vars)
+
+  for (name in names(vars)) {
+    ncvar_put(nc, vars[[name]], values[[name]])
+  }
+
+  nc_close(nc)
+          
+  ## nc_create_netcdf_from_list_(filename, variables)
+  
 }
