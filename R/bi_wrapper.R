@@ -248,7 +248,7 @@ bi_wrapper <- setRefClass("bi_wrapper",
         clone = function(model, ...) {
           if (missing(model)) {
             new_wrapper <- bi_wrapper(client = .self$client,
-                                      model_file_name = .self$model_file_name,
+                                      model = .self$model,
                                       config = .self$config,
                                       global_options = .self$global_options,
                                       path_to_libbi = .self$path_to_libbi,
