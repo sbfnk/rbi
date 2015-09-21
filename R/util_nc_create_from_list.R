@@ -51,7 +51,7 @@ netcdf_create_from_list <- function(filename, variables){
   values <- list()
   for (name in names(variables)){
     element <- variables[[name]]
-    if (class(element) == "list") {
+    if ("list" %in% class(element)) {
       element_names <- names(element)
       if ("dimension" %in% element_names){
         if (class(element[["dimension"]]) != "character"){
@@ -96,7 +96,7 @@ netcdf_create_from_list <- function(filename, variables){
       }
       vars[[name]] <- ncvar_def(name, "", var_dims)
       values[[name]] <- element[do.call(order, element[rev(names(var_dims))]), "value"]
-    } else if (class(element) %in% c("numeric", "integer")) {
+    } else if (length(intersect(class(element), c("numeric", "integer"))) > 0) {
       if (length(element) > 1) {
         stop("any elements of 'variables' that are a vector must be of length 1")
       }
