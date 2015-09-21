@@ -21,7 +21,10 @@ output_to_proposal <- function(wrapper, scale) {
     scale_string <- paste0(scale, " * ")
   }
 
-  param_sd <- sapply(params, function(p) {sd(res[[p]]$value)})
+  param_sd <- sapply(params, function(p) {
+    ifelse(length(res[[p]]) == 1, res[[p]], sd(res[[p]]$value))
+  })
+  
   param_bounds <- model$get_block("parameter")
 
   proposal_lines <- unname(sapply(names(param_sd), function(param) {
