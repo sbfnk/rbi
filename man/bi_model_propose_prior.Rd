@@ -16,12 +16,5 @@ PZ$propose_prior()
 }
 \seealso{
 \code{\link{bi_model}}
-
-Other bi_model.methods: \code{\link{bi_model_delete}};
-  \code{\link{bi_model_fix_noise}};
-  \code{\link{bi_model_insert}};
-  \code{\link{bi_model_update}};
-  \code{\link{bi_model_write_model_file}};
-  \code{\link{bi_model}}
 }
 

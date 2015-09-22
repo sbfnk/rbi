@@ -21,12 +21,5 @@ PZ$update(23, "alpha ~ normal(mu, sigma)")
 }
 \seealso{
 \code{\link{bi_model}}
-
-Other bi_model.methods: \code{\link{bi_model_delete}};
-  \code{\link{bi_model_fix_noise}};
-  \code{\link{bi_model_insert}};
-  \code{\link{bi_model_propose_prior}};
-  \code{\link{bi_model_write_model_file}};
-  \code{\link{bi_model}}
 }
 
