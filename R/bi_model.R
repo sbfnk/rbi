@@ -135,7 +135,9 @@ bi_model <- setRefClass("bi_model",
             
           fix_model <- model
 
-          noise_line_nbs <- grep("^[[:space:]]*noise[[:space:]]", fix_model)
+          noise_str <- paste0("^[[:space:]]*noise[[:space:]]+(",
+                              paste(names(fixed), collapse = "|"), ")")
+          noise_line_nbs <- grep(noise_str, fix_model)
           indent <- sub("^([[:space:]]*).*$", "\\1", fix_model[noise_line_nbs[1]])
 
           if (length(noise_line_nbs) > 0) {
@@ -163,7 +165,7 @@ bi_model <- setRefClass("bi_model",
                                fix_model[(noise_line_nbs[1]):length(fix_model)])
                 
                 this_noise_assignment <-
-                  grep(paste0(noise, "[[:space:]]*\\[[^]]*\\][[:space:]]*~"),
+                  grep(paste0(noise, "[[:space:]]*(\\[[^]]*\\])?[[:space:]]*~"),
                        fix_model)
                 if (length(this_noise_assignment) > 0) {
                   fix_model <- fix_model[-this_noise_assignment]
