@@ -88,7 +88,7 @@ bi_wrapper <- setRefClass("bi_wrapper",
             }
           }
 
-          if (missing(working_folder)){
+          if (missing(working_folder) | is.null(working_folder)){
             if (model_folder == "") {
               working_folder <<- tempdir()
             } else {
@@ -159,12 +159,14 @@ bi_wrapper <- setRefClass("bi_wrapper",
             options <- paste("--verbose", options)
 
           if (missing(output_file_name)){
-            output_file_name <<- tempfile(pattern="output_file_name", fileext=".nc")
+            output_file_name <<- tempfile(pattern="output_file_name", fileext=".nc",
+                                          tmpdir=working_folder)
           } else {
             output_file_name <<- output_file_name 
           }
           if (missing(stdoutput_file_name) && !verbose) {
-            stdoutput_file_name <- tempfile(pattern="output", fileext=".txt")
+            stdoutput_file_name <- tempfile(pattern="output", fileext=".txt",
+                                            tmpdir=working_folder)
           }
 
           if (verbose) {
@@ -174,7 +176,8 @@ bi_wrapper <- setRefClass("bi_wrapper",
           }
 
           if (.self$model_file_name == "") {
-            run_model_file <- tempfile(pattern=model$name, fileext=".bi")
+            run_model_file <- tempfile(pattern=model$name, fileext=".bi",
+                                       tmpdir=working_folder)
             model$write_model_file(run_model_file)
           } else {
             run_model_file <- .self$model_file_name
@@ -223,7 +226,8 @@ bi_wrapper <- setRefClass("bi_wrapper",
           if (verbose) options <- paste("--verbose", options)
 
           if (.self$model_file_name == "") {
-            run_model_file <- tempfile(pattern=model$name, fileext=".bi")
+            run_model_file <- tempfile(pattern=model$name, fileext=".bi",
+                                       tmpdir=working_folder)
             model$write_model_file(run_model_file)
           } else {
             run_model_file <- .self$model_file_name
