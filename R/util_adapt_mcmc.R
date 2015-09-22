@@ -32,7 +32,15 @@ adapt_mcmc <- function(wrapper, min = 0, max = 1, scale, add_options, samples, m
   init_np <- bi_dim_len(init_file, "np") - 1
 
   accRate <- 0
-  add_options[["nsamples"]] <- samples
+  if (missing(samples)) {
+    if ("nsamples" %in% names(wrapper$global_options)) {
+      samples <- wrapper$global_options[["nsamples"]]
+    } else {
+      stop("if 'nsamples' is not a global option, must provide 'samples'")
+    }
+  } else {
+    add_options[["nsamples"]] <- samples
+  }
   add_options[["init-file"]] <- init_file
   add_options[["init-np"]] <- init_np
   adapt_wrapper <-
@@ -40,13 +48,15 @@ adapt_mcmc <- function(wrapper, min = 0, max = 1, scale, add_options, samples, m
   add_options[["init-file"]] <- adapt_wrapper$output_file_name
   add_options[["init-np"]] <- samples - 1
   iter <- 1
-  while (min(accRate) < min | max(accRate) > max) {
+  while (length(accRate) == 0 | min(accRate) < min | max(accRate) > max) {
     model <- output_to_proposal(adapt_wrapper, scale)
     add_options[["init-file"]] <- adapt_wrapper$output_file_name
     adapt_wrapper <-
       adapt_wrapper$clone(model = model, run = TRUE, add_options = add_options, ...)
     mcmc_obj <- mcmc(get_traces(adapt_wrapper))
     accRate <- 1 - rejectionRate(mcmc_obj)
+    accRate <- accRate[accRate > 0]
+
     if (iter == max_iter) {
       stop("Maximum of iterations reached")
     } else {
