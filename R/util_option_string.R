@@ -27,7 +27,7 @@ option_string <- function(...){
                                paste0("--enable-", option)
                              else
                                paste0("--disable-", option)
-                           } else if (option == "dry")
+                           } else if (option == "dry") {
                              paste0("--dry-", list_options[[option]])
                            } else {
                              paste0("--", option, " ",
