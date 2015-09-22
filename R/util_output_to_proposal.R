@@ -22,27 +22,31 @@ output_to_proposal <- function(wrapper, scale) {
   }
 
   param_sd <- sapply(params, function(p) {
-    ifelse(length(res[[p]]) == 1, res[[p]], sd(res[[p]]$value))
+      ifelse(length(res[[p]]) == 1, 0, sd(res[[p]]$value))
   })
   
   param_bounds <- model$get_block("parameter")
 
-  proposal_lines <- unname(sapply(names(param_sd), function(param) {
+  proposal_lines <- unname(sapply(names(param_sd)[param_sd > 0], function(param) {
     bounds_line <-
       grep(paste0("^[[:space:]]*", param, "[^~]*~"), param_bounds,
            value = TRUE)
     bounds_string <- sub("^.*uniform\\(([^\\)]+)\\).*$", "\\1",
                          bounds_line)
-    bounds <- strsplit(bounds_string, split = ",")[[1]]
-    param_string <- sub(paste0("^[[:space:]]*", param, "([^~]*)~.*$"),
-                        paste0(param, "\\1"), bounds_line)
-    param_string <- sub("[[:space:]]+$", "", param_string)
-
-    paste0(param_string, " ~ truncated_normal(",
-           "mean = ", param_string,
-           ", std = ", scale_string, param_sd[param], ", ",
-           paste(c("lower", "upper"), "=", bounds, sep = " ", collapse = ", "),
-           ")")
+    if (bounds_string != bounds_line) {
+      bounds <- strsplit(bounds_string, split = ",")[[1]]
+      bounds <- gsub("lower[[:space:]]*=[[:space::]]*", "", bounds)
+      bounds <- gsub("upper[[:space:]]*=[[:space::]]*", "", bounds)
+      param_string <- sub(paste0("^[[:space:]]*", param, "([^~]*)~.*$"),
+                          paste0(param, "\\1"), bounds_line)
+      param_string <- sub("[[:space:]]+$", "", param_string)
+      
+      paste0(param_string, " ~ truncated_normal(",
+             "mean = ", param_string,
+             ", std = ", scale_string, param_sd[param], ", ",
+             paste(c("lower", "upper"), "=", bounds, sep = " ", collapse = ", "),
+             ")")
+    }
   }))
 
   model$add_block(name = "proposal_parameter",
