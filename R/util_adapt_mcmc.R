@@ -58,11 +58,11 @@ adapt_mcmc <- function(wrapper, min = 0, max = 1, scale = 1, add_options, sample
   while (length(accRate) == 0 | min(accRate) < min | max(accRate) > max) {
     if (length(accRate) == 0 | min(accRate) < min) {
       adapt_scale <- adapt_scale / scale
-    } else
+    } else {
       adapt_scale <- adapt_scale * scale
     }
-  model <- output_to_proposal(adapt_wrapper, adapt_scale)
-  add_options[["init-file"]] <- adapt_wrapper$output_file_name
+    model <- output_to_proposal(adapt_wrapper, adapt_scale)
+    add_options[["init-file"]] <- adapt_wrapper$output_file_name
     adapt_wrapper <-
       adapt_wrapper$clone(model = model, run = TRUE, add_options = add_options, ...)
     mcmc_obj <- mcmc(get_traces(adapt_wrapper))
