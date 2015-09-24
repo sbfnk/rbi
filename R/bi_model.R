@@ -40,8 +40,8 @@ NULL
 #' PZ <- bi_model(filename = model_file_name)
 #' PZ$propose_prior()
 NULL 
-#' @rdname bi_model_insert
-#' @name bi_model_insert
+#' @rdname bi_model_insert_lines
+#' @name bi_model_insert_lines
 #' @title Insert lines in a libbi model
 #' @description
 #' Inserts one or more lines into a libbi model. If one of \code{before} or \code{after} is given, the line(s) will be inserted before or after a given line number, respectively. If neither is given, the line(s) will be added at the end.
@@ -54,10 +54,10 @@ NULL
 #' @examples
 #' model_file_name <- system.file(package="bi", "PZ.bi")
 #' PZ <- bi_model(filename = model_file_name)
-#' PZ$insert(lines = "noise beta", after = 8)
+#' PZ$insert_lines(lines = "noise beta", after = 8)
 NULL 
-#' @rdname bi_model_update
-#' @name bi_model_update
+#' @rdname bi_model_update_lines
+#' @name bi_model_update_lines
 #' @title Update line(s) in a libbi model
 #' @description
 #' Updates one or more lines in a libbi model.
@@ -69,7 +69,7 @@ NULL
 #' @examples
 #' model_file_name <- system.file(package="bi", "PZ.bi")
 #' PZ <- bi_model(filename = model_file_name)
-#' PZ$update(23, "alpha ~ normal(mu, sigma)")
+#' PZ$update_lines(23, "alpha ~ normal(mu, sigma)")
 NULL 
 #' @rdname bi_model_delete_lines
 #' @name bi_model_delete_lines
@@ -263,7 +263,7 @@ bi_model <- setRefClass("bi_model",
           }
           return(lines)
         },
-        insert = function(before, after, lines) {
+        insert_lines = function(before, after, lines) {
           if (!missing(before)) {
             if (!missing(after)) {
               stop("Must give at most one of 'before' or 'after'")
@@ -286,7 +286,7 @@ bi_model <- setRefClass("bi_model",
 
           clean_model()
         }, 
-        update = function(num, lines) {
+        update_lines = function(num, lines) {
           model[num] <<- lines
 
           clean_model()
@@ -380,14 +380,16 @@ bi_model <- setRefClass("bi_model",
                       paste(lines, sep = "\n"), "}", "}")
           clean_model()
         },
-        get_vars = function(type) {
+        get_vars = function(type, dim = FALSE) {
           line_nbs <- grep(paste0("^[[:space:]]*", type, "[[:space:]]"), .self$model)
           if (length(line_nbs) > 0) {
-            ## remove "noise" term
+            ## remove qualifier
             names <- sub(paste0("^[[:space:]]*", type, "[[:space:]]"), "",
                          .self$model[line_nbs])
-            ## remove dimensions
-            names <- sub("\\[.*\\]", "", names)
+            if (!dim) {
+              ## remove dimensions
+              names <- sub("\\[.*\\]", "", names)
+            }
             names_vec <- unlist(strsplit(names, ","))
             return(names_vec)
           } else {
