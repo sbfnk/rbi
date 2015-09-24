@@ -16,7 +16,7 @@
 #' @export
 bi_obs_file <- function(filename, variable, times, name = "Y"){
   filename <- normalizePath(filename, "/", FALSE)
-  if (class(variable) != "numeric"){
+  if (!is.numeric(variable)){
     stop("'variable' should be a numeric vector")
   }
   if (missing(times)) {
