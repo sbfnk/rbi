@@ -61,6 +61,7 @@ adapt_mcmc <- function(wrapper, min = 0, max = 1, scale = 1, add_options, sample
     } else {
       adapt_scale <- adapt_scale * scale
     }
+    cat("Adapting with scale ", adapt_scale, "\n")
     model <- output_to_proposal(adapt_wrapper, adapt_scale)
     add_options[["init-file"]] <- adapt_wrapper$output_file_name
     adapt_wrapper <-
