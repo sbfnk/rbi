@@ -83,7 +83,7 @@ netcdf_create_from_list <- function(filename, variables, time_dim){
         stop("any elements of 'variables' that are a data frame must have a 'value' column")
       }
       var_dims <- list()
-      for (col in rev(setdiff(colnames(element), c("value")))) {
+      for (col in rev(colnames(element)[colnames(element) != "value"])) {
 	dim_name <- ifelse(!missing(time_dim) && col == time_dim, "nr", col)
         dim_values <- seq_along(unique(element[, col])) - 1
         if (dim_name %in% names(dims)) {
@@ -94,7 +94,8 @@ netcdf_create_from_list <- function(filename, variables, time_dim){
           new_dim <- ncdim_def(dim_name, "", dim_values)
           dims[[dim_name]] <- new_dim
         }
-        var_dims[[dim_name]] <- dims[[dim_name]]
+        var_dims <- c(var_dims, list(dims[[dim_name]]))
+        names(var_dims)[length(var_dims)] <- dim_name
       }
       if (!missing(time_dim) && time_dim %in% colnames(element)) {
 	## time_var <- paste("time", name, sep = "_")
