@@ -7,10 +7,11 @@
 #' @param filename a path to a NetCDF file to write the variable into, which will be overwritten
 #' if it already exists.
 #' @param variables a \code{list}
+#' @param time_dim the name of the time dimension, if one exists
 #' @details
 #'
-#' The list must follow the following rules. Each element of the list
-#' must itself be one of:
+#' The list of variables must follow the following rules. Each element
+#' of the list must itself be one of:
 #'
 #' 1) a list with two keys; the first key must be named "values" and
 #' contains a numeric vector; the second key must be named "dimension"
@@ -38,7 +39,7 @@
 #' netcdf_create_from_list(filename, variables)
 #' bi_file_ncdump(filename)
 #' @export
-netcdf_create_from_list <- function(filename, variables){
+netcdf_create_from_list <- function(filename, variables, time_dim){
   filename <- normalizePath(filename, "/", FALSE)
   if (class(variables) != "list"){
     stop("'variables' should be a list")
@@ -82,17 +83,24 @@ netcdf_create_from_list <- function(filename, variables){
         stop("any elements of 'variables' that are a data frame must have a 'value' column")
       }
       var_dims <- list()
-      for (col in rev(setdiff(colnames(element), "value"))) {
+      for (col in rev(setdiff(colnames(element), c("value")))) {
+	dim_name <- ifelse(!missing(time_dim) && col == time_dim, "nr", col)
         dim_values <- seq_along(unique(element[, col])) - 1
-        if (col %in% names(dims)) {
-          if (length(dim_values) != dims[[col]]$len){
-            stop("two elements of 'variables' with same dimension name (", col, ") should have equal size")
+        if (dim_name %in% names(dims)) {
+          if (length(dim_values) != dims[[dim_name]]$len){
+            stop("two elements of 'variables' with same dimension name (", dim_name, ") should have equal size")
           }
         } else {
-          new_dim <- ncdim_def(col, "", dim_values)
-          dims[[col]] <- new_dim
+          new_dim <- ncdim_def(dim_name, "", dim_values)
+          dims[[dim_name]] <- new_dim
         }
-        var_dims[[col]] <- dims[[col]]
+        var_dims[[dim_name]] <- dims[[dim_name]]
+      }
+      if (!missing(time_dim) && time_dim %in% colnames(element)) {
+	## time_var <- paste("time", name, sep = "_")
+	time_var <- "time"
+        vars[[time_var]] <- ncvar_def(time_var, "", list(dims[["nr"]]))
+        values[[time_var]] <- unique(element[, time_dim])
       }
       vars[[name]] <- ncvar_def(name, "", var_dims)
       values[[name]] <- element[do.call(order, element[rev(names(var_dims))]), "value"]
@@ -106,7 +114,7 @@ netcdf_create_from_list <- function(filename, variables){
       stop("each element of 'variables' should itself be a list or a data frame, or a numeric vector of length 1")
     }
   }
-          
+
   nc <- nc_create(filename, vars)
 
   for (name in names(vars)) {
