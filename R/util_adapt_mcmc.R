@@ -71,7 +71,7 @@ adapt_mcmc <- function(wrapper, min = 0, max = 1, scale = 1, add_options, sample
     accRate <- accRate[accRate > 0]
 
     if (iter == max_iter) {
-      stop("Maximum of iterations reached")
+      warning("Maximum of iterations reached")
     } else {
       iter <- iter + 1
     }
