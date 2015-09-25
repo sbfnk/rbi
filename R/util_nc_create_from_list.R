@@ -94,8 +94,11 @@ netcdf_create_from_list <- function(filename, variables, time_dim){
           new_dim <- ncdim_def(dim_name, "", dim_values)
           dims[[dim_name]] <- new_dim
         }
-        var_dims <- c(var_dims, list(dims[[dim_name]]))
-        names(var_dims)[length(var_dims)] <- dim_name
+        if (!((dim_name == "nr") && ("nr" %in% names(var_dims[[name]])))) {
+            ## make sure there is only one 'nr' dim per variable
+          var_dims <- c(var_dims, list(dims[[dim_name]]))
+          names(var_dims)[length(var_dims)] <- dim_name
+        }
       }
       if (!missing(time_dim) && time_dim %in% colnames(element)) {
 	## time_var <- paste("time", name, sep = "_")
