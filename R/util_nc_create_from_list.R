@@ -101,8 +101,8 @@ netcdf_create_from_list <- function(filename, variables, time_dim){
         }
       }
       if (!missing(time_dim) && time_dim %in% colnames(element)) {
-	## time_var <- paste("time", name, sep = "_")
-	time_var <- "time"
+        time_var <- paste("time", name, sep = "_")
+        ##	time_var <- "time"
         vars[[time_var]] <- ncvar_def(time_var, "", list(dims[["nr"]]))
         values[[time_var]] <- unique(element[, time_dim])
       }
