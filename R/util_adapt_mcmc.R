@@ -55,7 +55,7 @@ adapt_mcmc <- function(wrapper, min = 0, max = 1, scale = 1, add_options, sample
   add_options[["init-np"]] <- samples - 1
   iter <- 1
   adapt_scale <- 1
-  while (length(accRate) == 0 | min(accRate) < min | max(accRate) > max) {
+  while ((length(accRate) == 0 | min(accRate) < min | max(accRate) > max) && iter <= max_iter) {
     if (length(accRate) == 0 | min(accRate) < min) {
       adapt_scale <- adapt_scale / scale
     } else {
@@ -69,13 +69,12 @@ adapt_mcmc <- function(wrapper, min = 0, max = 1, scale = 1, add_options, sample
     mcmc_obj <- mcmc(get_traces(adapt_wrapper))
     accRate <- 1 - rejectionRate(mcmc_obj)
     accRate <- accRate[accRate > 0]
-
-    if (iter == max_iter) {
-      warning("Maximum of iterations reached")
-    } else {
-      iter <- iter + 1
-    }
+    iter <- iter + 1
   }
   
+  if (iter > max_iter) {
+    warning("Maximum of iterations reached")
+  }
+
   return(adapt_wrapper)
 }
