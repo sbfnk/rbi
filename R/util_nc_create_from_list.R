@@ -109,7 +109,7 @@ netcdf_create_from_list <- function(filename, variables, time_dim){
       vars[[name]] <- ncvar_def(name, "", var_dims)
       ## sort data frame
       dim_col_names <- names(var_dims)
-      if ("nr" %in% dim_col_names) {
+      if ("nr" %in% dim_col_names && !missing(time_dim)) {
         dim_col_names[which(dim_col_names == "nr")] <- time_dim
       }
       values[[name]] <- element[do.call(order, element[rev(dim_col_names)]), "value"]
