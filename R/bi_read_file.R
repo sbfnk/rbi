@@ -11,8 +11,7 @@
 #' @param missval.threshold upper threshold for the likelihood
 #' @param variables only extract given variables (for space saving)
 #' @param quiet suppress progress bar
-#' @param flat flatten results
-#' @return list of results (or a data.frame, if \code{flat} has been set to TRUE)
+#' @return list of results
 #' @export
 bi_read_file <- function(file, dims, missval.threshold, variables)
 {
