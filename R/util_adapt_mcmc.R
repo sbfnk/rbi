@@ -10,10 +10,10 @@
 #' @param min minimum acceptance rate
 #' @param max maximum acceptance rate
 #' @param scale scale multiplier/divider for the proposal. If >1 this
-#'   will be inverted
+#'   will be inverted.
 #' @param add_options list of additional options
 #' @param samples number of samples to generate each iteration
-#' @param max_iter maximum of iterations
+#' @param max_iter maximum of iterations (default: 10)
 #' @param ... parameters for bi_wrapper$run
 #' @return a \code{bi_wrapper} with the desired proposal distribution
 #' @export
