@@ -38,5 +38,5 @@ option_string <- function(...){
                          ), collapse = " "), string)
 
 
-return(string)
+  return(string)
 }
