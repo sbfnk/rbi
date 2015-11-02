@@ -47,6 +47,9 @@ netcdf_create_from_list <- function(filename, variables, time_dim){
   if (is.null(names(variables)) || any(names(variables) == "")) {
     stop("'variables' must be named")
   }
+  if (!missing(time_dim) && length(grep("^time", time_dim)) > 0) {
+    stop("'time_dim' must not start with 'time'")
+  }
   dims <- list()
   vars <- list()
   values <- list()
@@ -84,35 +87,30 @@ netcdf_create_from_list <- function(filename, variables, time_dim){
       }
       var_dims <- list()
       for (col in rev(colnames(element)[colnames(element) != "value"])) {
-	dim_name <- ifelse(!missing(time_dim) && col == time_dim, "nr", col)
+        dim_name <- ifelse(!missing(time_dim) && col == time_dim, paste(time_dim, name, sep = "_"), col)
+        ## strip trailing numbers, these indicate duplicate dimensions
+        dim_name <- sub("\\.[0-9]+$", "", dim_name)
         dim_values <- seq_along(unique(element[, col])) - 1
-        if (dim_name %in% names(dims)) {
-          if (length(dim_values) != dims[[dim_name]]$len){
-            stop("two elements of 'variables' with same dimension name (", dim_name, ") should have equal size")
+        if (dim_name %in% dims) {
+          if (length(dim_values) != dims[[dim_name]]$len) {
+            stop("Two dimensions of name '", dim_name, "' have different lengths")
           }
         } else {
           new_dim <- ncdim_def(dim_name, "", dim_values)
           dims[[dim_name]] <- new_dim
         }
-        if (!((dim_name == "nr") && ("nr" %in% names(var_dims)))) {
-            ## make sure there is only one 'nr' dim per variable
-          var_dims <- c(var_dims, list(dims[[dim_name]]))
-          names(var_dims)[length(var_dims)] <- dim_name
+        var_dims <- c(var_dims, list(dims[[dim_name]]))
+        names(var_dims)[length(var_dims)] <- col
+        if (!missing(time_dim) && time_dim %in% colnames(element)) {
+          time_var <- paste("time", name, sep = "_")
+          ##	time_var <- "time"
+          vars[[time_var]] <- ncvar_def(time_var, "", list(dims[[dim_name]]))
+          values[[time_var]] <- unique(element[, time_dim])
         }
-      }
-      if (!missing(time_dim) && time_dim %in% colnames(element)) {
-        time_var <- paste("time", name, sep = "_")
-        ##	time_var <- "time"
-        vars[[time_var]] <- ncvar_def(time_var, "", list(dims[["nr"]]))
-        values[[time_var]] <- unique(element[, time_dim])
       }
       vars[[name]] <- ncvar_def(name, "", var_dims)
       ## sort data frame
-      dim_col_names <- names(var_dims)
-      if ("nr" %in% dim_col_names && !missing(time_dim)) {
-        dim_col_names[which(dim_col_names == "nr")] <- time_dim
-      }
-      values[[name]] <- element[do.call(order, element[rev(dim_col_names)]), "value"]
+      values[[name]] <- element[do.call(order, element[rev(colnames(element)[colnames(element) != "value"])]), "value"]
     } else if (length(intersect(class(element), c("numeric", "integer"))) > 0) {
       if (length(element) > 1) {
         stop("any elements of 'variables' that are a vector must be of length 1")
