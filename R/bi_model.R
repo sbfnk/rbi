@@ -138,6 +138,10 @@ bi_model <- setRefClass("bi_model",
           noise_str <- paste0("^[[:space:]]*noise[[:space:]]+(",
                               paste(names(fixed), collapse = "|"), ")")
           noise_line_nbs <- grep(noise_str, fix_model)
+          if (length(noise_line_nbs) < length(fixed))
+          {
+              warning("Not all noises could be found, perhaps check the spelling.")
+          }
           indent <- sub("^([[:space:]]*).*$", "\\1", fix_model[noise_line_nbs[1]])
 
           if (length(noise_line_nbs) > 0) {
@@ -263,7 +267,7 @@ bi_model <- setRefClass("bi_model",
           }
           return(lines)
         },
-        insert_lines = function(before, after, lines) {
+        insert_lines = function(lines, before, after) {
           if (!missing(before)) {
             if (!missing(after)) {
               stop("Must give at most one of 'before' or 'after'")
