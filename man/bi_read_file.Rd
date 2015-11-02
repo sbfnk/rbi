@@ -4,7 +4,7 @@
 \alias{bi_read_file}
 \title{Bi Read File}
 \usage{
-bi_read_file(file, dims, missval.threshold, variables)
+bi_read_file(file, dims, missval.threshold, variables, time_dim)
 }
 \arguments{
 \item{file}{either a path to a NetCDF file, or a NetCDF connection created using \code{nc_open}}
@@ -15,12 +15,12 @@ bi_read_file(file, dims, missval.threshold, variables)
 
 \item{variables}{only extract given variables (for space saving)}
 
-\item{quiet}{suppress progress bar}
+\item{time_dim}{name of time dimension (if any)}
 
-\item{flat}{flatten results}
+\item{quiet}{suppress progress bar}
 }
 \value{
-list of results (or a data.frame, if \code{flat} has been set to TRUE)
+list of results
 }
 \description{
 This function reads all variable from a NetCDF file.

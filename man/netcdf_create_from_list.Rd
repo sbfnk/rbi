@@ -4,13 +4,15 @@
 \alias{netcdf_create_from_list}
 \title{Create NetCDF File from R list}
 \usage{
-netcdf_create_from_list(filename, variables)
+netcdf_create_from_list(filename, variables, time_dim)
 }
 \arguments{
 \item{filename}{a path to a NetCDF file to write the variable into, which will be overwritten
 if it already exists.}
 
 \item{variables}{a \code{list}}
+
+\item{time_dim}{the name of the time dimension, if one exists}
 }
 \value{
 None, but creates a NetCDF file at the specified path.
@@ -19,8 +21,8 @@ None, but creates a NetCDF file at the specified path.
 This function creates a NetCDF file given a list.
 }
 \details{
-The list must follow the following rules. Each element of the list
-must itself be one of:
+The list of variables must follow the following rules. Each element
+of the list must itself be one of:
 
 1) a list with two keys; the first key must be named "values" and
 contains a numeric vector; the second key must be named "dimension"
