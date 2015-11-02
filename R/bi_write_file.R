@@ -1,6 +1,6 @@
-#' @rdname bi_init_file
-#' @name bi_init_file
-#' @aliases bi_init_file
+#' @rdname bi_write_file
+#' @name bi_write_file
+#' @aliases bi_write_file
 #' @title Create Init Files for LibBi
 #' @description
 #' This function creates an init file to specify 
@@ -13,16 +13,16 @@
 #' @param time_dim name of the time dimension, if one exists
 #' @return None, but creates a NetCDF file at the specified path.
 #' @export
-bi_init_file <- function(filename, variables, time_dim){
+bi_write_file <- function(filename, variables, time_dim){
   filename <- normalizePath(filename, "/", FALSE)
   if (length(variables) == 0){
-    stop("please provide a non-empty list to bi_init_file")
+    stop("please provide a non-empty list to bi_write_file")
   }
   vector_variables <-
     variables[sapply(variables, function(x) {is.numeric(x) && length(x) > 1})]
   variablelengths <- as.numeric(unlist(lapply(X=vector_variables, FUN=length)))
   if (!all(variablelengths == variablelengths[1])){
-    stop("please provide to bi_init_file a list of vectors of equal length")
+    stop("please provide to bi_write_file a list of vectors of equal length")
   }
   variables_with_dim <- variables
   for (name in names(vector_variables)){
