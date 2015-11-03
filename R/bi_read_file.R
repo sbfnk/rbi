@@ -82,13 +82,8 @@ bi_read_file <- function(file, dims, missval.threshold, variables, time_dim)
         ## more than just one value
         mav <- data.frame(melt(all_values, varnames = rev(dim_names)))
         ## reorder duplicates
-        cols <- setdiff(colnames(mav), "value")
-        for (dup_dim in duplicated_dim_names) {
-          dup_cols <- grep(paste0(dup_dim, "\\.[0-9]+$"), cols)
-          cols[dup_cols] <- rev(cols[dup_cols])
-        }
-        mav <- mav[do.call(order, mav[rev(cols)]), ]
-        mav <- mav[, c(cols, "value")]
+          cols <- setdiff(colnames(mav), "value")
+        mav <- mav[do.call(order, mav[cols]), ]
         rownames(mav) <- seq_len(nrow(mav))
       } else {
         ## fixed value
@@ -107,7 +102,7 @@ bi_read_file <- function(file, dims, missval.threshold, variables, time_dim)
           mav[[current.dim]] <-
             factor(mav[[current.dim]], labels = dims[[current.dim]])
         } else if (current.dim %in% names(time_vars)) {
-          mav[[current.dim]] <- time_vars[[current.dim]]
+          mav[[current.dim]] <- time_vars[[current.dim]][mav[[current.dim]]]
           if (!is.null(time_dim)) {
             names(mav)[which(names(mav) == current.dim)] <- time_dim
           }
