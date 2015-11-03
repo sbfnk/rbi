@@ -37,8 +37,8 @@ adapt_particles <- function(wrapper, init = 1, min = 0, max = 1, scale = 2, add_
   if (scale < 1) scale <- ceiling(1 / scale)
 
   model <- wrapper$model
-  model <- model$remove_block("proposal_parameter")
-  model <- model$remove_block("proposal_initial")
+  model$remove_block("proposal_parameter")
+  model$remove_block("proposal_initial")
   
   init_file <- wrapper$output_file_name
   init_np <- bi_dim_len(init_file, "np") - 1 ## use last parameter value from output file
