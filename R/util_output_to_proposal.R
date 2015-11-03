@@ -33,7 +33,7 @@ output_to_proposal <- function(wrapper, scale) {
 
   proposal_lines <- unname(sapply(names(param_sd)[param_sd > 0], function(param) {
     bounds_line <-
-      grep(paste0("^[[:space:]]*", param, "[^~]*~"), param_bounds,
+      grep(paste0("^[[:space:]]*", param, "[[[:space:]][^~]*~"), param_bounds,
            value = TRUE)
     bounds_string <- sub("^.*uniform\\(([^\\)]+)\\).*$", "\\1",
                          bounds_line)
