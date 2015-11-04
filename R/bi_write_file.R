@@ -13,7 +13,7 @@
 #' @param time_dim name of the time dimension, if one exists
 #' @return None, but creates a NetCDF file at the specified path.
 #' @export
-bi_write_file <- function(filename, variables, time_dim){
+bi_write_file <- function(filename, variables, ...){
   filename <- normalizePath(filename, "/", FALSE)
   if (length(variables) == 0){
     stop("please provide a non-empty list to bi_write_file")
@@ -28,7 +28,7 @@ bi_write_file <- function(filename, variables, time_dim){
   for (name in names(vector_variables)){
     variables_with_dim[[name]] <- list(values = variables[[name]], dimension = "ns")
   }
-  netcdf_create_from_list(filename, variables_with_dim, time_dim)
+  netcdf_create_from_list(filename, variables_with_dim, ...)
 }
 
 ##' Create init files for LibBi, retained for backwards compatibility

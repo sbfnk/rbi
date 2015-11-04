@@ -4,7 +4,7 @@
 \alias{bi_write_file}
 \title{Create Init Files for LibBi}
 \usage{
-bi_write_file(filename, variables, time_dim)
+bi_write_file(filename, variables, ...)
 }
 \arguments{
 \item{filename}{a path to a NetCDF file to write the variables into, which will be overwritten
