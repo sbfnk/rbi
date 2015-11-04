@@ -35,21 +35,63 @@ output_to_proposal <- function(wrapper, scale) {
     bounds_line <-
       grep(paste0("^[[:space:]]*", param, "[[[:space:]][^~]*~"), param_bounds,
            value = TRUE)
-    bounds_string <- sub("^.*uniform\\(([^\\)]+)\\).*$", "\\1",
-                         bounds_line)
-    if (bounds_string != bounds_line) {
-      bounds <- strsplit(bounds_string, split = ",")[[1]]
-      bounds <- gsub("lower[[:space:]]*=[[:space::]]*", "", bounds)
-      bounds <- gsub("upper[[:space:]]*=[[:space::]]*", "", bounds)
-      param_string <- sub(paste0("^[[:space:]]*", param, "([^~]*)~.*$"),
+    param_string <- sub(paste0("^[[:space:]]*", param, "([^~]*)~.*$"),
                           paste0(param, "\\1"), bounds_line)
-      param_string <- sub("[[:space:]]+$", "", param_string)
+    param_string <- sub("[[:space:]]+$", "", param_string)
       
-      paste0(param_string, " ~ truncated_normal(",
+    param_bounds_string <-
+      sub("^.*(uniform|truncated_gaussian|truncated_normal)\\(([^\\)]+)\\).*$",
+          "\\1|\\2", bounds_line)
+
+    args <- strsplit(param_bounds_string, split = "\\|")
+
+    dist <- args[[1]][1]
+    bounds_string <- args[[1]][2]
+
+    if (bounds_string == bounds_line) {
+      paste0(param_string, " ~ gaussian(",
              "mean = ", param_string,
-             ", std = ", scale_string, param_sd[param], ", ",
-             paste(c("lower", "upper"), "=", bounds, sep = " ", collapse = ", "),
-             ")")
+             ", std = ", ")")
+    } else {
+      bounds <- c(lower = NA, upper = NA)
+      
+      split_bounds <- strsplit(bounds_string, split = ",")[[1]]
+      for (bound in c("lower", "upper")) {
+        named <- grep(paste0(bound, "[[:space:]]*="), split_bounds)
+        if (length(named) > 0) {
+          bounds[bound] <- split_bounds[named]
+          split_bounds <- split_bounds[-named]
+        }
+      }
+
+      if (any(is.na(bounds))) {
+        if (length(grep("^truncated", dist)) > 0) {
+          named_other <- grep("(mean|std)", split_bounds)
+          if (length(named_other) > 0) {
+            split_bounds <- split_bounds[-named_other]
+          }
+          if (length(named_other) < 2) {
+            split_bounds <- split_bounds[-seq_len(2 - length(named_other))]
+          }
+        }
+      }
+
+      for (split_bound in split_bounds) {
+        bounds[which(is.na(bounds))][1] <- split_bound
+      }
+
+      bounds <- gsub("(lower|upper)[[:space:]]*=[[:space::]]*", "", bounds)
+      bounds <- as.numeric(bounds)
+      bounds <- bounds[!is.na(bounds)]
+
+      paste0(param_string, " ~ truncated_gaussian(",
+             "mean = ", param_string,
+             ", std = ", scale_string, param_sd[param],
+             ifelse(length(bounds) > 0,
+                    paste0(", ", paste(names(bounds), "=", bounds,
+                                       sep = " ", collapse = ", "),
+                           ")"),
+                    ")"))
     }
   }))
 
