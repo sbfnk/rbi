@@ -60,7 +60,8 @@ adapt_particles <- function(wrapper, init = 1, min = 0, max = 1, add_options, sa
   accRate <- accRate[accRate > 0]
   
   while ((length(accRate) == 0 | min(accRate) < min | max(accRate) > max) && iter <= max_iter && (!(max(accRate) > max && nParticles > 1))) {
-    nParticles <- 2**(round(log(1/max(accRate), 2)))
+    nParticles <-
+      ifelse(length(accRate) > 0, 2**(round(log(1/max(accRate), 2))), 2 * nParticles)
     cat("Trying ", nParticles, " particles \n")
     adapt_wrapper$global_options[["nparticles"]] <- nParticles
     add_options[["init-file"]] <- adapt_wrapper$output_file_name
