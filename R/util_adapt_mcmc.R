@@ -37,7 +37,6 @@ adapt_mcmc <- function(wrapper, min = 0, max = 1, scale = 1, add_options, sample
   init_file <- wrapper$output_file_name
   init_np <- bi_dim_len(init_file, "np") - 1
 
-  accRate <- 0
   if (missing(samples)) {
     if ("nsamples" %in% names(wrapper$global_options)) {
       samples <- wrapper$global_options[["nsamples"]]
@@ -55,6 +54,9 @@ adapt_mcmc <- function(wrapper, min = 0, max = 1, scale = 1, add_options, sample
   add_options[["init-np"]] <- samples - 1
   iter <- 1
   adapt_scale <- 1
+  mcmc_obj <- mcmc(get_traces(adapt_wrapper))
+  accRate <- 1 - rejectionRate(mcmc_obj)
+  accRate <- accRate[accRate > 0]
   while ((length(accRate) == 0 | min(accRate) < min | max(accRate) > max) && iter <= max_iter) {
     if (length(accRate) == 0 | min(accRate) < min) {
       adapt_scale <- adapt_scale / scale
