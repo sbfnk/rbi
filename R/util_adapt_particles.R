@@ -36,9 +36,11 @@ adapt_particles <- function(wrapper, init = 1, min = 0, max = 1, scale = 2, add_
   ## small, divider if the acceptance Rate is too big)
   if (scale < 1) scale <- ceiling(1 / scale)
 
+  ## remove blocks
   model <- wrapper$model
   model$remove_block("proposal_parameter")
   model$remove_block("proposal_initial")
+  model$remove_block("parameter")
   
   init_file <- wrapper$output_file_name
   init_np <- bi_dim_len(init_file, "np") - 1 ## use last parameter value from output file
@@ -68,7 +70,7 @@ adapt_particles <- function(wrapper, init = 1, min = 0, max = 1, scale = 2, add_
       nParticles <- ceiling(nParticles / scale)
     }
     cat("Trying ", nParticles, " particles \n")
-    add_options[["nparticles"]] <- nParticles
+    adapt_wrapper$global_options[["nparticles"]] <- nParticles
     add_options[["init-file"]] <- adapt_wrapper$output_file_name
     adapt_wrapper <-
       adapt_wrapper$clone(model = model, run = TRUE, add_options = add_options, ...)
