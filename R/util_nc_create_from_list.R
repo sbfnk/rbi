@@ -8,6 +8,7 @@
 #' if it already exists.
 #' @param variables a \code{list}
 #' @param time_dim the name of the time dimension, if one exists
+#' @param value_column if any \code{variables} are data frames, which column contains the values (default: "value")
 #' @details
 #'
 #' The list of variables must follow the following rules. Each element
@@ -17,7 +18,7 @@
 #' contains a numeric vector; the second key must be named "dimension"
 #' and contains a string giving the dimension name.
 #'
-#' 2) a data frame with a "value" column and any number of other
+#' 2) a data frame with a \code{value_column} column (see option 'value_column') and any number of other
 #' columns indicating one or more dimensions
 #'
 #' 3) a numeric vector of length one, with no dimensions
@@ -39,7 +40,7 @@
 #' netcdf_create_from_list(filename, variables)
 #' bi_file_ncdump(filename)
 #' @export
-netcdf_create_from_list <- function(filename, variables, time_dim){
+netcdf_create_from_list <- function(filename, variables, time_dim, value_column = "value"){
   filename <- normalizePath(filename, "/", FALSE)
   if (class(variables) != "list"){
     stop("'variables' should be a list")
@@ -82,11 +83,11 @@ netcdf_create_from_list <- function(filename, variables, time_dim){
       vars[[name]] <- ncvar_def(name, "", dims[[element[["dimension"]]]])
       values[[name]] <- element[["values"]]
     } else if (length(intersect(class(element), c("data.frame"))) > 0) {
-      if (!("value" %in% colnames(element))) {
-        stop("any elements of 'variables' that are a data frame must have a 'value' column")
+      if (!(value_column %in% colnames(element))) {
+        stop("any elements of 'variables' that are a data frame must have a '", value_column, "' column")
       }
       var_dims <- list()
-      for (col in rev(colnames(element)[colnames(element) != "value"])) {
+      for (col in rev(colnames(element)[colnames(element) != value_column])) {
         dim_name <- ifelse(!missing(time_dim) && col == time_dim, paste(time_dim, name, sep = "_"), col)
         ## strip trailing numbers, these indicate duplicate dimensions
         dim_name <- sub("\\.[0-9]+$", "", dim_name)
@@ -110,7 +111,7 @@ netcdf_create_from_list <- function(filename, variables, time_dim){
       }
       vars[[name]] <- ncvar_def(name, "", var_dims)
       ## sort data frame
-      values[[name]] <- element[do.call(order, element[rev(colnames(element)[colnames(element) != "value"])]), "value"]
+      values[[name]] <- element[do.call(order, element[rev(colnames(element)[colnames(element) != value_column])]), value_column]
     } else if (length(intersect(class(element), c("numeric", "integer"))) > 0) {
       if (length(element) > 1) {
         stop("any elements of 'variables' that are a vector must be of length 1")
