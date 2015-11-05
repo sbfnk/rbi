@@ -74,9 +74,7 @@ bi_read_file <- function(file, dims, missval.threshold, variables, time_dim)
           dim_names[dim_names == dup_dim] <-
             paste(dup_dim, seq_along(dim_names[dim_names == dup_dim]), sep = ".")
         }
-      } else {
-        duplicated_dim_names <- c()
-      }
+      } 
       
       if (prod(dim(all_values)) > 1) {
         ## more than just one value
