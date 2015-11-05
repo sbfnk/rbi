@@ -13,10 +13,11 @@
 #' @param add_options list of additional options
 #' @param samples number of samples to generate each iteration
 #' @param max_iter maximum of iterations (default: 10)
+#' @param max_particles maximum number of particles
 #' @param ... parameters for bi_wrapper$run
 #' @return a \code{bi_wrapper} with the desired proposal distribution
 #' @export
-adapt_particles <- function(wrapper, init = 1, min = 0, max = 1, add_options, samples, max_iter = 10, ...) {
+adapt_particles <- function(wrapper, init = 1, min = 0, max = 1, add_options, samples, max_iter = 10, max_particles = 32768, ...) {
 
   if (missing(add_options)) {
     add_options <- list()
@@ -59,9 +60,10 @@ adapt_particles <- function(wrapper, init = 1, min = 0, max = 1, add_options, sa
   accRate <- max(1 - rejectionRate(mcmc_obj))
   
   while ((accRate < min | accRate > max) && iter <= max_iter &&
-    (!(accRate > max && nParticles > 1))) {
+    (!(accRate > max && nParticles > 1)) && nParticles < max_particles) {
     nParticles <-
-      ifelse(accRate > 0, nParticles * 2**(round(log(1/max(accRate), 2))), 2 * nParticles)
+      min(max_particles,
+          ifelse(accRate > 0, nParticles * 2**(round(log(1/max(accRate), 2))), 2 * nParticles))
     cat(paste0("Acceptance rate ", accRate,
                ", trying ", nParticles, " particles \n"))
     adapt_wrapper$global_options[["nparticles"]] <- nParticles

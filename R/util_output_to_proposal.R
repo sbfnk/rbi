@@ -48,10 +48,10 @@ output_to_proposal <- function(wrapper, scale) {
     dist <- args[[1]][1]
     bounds_string <- args[[1]][2]
 
-    if (bounds_string == bounds_line) {
+    if (is.na(bounds_string) || bounds_string == bounds_line) {
       paste0(param_string, " ~ gaussian(",
              "mean = ", param_string,
-             ", std = ", ")")
+             ", std = ", scale_string, param_sd[param], ")")
     } else {
       bounds <- c(lower = NA, upper = NA)
       
