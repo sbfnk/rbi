@@ -56,8 +56,7 @@ adapt_particles <- function(wrapper, init = 1, min = 0, max = 1, add_options, sa
   add_options[["init-file"]] <- adapt_wrapper$output_file_name
   add_options[["init-np"]] <- samples - 1
   iter <- 1
-  mcmc_obj <- mcmc(get_traces(adapt_wrapper, all = TRUE))
-  accRate <- max(1 - rejectionRate(mcmc_obj))
+  accRate <- acceptance_rate(adapt_wrapper)
   
   while ((accRate < min | accRate > max) && iter <= max_iter &&
     (!(accRate > max && nParticles > 1)) && nParticles < max_particles) {
@@ -70,8 +69,7 @@ adapt_particles <- function(wrapper, init = 1, min = 0, max = 1, add_options, sa
     add_options[["init-file"]] <- adapt_wrapper$output_file_name
     adapt_wrapper <-
       adapt_wrapper$clone(model = model, run = TRUE, add_options = add_options, ...)
-    mcmc_obj <- mcmc(get_traces(adapt_wrapper, all = TRUE))
-    accRate <- max(1 - rejectionRate(mcmc_obj))
+    accRate <- acceptance_rate(adapt_wrapper)
     iter <- iter + 1
   }
   cat("Acceptance rate:", min(accRate), "\n")

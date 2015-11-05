@@ -54,8 +54,7 @@ adapt_mcmc <- function(wrapper, min = 0, max = 1, scale = 1, add_options, sample
   add_options[["init-np"]] <- samples - 1
   iter <- 1
   adapt_scale <- 1
-  mcmc_obj <- mcmc(get_traces(adapt_wrapper, all = TRUE))
-  accRate <- max(1 - rejectionRate(mcmc_obj))
+  accRate <- acceptance_rate(adapt_wrapper)
   while ((min(accRate) < min | max(accRate) > max) && iter <= max_iter) {
     if (min(accRate) < min) {
       adapt_scale <- adapt_scale / scale
@@ -69,7 +68,7 @@ adapt_mcmc <- function(wrapper, min = 0, max = 1, scale = 1, add_options, sample
     adapt_wrapper <-
       adapt_wrapper$clone(model = model, run = TRUE, add_options = add_options, ...)
     mcmc_obj <- mcmc(get_traces(adapt_wrapper, all = TRUE))
-    accRate <- max(1 - rejectionRate(mcmc_obj))
+    accRate <- acceptance_rate(adapt_wrapper)
     iter <- iter + 1
   }
   cat("Acceptance rate:", min(accRate), "\n")
