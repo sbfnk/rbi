@@ -76,7 +76,7 @@ adapt_mcmc <- function(wrapper, min = 0, max = 1, scale = 1, add_options, sample
     if (length(accRate) == 0) accRate <- 0
     iter <- iter + 1
   }
-  cat("Acceptance rate:", min(accRate))
+  cat("Acceptance rate:", min(accRate), "\n")
   
   if (iter > max_iter) {
     warning("Maximum of iterations reached")

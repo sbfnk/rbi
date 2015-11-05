@@ -76,7 +76,7 @@ adapt_particles <- function(wrapper, init = 1, min = 0, max = 1, add_options, sa
     if (length(accRate) == 0) accRate <- 0
     iter <- iter + 1
   }
-  cat("Acceptance rate:", min(accRate))
+  cat("Acceptance rate:", min(accRate), "\n")
 
   if (iter > max_iter) {
     warning("Maximum of iterations reached")
