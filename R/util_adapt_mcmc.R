@@ -57,13 +57,14 @@ adapt_mcmc <- function(wrapper, min = 0, max = 1, scale = 1, add_options, sample
   mcmc_obj <- mcmc(get_traces(adapt_wrapper))
   accRate <- 1 - rejectionRate(mcmc_obj)
   accRate <- accRate[accRate > 0]
-  while ((length(accRate) == 0 | min(accRate) < min | max(accRate) > max) && iter <= max_iter) {
-    if (length(accRate) == 0 | min(accRate) < min) {
+  if (length(accRate) == 0) accRate <- 0
+  while ((min(accRate) < min | max(accRate) > max) && iter <= max_iter) {
+    if (min(accRate) < min) {
       adapt_scale <- adapt_scale / scale
     } else {
       adapt_scale <- adapt_scale * scale
     }
-    cat("Adapting with scale ", adapt_scale, "\n")
+    cat("Acceptance rate ", min(accRate), ", adapting with scale ", adapt_scale, "\n")
     model <- output_to_proposal(adapt_wrapper, adapt_scale)
     add_options[["init-file"]] <- adapt_wrapper$output_file_name
     adapt_wrapper <-
@@ -71,6 +72,7 @@ adapt_mcmc <- function(wrapper, min = 0, max = 1, scale = 1, add_options, sample
     mcmc_obj <- mcmc(get_traces(adapt_wrapper))
     accRate <- 1 - rejectionRate(mcmc_obj)
     accRate <- accRate[accRate > 0]
+    if (length(accRate) == 0) accRate <- 0
     iter <- iter + 1
   }
   

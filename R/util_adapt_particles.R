@@ -58,11 +58,13 @@ adapt_particles <- function(wrapper, init = 1, min = 0, max = 1, add_options, sa
   mcmc_obj <- mcmc(get_traces(adapt_wrapper))
   accRate <- 1 - rejectionRate(mcmc_obj)
   accRate <- accRate[accRate > 0]
+  if (length(accRate) == 0) accRate <- 0
   
-  while ((length(accRate) == 0 | min(accRate) < min | max(accRate) > max) && iter <= max_iter && (!(max(accRate) > max && nParticles > 1))) {
+  while ((min(accRate) < min | max(accRate) > max) && iter <= max_iter &&
+    (!(max(accRate) > max && nParticles > 1))) {
     nParticles <-
-      ifelse(length(accRate) > 0, 2**(round(log(1/max(accRate), 2))), 2 * nParticles)
-    cat("Trying ", nParticles, " particles \n")
+      ifelse(accRate == 0, 2**(round(log(1/max(accRate), 2))), 2 * nParticles)
+    cat("Acceptance rate ", min(accRate), ", trying ", nParticles, " particles \n")
     adapt_wrapper$global_options[["nparticles"]] <- nParticles
     add_options[["init-file"]] <- adapt_wrapper$output_file_name
     adapt_wrapper <-
@@ -70,6 +72,7 @@ adapt_particles <- function(wrapper, init = 1, min = 0, max = 1, add_options, sa
     mcmc_obj <- mcmc(get_traces(adapt_wrapper))
     accRate <- 1 - rejectionRate(mcmc_obj)
     accRate <- accRate[accRate > 0]
+    if (length(accRate) == 0) accRate <- 0
     iter <- iter + 1
   }
   
