@@ -63,7 +63,7 @@ adapt_particles <- function(wrapper, init = 1, min = 0, max = 1, add_options, sa
   while ((min(accRate) < min | max(accRate) > max) && iter <= max_iter &&
     (!(max(accRate) > max && nParticles > 1))) {
     nParticles <-
-      ifelse(accRate == 0, 2**(round(log(1/max(accRate), 2))), 2 * nParticles)
+      ifelse(accRate > 0, 2**(round(log(1/max(accRate), 2))), 2 * nParticles)
     cat(paste0("Acceptance rate ", min(accRate),
                ", trying ", nParticles, " particles \n"))
     adapt_wrapper$global_options[["nparticles"]] <- nParticles
