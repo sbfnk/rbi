@@ -6,20 +6,24 @@
 #' run and returns a data frame with the parameter traces.
 #' @param wrapper a \code{bi_wrapper} which has been run
 #' @param ... parameters to \code{bi_read_file} (e.g., dimensions)
-#' @return the updated bi model
+#' @return data frame with parameter traces; this can be fed to \code{coda} routines
 #' @export
-get_traces <- function(wrapper, ...) {
+get_traces <- function(wrapper, all = FALSE, ...) {
 
   model <- wrapper$model
   res <- bi_read_file(wrapper$output_file_name, ...)
 
-  params <- model$get_vars("param")
+  if (all) {
+    params <- names(res)
+  } else {
+    params <- model$get_vars("param")
+  }
 
   wide_list <- lapply(params, function(param) {
     extra.dims <- setdiff(colnames(res[[param]]), c("np", "param", "value"))
     if (length(extra.dims) > 0) {
-      df <- dcast(res[[param]], as.formula(paste("np", paste(extra.dims, sep = "+"),
-                                                 sep = "~")))
+      df <- dcast(res[[param]],
+                  as.formula(paste("np", paste(extra.dims, collapse = "+"), sep = "~")))
       names(df)[-1] <- paste(param, names(df)[-1], sep = ".")
     } else {
       df <- res[[param]]
