@@ -74,9 +74,11 @@ adapt_particles <- function(wrapper, init = 1, min = 0, max = 1, add_options, sa
   }
   cat("Acceptance rate:", min(accRate), "\n")
 
+  wrapper$global_options[["nparticles"]] <- nParticles
+  
   if (iter > max_iter) {
     warning("Maximum of iterations reached")
   }
 
-  return(adapt_wrapper)
+  return(wrapper)
 }
