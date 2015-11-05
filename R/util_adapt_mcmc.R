@@ -64,7 +64,8 @@ adapt_mcmc <- function(wrapper, min = 0, max = 1, scale = 1, add_options, sample
     } else {
       adapt_scale <- adapt_scale * scale
     }
-    cat("Acceptance rate ", min(accRate), ", adapting with scale ", adapt_scale, "\n")
+    cat(paste0("Acceptance rate ", min(accRate),
+               ", adapting with scale ", adapt_scale, "\n"))
     model <- output_to_proposal(adapt_wrapper, adapt_scale)
     add_options[["init-file"]] <- adapt_wrapper$output_file_name
     adapt_wrapper <-
@@ -75,6 +76,7 @@ adapt_mcmc <- function(wrapper, min = 0, max = 1, scale = 1, add_options, sample
     if (length(accRate) == 0) accRate <- 0
     iter <- iter + 1
   }
+  cat("Acceptance rate:", min(accRate))
   
   if (iter > max_iter) {
     warning("Maximum of iterations reached")

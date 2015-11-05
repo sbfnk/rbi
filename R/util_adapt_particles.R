@@ -64,7 +64,8 @@ adapt_particles <- function(wrapper, init = 1, min = 0, max = 1, add_options, sa
     (!(max(accRate) > max && nParticles > 1))) {
     nParticles <-
       ifelse(accRate == 0, 2**(round(log(1/max(accRate), 2))), 2 * nParticles)
-    cat("Acceptance rate ", min(accRate), ", trying ", nParticles, " particles \n")
+    cat(paste0("Acceptance rate ", min(accRate),
+               ", trying ", nParticles, " particles \n"))
     adapt_wrapper$global_options[["nparticles"]] <- nParticles
     add_options[["init-file"]] <- adapt_wrapper$output_file_name
     adapt_wrapper <-
@@ -75,7 +76,8 @@ adapt_particles <- function(wrapper, init = 1, min = 0, max = 1, add_options, sa
     if (length(accRate) == 0) accRate <- 0
     iter <- iter + 1
   }
-  
+  cat("Acceptance rate:", min(accRate))
+
   if (iter > max_iter) {
     warning("Maximum of iterations reached")
   }
