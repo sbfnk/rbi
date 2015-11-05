@@ -81,7 +81,6 @@ output_to_proposal <- function(wrapper, scale) {
       }
 
       bounds <- gsub("(lower|upper)[[:space:]]*=[[:space::]]*", "", bounds)
-      bounds <- as.numeric(bounds)
       bounds <- bounds[!is.na(bounds)]
 
       paste0(param_string, " ~ truncated_gaussian(",
