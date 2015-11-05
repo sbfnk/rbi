@@ -3,14 +3,13 @@
 #' @title Compute acceptance rate
 #' @description
 #' This function takes the provided \code{bi_wrapper} which has been
-#' run and returns a the acceptance rate
-#' @param wrapper a \code{bi_wrapper} which has been run
-#' @param ... parameters to \code{get_traces} (e.g., dimensions)
-#' @return 
+#' run, or a bi file, and returns a the acceptance rate
+#' @param ... parameters to \link{\code{get_traces}} (especially 'run')
+#' @return acceptance rate
 #' @export
-acceptance_rate <- function(wrapper, ...) {
+acceptance_rate <- function( ...) {
 
-  mcmc_obj <- mcmc(get_traces(wrapper, all = TRUE, ...))
+  mcmc_obj <- mcmc(get_traces(all = TRUE, ...))
   accRate <- max(1 - rejectionRate(mcmc_obj))
   
   return(accRate)
