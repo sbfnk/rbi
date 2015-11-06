@@ -31,7 +31,7 @@ adapt_particles <- function(wrapper, init = 1, min = 0, max = 1, add_options, sa
 
   nParticles <- init
 
-  model <- wrapper$model
+  model <- bi_model(lines = wrapper$model$get_lines())
   model$remove_block("proposal_parameter")
   model$remove_block("proposal_initial")
   model$remove_block("parameter")
@@ -55,6 +55,7 @@ adapt_particles <- function(wrapper, init = 1, min = 0, max = 1, add_options, sa
     wrapper$clone(model = model, run = TRUE, add_options = add_options, ...)
   add_options[["init-file"]] <- adapt_wrapper$output_file_name
   add_options[["init-np"]] <- samples - 1
+  add_optoins[["nparticles"]] <- NULL
   iter <- 1
   accRate <- acceptance_rate(adapt_wrapper)
   
