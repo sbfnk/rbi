@@ -64,10 +64,11 @@ adapt_particles <- function(wrapper, init = 1, min = 0, max = 1, add_options, sa
     nParticles <-
       min(max_particles,
           ifelse(accRate > 0,
-                 2 ** (round(log(min/accRate, 2))) * nParticles,
+                 2 ** (ceiling(log(min/accRate, 2))) * nParticles,
                  2 * nParticles))
     cat(paste0("Acceptance rate ", accRate,
-               ", trying ", nParticles, " particles \n"))
+               ", trying ", nParticles, " particle",
+               ifelse(nParticles > 1, s, ""), "\n"))
     adapt_wrapper$global_options[["nparticles"]] <- nParticles
     add_options[["init-file"]] <- adapt_wrapper$output_file_name
     adapt_wrapper <-
