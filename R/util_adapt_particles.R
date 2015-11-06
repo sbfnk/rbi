@@ -55,7 +55,7 @@ adapt_particles <- function(wrapper, init = 1, min = 0, max = 1, add_options, sa
     wrapper$clone(model = model, run = TRUE, add_options = add_options, ...)
   add_options[["init-file"]] <- adapt_wrapper$output_file_name
   add_options[["init-np"]] <- samples - 1
-  add_optoins[["nparticles"]] <- NULL
+  add_options[["nparticles"]] <- NULL
   iter <- 1
   accRate <- acceptance_rate(adapt_wrapper)
   
@@ -63,7 +63,9 @@ adapt_particles <- function(wrapper, init = 1, min = 0, max = 1, add_options, sa
     (!(accRate > max && nParticles > 1)) && nParticles < max_particles) {
     nParticles <-
       min(max_particles,
-          ifelse(accRate > 0, nParticles * 2**(round(log(1/max(accRate), 2))), 2 * nParticles))
+          ifelse(accRate > 0,
+                 2 ** (round(log(min/accRate, 2))) * nParticles,
+                 2 * nParticles))
     cat(paste0("Acceptance rate ", accRate,
                ", trying ", nParticles, " particles \n"))
     adapt_wrapper$global_options[["nparticles"]] <- nParticles
