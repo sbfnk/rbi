@@ -4,15 +4,23 @@
 \alias{get_traces}
 \title{Get the parameter traces}
 \usage{
-get_traces(wrapper, ...)
+get_traces(run, all = FALSE, model, ...)
 }
 \arguments{
-\item{wrapper}{a \code{bi_wrapper} which has been run}
+\item{run}{a \code{bi_wrapper} which has been run, or a file (in
+which case either 'all' must be TRUE or a model given}
+
+\item{all}{whether all variables in the run file should be
+considered (otherwise, just parameters)}
+
+\item{model}{a model to get the parameter names from; not needed if
+'run' is given as a \code{bi_wrapper} object or 'all' is set to
+TRUE}
 
 \item{...}{parameters to \code{bi_read_file} (e.g., dimensions)}
 }
 \value{
-the updated bi model
+data frame with parameter traces; this can be fed to \code{coda} routines
 }
 \description{
 This function takes the provided \code{bi_wrapper} which has been
