@@ -111,7 +111,11 @@ netcdf_create_from_list <- function(filename, variables, time_dim, value_column 
       }
       vars[[name]] <- ncvar_def(name, "", var_dims)
       ## sort data frame
-      values[[name]] <- element[do.call(order, element[rev(colnames(element)[colnames(element) != value_column])]), value_column]
+      if (sum(colnames(element) != value_column) > 0) {
+        values[[name]] <- element[do.call(order, element[rev(colnames(element)[colnames(element) != value_column])]), value_column]
+      } else {
+        values[[name]] <- element[, value_column]
+      }
     } else if (length(intersect(class(element), c("numeric", "integer"))) > 0) {
       if (length(element) > 1) {
         stop("any elements of 'variables' that are a vector must be of length 1")

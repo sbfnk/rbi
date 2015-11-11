@@ -58,7 +58,7 @@ bi_read_file <- function(file, dims, missval.threshold, variables, time_dim)
 
   ## read other variables
   
-  for (var_name in var_names) {
+  for (var_name in var_names) { 
     var <- nc[["var"]][[var_name]]
     if (missing(variables) || var$name %in% variables) {
       all_values <- read_var_input(nc, var$name)
@@ -85,7 +85,7 @@ bi_read_file <- function(file, dims, missval.threshold, variables, time_dim)
         rownames(mav) <- seq_len(nrow(mav))
       } else {
         ## fixed value
-        mav <- data.frame(value = all_values)
+        mav <- all_values
       }
 
       if (!missing(missval.threshold)) {
