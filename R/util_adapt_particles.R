@@ -59,10 +59,13 @@ adapt_particles <- function(wrapper, init = 1, min = 0, max = 1, add_options, sa
   iter <- 1
   accRate <- acceptance_rate(adapt_wrapper)
 
+  ## initialise
   new_nParticles <- nParticles
+  start <- TRUE
   
   while ((accRate < min | accRate > max) && iter <= max_iter &&
-    (!(accRate > max && nParticles > 1)) && new_nParticles != nParticles) {
+    (!(accRate > max && nParticles > 1)) && (start || new_nParticles != nParticles)) {
+    start <- FALSE
     nParticles <- new_nParticles
     new_nParticles <- 
       min(max_particles,
@@ -72,7 +75,7 @@ adapt_particles <- function(wrapper, init = 1, min = 0, max = 1, add_options, sa
     if (new_nParticles != nParticles) {
       cat(paste0("Acceptance rate ", accRate,
                  ", trying ", new_nParticles, " particle",
-                 ifelse(new_nParticles > 1, s, ""), "\n"))
+                 ifelse(new_nParticles > 1, "s", ""), "\n"))
       adapt_wrapper$global_options[["nparticles"]] <- new_nParticles
       add_options[["init-file"]] <- adapt_wrapper$output_file_name
       adapt_wrapper <-
