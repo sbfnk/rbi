@@ -135,6 +135,4 @@ netcdf_create_from_list <- function(filename, variables, time_dim, value_column 
 
   nc_close(nc)
           
-  ## nc_create_netcdf_from_list_(filename, variables)
-  
 }
