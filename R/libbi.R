@@ -1,11 +1,11 @@
-#' @rdname bi_wrapper
-#' @name bi_wrapper
-#' @title Bi Wrapper
+#' @rdname libbi
+#' @name libbi
+#' @title LibBi Wrapper
 #' @description
-#' \code{bi_wrapper} allows to call \code{libbi}.
-#' Upon creating a new bi_wrapper object, the following arguments can be given.
+#' \code{libbi} allows to call \code{libbi}.
+#' Upon creating a new libbi object, the following arguments can be given.
 #' Once the instance is created, \code{libbi} can be run through the \code{run}
-#' method documented in \code{\link{bi_wrapper_run}}.
+#' method documented in \code{\link{libbi_run}}.
 #' 
 #' @param client is either "draw", "filter", "sample"... see LibBi documentation.
 #' @param model either a character vector giving the path to a model file (typically ending in ".bi"), or a \code{bi_model} object; if it is a file name, libbi will be executed from within the same folder, if a \code{bi_model} object in a temporary folder (both unless \code{working_folder} is given)
@@ -16,18 +16,18 @@
 #' using the \code{which} Unix command, after having loaded "~/.bashrc" if present; 
 #' if unsuccessful it tries "~/PathToBiBin/libbi"; if unsuccessful again it fails.
 #' @examples
-#' bi_object <- bi_wrapper$new(client = "sample",
+#' bi_object <- libbi$new(client = "sample",
 #'                             model = system.file(package="bi", "PZ.bi"), 
 #'                             global_options = "--sampler smc2")
-#' @seealso \code{\link{bi_wrapper_run}}
-#' @export bi_wrapper
+#' @seealso \code{\link{libbi_run}}
+#' @export libbi
 NULL 
-#' @rdname bi_wrapper_run
-#' @name bi_wrapper_run
-#' @aliases bi_wrapper_run  bi_run  libbi
+#' @rdname libbi_run
+#' @name libbi_run
+#' @aliases libbi_run  bi_run  libbi
 #' @title Using the Bi Wrapper to Launch LibBi
 #' @description
-#' The method \code{run} of an instance of \code{\link{bi_wrapper}}
+#' The method \code{run} of an instance of \code{\link{libbi}}
 #' allows to launch \code{libbi} with a particular set of command line
 #' arguments. 
 #'
@@ -35,17 +35,17 @@ NULL
 #' @param output_file_name path to the result file (which will be overwritten)
 #' @param stdoutput_file_name path to a file to text file to report the output of \code{libbi}
 #' @return a list containing the absolute paths to the results; it is stored in the 
-#' \code{result} field of the instance of \code{\link{bi_wrapper}}.
-#' @seealso \code{\link{bi_wrapper}}
+#' \code{result} field of the instance of \code{\link{libbi}}.
+#' @seealso \code{\link{libbi}}
 #' @examples
-#' bi_object <- bi_wrapper$new(client = "sample",
+#' bi_object <- libbi$new(client = "sample",
 #'                             model_file_name = system.file(package="bi", "PZ.bi"), 
 #'                             global_options = "--sampler smc2")
 #' bi_object$run(add_options=" --verbose --nthreads 1")
 #' bi_file_summary(bi_object$result$output_file_name)
 NULL 
 
-bi_wrapper <- setRefClass("bi_wrapper",
+libbi <- setRefClass("libbi",
       fields = c("client", "config", "global_options", "path_to_libbi", 
                  "model", "model_file_name", "model_folder", 
                  "base_command_string", "command", "command_dryparse", "result",
@@ -57,7 +57,7 @@ bi_wrapper <- setRefClass("bi_wrapper",
           result <<- list()
           run_flag <<- FALSE
           if (missing(client)){
-            print("you didn't provide a 'client' to bi_wrapper, it's kinda weird; default to 'sample'.")
+            print("you didn't provide a 'client' to libbi, it's kinda weird; default to 'sample'.")
             client <<- "sample"
           } else {
             client <<- client
@@ -251,7 +251,7 @@ bi_wrapper <- setRefClass("bi_wrapper",
         },
         clone = function(model, ...) {
           if (missing(model)) {
-            new_wrapper <- bi_wrapper(client = .self$client,
+            new_wrapper <- libbi(client = .self$client,
                                       model = .self$model,
                                       config = .self$config,
                                       global_options = .self$global_options,
@@ -259,7 +259,7 @@ bi_wrapper <- setRefClass("bi_wrapper",
                                       working_folder = .self$working_folder,
                                       ...)
           } else {
-            new_wrapper <- bi_wrapper(client = .self$client,
+            new_wrapper <- libbi(client = .self$client,
                                       model = model,
                                       config = .self$config,
                                       global_options = .self$global_options,
