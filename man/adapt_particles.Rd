@@ -4,8 +4,8 @@
 \alias{adapt_particles}
 \title{Adapt the number of particles}
 \usage{
-adapt_particles(wrapper, init = 1, min = 0, max = 1, scale = 2,
-  add_options, samples, max_iter = 10, ...)
+adapt_particles(wrapper, init = 1, min = 0, max = 1, add_options, samples,
+  max_iter = 10, max_particles = 32768, ...)
 }
 \arguments{
 \item{wrapper}{\code{bi_wrapper} (which has been run) to study}
@@ -16,14 +16,13 @@ adapt_particles(wrapper, init = 1, min = 0, max = 1, scale = 2,
 
 \item{max}{maximum acceptance rate}
 
-\item{scale}{scale multiplier/divider for the number of particles (default: 2).
-If >1 this will be inverted and rounded up.}
-
 \item{add_options}{list of additional options}
 
 \item{samples}{number of samples to generate each iteration}
 
 \item{max_iter}{maximum of iterations (default: 10)}
+
+\item{max_particles}{maximum number of particles}
 
 \item{...}{parameters for bi_wrapper$run}
 }
