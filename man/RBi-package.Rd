@@ -26,8 +26,10 @@ interest, and to plot them in various ways.
 }
 }
 \examples{
-demo(LG_filtering.R)
- demo(PZ_PMMH.R)
+ demo(PZ_generate_dataset)
+ demo(PZ_PMMH)
+ demo(PZ_SMC2)
+ demo(PZ_filtering)
 }
 \author{
 Pierre E. Jacob \email{pierre.jacob.work@gmail.com} Sebastian Funk \email{sebastian.funk@lshtm.ac.uk}
