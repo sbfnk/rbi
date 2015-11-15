@@ -7,7 +7,7 @@
 #' @param filename a path to a NetCDF file to write the variable into, which will be overwritten
 #' if it already exists.
 #' @param variables a \code{list}
-#' @param time_dim the name of the time dimension, if one exists
+#' @param time_dim the name of the time dimension, if one exists; "nr" by default
 #' @param value_column if any \code{variables} are data frames, which column contains the values (default: "value")
 #' @details
 #'
@@ -40,7 +40,7 @@
 #' netcdf_create_from_list(filename, variables)
 #' bi_file_ncdump(filename)
 #' @export
-netcdf_create_from_list <- function(filename, variables, time_dim, value_column = "value"){
+netcdf_create_from_list <- function(filename, variables, time_dim = "nr", value_column = "value"){
   filename <- normalizePath(filename, "/", FALSE)
   if (class(variables) != "list"){
     stop("'variables' should be a list")
@@ -88,7 +88,7 @@ netcdf_create_from_list <- function(filename, variables, time_dim, value_column 
       }
       var_dims <- list()
       for (col in rev(colnames(element)[colnames(element) != value_column])) {
-        dim_name <- ifelse(!missing(time_dim) && col == time_dim, paste(time_dim, name, sep = "_"), col)
+        dim_name <- ifelse(col == time_dim, paste(time_dim, name, sep = "_"), col)
         ## strip trailing numbers, these indicate duplicate dimensions
         dim_name <- sub("\\.[0-9]+$", "", dim_name)
         dim_values <- seq_along(unique(element[, col])) - 1
@@ -102,7 +102,7 @@ netcdf_create_from_list <- function(filename, variables, time_dim, value_column 
         }
         var_dims <- c(var_dims, list(dims[[dim_name]]))
         names(var_dims)[length(var_dims)] <- col
-        if (!missing(time_dim) && col == time_dim) {
+        if (col == time_dim) {
           time_var <- paste("time", name, sep = "_")
           ##	time_var <- "time"
           vars[[time_var]] <- ncvar_def(time_var, "", list(dims[[dim_name]]))
