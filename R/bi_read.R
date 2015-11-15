@@ -1,12 +1,15 @@
-#' @rdname bi_read_file
-#' @name bi_read_file
-#' @title Bi Read File
+#' @rdname bi_read
+#' @name bi_read
+#' @title Bi Read
 #' @description
-#' This function reads all variable from a NetCDF file.
+#' This function reads all variable from a NetCDF file or the output of a
+#' \code{\link{libbi}} object.
 #' The file can be specified as a string to the filepath, in which
 #' case a NetCDF connection is opened, or directly as a NetCDF connection.
 #' 
-#' @param file either a path to a NetCDF file, or a NetCDF connection created using \code{nc_open}
+#' @param read either a path to a NetCDF file, or a NetCDF connection created using \code{nc_open}, or a \code{\link{libbi}} object from which to read the output
+#' @param wrapper a \code{\link{libbi}} object; either this or \code{file} must be given.
+#' @param vars variables to read; if not given, all will be read
 #' @param dims factors for dimensions
 #' @param missval.threshold upper threshold for the likelihood
 #' @param variables only extract given variables (for space saving)
@@ -14,20 +17,31 @@
 #' @param quiet suppress progress bar
 #' @return list of results
 #' @export
-bi_read_file <- function(file, dims, missval.threshold, variables, time_dim)
+bi_read <- function(read, vars, dims, missval.threshold, variables, time_dim)
 {
-  res <- list()
 
-  if (typeof(file) == "character"){
-    nc <- nc_open(tools::file_path_as_absolute(file))
+  if (typeof(read) == "character"){
+    nc <- nc_open(tools::file_path_as_absolute(read))
+  } else if (class(read) == "ncdf4") {
+    nc <- read
+  } else if (class(read) == "libbi"){
+    if (!read$run_flag) {
+      stop("The libbi object should be run first")
+    }
+    nc <- nc_open(tools::file_path_as_absolute(read$result$output_file_name))
   } else {
-    nc <- file
+    stop("'read' must be a string, ncdf4 or libbi object.")
   }
+
+  res <- list()
 
   var_names <- unname(sapply(nc[["var"]], function(x) { x[["name"]] }))
 
   time_var_names <- var_names[grep("^time", var_names)]
   var_names <- var_names[!(var_names %in% time_var_names)]
+  if (!missing(vars)) {
+    var_names <- intersect(var_names, vars)
+  }
 
   ## read time variables
   
@@ -113,7 +127,12 @@ bi_read_file <- function(file, dims, missval.threshold, variables, time_dim)
     }
   }
 
-  if (typeof(file) == "character") nc_close(nc)
+    if (typeof(file) == "character") nc_close(nc)
+
+    ## if only one variable has been requested, return data frame
+    if (!missing(vars) && length(vars) == 1) {
+      res <- res[[1]]
+    }
 
   return(res)
 }

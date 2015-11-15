@@ -11,7 +11,7 @@
 #' @param model a model to get the parameter names from; not needed if
 #'   'run' is given as a \code{bi_wrapper} object or 'all' is set to
 #'   TRUE 
-#' @param ... parameters to \code{bi_read_file} (e.g., dimensions)
+#' @param ... parameters to \code{bi_read} (e.g., dimensions)
 #' @return data frame with parameter traces; this can be fed to \code{coda} routines
 #' @export
 get_traces <- function(run, all = FALSE, model, ...) {

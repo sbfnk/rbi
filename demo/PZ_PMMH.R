@@ -33,8 +33,8 @@ bi_object$run(add_options = paste("--end-time", T, "--noutputs", T, "--nsamples 
 # It can be a good idea to look at the result file
 bi_file_summary(bi_object$result$output_file_name)
 # Have a look at the posterior distribution
-mu <- bi_read_var(bi_object$result$output_file_name, "mu")
+mu <- bi_read(bi_object, "mu")$value
 g1 <- qplot(x = mu, y = ..density.., geom = "histogram") + xlab(expression(mu))
-sigma <- bi_read_var(bi_object$result$output_file_name, "sigma")
+sigma <- bi_read(bi_object, "sigma")$value
 g2 <- qplot(x = sigma, y = ..density.., geom = "histogram") + xlab(expression(sigma))
 grid.arrange(g1, g2)

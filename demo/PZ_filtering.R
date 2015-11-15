@@ -29,19 +29,19 @@ print(bi_object)
 bi_object$run(add_options= paste("--nparticles 8192 --verbose --nthreads 1 --end-time", T, "--noutputs", T))
 # It can be a good idea to look at the result file
 bi_file_summary(bi_object$result$output_file_name)
-bi_read_var(bi_object$result$output_file_name, "mu")
+bi_read(bi_object$result$output_file_name, vars = "mu")
 # Let's have a look at the filtering means
 # First, get the particles
-logw <- bi_read_var(bi_object$result$output_file_name, "logweight")
-P <- bi_read_var(bi_object$result$output_file_name, "P")
-Z <- bi_read_var(bi_object$result$output_file_name, "Z")
+logw <- xtabs(value ~ nr + np, data = bi_read(bi_object, "logweight"))
+P <- bi_read(bi_object, "P")$value
+Z <- bi_read(bi_object, "Z")$value
 # Then compute the filtering means
 w = t(apply(X=logw, MARGIN=1, FUN=log2normw))
 Pmeans = apply(X = P*w, MARGIN=1, FUN=sum)
 Zmeans = apply(X = Z*w, MARGIN=1, FUN=sum)
 # Finally retrieve the original values used to generate the data
-P_original <- bi_read_var(synthetic_dataset, "P")
-Z_original <- bi_read_var(synthetic_dataset, "Z")
+P_original <- bi_read(synthetic_dataset, "P")$value
+Z_original <- bi_read(synthetic_dataset, "Z")$value
 # And now plot the estimated states along with the original "unknown" states
 # taken from the synthetic dataset
 theme_set(theme_bw())
