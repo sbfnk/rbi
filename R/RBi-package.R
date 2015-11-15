@@ -25,8 +25,10 @@
 #'@keywords package
 #'@examples
 #'
-#'  demo(LG_filtering.R)
-#'  demo(PZ_PMMH.R)
+#'  demo(PZ_generate_dataset)
+#'  demo(PZ_PMMH)
+#'  demo(PZ_SMC2)
+#'  demo(PZ_filtering)
 #'
 NULL
 

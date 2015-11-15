@@ -26,7 +26,7 @@ interest, and to plot them in various ways.
 }
 }
 \examples{
- demo(PZ_generate_dataset)
+demo(PZ_generate_dataset)
  demo(PZ_PMMH)
  demo(PZ_SMC2)
  demo(PZ_filtering)
