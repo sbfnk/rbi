@@ -116,7 +116,7 @@ netcdf_create_from_list <- function(filename, variables, time_dim = "nr", value_
       } else {
         values[[name]] <- element[, value_column]
       }
-    } else if (length(intersect(class(element), c("numeric", "integer"))) > 0) {
+    } else if (length(intersect(typeof(element), c("double", "integer"))) > 0) {
       if (length(element) > 1) {
         stop("any elements of 'variables' that are a vector must be of length 1")
       }
