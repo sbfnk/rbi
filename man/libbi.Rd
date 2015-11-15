@@ -6,13 +6,13 @@
 \arguments{
 \item{client}{is either "draw", "filter", "sample"... see LibBi documentation.}
 
-\item{model}{either a character vector giving the path to a model file (typically ending in ".bi"), or a \code{bi_model} object; if it is a file name, libbi will be executed from within the same folder, if a \code{bi_model} object in a temporary folder (both unless \code{working_folder} is given)}
+\item{model}{either a character vector giving the path to a model file (typically ending in ".bi"), or a \code{bi_model} object}
 
 \item{config}{path to a configuration file, containing multiple arguments}
 
 \item{global_options}{additional arguments to pass to the call to \code{libbi}, on top of the ones in the config file}
 
-\item{working_folder}{path to a folder from which to run \code{libbi}; default to the folder where model_file_name is.}
+\item{working_folder}{path to a folder from which to run \code{libbi}; default to a temporary folder.}
 
 \item{path_to_libbi}{path to \code{libbi} binary; by default it tries to locate \code{libbi}
 using the \code{which} Unix command, after having loaded "~/.bashrc" if present;
@@ -26,8 +26,8 @@ method documented in \code{\link{libbi_run}}.
 }
 \examples{
 bi_object <- libbi$new(client = "sample",
-                            model = system.file(package="bi", "PZ.bi"),
-                            global_options = "--sampler smc2")
+                       model = system.file(package="bi", "PZ.bi"),
+                       global_options = list(sampler = "smc2"))
 }
 \seealso{
 \code{\link{libbi_run}}

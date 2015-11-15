@@ -13,7 +13,7 @@ acceptance_rate(...)
 acceptance rate
 }
 \description{
-This function takes the provided \code{bi_wrapper} which has been
+This function takes the provided \code{\link{libbi}} object which has been
 run, or a bi file, and returns a the acceptance rate
 }
 

@@ -7,7 +7,7 @@
 sample_observations(wrapper, output_file_name)
 }
 \arguments{
-\item{wrapper}{a \code{bi_wrapper} that has been run}
+\item{wrapper}{a \code{\link{libbi}} that has been run}
 
 \item{output_file_name}{the name of the output file to write}
 }

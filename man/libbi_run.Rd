@@ -4,13 +4,21 @@
 \alias{bi_run}
 \alias{libbi}
 \alias{libbi_run}
-\title{Using the Bi Wrapper to Launch LibBi}
+\title{Using the LibBi wrapper to launch LibBi}
 \arguments{
 \item{add_options}{additional arguments to pass to the call to \code{libbi}}
 
 \item{output_file_name}{path to the result file (which will be overwritten)}
 
 \item{stdoutput_file_name}{path to a file to text file to report the output of \code{libbi}}
+
+\item{init}{initialisation of the model, either supplied as a list of values and/or data frames, or a (netcdf) file name, or a \code{\link{libbi}} object which has been run (in which case the output of that run is used as input)}
+
+\item{input}{input of the model, either supplied as a list of values and/or data frames, or a (netcdf) file name, or a \code{\link{libbi}} object which has been run (in which case the output of that run is used as input)}
+
+\item{obs}{observations of the model, either supplied as a list of values and/or data frames, or a (netcdf) file name, or a \code{\link{libbi}} object which has been run (in which case the output of that run is used as observations)}
+
+\item{verbose}{if TRUE, will run libbi with the '--verbose' option}
 }
 \value{
 a list containing the absolute paths to the results; it is stored in the
@@ -23,9 +31,9 @@ arguments.
 }
 \examples{
 bi_object <- libbi$new(client = "sample",
-                            model_file_name = system.file(package="bi", "PZ.bi"),
-                            global_options = "--sampler smc2")
-bi_object$run(add_options=" --verbose --nthreads 1")
+                       model_file_name = system.file(package="bi", "PZ.bi"),
+                       global_options = list(sampler = "smc2"))
+bi_object$run(add_options=list(nthreads = 1), verbose = TRUE)
 bi_file_summary(bi_object$result$output_file_name)
 }
 \seealso{

@@ -7,7 +7,7 @@
 output_to_proposal(wrapper, scale)
 }
 \arguments{
-\item{wrapper}{a \code{bi_wrapper} which has been run}
+\item{wrapper}{a \code{\link{libbi}} which has been run}
 
 \item{scale}{a factor by which to scale all the standard deviations}
 }
@@ -15,7 +15,7 @@ output_to_proposal(wrapper, scale)
 the updated bi model
 }
 \description{
-This function takes the provided \code{bi_wrapper} which has been
+This function takes the provided \code{\link{libbi}} which has been
 run and returns a new model which has the proposal constructed from
 the sample mean and standard deviation.
 }

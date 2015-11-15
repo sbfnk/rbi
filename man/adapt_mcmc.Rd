@@ -9,7 +9,7 @@ adapt_mcmc(wrapper, min = 0, max = 1, scale = 1, add_options, samples,
   max_iter = 10, ...)
 }
 \arguments{
-\item{wrapper}{\code{bi_wrapper} (which has been run) to study}
+\item{wrapper}{\code{link{libbi}} (which has been run) to study}
 
 \item{min}{minimum acceptance rate}
 
@@ -24,13 +24,13 @@ will be inverted.}
 
 \item{max_iter}{maximum of iterations (default: 10)}
 
-\item{...}{parameters for bi_wrapper$run}
+\item{...}{parameters for libbi$run}
 }
 \value{
-a \code{bi_wrapper} with the desired proposal distribution
+a \code{\link{libbi}} with the desired proposal distribution
 }
 \description{
-This function takes the provided \code{bi_wrapper} and
+This function takes the provided \code{\link{libbi}} object and
   runs MCMC, adapting the proposal distribution until the desired
   acceptance rate is achieved. If a scale is given, it will be used
   to adapt the proposal at each iteration

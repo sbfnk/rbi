@@ -8,24 +8,24 @@
 #' method documented in \code{\link{libbi_run}}.
 #' 
 #' @param client is either "draw", "filter", "sample"... see LibBi documentation.
-#' @param model either a character vector giving the path to a model file (typically ending in ".bi"), or a \code{bi_model} object; if it is a file name, libbi will be executed from within the same folder, if a \code{bi_model} object in a temporary folder (both unless \code{working_folder} is given)
+#' @param model either a character vector giving the path to a model file (typically ending in ".bi"), or a \code{bi_model} object
 #' @param config path to a configuration file, containing multiple arguments
 #' @param global_options additional arguments to pass to the call to \code{libbi}, on top of the ones in the config file
-#' @param working_folder path to a folder from which to run \code{libbi}; default to the folder where model_file_name is.
+#' @param working_folder path to a folder from which to run \code{libbi}; default to a temporary folder.
 #' @param path_to_libbi path to \code{libbi} binary; by default it tries to locate \code{libbi}
 #' using the \code{which} Unix command, after having loaded "~/.bashrc" if present; 
 #' if unsuccessful it tries "~/PathToBiBin/libbi"; if unsuccessful again it fails.
 #' @examples
 #' bi_object <- libbi$new(client = "sample",
-#'                             model = system.file(package="bi", "PZ.bi"), 
-#'                             global_options = "--sampler smc2")
+#'                        model = system.file(package="bi", "PZ.bi"), 
+#'                        global_options = list(sampler = "smc2"))
 #' @seealso \code{\link{libbi_run}}
 #' @export libbi
 NULL 
 #' @rdname libbi_run
 #' @name libbi_run
 #' @aliases libbi_run  bi_run  libbi
-#' @title Using the Bi Wrapper to Launch LibBi
+#' @title Using the LibBi wrapper to launch LibBi
 #' @description
 #' The method \code{run} of an instance of \code{\link{libbi}}
 #' allows to launch \code{libbi} with a particular set of command line
@@ -34,14 +34,18 @@ NULL
 #' @param add_options additional arguments to pass to the call to \code{libbi}
 #' @param output_file_name path to the result file (which will be overwritten)
 #' @param stdoutput_file_name path to a file to text file to report the output of \code{libbi}
+#' @param init initialisation of the model, either supplied as a list of values and/or data frames, or a (netcdf) file name, or a \code{\link{libbi}} object which has been run (in which case the output of that run is used as input)
+#' @param input input of the model, either supplied as a list of values and/or data frames, or a (netcdf) file name, or a \code{\link{libbi}} object which has been run (in which case the output of that run is used as input)
+#' @param obs observations of the model, either supplied as a list of values and/or data frames, or a (netcdf) file name, or a \code{\link{libbi}} object which has been run (in which case the output of that run is used as observations)
+#' @param verbose if TRUE, will run libbi with the '--verbose' option
 #' @return a list containing the absolute paths to the results; it is stored in the 
 #' \code{result} field of the instance of \code{\link{libbi}}.
 #' @seealso \code{\link{libbi}}
 #' @examples
 #' bi_object <- libbi$new(client = "sample",
-#'                             model_file_name = system.file(package="bi", "PZ.bi"), 
-#'                             global_options = "--sampler smc2")
-#' bi_object$run(add_options=" --verbose --nthreads 1")
+#'                        model_file_name = system.file(package="bi", "PZ.bi"), 
+#'                        global_options = list(sampler = "smc2"))
+#' bi_object$run(add_options=list(nthreads = 1), verbose = TRUE)
 #' bi_file_summary(bi_object$result$output_file_name)
 NULL 
 

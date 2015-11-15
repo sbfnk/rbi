@@ -2,11 +2,11 @@
 #' @name adapt_mcmc
 #' @title Adapt the proposal distribution of MCMC using the covariance
 #'   of samples
-#' @description This function takes the provided \code{bi_wrapper} and
+#' @description This function takes the provided \code{\link{libbi}} object and
 #'   runs MCMC, adapting the proposal distribution until the desired
 #'   acceptance rate is achieved. If a scale is given, it will be used
 #'   to adapt the proposal at each iteration
-#' @param wrapper \code{bi_wrapper} (which has been run) to study
+#' @param wrapper \code{link{libbi}} (which has been run) to study
 #' @param min minimum acceptance rate
 #' @param max maximum acceptance rate
 #' @param scale scale multiplier/divider for the proposal. If >1 this
@@ -14,8 +14,8 @@
 #' @param add_options list of additional options
 #' @param samples number of samples to generate each iteration
 #' @param max_iter maximum of iterations (default: 10)
-#' @param ... parameters for bi_wrapper$run
-#' @return a \code{bi_wrapper} with the desired proposal distribution
+#' @param ... parameters for libbi$run
+#' @return a \code{\link{libbi}} with the desired proposal distribution
 #' @export
 adapt_mcmc <- function(wrapper, min = 0, max = 1, scale = 1, add_options, samples, max_iter = 10, ...) {
 

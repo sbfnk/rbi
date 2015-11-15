@@ -1,12 +1,12 @@
 #' @rdname adapt_particles
 #' @name adapt_particles
 #' @title Adapt the number of particles 
-#' @description This function takes the provided \code{bi_wrapper} and
+#' @description This function takes the provided \code{\link{libbi}} and
 #'   runs MCMC at a single point (i.e., repeatedly proposing the same paramters),
 #'   adapting the number of particles distribution until the desired 
 #'   acceptance rate is achieved. If a scale is given, it will be used
 #'   to adapt the number of particles at each iteration.
-#' @param wrapper \code{bi_wrapper} (which has been run) to study
+#' @param wrapper \code{\link{libbi}} (which has been run) to study
 #' @param init initial number of particles (default: 1)
 #' @param min minimum acceptance rate
 #' @param max maximum acceptance rate
@@ -14,8 +14,8 @@
 #' @param samples number of samples to generate each iteration
 #' @param max_iter maximum of iterations (default: 10)
 #' @param max_particles maximum number of particles
-#' @param ... parameters for bi_wrapper$run
-#' @return a \code{bi_wrapper} with the desired proposal distribution
+#' @param ... parameters for libbi$run
+#' @return a \code{\link{libbi}} with the desired proposal distribution
 #' @export
 adapt_particles <- function(wrapper, init = 1, min = 0, max = 1, add_options, samples, max_iter = 10, max_particles = 32768, ...) {
 

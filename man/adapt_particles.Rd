@@ -8,7 +8,7 @@ adapt_particles(wrapper, init = 1, min = 0, max = 1, add_options, samples,
   max_iter = 10, max_particles = 32768, ...)
 }
 \arguments{
-\item{wrapper}{\code{bi_wrapper} (which has been run) to study}
+\item{wrapper}{\code{\link{libbi}} (which has been run) to study}
 
 \item{init}{initial number of particles (default: 1)}
 
@@ -24,13 +24,13 @@ adapt_particles(wrapper, init = 1, min = 0, max = 1, add_options, samples,
 
 \item{max_particles}{maximum number of particles}
 
-\item{...}{parameters for bi_wrapper$run}
+\item{...}{parameters for libbi$run}
 }
 \value{
-a \code{bi_wrapper} with the desired proposal distribution
+a \code{\link{libbi}} with the desired proposal distribution
 }
 \description{
-This function takes the provided \code{bi_wrapper} and
+This function takes the provided \code{\link{libbi}} and
   runs MCMC at a single point (i.e., repeatedly proposing the same paramters),
   adapting the number of particles distribution until the desired
   acceptance rate is achieved. If a scale is given, it will be used

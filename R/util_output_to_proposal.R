@@ -2,10 +2,10 @@
 #' @name output_to_proposal
 #' @title Construct a proposal from run results
 #' @description
-#' This function takes the provided \code{bi_wrapper} which has been
+#' This function takes the provided \code{\link{libbi}} which has been
 #' run and returns a new model which has the proposal constructed from
 #' the sample mean and standard deviation.
-#' @param wrapper a \code{bi_wrapper} which has been run
+#' @param wrapper a \code{\link{libbi}} which has been run
 #' @param scale a factor by which to scale all the standard deviations
 #' @return the updated bi model
 #' @export

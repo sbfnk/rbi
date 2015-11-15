@@ -1,7 +1,7 @@
 #' @rdname sample_observations
 #' @name sample_observations
 #' @title Sample observations from trajectories of a libbi model, one at each time step
-#' @param wrapper a \code{bi_wrapper} that has been run
+#' @param wrapper a \code{\link{libbi}} that has been run
 #' @param output_file_name the name of the output file to write
 #' @export
 #' 

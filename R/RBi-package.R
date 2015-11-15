@@ -8,7 +8,7 @@
 #' The package will ultimately be made of various components.
 #' \itemize{
 #' \item First there is a wrapper around \code{libbi} called 
-#' \code{\link{bi_wrapper}}.
+#' \code{\link{libbi}}.
 #' \item Then there are funtions to manipulate the results of the \code{libbi} command,
 #' which are stored in NetCDF files. Those functions allow to extract variables of
 #' interest, and to plot them in various ways.
@@ -18,10 +18,10 @@
 #'@name RBi-package
 #'@aliases Rbi RBi RBI
 #'@docType package
-#'@title RBi - R nterface for \code{libbi}
-#'@author Pierre E. Jacob <pierre.jacob.work@@gmail.com>
+#'@title RBi - R interface for \code{libbi}
+#'@author Pierre E. Jacob \email{pierre.jacob.work@@gmail.com} Sebastian Funk \email{sebastian.funk@@lshtm.ac.uk}
 #'@references \url{http://libbi.org/}
-#'@seealso \code{\link{bi_wrapper}}
+#'@seealso \code{\link{libbi}}
 #'@keywords package
 #'@examples
 #'

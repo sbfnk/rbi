@@ -2,14 +2,14 @@
 #' @name get_traces
 #' @title Get the parameter traces
 #' @description
-#' This function takes the provided \code{bi_wrapper} which has been
+#' This function takes the provided \code{\link{libbi}} which has been
 #' run and returns a data frame with the parameter traces.
-#' @param run a \code{bi_wrapper} which has been run, or a file (in
+#' @param run a \code{\link{libbi}} which has been run, or a file (in
 #'   which case either 'all' must be TRUE or a model given 
 #' @param all whether all variables in the run file should be
 #'   considered (otherwise, just parameters)
 #' @param model a model to get the parameter names from; not needed if
-#'   'run' is given as a \code{bi_wrapper} object or 'all' is set to
+#'   'run' is given as a \code{\link{libbi}} object or 'all' is set to
 #'   TRUE 
 #' @param ... parameters to \code{bi_read} (e.g., dimensions)
 #' @return data frame with parameter traces; this can be fed to \code{coda} routines
