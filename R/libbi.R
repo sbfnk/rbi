@@ -269,6 +269,8 @@ libbi <- setRefClass("libbi",
             add_options <- list()
           }
 
+          options <- option_string(getOption("libbi_args"), global_options, add_options)
+
           if (missing(verbose)) verbose <- FALSE
 
           if (verbose) options <- paste("--verbose", options)
