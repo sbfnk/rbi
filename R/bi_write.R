@@ -1,7 +1,7 @@
-#' @rdname bi_write_file
-#' @name bi_write_file
-#' @aliases bi_write_file
-#' @title Create Init Files for LibBi
+#' @rdname bi_write
+#' @name bi_write
+#' @aliases bi_write
+#' @title Create (init or observation) files for LibBi
 #' @description
 #' This function creates an init file to specify 
 #' parameter values and initial conditions. This file
@@ -13,16 +13,16 @@
 #' @param time_dim name of the time dimension, if one exists
 #' @return None, but creates a NetCDF file at the specified path.
 #' @export
-bi_write_file <- function(filename, variables, ...){
+bi_write <- function(filename, variables, ...){
   filename <- normalizePath(filename, "/", FALSE)
   if (length(variables) == 0){
-    stop("please provide a non-empty list to bi_write_file")
+    stop("please provide a non-empty list to bi_write")
   }
   vector_variables <-
     variables[sapply(variables, function(x) {is.numeric(x) && length(x) > 1})]
   variablelengths <- as.numeric(unlist(lapply(X=vector_variables, FUN=length)))
   if (!all(variablelengths == variablelengths[1])){
-    stop("please provide to bi_write_file a list of vectors of equal length")
+    stop("please provide to bi_write a list of vectors of equal length")
   }
   variables_with_dim <- variables
   for (name in names(vector_variables)){
@@ -33,11 +33,11 @@ bi_write_file <- function(filename, variables, ...){
 
 ##' Create init files for LibBi, retained for backwards compatibility
 ##'
-##' Users should use \code{bi_write_file} instead
-##' @param ... parameters passed to \code{bi_write_file}
-##' @return whatever \code{bi_write_file} returns
-##' @seealso \code{\link{bi_write_file}}
+##' Users should use \code{bi_write} instead
+##' @param ... parameters passed to \code{bi_write}
+##' @return whatever \code{bi_write} returns
+##' @seealso \code{\link{bi_write}}
 bi_init_file <- function(...) {
-  warning("'bi_init_file' is deprecated, use 'bi_write_file' instead.")
-  bi_write_file(...)
+  warning("'bi_init_file' is deprecated, use 'bi_write' instead.")
+  bi_write(...)
 }
