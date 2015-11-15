@@ -13,7 +13,7 @@ Installation
 ==============
 
 `RBi` is an `R` package requiring `R` (>= 2.12.1) as well as the packages:
-- `ggplot2`
+- `reshape2`
 - `ncdf`
 
 It has only been tested on GNU/Linux and OS X, but it should mostly work everywhere `R` works.
