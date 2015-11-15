@@ -29,3 +29,12 @@
 #'  demo(PZ_PMMH.R)
 #'
 NULL
+
+## set global option
+if (Sys.info()["sysname"] == "Darwin") {
+  ## I don't think openmp works on OSX at the moemnt
+  options(list("libbi_args" = list(openmp = FALSE)))
+} else {
+  options(list("libbi_args" = list()))
+}
+
