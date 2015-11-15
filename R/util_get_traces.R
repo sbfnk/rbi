@@ -16,7 +16,7 @@
 #' @export
 get_traces <- function(run, all = FALSE, model, ...) {
 
-  if (class(run) == "bi_wrapper") {
+  if (class(run) == "libbi") {
     res <- bi_read_file(run$output_file_name, ...)
     if (missing(model)) {
       model <- run$model
