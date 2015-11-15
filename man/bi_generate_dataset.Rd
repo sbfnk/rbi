@@ -12,8 +12,6 @@ bi_generate_dataset(endtime, noutputs, ...)
 \item{noutputs}{number of output points to be extracted from the hidden process; default is noutputs = endtime.}
 
 \item{...}{arguments to be passed to \code{\link{libbi}} (with run = TRUE), especially 'model'}
-
-\item{R}{if TRUE, return dataset as R data (a list) instead of the output file name}
 }
 \value{
 path to the output file.

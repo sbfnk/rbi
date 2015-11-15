@@ -156,7 +156,7 @@ libbi <- setRefClass("libbi",
           if (!missing(input)) {
             if (is.list(input)) {
               input_file_name <- tempfile(pattern=paste0(model$name, "input"), fileext=".nc", tmpdir=working_folder)
-              bi_write_file(input_file_name, input)
+              bi_write(input_file_name, input)
               add_options[["input-file"]] <- input_file_name
             } else if (is.character(input)) {
               add_options[["input-file"]] <- input_name
@@ -173,7 +173,7 @@ libbi <- setRefClass("libbi",
           if (!missing(init)) {
             if (is.list(init)) {
               init_file_name <- tempfile(pattern=paste0(model$name, "init"), fileext=".nc", tmpdir=working_folder)
-              bi_write_file(init_file_name, init)
+              bi_write(init_file_name, init)
               add_options[["init-file"]] <- init_file_name
             } else if (is.character(init)) {
               add_options[["init-file"]] <- init_name
@@ -190,7 +190,7 @@ libbi <- setRefClass("libbi",
           if (!missing(obs)) {
             if (is.list(obs)) {
               obs_file_name <- tempfile(pattern=paste0(model$name, "obs"), fileext=".nc", tmpdir=working_folder)
-              bi_write_file(obs_file_name, obs)
+              bi_write(obs_file_name, obs)
               add_options[["obs-file"]] <- obs_file_name
             } else if (is.character(obs)) {
               add_options[["obs-file"]] <- obs_name
