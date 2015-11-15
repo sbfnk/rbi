@@ -19,7 +19,6 @@ synthetic_dataset <- bi_generate_dataset(endtime=T, model_file_name=model_file_n
 # Settings
 bi_object <- libbi$new(client="sample", 
                        model_file_name=model_file_name,
-                       working_folder = working_folder,
                        global_options=list(sampler = "smc2"))
 print(bi_object)
 

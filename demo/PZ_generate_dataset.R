@@ -15,8 +15,7 @@ T <- 100
 # First let's generate a dataset without specifying parameters
 # so the parameters and initial conditions are drawn from the prior distribution
 # which is specified in the model file.
-dataset1 <- bi_generate_dataset(endtime=T, model_file_name=model_file_name,
-                                working_folder=working_folder)
+dataset1 <- bi_generate_dataset(endtime=T, model_file_name=model_file_name)
 # Read results
 output1 <- bi_read(dataset1, c("P_obs", "sigma"))
 
@@ -29,7 +28,6 @@ g1 <- g1 + xlab("time") + ylab(paste("P_obs with sigma=", round(sigma1, 2)))
 # Then generate dataset with a specified set of parameter values;
 # the parameters left unspecified are drawn from the prior.
 dataset2 <- bi_generate_dataset(endtime=T, model_file_name=model_file_name,
-                                working_folder=working_folder,
                                 init = list(sigma = 0.5))
 output2 <- bi_read(dataset2, c("P_obs", "sigma"))
 
