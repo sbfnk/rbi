@@ -317,6 +317,7 @@ libbi <- setRefClass("libbi",
                                       working_folder = .self$working_folder,
                                       ...)
           }
+          return(new_wrapper)
         }, 
         show = function(){
           cat("Wrapper around LibBi\n")
