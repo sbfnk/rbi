@@ -88,12 +88,8 @@ libbi <- setRefClass("libbi",
             }
           }
 
-          if (missing(working_folder) | is.null(working_folder)){
-            if (model_folder == "") {
-              working_folder <<- tempdir()
-            } else {
-              working_folder <<- model_folder
-            }
+          if (missing(working_folder)){
+            working_folder <<- tempdir()
           } else {
             working_folder <<- working_folder
           }
