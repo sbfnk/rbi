@@ -3,6 +3,9 @@ unlink(".RData")
 try(detach(package:bi, unload = TRUE), silent = TRUE)
 library(bi, quietly = TRUE)
 
+library('ggplot2', quietly = TRUE)
+library('gridExtra', quietly = TRUE)
+
 # the PZ model file is included in RBi and can be found there:
 model_file_name <- system.file(package="bi", "PZ.bi")
 
