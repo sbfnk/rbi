@@ -1,15 +1,15 @@
 ### This demo shows how to perform filtering on a simple 
-### synthetic dataset using bi_wrapper.
+### synthetic dataset using libbi.
 rm(list = ls(all.names=TRUE))
 unlink(".RData")
-try(detach(package:bi, unload = TRUE), silent = TRUE)
-library(bi, quietly = TRUE)
+try(detach(package:RBi, unload = TRUE), silent = TRUE)
+library(RBi, quietly = TRUE)
 
 library('ggplot2', quietly = TRUE)
 library('gridExtra', quietly = TRUE)
 
 # the PZ model file is included in RBi and can be found there:
-model_file_name <- system.file(package="bi", "PZ.bi")
+model_file_name <- system.file(package="RBi", "PZ.bi")
 
 T <- 100
 init_parameters <- list(P = 2, Z = 2, mu = 0.5, sigma = 0.3)

@@ -2,14 +2,14 @@
 
 rm(list = ls(all.names=TRUE))
 unlink(".RData")
-try(detach(package:bi, unload = TRUE), silent = TRUE)
-library(bi, quietly = TRUE)
+try(detach(package:RBi, unload = TRUE), silent = TRUE)
+library(RBi, quietly = TRUE)
 
 library('ggplot2', quietly = TRUE)
 library('gridExtra', quietly = TRUE)
 
 # the PZ model file is included in RBi and can be found there:
-model_file_name <- system.file(package="bi", "PZ.bi")
+model_file_name <- system.file(package="RBi", "PZ.bi")
 
 T <- 100
 # First let's generate a dataset without specifying parameters
