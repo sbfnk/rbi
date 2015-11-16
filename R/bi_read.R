@@ -40,6 +40,10 @@ bi_read <- function(read, vars, dims, missval.threshold, variables, time_dim)
   time_var_names <- var_names[grep("^time", var_names)]
   var_names <- var_names[!(var_names %in% time_var_names)]
   if (!missing(vars)) {
+    missing_vars <- setdiff(vars, var_names)
+    if (length(missing_vars) > 0) {
+      warning("Variable(s) ", missing_vars, " not found")
+    }
     var_names <- intersect(var_names, vars)
   }
 
@@ -130,7 +134,7 @@ bi_read <- function(read, vars, dims, missval.threshold, variables, time_dim)
     if (typeof(file) == "character") nc_close(nc)
 
     ## if only one variable has been requested, return data frame
-    if (!missing(vars) && length(vars) == 1) {
+    if (!missing(vars) && length(vars) == 1 && length(res) > 0) {
       res <- res[[1]]
     }
 
