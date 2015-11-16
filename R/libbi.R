@@ -154,8 +154,8 @@ libbi <- setRefClass("libbi",
           }
 
           for (file in c("input", "init", "obs")) {
-            arg <- get(file)
-            if (!missing(arg)) {
+            if (exists(deparse(substitute(file)))) {
+              arg <- get(file)
               if (is.list(arg)) {
                 arg_file_name <- tempfile(pattern=paste0(model$name, file),
                                           fileext=".nc", tmpdir=working_folder)
