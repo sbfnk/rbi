@@ -153,54 +153,25 @@ libbi <- setRefClass("libbi",
             add_options <- list()
           }
 
-          if (!missing(input)) {
-            if (is.list(input)) {
-              input_file_name <- tempfile(pattern=paste0(model$name, "input"), fileext=".nc", tmpdir=working_folder)
-              bi_write(input_file_name, input)
-              add_options[["input-file"]] <- input_file_name
-            } else if (is.character(input)) {
-              add_options[["input-file"]] <- input_name
-            } else if (class(input) == "libbi") {
-              if (!input$run_flag) {
-                stop("The libbi object for 'input' should be run first")
+          for (file in c("input", "init", "obs")) {
+            arg <- get(file)
+            if (!missing(arg)) {
+              if (is.list(arg)) {
+                arg_file_name <- tempfile(pattern=paste0(model$name, file),
+                                          fileext=".nc", tmpdir=working_folder)
+                bi_write(arg_file_name, arg)
+                add_options[[paste(file, "file", sep = "-")]] <- arg_file_name
+              } else if (is.character(arg)) {
+                add_options[[paste(file, "file", sep = "-")]] <- arg
+              } else if (class(arg) == "libbi") {
+                if (!arg$run_flag) {
+                  stop("The libbi object for 'arg' should be run first")
+                }
+                add_options[[paste(file, "file", sep = "-")]] <-
+                  arg$result$output_file_name
+              } else {
+                stop("'", file, "' must be a list, string or 'libbi' object.")
               }
-              add_options[["input-file"]] <- input$result$output_file_name
-            } else {
-              stop("'input' must be a list, string or 'libbi' object.")
-            }
-          }
-          
-          if (!missing(init)) {
-            if (is.list(init)) {
-              init_file_name <- tempfile(pattern=paste0(model$name, "init"), fileext=".nc", tmpdir=working_folder)
-              bi_write(init_file_name, init)
-              add_options[["init-file"]] <- init_file_name
-            } else if (is.character(init)) {
-              add_options[["init-file"]] <- init_name
-            } else if (class(init) == "libbi") {
-              if (!init$run_flag) {
-                stop("The libbi object for 'init' should be run first")
-              }
-              add_options[["init-file"]] <- init$result$output_file_name
-            } else {
-              stop("'init' must be a list, string or 'libbi' object.")
-            }
-          }
-          
-          if (!missing(obs)) {
-            if (is.list(obs)) {
-              obs_file_name <- tempfile(pattern=paste0(model$name, "obs"), fileext=".nc", tmpdir=working_folder)
-              bi_write(obs_file_name, obs)
-              add_options[["obs-file"]] <- obs_file_name
-            } else if (is.character(obs)) {
-              add_options[["obs-file"]] <- obs_name
-            } else if (class(obs) == "libbi") {
-              if (!obs$run_flag) {
-                stop("The libbi object for 'obs' should be run first")
-              }
-              add_options[["obs-file"]] <- obs$result$output_file_name
-            } else {
-              stop("'obs' must be a list, string or 'libbi' object.")
             }
           }
           
