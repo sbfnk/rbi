@@ -1,7 +1,7 @@
 RBi -- Bayesian inference for state-space models with R
 =============
 
-[RBi] (https://github.com/libbi/RBi) is an interface to [libbi] (https://github.com/libbi/LibBi), a library for Bayesian Inference.
+[RBi] (https://github.com/libbi/RBi) is an interface to [libbi] (https://github.com/libbi/LibBi), a library for Bayesian inference.
 
 It mainly contains:
 - a wrapper to call libbi (called "libbi"), allowing to perform the full inference from within R,
