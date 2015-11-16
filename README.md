@@ -1,4 +1,4 @@
-RBi
+RBi -- Bayesian inference for state-space models with R
 =============
 
 [RBi] (https://github.com/libbi/RBi) is an interface to [libbi] (https://github.com/libbi/LibBi), a library for Bayesian Inference.
@@ -12,7 +12,7 @@ Installation
 
 `RBi` is an `R` package requiring `R` (>= 2.12.1) as well as the packages:
 - `reshape2`
-- `ncdf`
+- `ncdf4`
 
 The easiest way to install `RBi` is to use the `devtools` package:
 
@@ -34,8 +34,8 @@ Getting started
 A good starting point is to use the included demos:
 
 ```{r}
- demo(PZ_generate_dataset)
- demo(PZ_PMMH)
- demo(PZ_SMC2)
- demo(PZ_filtering)
+ demo(PZ_generate_dataset) ## generating a data set from a model
+ demo(PZ_PMMH)             ## particle Markov-chain Metropolis-Hastings
+ demo(PZ_SMC2)             ## SMC^2
+ demo(PZ_filtering)        ## filtering
 ```
