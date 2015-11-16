@@ -4,7 +4,8 @@ Date: 2015-11-16
 Title: RBi
 Author: Pierre E. Jacob <pierre.jacob.work@gmail.com>, Anthony Lee <awllee@gmail.com>, Sebastian Funk <sebastian.funk@lshtm.ac.uk>
 Maintainer: Pierre E. Jacob <pierre.jacob.work@gmail.com>
-Depends: R (>= 2.12.1), ncdf4, reshape2
+Depends: R (>= 2.12.1), ncdf4
+Imports: reshape2
 LinkingTo: Rcpp
 Suggests: 
 Description: R interface to LibBi

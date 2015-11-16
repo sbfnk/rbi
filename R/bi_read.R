@@ -16,6 +16,7 @@
 #' @param time_dim name of time dimension (if any)
 #' @param quiet suppress progress bar
 #' @return list of results
+#' @importFrom reshape2 melt
 #' @export
 bi_read <- function(read, vars, dims, missval.threshold, variables, time_dim)
 {
@@ -96,7 +97,7 @@ bi_read <- function(read, vars, dims, missval.threshold, variables, time_dim)
       
       if (prod(dim(all_values)) > 1) {
         ## more than just one value
-        mav <- data.frame(melt(all_values, varnames = rev(dim_names)))
+        mav <- data.frame(reshape2::melt(all_values, varnames = rev(dim_names)))
         ## reorder duplicates
           cols <- setdiff(colnames(mav), "value")
         mav <- mav[do.call(order, mav[cols]), ]
