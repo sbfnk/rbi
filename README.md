@@ -39,3 +39,8 @@ A good starting point is to use the included demos:
  demo(PZ_SMC2)             ## SMC^2
  demo(PZ_filtering)        ## filtering
 ```
+
+Going further
+==============
+
+For higher-level methods to interact with `libbi`, [libbi] (https://github.com/libbi/LibBi), have a look at [RBi.helpers] (https://github.com/sbfnk/RBi.helpers)
