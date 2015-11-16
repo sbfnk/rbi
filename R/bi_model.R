@@ -341,12 +341,7 @@ bi_model <- setRefClass("bi_model",
               line <- line + 1
               braces <- grep("[\\{\\}]", lines[line], value = TRUE)
               line_brace <- 1
-              while (open_braces > 0 & line_brace <= length(braces)) {
-                if (braces[line_brace] == "{")
-                  open_braces <- open_braces + 1
-                else (braces[line_brace] == "}")
-                  open_braces <- open_braces - 1
-              }
+              open_braces <- open_braces + nchar(gsub("\\}", "", lines[line])) - nchar(gsub("\\{", "", lines[line]))
             }
             return(sub_line:line)
           } else {
