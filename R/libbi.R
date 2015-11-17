@@ -153,25 +153,23 @@ libbi <- setRefClass("libbi",
             add_options <- list()
           }
 
-          for (file in c("input", "init", "obs")) {
-            if (exists(deparse(substitute(file)))) {
-              arg <- get(file)
-              if (is.list(arg)) {
-                arg_file_name <- tempfile(pattern=paste0(model$name, file),
-                                          fileext=".nc", tmpdir=working_folder)
-                bi_write(arg_file_name, arg)
-                add_options[[paste(file, "file", sep = "-")]] <- arg_file_name
-              } else if (is.character(arg)) {
-                add_options[[paste(file, "file", sep = "-")]] <- arg
-              } else if (class(arg) == "libbi") {
-                if (!arg$run_flag) {
-                  stop("The libbi object for 'arg' should be run first")
-                }
-                add_options[[paste(file, "file", sep = "-")]] <-
-                  arg$result$output_file_name
-              } else {
-                stop("'", file, "' must be a list, string or 'libbi' object.")
+          for (file in intersect(names(match.call()), c("input", "init", "obs"))) {
+            arg <- get(file)
+            if (is.list(arg)) {
+              arg_file_name <- tempfile(pattern=paste0(model$name, file),
+                                        fileext=".nc", tmpdir=working_folder)
+              bi_write(arg_file_name, arg)
+              add_options[[paste(file, "file", sep = "-")]] <- arg_file_name
+            } else if (is.character(arg)) {
+              add_options[[paste(file, "file", sep = "-")]] <- arg
+            } else if (class(arg) == "libbi") {
+              if (!arg$run_flag) {
+                stop("The libbi object for 'arg' should be run first")
               }
+              add_options[[paste(file, "file", sep = "-")]] <-
+                arg$result$output_file_name
+            } else {
+              stop("'", file, "' must be a list, string or 'libbi' object.")
             }
           }
           
