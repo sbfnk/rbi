@@ -31,7 +31,7 @@ If you just want to process the output from [libbi] (https://github.com/libbi/Li
 Getting started
 ==============
 
-A good starting point is to use the included demos:
+A good starting point is to look at the included demos:
 
 ```{r}
  demo(PZ_generate_dataset) ## generating a data set from a model

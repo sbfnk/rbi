@@ -11,6 +11,9 @@ library('gridExtra', quietly = TRUE)
 # the PZ model file is included in RBi and can be found there:
 model_file_name <- system.file(package="RBi", "PZ.bi")
 
+# look at the model
+bi_model(model_file_name)
+
 T <- 100
 init_parameters <- list(P = 2, Z = 2, mu = 0.5, sigma = 0.3)
 # First let's generate a dataset from the model
