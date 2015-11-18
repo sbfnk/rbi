@@ -164,7 +164,7 @@ libbi <- setRefClass("libbi",
               add_options[[paste(file, "file", sep = "-")]] <- arg
             } else if (class(arg) == "libbi") {
               if (!arg$run_flag) {
-                stop("The libbi object for 'arg' should be run first")
+                stop("The libbi object for '", arg, "' should be run first")
               }
               add_options[[paste(file, "file", sep = "-")]] <-
                 arg$result$output_file_name
