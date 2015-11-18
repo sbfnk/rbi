@@ -8,32 +8,19 @@
 #' case a NetCDF connection is opened, or directly as a NetCDF connection.
 #' 
 #' @param read either a path to a NetCDF file, or a NetCDF connection created using \code{nc_open}, or a \code{\link{libbi}} object from which to read the output
-#' @param wrapper a \code{\link{libbi}} object; either this or \code{file} must be given.
 #' @param vars variables to read; if not given, all will be read
 #' @param dims factors for dimensions
 #' @param missval.threshold upper threshold for the likelihood
 #' @param variables only extract given variables (for space saving)
 #' @param time_dim name of time dimension (if any)
-#' @param quiet suppress progress bar
+#' @param vector if TRUE, will return results as vectors, not data.frames.
 #' @return list of results
 #' @importFrom reshape2 melt
 #' @export
-bi_read <- function(read, vars, dims, missval.threshold, variables, time_dim)
+bi_read <- function(read, vars, dims, missval.threshold, variables, time_dim, vector)
 {
 
-  if (typeof(read) == "character"){
-    nc <- nc_open(tools::file_path_as_absolute(read))
-  } else if (class(read) == "ncdf4") {
-    nc <- read
-  } else if (class(read) == "libbi"){
-    if (!read$run_flag) {
-      stop("The libbi object should be run first")
-    }
-    nc <- nc_open(tools::file_path_as_absolute(read$result$output_file_name))
-  } else {
-    stop("'read' must be a string, ncdf4 or libbi object.")
-  }
-
+  nc <- bi_open(read)
   res <- list()
 
   var_names <- unname(sapply(nc[["var"]], function(x) { x[["name"]] }))
@@ -41,11 +28,11 @@ bi_read <- function(read, vars, dims, missval.threshold, variables, time_dim)
   time_var_names <- var_names[grep("^time", var_names)]
   var_names <- var_names[!(var_names %in% time_var_names)]
   if (!missing(vars)) {
-    missing_vars <- setdiff(vars, var_names)
+    missing_vars <- setdiff(vars, union(var_names, time_var_names))
     if (length(missing_vars) > 0) {
       warning("Variable(s) ", missing_vars, " not found")
     }
-    var_names <- intersect(var_names, vars)
+    var_names <- intersect(union(var_names, time_var_names), vars)
   }
 
   ## read time variables
@@ -128,7 +115,11 @@ bi_read <- function(read, vars, dims, missval.threshold, variables, time_dim)
         }
       }
 
-      res[[var$name]] <- mav
+      if (!missing(vector) && vector) {
+        res[[var$name]] <- mav$value
+      } else {
+        res[[var$name]] <- mav
+      }
     }
   }
 
