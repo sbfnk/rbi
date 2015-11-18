@@ -275,7 +275,7 @@ libbi <- setRefClass("libbi",
         clone = function(model, ...) {
           if (missing(model)) {
             new_wrapper <- libbi(client = .self$client,
-                                      model = .self$model,
+                                      model = .self$model$clone(), 
                                       config = .self$config,
                                       global_options = .self$global_options,
                                       path_to_libbi = .self$path_to_libbi,
