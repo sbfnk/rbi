@@ -34,10 +34,10 @@ NULL
 
 ## set global option
 .onLoad <- function(libname, pkgname) {
+  libbi_args <- list(assert = FALSE)
   if (Sys.info()["sysname"] == "Darwin") {
     ## I don't think openmp works on OSX at the moemnt
-    options(list("libbi_args" = list(openmp = FALSE)))
-  } else {
-    options(list("libbi_args" = list()))
+    libbi_args[["openmp"]] <- FALSE
   }
+  options(list("libbi_args" = libbi_args))
 }
