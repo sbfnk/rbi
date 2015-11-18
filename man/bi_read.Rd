@@ -4,7 +4,7 @@
 \alias{bi_read}
 \title{Bi Read}
 \usage{
-bi_read(read, vars, dims, missval.threshold, variables, time_dim)
+bi_read(read, vars, dims, missval.threshold, variables, time_dim, vector)
 }
 \arguments{
 \item{read}{either a path to a NetCDF file, or a NetCDF connection created using \code{nc_open}, or a \code{\link{libbi}} object from which to read the output}
@@ -19,9 +19,7 @@ bi_read(read, vars, dims, missval.threshold, variables, time_dim)
 
 \item{time_dim}{name of time dimension (if any)}
 
-\item{wrapper}{a \code{\link{libbi}} object; either this or \code{file} must be given.}
-
-\item{quiet}{suppress progress bar}
+\item{vector}{if TRUE, will return results as vectors, not data.frames.}
 }
 \value{
 list of results
