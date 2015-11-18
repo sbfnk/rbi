@@ -7,7 +7,7 @@
 #' @return dimension values
 #' @export
 #' 
-bi_dim_value <- function(filename, dim){
+bi_dim_values <- function(filename, dim){
   ncfile <-  nc_open(tools::file_path_as_absolute(filename), verbose = FALSE)  
   vals <- ncfile$dim[[which(names(ncfile$dim) == dim)]]$vals
   nc_close(ncfile)

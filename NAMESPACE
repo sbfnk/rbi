@@ -2,7 +2,7 @@
 
 export(absolute_path)
 export(bi_dim_len)
-export(bi_dim_value)
+export(bi_dim_values)
 export(bi_file_ncdump)
 export(bi_file_summary)
 export(bi_generate_dataset)
