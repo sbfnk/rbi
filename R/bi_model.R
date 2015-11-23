@@ -9,7 +9,7 @@
 #' @param filename is the file name of the model file
 #' @examples
 #' bi_sir <- bi_model$new(filename = "sir.bi")
-#' @seealso \code{\link{bi_model_fix_noise}}, \code{\link{bi_model_propose_prior}}, \code{\link{bi_model_insert_lines}}, \code{\link{bi_model_update_lines}}, \code{\link{bi_model_delete_lines}}, \code{\link{bi_model_write_model_file}}, 
+#' @seealso \code{\link{bi_model_fix_noise}}, \code{\link{bi_model_propose_prior}}, \code{\link{bi_model_insert_lines}}, \code{\link{bi_model_update_lines}}, \code{\link{bi_model_remove_lines}}, \code{\link{bi_model_write_model_file}}, 
 #' #' @export bi_model
 NULL 
 #' @rdname bi_model_fix_noise
@@ -71,19 +71,19 @@ NULL
 #' PZ <- bi_model(filename = model_file_name)
 #' PZ$update_lines(23, "alpha ~ normal(mu, sigma)")
 NULL 
-#' @rdname bi_model_delete_lines
-#' @name bi_model_delete_lines
-#' @title Delete line(s) in a libbi model
+#' @rdname bi_model_remove_lines
+#' @name bi_model_remove_lines
+#' @title Remove line(s) in a libbi model
 #' @description
-#' Deletes one or more lines in a libbi model.
+#' Removes one or more lines in a libbi model.
 #'
-#' @param num line number(s) to delete
+#' @param num line number(s) to remove
 #' @return the updated bi model
 #' @seealso \code{\link{bi_model}}
 #' @examples
 #' model_file_name <- system.file(package="bi", "PZ.bi")
 #' PZ <- bi_model(filename = model_file_name)
-#' PZ$delete_line(2)
+#' PZ$remove_lines(2)
 NULL 
 #' @rdname bi_model_write_model_file
 #' @name bi_model_write_model_file
@@ -295,9 +295,9 @@ bi_model <- setRefClass("bi_model",
 
           clean_model()
         },
-        delete_lines = function(num) {
+        remove_lines = function(num) {
           if (length(grep("[\\{\\}]", model[num])) %% 2 == 1) {
-            stop("Delete would create unbalanced braces.")
+            stop("Removing lines would create unbalanced braces.")
           }
           model <<- model[-num]
 
