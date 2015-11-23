@@ -43,4 +43,4 @@ A good starting point is to look at the included demos:
 Going further
 ==============
 
-For higher-level methods to interact with `libbi`, [libbi] (https://github.com/libbi/LibBi), have a look at [RBi.helpers] (https://github.com/sbfnk/RBi.helpers)
+For higher-level methods to interact with [libbi] (https://github.com/libbi/LibBi), have a look at [RBi.helpers] (https://github.com/sbfnk/RBi.helpers)

@@ -13,6 +13,7 @@
 #'   TRUE 
 #' @param ... parameters to \code{bi_read} (e.g., dimensions)
 #' @return data frame with parameter traces; this can be fed to \code{coda} routines
+#' @importFrom reshape2 dcast
 #' @export
 get_traces <- function(run, all = FALSE, model, ...) {
 
