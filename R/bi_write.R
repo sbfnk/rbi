@@ -10,10 +10,12 @@
 #' @param filename a path to a NetCDF file to write the variables into, which will be overwritten
 #' if it already exists.
 #' @param variables a \code{list} object, which names should be the variable names and values should be either single values, vectors of equal length, or data frames
+#' @param timed if TRUE, any elements of \code{variables} that are vectors will be assumed to have a time dimension
+#' @param ... arguments passed to \code{\link{netcdf_create_from_list}}
 #' @param time_dim name of the time dimension, if one exists
 #' @return None, but creates a NetCDF file at the specified path.
 #' @export
-bi_write <- function(filename, variables, ...){
+bi_write <- function(filename, variables, timed, ...){
   filename <- normalizePath(filename, "/", FALSE)
   if (length(variables) == 0){
     stop("please provide a non-empty list to bi_write")
@@ -26,7 +28,10 @@ bi_write <- function(filename, variables, ...){
   }
   variables_with_dim <- variables
   for (name in names(vector_variables)){
-    variables_with_dim[[name]] <- list(values = variables[[name]], dimension = "ns")
+    dim <- ifelse(!missing(timed) && timed, "nr", "ns")
+    vars <- data.frame(value = variables[[name]], dim = seq_along(variables[[name]]) - 1)
+    names(vars)[2] <- dim
+    variables_with_dim[[name]] <- vars
   }
   netcdf_create_from_list(filename, variables_with_dim, ...)
 }
