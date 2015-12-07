@@ -75,8 +75,8 @@ libbi <- setRefClass("libbi",
             model_folder <<- ""
             model <<- model
           } else {
-            model_file_name <<- model_file_name
-            model_folder <<- dirname(model_file_name)
+            model_file_name <<- absolute_path(model_file_name)
+            model_folder <<- dirname(.self$model_file_name)
             if (missing(model)) {
               model <<- bi_model(model_file_name)
             } else {
@@ -95,7 +95,7 @@ libbi <- setRefClass("libbi",
           if (missing(working_folder)){
             working_folder <<- tempdir()
           } else {
-            working_folder <<- working_folder
+            working_folder <<- absolute_path(working_folder)
           }
 
           if (missing(config)){
@@ -157,8 +157,9 @@ libbi <- setRefClass("libbi",
             arg <- get(file)
             if (is.list(arg)) {
               arg_file_name <- tempfile(pattern=paste0(model$name, file),
-                                        fileext=".nc", tmpdir=working_folder)
-              bi_write(arg_file_name, arg)
+                                        fileext=".nc",
+                                        tmpdir=absolute_path(working_folder))
+              bi_write(arg_file_name, arg, timed = TRUE)
               add_options[[paste(file, "file", sep = "-")]] <- arg_file_name
             } else if (is.character(arg)) {
               add_options[[paste(file, "file", sep = "-")]] <- arg
@@ -182,13 +183,13 @@ libbi <- setRefClass("libbi",
 
           if (missing(output_file_name)){
             output_file_name <<- tempfile(pattern="output_file_name", fileext=".nc",
-                                          tmpdir=working_folder)
+                                          tmpdir=absolute_path(working_folder))
           } else {
             output_file_name <<- output_file_name 
           }
           if (missing(stdoutput_file_name) && !verbose) {
             stdoutput_file_name <- tempfile(pattern="output", fileext=".txt",
-                                            tmpdir=working_folder)
+                                            tmpdir=absolute_path(working_folder))
           }
 
           if (verbose) {
