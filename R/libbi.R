@@ -78,7 +78,13 @@ libbi <- setRefClass("libbi",
           if (missing(model_file_name)){
             model_file_name <<- ""
             model_folder <<- ""
-            model <<- model
+            if (is.character(model)) {
+              model <<- bi_model(model)
+            } else if ("bi_model" %in% class(model)) {
+              model <<- model
+            } else {
+              stop("'model' must be either a 'bi_model' object or a path to a valid model file in LibBi's syntax")
+            }
           } else {
             model_file_name <<- absolute_path(model_file_name)
             model_folder <<- dirname(.self$model_file_name)
@@ -151,7 +157,7 @@ libbi <- setRefClass("libbi",
           for (file in intersect(names(match.call()), c("input", "init", "obs"))) {
             arg <- get(file)
             if (is.list(arg)) {
-              arg_file_name <- tempfile(pattern=file, 
+              arg_file_name <- tempfile(pattern=paste(.self$model$name, file, sep = "_"), 
                                         fileext=".nc",
                                         tmpdir=absolute_path(.self$working_folder))
               bi_write(arg_file_name, arg, timed = TRUE)
@@ -185,7 +191,7 @@ libbi <- setRefClass("libbi",
           for (file in intersect(names(match.call()), c("input", "init", "obs"))) {
             arg <- get(file)
             if (is.list(arg)) {
-              arg_file_name <- tempfile(pattern=file,
+              arg_file_name <- tempfile(pattern=paste(.self$model$name, file, sep = "_"), 
                                         fileext=".nc",
                                         tmpdir=absolute_path(.self$working_folder))
               bi_write(arg_file_name, arg, timed = TRUE)
@@ -221,7 +227,8 @@ libbi <- setRefClass("libbi",
             options <- paste("--verbose", options)
 
           if (missing(output_file_name)){
-            output_file_name <<- tempfile(pattern="output_file_name", fileext=".nc",
+            output_file_name <<- tempfile(pattern=paste(.self$model$name, "output", sep = "_"),
+                                          fileext=".nc",
                                           tmpdir=absolute_path(.self$working_folder))
           } else {
             output_file_name <<- output_file_name 
@@ -238,7 +245,7 @@ libbi <- setRefClass("libbi",
           }
 
           if (.self$model_file_name == "") {
-            run_model_file <- tempfile(pattern=model$name, fileext=".bi",
+            run_model_file <- tempfile(pattern=.self$model$name, fileext=".bi",
                                        tmpdir=.self$working_folder)
             model$write_model_file(run_model_file)
           } else {
@@ -289,7 +296,7 @@ libbi <- setRefClass("libbi",
           if (verbose) options <- paste("--verbose", options)
 
           if (.self$model_file_name == "") {
-            run_model_file <- tempfile(pattern=model$name, fileext=".bi",
+            run_model_file <- tempfile(pattern=.self$model$name, fileext=".bi",
                                        tmpdir=.self$working_folder)
             model$write_model_file(run_model_file)
           } else {
