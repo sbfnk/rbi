@@ -12,7 +12,8 @@ option_string <- function(...){
 
   for (option in list(...)) {
     if (is.character(option)) {
-      string <- paste(string, option)
+      string_options <- option_list(option)
+      list_options[names(string_options)] <- string_options
     } else if (is.list(option)) {
       list_options[names(option)] <- option
     } else {
