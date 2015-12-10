@@ -14,7 +14,15 @@
 
 \item{working_folder}{path to a folder from which to run \code{libbi}; default to a temporary folder.}
 
-\item{path_to_libbi}{path to \code{libbi} binary; by default it tries to locate \code{libbi}
+\item{path_to_libbi}{path to \code{libbi} binary; by default it tries to locate \code{libbi}}
+
+\item{input}{input file (given as file name or \code{libbi} object or a list of data frames}
+
+\item{init}{init file (given as file name or \code{libbi} object or a list of data frames}
+
+\item{obs}{observation file (given as file name or \code{libbi} object or a list of data frames}
+
+\item{run}{(boolean) whether to run the model
 using the \code{which} Unix command, after having loaded "~/.bashrc" if present; 
 if unsuccessful it tries "~/PathToBiBin/libbi"; if unsuccessful again it fails.}
 }

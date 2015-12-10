@@ -1,27 +1,13 @@
-# Copyright (C) 2011-2013-2013
-# Author: Lawrence Murray <lawrence.murray@csiro.au>
-#   % $Rev: 3551 $
-#   % $Date: 2013-02-26 11:10:42 +0800 (Tue, 26 Feb 2013) $
-#   
-#   % -*- texinfo -*-
-#   % @deftypefn {Function File} {@var{X} = } read_var_simulator (@var{nc}, @var{name}, @var{coord}, @var{ps}, @var{ts})
-#
-# Read variable from NetCDF file.
-#
-# @itemize
-# @item @var{nc} NetCDF file handle.
-#
-# @item @var{name} Name of the variable.
-#
-# @item @var{coord} (optional) Dimensions index.
-#
-# @item @var{ps} (optional) Path indices.
-#
-# @item @var{ts} (optional) Time indices.
-#
-# @end itemize
-# @end deftypefn
-#
+##' Read variable from NetCDF file.
+##'
+##' @param nc NetCDF file handle
+##' @param name Name of the variable
+##' @param coord (optional) Demsions index.
+##' @param ps (optional) Path indices.
+##' @param ts (optional) Time indices.
+##' @return read values
+##' @author Lawrence Murray <lawrence.murray@csiro.au>
+##' @importFrom ncdf4 ncvar_get
 read_var_input <- function(nc, name, coord, ps, ts){
   # check arguments
   # if nargin < 2 || nargin > 5

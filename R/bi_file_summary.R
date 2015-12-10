@@ -8,6 +8,7 @@
 #' @param filename path to a NetCDF file
 #' @return None
 #' @export
+#' @importFrom ncdf4 nc_open nc_close
 #' 
 bi_file_summary <- function(filename){
   cat("Summary of file", filename, "\n")

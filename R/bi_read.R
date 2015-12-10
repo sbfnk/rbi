@@ -16,6 +16,7 @@
 #' @param vector if TRUE, will return results as vectors, not data.frames.
 #' @return list of results
 #' @importFrom reshape2 melt
+#' @importFrom ncdf4 nc_close
 #' @export
 bi_read <- function(read, vars, dims, missval.threshold, variables, time_dim, vector)
 {

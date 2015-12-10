@@ -8,6 +8,7 @@
 #' 
 #' @param read either a path to a NetCDF file, or a NetCDF connection created using \code{nc_open}, or a \code{\link{libbi}} object from which to read the output
 #' @return open NetCDF connection
+#' @importFrom ncdf4 nc_open
 bi_open <- function(read)
 {
   if (typeof(read) == "character"){

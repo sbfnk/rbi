@@ -13,6 +13,10 @@
 #' @param global_options additional arguments to pass to the call to \code{libbi}, on top of the ones in the config file
 #' @param working_folder path to a folder from which to run \code{libbi}; default to a temporary folder.
 #' @param path_to_libbi path to \code{libbi} binary; by default it tries to locate \code{libbi}
+#' @param input input file (given as file name or \code{libbi} object or a list of data frames
+#' @param init init file (given as file name or \code{libbi} object or a list of data frames
+#' @param obs observation file (given as file name or \code{libbi} object or a list of data frames
+#' @param run (boolean) whether to run the model
 #' using the \code{which} Unix command, after having loaded "~/.bashrc" if present; 
 #' if unsuccessful it tries "~/PathToBiBin/libbi"; if unsuccessful again it fails.
 #' @examples
@@ -57,6 +61,7 @@ libbi <- setRefClass("libbi",
       methods = list(
         initialize = function(client, model, model_file_name,
                               config, global_options, path_to_libbi,
+                              input, init, obs, 
                               working_folder, run = FALSE, overwrite = FALSE, ...){
           result <<- list()
           run_flag <<- FALSE
