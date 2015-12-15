@@ -1,7 +1,7 @@
 Package: RBi
 Version: 0.1-1
 Date: 2015-11-16
-Title: RBi
+Title: R interface to LibBi
 Author: Pierre E. Jacob <pierre.jacob.work@gmail.com>, Anthony Lee
     <awllee@gmail.com>, Sebastian Funk <sebastian.funk@lshtm.ac.uk>
 Maintainer: Pierre E. Jacob <pierre.jacob.work@gmail.com>
