@@ -39,7 +39,7 @@
 #' variables <- list(a=a, b=b, c=c, d=d, e=e)
 #' netcdf_create_from_list(filename, variables)
 #' bi_file_ncdump(filename)
-#' @importFrom ncdf4 nc_open nc_close
+#' @importFrom ncdf4 nc_open nc_close ncdim_def ncvar_def nc_create ncvar_put
 #' @export
 netcdf_create_from_list <- function(filename, variables, time_dim = "nr", value_column = "value"){
   filename <- normalizePath(filename, "/", FALSE)

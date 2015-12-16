@@ -6,10 +6,10 @@ Author: Pierre E. Jacob <pierre.jacob.work@gmail.com>, Anthony Lee
     <awllee@gmail.com>, Sebastian Funk <sebastian.funk@lshtm.ac.uk>
 Maintainer: Pierre E. Jacob <pierre.jacob.work@gmail.com>
 Depends:
-    ncdf4,
     methods
 Imports:
-    reshape2
+    reshape2,
+    ncdf4
 LinkingTo: Rcpp
 Suggests:
 Description: R interface to LibBi
