@@ -24,10 +24,14 @@ option_string <- function(...){
   string <- paste(paste(sapply(names(list_options),
                          function(option) {
                            if (is.logical(list_options[[option]])) {
-                             if (list_options[[option]] == TRUE)
-                               paste0("--enable-", option)
-                             else
-                               paste0("--disable-", option)
+                             if (option == "verbose") {
+                                 paste0("--verbose")
+                             } else {
+                               if (list_options[[option]] == TRUE)
+                                 paste0("--enable-", option)
+                               else  
+                                 paste0("--disable-", option)
+                             }
                            } else if (option == "dry") {
                              paste0("--dry-", list_options[[option]])
                            } else {
