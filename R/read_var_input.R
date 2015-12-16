@@ -6,7 +6,7 @@
 ##' @param ps (optional) Path indices.
 ##' @param ts (optional) Time indices.
 ##' @return read values
-##' @author Lawrence Murray <lawrence.murray@csiro.au>
+##' @author Lawrence Murray, \email{lawrence.murray@@csiro.au}
 ##' @importFrom ncdf4 ncvar_get
 read_var_input <- function(nc, name, coord, ps, ts){
   # check arguments
