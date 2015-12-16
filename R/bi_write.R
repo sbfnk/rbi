@@ -17,7 +17,7 @@
 #' @export
 bi_write <- function(filename, variables, timed, ...){
   filename <- normalizePath(filename, "/", FALSE)
-  if (length(variables) == 0){
+  if (!("list" %in% class(variables)) || length(variables) == 0){
     stop("please provide a non-empty list to bi_write")
   }
   vector_variables <-

@@ -43,7 +43,7 @@
 #' @export
 netcdf_create_from_list <- function(filename, variables, time_dim = "nr", value_column = "value"){
   filename <- normalizePath(filename, "/", FALSE)
-  if (class(variables) != "list"){
+  if (!("list" %in% class(variables))){
     stop("'variables' should be a list")
   }
   if (is.null(names(variables)) || any(names(variables) == "")) {
