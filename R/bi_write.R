@@ -9,7 +9,7 @@
 #' 
 #' @param filename a path to a NetCDF file to write the variables into, which will be overwritten
 #' if it already exists.
-#' @param variables a \code{list} object, which names should be the variable names and values should be either single values, vectors of equal length, or data frames
+#' @param variables a \code{list} object, which names should be the variable names and values should be either single values, vectors of equal length, or data frames; or a single element of the type
 #' @param timed if TRUE, any elements of \code{variables} that are vectors will be assumed to have a time dimension
 #' @param ... arguments passed to \code{\link{netcdf_create_from_list}}
 #' @param time_dim name of the time dimension, if one exists
