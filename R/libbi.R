@@ -42,6 +42,7 @@ NULL
 #' @param input input of the model, either supplied as a list of values and/or data frames, or a (netcdf) file name, or a \code{\link{libbi}} object which has been run (in which case the output of that run is used as input)
 #' @param obs observations of the model, either supplied as a list of values and/or data frames, or a (netcdf) file name, or a \code{\link{libbi}} object which has been run (in which case the output of that run is used as observations)
 #' @param verbose if TRUE, will run libbi with the '--verbose' option
+#' @param ... any onrecognised options will be added to \code{add_options}
 #' @return a list containing the absolute paths to the results; it is stored in the 
 #' \code{result} field of the instance of \code{\link{libbi}}.
 #' @seealso \code{\link{libbi}}
@@ -62,7 +63,8 @@ libbi <- setRefClass("libbi",
         initialize = function(client, model, model_file_name,
                               config, global_options, path_to_libbi,
                               input, init, obs, 
-                              working_folder, run = FALSE, overwrite = FALSE, ...){
+                              working_folder, run = FALSE,
+                              overwrite = FALSE, ...){
           result <<- list()
           run_flag <<- FALSE
           if (missing(client)){
@@ -154,6 +156,12 @@ libbi <- setRefClass("libbi",
           base_command_string <<- paste(.self$path_to_libbi, .self$client,
                                         .self$config)
 
+          dot_options <- list(...)
+          for (option in names(dot_options))
+          {
+              global_options[[option]] <<- dot_options[[option]]
+          }
+
           for (file in intersect(names(match.call()), c("input", "init", "obs"))) {
             arg <- get(file)
             if (is.list(arg)) {
@@ -174,15 +182,21 @@ libbi <- setRefClass("libbi",
               stop("'", file, "' must be a list, string or 'libbi' object.")
             }
           }
-          
+
           if (run == TRUE) {
-            .self$run(...)
+            .self$run(from_init = TRUE, ...)
           }
         },
-        run = function(add_options, output_file_name, stdoutput_file_name, init, input, obs, verbose){
+        run = function(add_options, output_file_name, stdoutput_file_name, init, input, obs, from_init = FALSE, ...){
 
-          if (missing(add_options))
-          {
+          ## if run from init, check if any of the global options are actually our option
+          if (from_init) {
+            for (run_option in intersect(names(match.call(expand.dots = FALSE)), names(global_options))) {
+              global_options[[run_option]] <<- NULL
+            }
+          }
+
+          if (missing(add_options)){
             add_options <- list()
           } else {
             add_options <- option_list(add_options)
@@ -218,20 +232,17 @@ libbi <- setRefClass("libbi",
               stop("'", file, "' must be a list, string or 'libbi' object.")
             }
           }
-          
-          options <- option_string(getOption("libbi_args"), global_options, add_options)
-            
-          if (missing(verbose)) verbose <- FALSE
-          
-          if (verbose)
-            options <- paste("--verbose", options)
 
+          options <- option_list(getOption("libbi_args"), global_options, add_options, list(...))
+          opt_string <- option_string(options)
+          verbose <- ("verbose" %in% names(options) && options[["verbose"]] == TRUE)
+            
           if (missing(output_file_name)){
             output_file_name <<- tempfile(pattern=paste(.self$model$name, "output", sep = "_"),
                                           fileext=".nc",
                                           tmpdir=absolute_path(.self$working_folder))
           } else {
-            output_file_name <<- output_file_name 
+            output_file_name <<- absolute_path(output_file_name, getwd())
           }
           if (missing(stdoutput_file_name) && !verbose) {
             stdoutput_file_name <- tempfile(pattern="output", fileext=".txt",
@@ -259,7 +270,7 @@ libbi <- setRefClass("libbi",
           }
           
           cdcommand <- paste("cd", .self$working_folder)
-          launchcommand <- paste(.self$base_command_string, options,
+          launchcommand <- paste(.self$base_command_string, opt_string,
                                  "--output-file", .self$output_file_name,
                                  "--model-file", rel_model_file)
           if (verbose) print("Launching LibBi with the following commands:")
@@ -271,15 +282,17 @@ libbi <- setRefClass("libbi",
           system(command, intern = TRUE)
           if (verbose) print("... LibBi has finished!")
           libbi_result <- list(output_file_name = absolute_path(filename=.self$output_file_name, 
-                                                  dirname=.self$working_folder),
-                               model_file_name = .self$model_file_name)
+                                                                dirname=.self$working_folder))
+          if (nchar(.self$model_file_name) > 0){
+            libbi_result["model_fil_name"] = .self$model_file_name
+          }
           if (!missing(stdoutput_file_name)){
             libbi_result["stdoutput_file_name"] = absolute_path(filename=stdoutput_file_name, dirname=.self$model_file_name)
           }
           run_flag <<- TRUE
           result <<- libbi_result
         },
-        rerun = function(add_options, verbose){
+        rerun = function(add_options, ...){
           if (!run_flag) {
             stop("The model should be run before running 'rerun'")
           }
@@ -289,11 +302,11 @@ libbi <- setRefClass("libbi",
             add_options <- list()
           }
 
-          options <- option_string(getOption("libbi_args"), global_options, add_options)
+          options <- option_list(getOption("libbi_args"), global_options, add_options, list(...))
+          opt_string <- option_string(option_list)
+          verbose <- ("verbose" %in% names(options) && options[["verbose"]] == TRUE)
 
           if (missing(verbose)) verbose <- FALSE
-
-          if (verbose) options <- paste("--verbose", options)
 
           if (.self$model_file_name == "") {
             run_model_file <- tempfile(pattern=.self$model$name, fileext=".bi",
@@ -310,7 +323,7 @@ libbi <- setRefClass("libbi",
           }
           
           cdcommand <- paste("cd", .self$working_folder)
-          launchcommand <- paste(.self$base_command_string, options,
+          launchcommand <- paste(.self$base_command_string, opt_string,
                                  "--output-file", .self$output_file_name,
                                  "--model-file", rel_model_file)
           command_dryparse <<- paste(c(cdcommand, paste(launchcommand, "--dry-parse")), collapse = ";")
