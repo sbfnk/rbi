@@ -379,7 +379,7 @@ bi_model <- setRefClass("bi_model",
                       paste(lines, sep = "\n"), "}", "}")
           clean_model()
         },
-        get_vars = function(type, dim = FALSE) {
+        get_vars = function(type, dim = FALSE, opt = FALSE) {
           line_nbs <- grep(paste0("^[[:space:]]*", type, "[[:space:]]"), .self$model)
           if (length(line_nbs) > 0) {
             ## remove qualifier
@@ -389,6 +389,12 @@ bi_model <- setRefClass("bi_model",
               ## remove dimensions
               names <- sub("\\[.*\\]", "", names)
             }
+            if (!dim) {
+              ## remove options
+              names <- sub("\\(.*\\)", "", names)
+            }
+            ## remove spaces
+            names <- sub("[[:space:]]", "", names)              
             names_vec <- unlist(strsplit(names, ","))
             return(names_vec)
           } else {
