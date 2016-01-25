@@ -398,7 +398,7 @@ bi_model <- setRefClass("bi_model",
             names_vec <- unlist(strsplit(names, ","))
             return(names_vec)
           } else {
-            return(NA)
+            return(c())
           }
         },
         clone = function() {
