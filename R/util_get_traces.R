@@ -1,23 +1,26 @@
 #' @rdname get_traces
 #' @name get_traces
 #' @title Get the parameter traces
-#' @description
-#' This function takes the provided \code{\link{libbi}} which has been
-#' run and returns a data frame with the parameter traces.
-#' @param run a \code{\link{libbi}} which has been run, or a file (in
-#'   which case either 'all' must be TRUE or a model given 
+#' @description This function takes the provided \code{\link{libbi}}
+#'     which has been run and returns a data frame with the parameter
+#'     traces.
+#' @param run a \code{\link{libbi}} object which has been run, or a
+#'     list of data frames containing parameter traces (as returned by
+#'     from \code{bi_read}); if it is not a \code{\linke{libbi}}
+#'     object, either 'all' must be TRUE or a model given
 #' @param all whether all variables in the run file should be
-#'   considered (otherwise, just parameters)
+#'     considered (otherwise, just parameters)
 #' @param model a model to get the parameter names from; not needed if
-#'   'run' is given as a \code{\link{libbi}} object or 'all' is set to
-#'   TRUE 
+#'     'run' is given as a \code{\link{libbi}} object or 'all' is set
+#'     to TRUE
 #' @param ... parameters to \code{bi_read} (e.g., dimensions)
-#' @return data frame with parameter traces; this can be fed to \code{coda} routines
+#' @return data frame with parameter traces; this can be fed to
+#'     \code{coda} routines
 #' @importFrom reshape2 dcast
 #' @export
 get_traces <- function(run, all = FALSE, model, ...) {
 
-  if (class(run) == "libbi") {
+  if ("libbi" %in% class(run)) {
     res <- bi_read(run$output_file_name, ...)
     if (missing(model)) {
       model <- run$model
@@ -25,7 +28,13 @@ get_traces <- function(run, all = FALSE, model, ...) {
       warning("Given model will overwrite model contained in given 'run'.")
     }
   } else {
-    res <- bi_read(run, ...)
+    if ("character" %in% class(run)) {
+      res <- bi_read(run, ...)
+    } else if ("list" %in% class(run)) {
+      res <- run
+    } else {
+      stop("'run' must be a 'libbi' object or a file name or a list of data frames.")
+    }
     if (missing(model)) {
       model <- NULL
     }
