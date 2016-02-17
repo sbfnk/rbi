@@ -14,11 +14,12 @@
 #' @param variables only extract given variables (for space saving)
 #' @param time_dim name of time dimension (if any)
 #' @param vector if TRUE, will return results as vectors, not data.frames.
+#' @param thin thinning (keep only 1/thin of samples)
 #' @return list of results
 #' @importFrom reshape2 melt
 #' @importFrom ncdf4 nc_close
 #' @export
-bi_read <- function(read, vars, dims, missval.threshold, variables, time_dim, vector)
+bi_read <- function(read, vars, dims, missval.threshold, variables, time_dim, vector, thin)
 {
 
   nc <- bi_open(read)
@@ -114,6 +115,11 @@ bi_read <- function(read, vars, dims, missval.threshold, variables, time_dim, ve
         } else {
           mav[[current.dim]] <- mav[[current.dim]] - 1
         }
+      }
+
+      if (!missing(thin) && "np" %in% names(mav))
+      {
+          mav <- mav[mav$np %% thin == 0, ]
       }
 
       if (!missing(vector) && vector) {
