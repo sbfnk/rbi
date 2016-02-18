@@ -18,8 +18,9 @@
 #' @return list of results
 #' @importFrom reshape2 melt
 #' @importFrom ncdf4 nc_close
+#' @importFrom data.table data.table setkeyv
 #' @export
-bi_read <- function(read, vars, dims, missval.threshold, variables, time_dim, vector, thin)
+bi_read <- function(read, vars, dims, missval.threshold, variables, time_dim, vector, thin, verbose)
 {
 
   nc <- bi_open(read)
@@ -66,7 +67,11 @@ bi_read <- function(read, vars, dims, missval.threshold, variables, time_dim, ve
 
   ## read other variables
   
-  for (var_name in var_names) { 
+  for (var_name in var_names) {
+    if (!missing(verbose) && verbose)
+    {
+      message(var_name)
+    }
     var <- nc[["var"]][[var_name]]
     if (missing(variables) || var$name %in% variables) {
       all_values <- read_var_input(nc, var$name)
@@ -86,10 +91,11 @@ bi_read <- function(read, vars, dims, missval.threshold, variables, time_dim, ve
       
       if (prod(dim(all_values)) > 1) {
         ## more than just one value
-        mav <- data.frame(reshape2::melt(all_values, varnames = rev(dim_names)))
+        mav <- data.table::data.table(reshape2::melt(all_values, varnames = rev(dim_names)))
         ## reorder duplicates
-          cols <- setdiff(colnames(mav), "value")
-        mav <- mav[do.call(order, mav[cols]), ]
+        cols <- setdiff(colnames(mav), "value")
+        data.table::setkeyv(mav, cols)
+        ## mav <- mav[do.call(order, mav[cols]), ]
         rownames(mav) <- seq_len(nrow(mav))
       } else {
         ## fixed value
