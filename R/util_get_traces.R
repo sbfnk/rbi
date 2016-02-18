@@ -6,7 +6,7 @@
 #'     traces.
 #' @param run a \code{\link{libbi}} object which has been run, or a
 #'     list of data frames containing parameter traces (as returned by
-#'     from \code{bi_read}); if it is not a \code{\linke{libbi}}
+#'     from \code{bi_read}); if it is not a \code{\link{libbi}}
 #'     object, either 'all' must be TRUE or a model given
 #' @param all whether all variables in the run file should be
 #'     considered (otherwise, just parameters)
@@ -20,37 +20,41 @@
 #' @export
 get_traces <- function(run, all = FALSE, model, ...) {
 
+  read_options <- list(...)
+
   if ("libbi" %in% class(run)) {
-    res <- bi_read(run$output_file_name, ...)
     if (missing(model)) {
       model <- run$model
     } else {
       warning("Given model will overwrite model contained in given 'run'.")
     }
+    read_options <- c(read_options, list(read = run$output_file_name))
   } else {
-    if ("character" %in% class(run)) {
-      res <- bi_read(run, ...)
-    } else if ("list" %in% class(run)) {
-      res <- run
-    } else {
-      stop("'run' must be a 'libbi' object or a file name or a list of data frames.")
-    }
-    if (missing(model)) {
-      model <- NULL
-    }
-  }
-  
-  if (all) {
-    params <- names(res)
-  } else {
-    if (is.null(model)) {
-      stop("Either 'all' must be set to TRUE, or a model given (via the 'run' or 'model' options)")
-    }
-    params <- model$get_vars("param")
+    read_options <- c(read_options, list(read = run))
   }
 
-  wide_list <- lapply(params, function(param) {
-    extra.dims <- setdiff(colnames(res[[param]]), c("np", "param", "value"))
+  if (!all) {
+    if (missing(model)) {
+      stop("Either 'all' must be set to TRUE, or a model given (via the 'run' or 'model' options)")
+    } else {
+      read_options <- c(read_options, list(vars = model$get_vars("param")))
+    }
+  }
+
+  if (("libbi" %in% class(run)) | ("character" %in% class(run))) {
+      res <- do.call(bi_read, read_options)
+  } else if ("list" %in% class(run)) {
+      if (all) {
+        res <- run
+      } else {
+        res <- run[intersect(names(run), model$get_vars("params"))]
+      }
+  } else {
+      stop("'run' must be a 'libbi' object or a file name or a list of data frames.")
+  }
+      
+  wide_list <- lapply(names(res), function(param) {
+      extra.dims <- setdiff(colnames(res[[param]]), c("np", "param", "value"))
     if (length(extra.dims) > 0) {
       df <- dcast(res[[param]],
                   as.formula(paste("np", paste(extra.dims, collapse = "+"), sep = "~")))
