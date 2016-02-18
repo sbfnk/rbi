@@ -11,7 +11,6 @@
 #' @param ... arguments to be passed to \code{\link{libbi}} (with run = TRUE), especially 'model'
 #' @return path to the output file.
 #' @export
-#' 
 bi_generate_dataset <- function(endtime, noutputs, ...){
   if (missing(endtime)){
     stop("please specify the final time index!")
