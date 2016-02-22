@@ -284,7 +284,7 @@ libbi <- setRefClass("libbi",
           libbi_result <-
             list(output_file_name = absolute_path(filename=.self$output_file_name, 
                                                   dirname=.self$working_folder),
-                 command = command)
+                 command = launchcommand)
           if (nchar(.self$model_file_name) > 0){
             libbi_result["model_file_name"] = .self$model_file_name
           }
