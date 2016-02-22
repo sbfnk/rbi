@@ -281,10 +281,12 @@ libbi <- setRefClass("libbi",
 #           command_dryparse <<- paste(c(cdcommand, paste(launchcommand, "--dry-parse")), collapse = ";")
           system(command, intern = TRUE)
           if (verbose) print("... LibBi has finished!")
-          libbi_result <- list(output_file_name = absolute_path(filename=.self$output_file_name, 
-                                                                dirname=.self$working_folder))
+          libbi_result <-
+            list(output_file_name = absolute_path(filename=.self$output_file_name, 
+                                                  dirname=.self$working_folder),
+                 command = command)
           if (nchar(.self$model_file_name) > 0){
-            libbi_result["model_fil_name"] = .self$model_file_name
+            libbi_result["model_file_name"] = .self$model_file_name
           }
           if (!missing(stdoutput_file_name)){
             libbi_result["stdoutput_file_name"] = absolute_path(filename=stdoutput_file_name, dirname=.self$model_file_name)
