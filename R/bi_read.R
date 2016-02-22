@@ -18,7 +18,7 @@
 #' @return list of results
 #' @importFrom reshape2 melt
 #' @importFrom ncdf4 nc_close
-#' @importFrom data.table data.table setkeyv
+#' @importFrom data.table data.table setkeyv setDF is.data.table
 #' @export
 bi_read <- function(read, vars, dims, missval.threshold, variables, time_dim, vector, thin, verbose)
 {
@@ -131,7 +131,11 @@ bi_read <- function(read, vars, dims, missval.threshold, variables, time_dim, ve
       if (!missing(vector) && vector) {
         res[[var$name]] <- mav$value
       } else {
-        res[[var$name]] <- mav
+        if (data.table::is.data.table(mav)) {
+          res[[var$name]] <- data.table::setDF(mav)
+        } else {
+          res[[var$name]] <- mav
+        }
       }
     }
   }
