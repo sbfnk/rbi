@@ -92,7 +92,7 @@ netcdf_create_from_list <- function(filename, variables, time_dim = "nr", value_
         dim_name <- ifelse(col == time_dim, paste(time_dim, name, sep = "_"), col)
         ## strip trailing numbers, these indicate duplicate dimensions
         dim_name <- sub("\\.[0-9]+$", "", dim_name)
-        dim_values <- seq_along(unique(element[, col])) - 1
+        dim_values <- seq_along(unique(element[[col]])) - 1
         if (dim_name %in% names(dims)) {
           if (length(dim_values) != dims[[dim_name]]$len) {
             stop("Two dimensions of name '", dim_name, "' have different lengths")
@@ -107,7 +107,7 @@ netcdf_create_from_list <- function(filename, variables, time_dim = "nr", value_
           time_var <- paste("time", name, sep = "_")
           ##	time_var <- "time"
           vars[[time_var]] <- ncvar_def(time_var, "", list(dims[[dim_name]]))
-          values[[time_var]] <- unique(element[, time_dim])
+          values[[time_var]] <- unique(element[[time_dim]])
         }
       } 
      vars[[name]] <- ncvar_def(name, "", var_dims)
@@ -115,7 +115,7 @@ netcdf_create_from_list <- function(filename, variables, time_dim = "nr", value_
       ## if (sum(colnames(element) != value_column) > 0) {
       ##   values[[name]] <- element[do.call(order, element[rev(colnames(element)[colnames(element) != value_column])]), value_column]
       ## } else {
-        values[[name]] <- element[, value_column]
+        values[[name]] <- element[[value_column]]
       ## }
     } else if (length(intersect(typeof(element), c("double", "integer"))) > 0) {
       if (length(element) > 1) {
