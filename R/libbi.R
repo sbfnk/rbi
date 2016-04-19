@@ -220,7 +220,7 @@ libbi <- setRefClass("libbi",
               add_options[[paste(file, "file", sep = "-")]] <- arg
             } else if (class(arg) == "libbi") {
               if (!arg$run_flag) {
-                stop("The libbi object for '", arg, "' should be run first")
+                stop("The libbi object for '", file, "' should be run first")
               }
               ## overwrite global and additional option, i.e. if this
               ## is run again it should use the file given here
@@ -336,22 +336,15 @@ libbi <- setRefClass("libbi",
         },
         clone = function(model, ...) {
           if (missing(model)) {
-            new_wrapper <- libbi(client = .self$client,
-                                      model = .self$model$clone(), 
-                                      config = .self$config,
-                                      global_options = .self$global_options,
-                                      path_to_libbi = .self$path_to_libbi,
-                                      working_folder = .self$working_folder,
-                                      ...)
-          } else {
-            new_wrapper <- libbi(client = .self$client,
-                                      model = model,
-                                      config = .self$config,
-                                      global_options = .self$global_options,
-                                      path_to_libbi = .self$path_to_libbi,
-                                      working_folder = .self$working_folder,
-                                      ...)
+            model <- .self$model$clone()
           }
+          new_wrapper <- libbi(client = .self$client,
+                               model = model,
+                               config = .self$config,
+                               global_options = .self$global_options,
+                               path_to_libbi = .self$path_to_libbi,
+                               working_folder = .self$working_folder,
+                               ...)
           return(new_wrapper)
         }, 
         show = function(){
