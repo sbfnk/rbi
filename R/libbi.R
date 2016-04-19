@@ -336,10 +336,10 @@ libbi <- setRefClass("libbi",
         },
         clone = function(model, ...) {
           if (missing(model)) {
-            model <- .self$model$clone()
+            cloned_model <- .self$model$clone()
           }
           new_wrapper <- libbi(client = .self$client,
-                               model = model,
+                               model = cloned_model,
                                config = .self$config,
                                global_options = .self$global_options,
                                path_to_libbi = .self$path_to_libbi,
