@@ -15,6 +15,6 @@ object.
 bi_sir <- bi_model$new(filename = "sir.bi")
 }
 \seealso{
-\code{\link{bi_model_fix_noise}}, \code{\link{bi_model_propose_prior}}, \code{\link{bi_model_insert_lines}}, \code{\link{bi_model_update_lines}}, \code{\link{bi_model_remove_lines}}, \code{\link{bi_model_write_model_file}},
+\code{\link{bi_model_fix}}, \code{\link{bi_model_propose_prior}}, \code{\link{bi_model_insert_lines}}, \code{\link{bi_model_update_lines}}, \code{\link{bi_model_remove_lines}}, \code{\link{bi_model_write_model_file}},
 }
 

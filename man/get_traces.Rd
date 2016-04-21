@@ -9,7 +9,7 @@ get_traces(run, all = FALSE, model, ...)
 \arguments{
 \item{run}{a \code{\link{libbi}} object which has been run, or a
 list of data frames containing parameter traces (as returned by
-from \code{bi_read}); if it is not a \code{\linke{libbi}}
+from \code{bi_read}); if it is not a \code{\link{libbi}}
 object, either 'all' must be TRUE or a model given}
 
 \item{all}{whether all variables in the run file should be

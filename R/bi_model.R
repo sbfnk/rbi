@@ -9,23 +9,22 @@
 #' @param filename is the file name of the model file
 #' @examples
 #' bi_sir <- bi_model$new(filename = "sir.bi")
-#' @seealso \code{\link{bi_model_fix_noise}}, \code{\link{bi_model_propose_prior}}, \code{\link{bi_model_insert_lines}}, \code{\link{bi_model_update_lines}}, \code{\link{bi_model_remove_lines}}, \code{\link{bi_model_write_model_file}}, 
+#' @seealso \code{\link{bi_model_fix}}, \code{\link{bi_model_propose_prior}}, \code{\link{bi_model_insert_lines}}, \code{\link{bi_model_update_lines}}, \code{\link{bi_model_remove_lines}}, \code{\link{bi_model_write_model_file}}, 
 #' @export bi_model
 NULL 
-#' @rdname bi_model_fix_noise
-#' @name bi_model_fix_noise
-#' @title Fix noise term of a libbi model
+#' @rdname bi_model_fix
+#' @name bi_model_fix
+#' @title Fix noise term, state or parameter of a libbi model
 #' @description
-#' Replaces all noises with fixed values as given in 'fixed', otherwise as given in 'default'
+#' Replaces all variables with fixed values as given in 'fixed'; note that this will not replace differential equations and lead to an error if applied to states that are changed inside an "ode" block
 #'
-#' @param fixed a vector of values to be assigned to the (usually) noise value
-#' @param default an optional default value to give to all noises not specified in \code{fixed}
+#' @param ... values to be assigned to the (named) variables
 #' @return a bi model object of the new model
 #' @seealso \code{\link{bi_model}}
 #' @examples
 #' model_file_name <- system.file(package="bi", "PZ.bi")
 #' PZ <- bi_model(filename = model_file_name)
-#' PZ$fix_noise(fixed = c(alpha = 0))
+#' PZ$fix(alpha = 0)
 NULL 
 #' @rdname bi_model_propose_prior
 #' @name bi_model_propose_prior
@@ -125,60 +124,59 @@ bi_model <- setRefClass("bi_model",
 
           clean_model()
         },
-        fix_noise = function(fixed, default){
-          if (missing(fixed) && missing(default)) {
-            stop("At least one of 'fixed' and 'default' must be given.")
-          }
-          if (missing(fixed)) {
-            fixed <- list()
-          }
-            
+        fix = function(...){
+
           fix_model <- model
 
-          noise_str <- paste0("^[[:space:]]*noise[[:space:]]+(",
-                              paste(names(fixed), collapse = "|"), ")")
-          noise_line_nbs <- grep(noise_str, fix_model)
-          if (length(noise_line_nbs) < length(fixed))
+          fixed = list(...)
+
+          ## variables that are to be fixed
+          var_str <-
+            paste0("^[[:space:]]*(noise|param|state|const)[[:space:]]+(",
+                   paste(names(fixed), collapse = "|"), ")")
+          var_line_nbs <- grep(var_str, fix_model)
+
+          if (length(var_line_nbs) < length(fixed))
           {
-              warning("Not all noises could be found, perhaps check the spelling.")
+              warning("Not all given variables could be found, perhaps check the spelling.")
           }
-          indent <- sub("^([[:space:]]*).*$", "\\1", fix_model[noise_line_nbs[1]])
+          indent <- sub("^([[:space:]]*).*$", "\\1",
+                        fix_model[var_line_nbs[1]])
 
-          if (length(noise_line_nbs) > 0) {
-            ## remove "noise" term
-            noise_vec <- .self$get_vars("noise")
+          if (length(var_line_nbs) > 0) {
+            var_vec <- c(.self$get_vars("noise"),
+                         .self$get_vars("param"),
+                         .self$get_vars("state"),
+                         .self$get_vars("const"))
 
-            unmatched_names <- setdiff(names(fixed), noise_vec)
+            unmatched_names <- setdiff(names(fixed), var_vec)
             if (length(unmatched_names) > 0) {
-              stop("Given noises ", paste(unmatched_names, collapse = ", "),
+              stop("Given variables ",
+                   paste(unmatched_names, collapse = ", "),
                    " not found in model.")
             }
 
-            fix_model <- fix_model[-noise_line_nbs]
-            for (noise in noise_vec) {
-              if (!missing(default) || (noise %in% names(fixed))) {
-                fixed_lines <- c()
-                if (!(noise %in% names(fixed))) {
-                  fixed[[noise]] <- default
-                }
-                fixed_lines <- c(fixed_lines,
-                                 paste0(indent, "const ", noise, " = ",
-                                        fixed[[noise]]))
-                fix_model <- c(fix_model[1:(noise_line_nbs[1] - 1)],
-                               fixed_lines, 
-                               fix_model[(noise_line_nbs[1]):length(fix_model)])
-                
-                this_noise_assignment <-
-                  grep(paste0(noise, "[[:space:]]*(\\[[^]]*\\])?[[:space:]]*~"),
-                       fix_model)
-                if (length(this_noise_assignment) > 0) {
-                  fix_model <- fix_model[-this_noise_assignment]
-                }
-
-                ## remove dimensions
-                fix_model <-
-                  sub(paste0(noise, "[[:space:]]*\\[[^]]*\\]"), noise, fix_model)
+            fix_model <- fix_model[-var_line_nbs]
+            for (var in intersect(names(fixed), var_vec)) {
+              ## remove assignments
+              assignments <-
+                grep(paste0(var,
+                            "[[:space:]]*(\\[[^]]*\\])?[[:space:]]*(~|=|<-)"),
+                     fix_model)
+              if (length(assignments) > 0) {
+                fix_model <- fix_model[-assignments]
               }
+
+              ## remove dimensions
+              fix_model <-
+                gsub(paste0(var, "[[:space:]]*\\[[^]]*\\]"), var, fix_model)
+
+              ## add const assignment
+              fixed_line <- paste0(indent, "const ", var, " = ", fixed[[var]])
+              fix_model <- c(fix_model[1:(var_line_nbs[1] - 1)],
+                             fixed_line, 
+                             fix_model[(var_line_nbs[1]):length(fix_model)])
+
             }
           }
 
@@ -389,12 +387,16 @@ bi_model <- setRefClass("bi_model",
               ## remove dimensions
               names <- sub("\\[.*\\]", "", names)
             }
-            if (!dim) {
+            if (!opt) {
               ## remove options
               names <- sub("\\(.*\\)", "", names)
             }
+            if (type == "const") {
+              ## remove assignments
+              names <- sub("=.*$", "", names)
+            }
             ## remove spaces
-            names <- sub("[[:space:]]", "", names)              
+            names <- sub("[[:space:]]", "", names)
             names_vec <- unlist(strsplit(names, ","))
             return(names_vec)
           } else {
@@ -403,7 +405,7 @@ bi_model <- setRefClass("bi_model",
         },
         clone = function() {
           return(bi_model(lines = .self$model))
-        }, 
+        },
         show = function() {
           if (!is.null(name)) {
             cat("bi model:", name, "\n")
