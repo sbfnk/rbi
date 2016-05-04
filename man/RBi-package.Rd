@@ -34,7 +34,7 @@ interest, and to plot them in various ways.
 
 }
 \author{
-Pierre E. Jacob \email{pierre.jacob.work@gmail.com} Sebastian Funk \email{sebastian.funk@lshtm.ac.uk}
+Pierre E. Jacob \email{pierre.jacob.work@gmail.com}, Sebastian Funk \email{sebastian.funk@lshtm.ac.uk}
 }
 \references{
 \url{http://libbi.org/}

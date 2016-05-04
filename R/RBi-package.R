@@ -19,7 +19,7 @@
 #'@aliases Rbi RBi RBI
 #'@docType package
 #'@title RBi - R interface for \code{libbi}
-#'@author Pierre E. Jacob \email{pierre.jacob.work@@gmail.com} Sebastian Funk \email{sebastian.funk@@lshtm.ac.uk}
+#'@author Pierre E. Jacob \email{pierre.jacob.work@@gmail.com}, Sebastian Funk \email{sebastian.funk@@lshtm.ac.uk}
 #'@references \url{http://libbi.org/}
 #'@seealso \code{\link{libbi}}
 #'@keywords package
