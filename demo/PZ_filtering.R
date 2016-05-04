@@ -11,19 +11,21 @@ library('gridExtra', quietly = TRUE)
 # the PZ model file is included in RBi and can be found there:
 model_file_name <- system.file(package="RBi", "PZ.bi")
 
+# assign model variable
+PZ <- bi_model(model_file_name)
 # look at the model
-bi_model(model_file_name)
+PZ
 
 T <- 100
 init_parameters <- list(P = 2, Z = 2, mu = 0.5, sigma = 0.3)
 # First let's generate a dataset from the model
-synthetic_dataset <- bi_generate_dataset(endtime=T, model_file_name=model_file_name,
+synthetic_dataset <- bi_generate_dataset(endtime=T, model=PZ,
                                          init=init_parameters)
 # Settings
-bi_object <- libbi$new(client="filter", model_file_name=model_file_name)
+bi_object <- libbi$new(client="filter", model=PZ)
 print(bi_object)
 # Once happy with the settings, launch bi.
-bi_object$run(add_options = list(nparticles = 8192, nthreads = 1, "end-time" = T, noutputs = T), verbose = T, obs = synthetic_dataset, init = init_parameters)
+bi_object$run(add_options = list(nparticles = 8192, nthreads = 1, "end-time" = T, noutputs = T), verbose = TRUE, obs = synthetic_dataset, init = init_parameters)
 # It can be a good idea to look at the result file
 bi_file_summary(bi_object$result$output_file_name)
 bi_read(bi_object$result$output_file_name, vars = "mu")
@@ -49,4 +51,3 @@ gZ <- qplot(x=seq_along(Zmeans), y=Zmeans, geom = "line", col = "Z") +
   geom_line(aes(y=Z_original, col = "Z_original")) + scale_color_discrete(name = "") +
   xlab("time") + ylab("Z")
 grid.arrange(gP, gZ)
-

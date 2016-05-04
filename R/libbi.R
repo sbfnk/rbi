@@ -5,7 +5,7 @@
 #' \code{libbi} allows to call \code{libbi}.
 #' Upon creating a new libbi object, the following arguments can be given.
 #' Once the instance is created, \code{libbi} can be run through the \code{run}
-#' method documented in \code{\link{libbi_run}}.
+#' method documented in \code{\link{libbi_run}}. Note that \code{\link{libbi}} objects can be plotted using \code{\link{plot}} if the \code{RBi.helpers} package is loaded.
 #' 
 #' @param client is either "draw", "filter", "sample"... see LibBi documentation.
 #' @param model either a character vector giving the path to a model file (typically ending in ".bi"), or a \code{bi_model} object

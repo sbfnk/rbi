@@ -42,7 +42,12 @@ A good starting point is to look at the included demos:
 
 For a documentation of all available functions, have a look at the [reference manual] (https://github.com/sbfnk/RBi/raw/master/RBi.pdf).
 
-Ohter packages
+Using coda
+==========
+
+`RBi` contains the `get_traces` method which provides an interface to [coda] (https://cran.r-project.org/web/packages/coda/index.html).
+
+Other packages
 ==============
 
 For higher-level methods to interact with [libbi] (https://github.com/libbi/LibBi), have a look at [RBi.helpers] (https://github.com/sbfnk/RBi.helpers)
