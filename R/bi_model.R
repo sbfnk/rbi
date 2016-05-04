@@ -126,38 +126,46 @@ bi_model <- setRefClass("bi_model",
         },
         fix = function(...){
 
-          fix_model <- model
+            fix_model <- model
 
-          fixed = list(...)
+            fixed = list(...)
 
-          ## variables that are to be fixed
-          var_str <-
-            paste0("^[[:space:]]*(noise|param|state|const)[[:space:]]+(",
-                   paste(names(fixed), collapse = "|"), ")")
-          var_line_nbs <- grep(var_str, fix_model)
+            ## variables that are to be fixed
+            var_str <-
+                paste0("^[[:space:]]*(noise|param|state|const)[[:space:]]+(",
+                       paste(names(fixed), collapse = "|"), ")")
+            var_line_nbs <- grep(var_str, fix_model)
 
-          if (length(var_line_nbs) < length(fixed))
-          {
-              warning("Not all given variables could be found, perhaps check the spelling.")
-          }
-          indent <- sub("^([[:space:]]*).*$", "\\1",
-                        fix_model[var_line_nbs[1]])
-
-          if (length(var_line_nbs) > 0) {
             var_vec <- c(.self$get_vars("noise"),
                          .self$get_vars("param"),
                          .self$get_vars("state"),
                          .self$get_vars("const"))
 
             unmatched_names <- setdiff(names(fixed), var_vec)
-            if (length(unmatched_names) > 0) {
-              stop("Given variables ",
-                   paste(unmatched_names, collapse = ", "),
-                   " not found in model.")
+
+            if (length(var_line_nbs) > 0)
+            {
+                fix_model <- fix_model[-var_line_nbs]
             }
 
-            fix_model <- fix_model[-var_line_nbs]
-            for (var in intersect(names(fixed), var_vec)) {
+            for (name in unmatched_names)
+            {
+                fixed_line <-
+                    paste0("const ", name, " = ", fixed[[name]])
+                if (length(var_line_nbs) > 0)
+                {
+                    first_const_line <- var_line_nbs[1]
+                } else
+                {
+                    first_const_line <- grep("^[[:space:]]*(noise|param|state|const)[[:space:]]+", fix_model)[1]
+                }
+                fix_model <-
+                    c(fix_model[1:(first_const_line - 1)],
+                      fixed_line,
+                      fix_model[first_const_line:length(fix_model)])
+            }
+
+           for (var in intersect(names(fixed), var_vec)) {
               ## remove assignments
               assignments <-
                 grep(paste0(var,
@@ -172,15 +180,14 @@ bi_model <- setRefClass("bi_model",
                 gsub(paste0(var, "[[:space:]]*\\[[^]]*\\]"), var, fix_model)
 
               ## add const assignment
-              fixed_line <- paste0(indent, "const ", var, " = ", fixed[[var]])
+              fixed_line <- paste0("const ", var, " = ", fixed[[var]])
               fix_model <- c(fix_model[1:(var_line_nbs[1] - 1)],
                              fixed_line, 
                              fix_model[(var_line_nbs[1]):length(fix_model)])
 
             }
-          }
 
-          return(bi_model(lines = fix_model))
+            return(bi_model(lines = fix_model))
         },
         propose_prior = function() {
           new_model <- bi_model(lines = .self$model)
