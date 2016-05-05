@@ -62,7 +62,6 @@ libbi <- setRefClass("libbi",
       methods = list(
         initialize = function(client, model, model_file_name,
                               config, global_options, path_to_libbi,
-                              input, init, obs, 
                               working_folder, run = FALSE,
                               overwrite = FALSE, ...){
           result <<- list()
@@ -162,32 +161,11 @@ libbi <- setRefClass("libbi",
               global_options[[option]] <<- dot_options[[option]]
           }
 
-          for (file in intersect(names(match.call()), c("input", "init", "obs"))) {
-            arg <- get(file)
-            if (is.list(arg)) {
-              arg_file_name <- tempfile(pattern=paste(.self$model$name, file, sep = "_"), 
-                                        fileext=".nc",
-                                        tmpdir=absolute_path(.self$working_folder))
-              bi_write(arg_file_name, arg, timed = TRUE)
-              global_options[[paste(file, "file", sep = "-")]] <<- arg_file_name
-            } else if (is.character(arg)) {
-              global_options[[paste(file, "file", sep = "-")]] <<- arg
-            } else if (class(arg) == "libbi") {
-              if (!arg$run_flag) {
-                stop("The libbi object for '", arg, "' should be run first")
-              }
-              global_options[[paste(file, "file", sep = "-")]] <<-
-                arg$result$output_file_name
-            } else {
-              stop("'", file, "' must be a list, string or 'libbi' object.")
-            }
-          }
-
           if (run == TRUE) {
             .self$run(from_init = TRUE, ...)
           }
         },
-        run = function(add_options, output_file_name, stdoutput_file_name, init, input, obs, from_init = FALSE, ...){
+        run = function(add_options, output_file_name, stdoutput_file_name, init, input, obs, time_dim, from_init = FALSE, ...){
 
           ## if run from init, check if any of the global options are actually our option
           if (from_init) {
@@ -202,36 +180,53 @@ libbi <- setRefClass("libbi",
             add_options <- option_list(add_options)
           }
 
-          for (file in intersect(names(match.call()), c("input", "init", "obs"))) {
-            arg <- get(file)
+          ## read file options: input, init, obs
+          args <- match.call()
+          file_types <- c("input", "init", "obs")
+          file_args <- intersect(names(args), file_types)
+          ## assign file args to global_options
+          for (arg in file_args) global_options[[arg]] <<- get(arg)
+          global_file_options <- intersect(names(global_options), file_types)
+
+          file_options <- list()
+
+          ## loop over global options that are file args
+          for (file in global_file_options) {
+            arg <- global_options[[file]]
+            ## unset global option (we set the file option instead later)
+            global_options[[file]] <<- NULL
             if (is.list(arg)) {
-              arg_file_name <- tempfile(pattern=paste(.self$model$name, file, sep = "_"), 
-                                        fileext=".nc",
-                                        tmpdir=absolute_path(.self$working_folder))
-              bi_write(arg_file_name, arg, timed = TRUE)
-              ## overwrite global and additional option, i.e. if this
-              ## is run again it should use the file given here
-              global_options[[paste(file, "file", sep = "-")]] <<- arg_file_name
-              add_options[[paste(file, "file", sep = "-")]] <- arg_file_name
+              arg_file_name <-
+                tempfile(pattern=paste(.self$model$name, file, sep = "_"), 
+                         fileext=".nc",
+                         tmpdir=absolute_path(.self$working_folder))
+              write_opts <- list(filename = arg_file_name,
+                                 variables = arg,
+                                 timed = TRUE)
+              if (file == "obs") ## guess coord
+              {
+                write_opts[["guess_coord"]] <- TRUE
+              }
+              if (!missing(time_dim)) write_opts[["time_dim"]] <- time_dim
+              do.call(bi_write, write_opts)
+              file_options[[paste(file, "file", sep = "-")]] <- arg_file_name
             } else if (is.character(arg)) {
-              ## overwrite global and additional option, i.e. if this
-              ## is run again it should use the file given here
-              global_options[[paste(file, "file", sep = "-")]] <<- arg
-              add_options[[paste(file, "file", sep = "-")]] <- arg
+              file_options[[paste(file, "file", sep = "-")]] <- arg
             } else if (class(arg) == "libbi") {
               if (!arg$run_flag) {
-                stop("The libbi object for '", file, "' should be run first")
+                stop("The libbi object for '", arg, "' should be run first")
               }
-              ## overwrite global and additional option, i.e. if this
-              ## is run again it should use the file given here
-              global_options[[paste(file, "file", sep = "-")]] <<-
-                arg$result$output_file_name
-              add_options[[paste(file, "file", sep = "-")]] <-
+              file_options[[paste(file, "file", sep = "-")]] <-
                 arg$result$output_file_name
             } else {
               stop("'", file, "' must be a list, string or 'libbi' object.")
             }
           }
+
+          ## overwrite global and additional option, i.e. if this
+          ## is run again it should use the file given here
+          add_options <- merge_by_name(add_options, file_options)
+          global_options <<- merge_by_name(global_options, file_options)
 
           options <- option_list(getOption("libbi_args"), global_options, add_options, list(...))
           opt_string <- option_string(options)
