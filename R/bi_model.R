@@ -133,7 +133,7 @@ bi_model <- setRefClass("bi_model",
             ## variables that are to be fixed
             var_str <-
                 paste0("^[[:space:]]*(noise|param|state|const)[[:space:]]+(",
-                       paste(names(fixed), collapse = "|"), ")")
+                       paste(names(fixed), collapse = "|"), ")[[:space:]$]")
             var_line_nbs <- grep(var_str, fix_model)
 
             var_vec <- c(.self$get_vars("noise"),
