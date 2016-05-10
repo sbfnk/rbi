@@ -55,6 +55,11 @@ netcdf_create_from_list <- function(filename, variables, time_dim, coord_dim, va
   if (!missing(coord_dim) && guess_coord) {
     stop("'coord_dim' must not be given is guess_cord is TRUE")
   }
+
+  index_cols <- c()
+  if (!missing(time_dim)) index_cols <- c(index_cols, time = time_dim)
+  if (!missing(coord_dim)) index_cols <- c(index_cols, coord = coord_dim)
+
   dims <- list()
   vars <- list()
   values <- list()
@@ -104,18 +109,41 @@ netcdf_create_from_list <- function(filename, variables, time_dim, coord_dim, va
         }
       }
       var_dims <- list()
-      for (col in rev(colnames(element)[colnames(element) != value_column])) {
-        
-        if ((!missing(time_dim) && col == time_dim) ||
-            (!missing(coord_dim) && col == coord_dim)) {
-          dim_name <- "nr"
-          dim_values <- seq_len(nrow(element)) - 1
-        } else {
-          dim_name <- col
-          ## strip trailing numbers, these indicate duplicate dimensions
-          dim_name <- sub("\\.[0-9]+$", "", dim_name)
-          dim_values <- seq_along(unique(element[[col]])) - 1
+      ## first, check for time and coord columns
+      cols <- colnames(element)
+      index_table <-
+        unique(as.data.frame(element)[, intersect(colnames(element), index_cols), drop = FALSE])
+      if (nrow(index_table) > 0) {
+        nr_values <- seq_len(nrow(index_table)) - 1
+        nr_dim <- ncdim_def("nr", "", nr_values)
+        dims[["nr"]] <- nr_dim
+        var_dims <- c(var_dims, list(nr_dim))
+        names(var_dims)[length(var_dims)] <- "nr"
+
+        if (!missing(time_dim) && time_dim %in% cols)
+        {
+          time_var <- paste("time", name, sep = "_")
+          vars[[time_var]] <- ncvar_def(time_var, "", list(nr_dim))
+          values[[time_var]] <- index_table[[time_dim]]
         }
+        if (!missing(coord_dim) && col == coord_dim) {
+          coord_var <- paste("coord", name, sep = "_")
+          vars[[coord_var]] <-
+            ncvar_def(coord_var, "", list(nr_dim))
+          if (class(element[[coord_dim]]) %in% c("factor", "character")) {
+            values[[coord_var]] <-
+              as.integer(factor(index_table[[coord_dim]])) - 1
+          } else {
+            values[[coord_var]] <- index_table[[coord_dim]]
+          }
+        }
+      }
+      data_cols <- setdiff(cols, c(index_cols, value_column))
+      for (col in rev(data_cols)) {
+        dim_name <- col
+        ## strip trailing numbers, these indicate duplicate dimensions
+        dim_name <- sub("\\.[0-9]+$", "", dim_name)
+        dim_values <- seq_along(unique(element[[col]])) - 1
 
         if (dim_name %in% names(dims)) {
           if (length(dim_values) != dims[[dim_name]]$len) {
@@ -126,22 +154,13 @@ netcdf_create_from_list <- function(filename, variables, time_dim, coord_dim, va
           dims[[dim_name]] <- new_dim
         }
 
-        var_dims[[dim_name]] <- dims[[dim_name]]
-        if (!missing(time_dim) && col == time_dim) {
-          time_var <- paste("time", name, sep = "_")
-          vars[[time_var]] <- ncvar_def(time_var, "", list(dims[[dim_name]]))
-          values[[time_var]] <- element[[time_dim]]
-        } else if (!missing(coord_dim) && col == coord_dim) {
-          coord_var <- paste("coord", name, sep = "_")
-          vars[[coord_var]] <- ncvar_def(coord_var, "", list(dims[[dim_name]]))
-          if (class(element[[coord_dim]]) %in% c("factor", "character")) {
-            values[[coord_var]] <-
-              as.integer(factor(element[[coord_dim]])) - 1
-          } else {
-            values[[coord_var]] <- element[[coord_dim]]
-          }
-        }
-      } 
+        var_dims <- c(var_dims, list(dims[[dim_name]]))
+        names(var_dims)[length(var_dims)] <- col
+      }
+      ## order variables
+      order_cols <- rev(c("nr", cols))
+      var_dims <-
+        var_dims[names(var_dims)[order(match(names(var_dims), order_cols))]]
       vars[[name]] <- ncvar_def(name, "", var_dims)
       values[[name]] <- element[[value_column]]
     } else if (length(intersect(typeof(element), c("double", "integer"))) > 0) {
