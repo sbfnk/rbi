@@ -103,6 +103,7 @@ netcdf_create_from_list <- function(filename, variables, time_dim, coord_dim, va
         guessed_coord <- setdiff(colnames(element), exclude)
         if (length(guess_coord) == 1) {
           coord_dim <- guessed_coord
+          index_cols <- c(index_cols, coord_dim)
         } else
         {
           warning("Could not guess column from ", length(guessed_coord), " options")
@@ -126,7 +127,7 @@ netcdf_create_from_list <- function(filename, variables, time_dim, coord_dim, va
           vars[[time_var]] <- ncvar_def(time_var, "", list(nr_dim))
           values[[time_var]] <- index_table[[time_dim]]
         }
-        if (!missing(coord_dim) && col == coord_dim) {
+        if (!missing(coord_dim) && coord_dim %in% cols) {
           coord_var <- paste("coord", name, sep = "_")
           vars[[coord_var]] <-
             ncvar_def(coord_var, "", list(nr_dim))
