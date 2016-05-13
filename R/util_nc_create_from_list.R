@@ -101,7 +101,7 @@ netcdf_create_from_list <- function(filename, variables, time_dim, coord_dim, va
           exclude <- c(exclude, time_dim)
         }
         guessed_coord <- setdiff(colnames(element), exclude)
-        if (length(guess_coord) == 1) {
+        if (length(guessed_coord) == 1) {
           coord_dim <- guessed_coord
           index_cols <- c(index_cols, coord_dim)
         } else
