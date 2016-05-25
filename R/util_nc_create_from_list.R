@@ -29,7 +29,7 @@
 #' 
 #' @note Two elements of the given list can possibly have the same
 #'   dimension name.
-#' @return None, but creates a NetCDF file at the specified path.
+#' @return A list of factors in extra dimensions, if any
 #' @examples
 #' filename <- tempfile(pattern="dummy", fileext=".nc")
 #' a <- list(values = 1:3, dimension = "dim_a")
@@ -61,6 +61,7 @@ netcdf_create_from_list <- function(filename, variables, time_dim, coord_dim, va
   if (!missing(coord_dim)) index_cols <- c(index_cols, coord = coord_dim)
 
   dims <- list()
+  dim_factors <- list()
   vars <- list()
   values <- list()
   for (name in names(variables)){
@@ -86,8 +87,11 @@ netcdf_create_from_list <- function(filename, variables, time_dim, coord_dim, va
           stop("two elements of 'variables' with same dimension name should have equal size")
         }
       } else {
-        new_dim <- ncdim_def(element[["dimension"]], "", seq_along(element[["values"]]) - 1)
+        dim_name <- element[["dimension"]]
+        dim_values <- element[["values"]]
+        new_dim <- ncdim_def(dim_name, "", seq_along(dim_values) - 1)
         dims[[element[["dimension"]]]] <- new_dim
+        dim_factors[[dim_name]] <- dim_values
       }
       vars[[name]] <- ncvar_def(name, "", dims[[element[["dimension"]]]])
       values[[name]] <- element[["values"]]
@@ -141,15 +145,15 @@ netcdf_create_from_list <- function(filename, variables, time_dim, coord_dim, va
         dim_name <- col
         ## strip trailing numbers, these indicate duplicate dimensions
         dim_name <- sub("\\.[0-9]+$", "", dim_name)
-        dim_values <- seq_along(unique(element[[col]])) - 1
-
+        dim_values <- unique(element[[col]])
         if (dim_name %in% names(dims)) {
           if (length(dim_values) != dims[[dim_name]]$len) {
             stop("Two dimensions of name '", dim_name, "' have different lengths")
           }
         } else {
-          new_dim <- ncdim_def(dim_name, "", dim_values)
+          new_dim <- ncdim_def(dim_name, "", seq_along(unique(dim_values)) - 1)
           dims[[dim_name]] <- new_dim
+          dim_factors[[dim_name]] <- dim_values
         }
 
         var_dims <- c(var_dims, list(dims[[dim_name]]))
@@ -179,4 +183,6 @@ netcdf_create_from_list <- function(filename, variables, time_dim, coord_dim, va
   }
 
   nc_close(nc)
+
+  if (length(dim_factors) > 0) return(dim_factors)
 }

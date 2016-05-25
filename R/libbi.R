@@ -52,19 +52,21 @@ NULL
 #'                        global_options = list(sampler = "smc2"))
 #' bi_object$run(add_options=list(nthreads = 1), verbose = TRUE)
 #' bi_file_summary(bi_object$result$output_file_name)
-NULL 
+NULL
 
 libbi <- setRefClass("libbi",
       fields = c("client", "config", "global_options", "path_to_libbi", 
                  "model", "model_file_name", "model_folder", 
                  "base_command_string", "command", "command_dryparse", "result",
-                 "working_folder", "output_file_name", "run_flag"),
+                 "working_folder", "output_file_name", "run_flag",
+                 "dims"),
       methods = list(
         initialize = function(client, model, model_file_name,
                               config, global_options, path_to_libbi,
                               working_folder, run = FALSE,
                               overwrite = FALSE, ...){
           result <<- list()
+          dims <<- list()
           run_flag <<- FALSE
           if (missing(client)){
             print("you didn't provide a 'client' to libbi, it's kinda weird; default to 'sample'.")
@@ -208,7 +210,8 @@ libbi <- setRefClass("libbi",
                 write_opts[["guess_coord"]] <- TRUE
               }
               if (!missing(time_dim)) write_opts[["time_dim"]] <- time_dim
-              do.call(bi_write, write_opts)
+              file_dims <- do.call(bi_write, write_opts)
+              dims[names(file_dims)] <<- file_dims
               file_options[[paste(file, "file", sep = "-")]] <- arg_file_name
             } else if (is.character(arg)) {
               file_options[[paste(file, "file", sep = "-")]] <- arg
@@ -231,7 +234,7 @@ libbi <- setRefClass("libbi",
           options <- option_list(getOption("libbi_args"), global_options, add_options, list(...))
           opt_string <- option_string(options)
           verbose <- ("verbose" %in% names(options) && options[["verbose"]] == TRUE)
-            
+
           if (missing(output_file_name)){
             output_file_name <<- tempfile(pattern=paste(.self$model$name, "output", sep = "_"),
                                           fileext=".nc",
@@ -263,7 +266,7 @@ libbi <- setRefClass("libbi",
           } else {
             rel_model_file <- run_model_file
           }
-          
+
           cdcommand <- paste("cd", .self$working_folder)
           launchcommand <- paste(.self$base_command_string, opt_string,
                                  "--output-file", .self$output_file_name,
@@ -293,7 +296,7 @@ libbi <- setRefClass("libbi",
           if (!run_flag) {
             stop("The model should be run before running 'rerun'")
           }
-          
+
           if (missing(add_options))
           {
             add_options <- list()
@@ -318,7 +321,7 @@ libbi <- setRefClass("libbi",
           } else {
             rel_model_file <- run_model_file
           }
-          
+
           cdcommand <- paste("cd", .self$working_folder)
           launchcommand <- paste(.self$base_command_string, opt_string,
                                  "--output-file", .self$output_file_name,
@@ -343,9 +346,10 @@ libbi <- setRefClass("libbi",
                                global_options = .self$global_options,
                                path_to_libbi = .self$path_to_libbi,
                                working_folder = .self$working_folder,
+                               dims = .self$dims,
                                ...)
           return(new_wrapper)
-        }, 
+        },
         show = function(){
           cat("Wrapper around LibBi\n")
           cat("* client: ", .self$client, "\n")

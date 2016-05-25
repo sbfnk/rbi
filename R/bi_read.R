@@ -6,7 +6,7 @@
 #' \code{\link{libbi}} object.
 #' The file can be specified as a string to the filepath, in which
 #' case a NetCDF connection is opened, or directly as a NetCDF connection.
-#' 
+#'
 #' @param read either a path to a NetCDF file, or a NetCDF connection created using \code{nc_open}, or a \code{\link{libbi}} object from which to read the output
 #' @param vars variables to read; if not given, all will be read
 #' @param dims factors for dimensions
@@ -26,6 +26,14 @@ bi_read <- function(read, vars, dims, missval.threshold, variables, time_dim, ve
   nc <- bi_open(read)
   res <- list()
 
+  if ("libbi" %in% class(read) && !is.null(read$dims)) {
+    if (missing(dims)) {
+      dims <- read$dims
+    } else {
+      warning("Given 'dims' will overwrite dimensions in passed libbi object")
+    }
+  }
+
   var_names <- unname(sapply(nc[["var"]], function(x) { x[["name"]] }))
 
   time_var_names <- var_names[grep("^time", var_names)]
@@ -39,7 +47,7 @@ bi_read <- function(read, vars, dims, missval.threshold, variables, time_dim, ve
   }
 
   ## read time variables
-  
+
   time_vars <- list()
   for (var_name in time_var_names) {
     var <- nc[["var"]][[var_name]]
@@ -66,7 +74,7 @@ bi_read <- function(read, vars, dims, missval.threshold, variables, time_dim, ve
   }
 
   ## read other variables
-  
+
   for (var_name in var_names) {
     if (!missing(verbose) && verbose)
     {
@@ -75,7 +83,7 @@ bi_read <- function(read, vars, dims, missval.threshold, variables, time_dim, ve
     var <- nc[["var"]][[var_name]]
     if (missing(variables) || var$name %in% variables) {
       all_values <- read_var_input(nc, var$name)
-      
+
       dim_names <- sapply(var$dim, function(x) {
         ifelse(x$len > 1, x$name, "") # ncvar_get ignores dimensions of length 1
       })
@@ -87,8 +95,8 @@ bi_read <- function(read, vars, dims, missval.threshold, variables, time_dim, ve
           dim_names[dim_names == dup_dim] <-
             paste(dup_dim, seq_along(dim_names[dim_names == dup_dim]), sep = ".")
         }
-      } 
-      
+      }
+
       if (prod(dim(all_values)) > 1) {
         ## more than just one value
         mav <- data.table::data.table(reshape2::melt(all_values, varnames = rev(dim_names)))
