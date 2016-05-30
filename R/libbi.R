@@ -346,8 +346,8 @@ libbi <- setRefClass("libbi",
                                global_options = .self$global_options,
                                path_to_libbi = .self$path_to_libbi,
                                working_folder = .self$working_folder,
-                               dims = .self$dims,
                                ...)
+          new_wrapper$dims = .self$dims
           return(new_wrapper)
         },
         show = function(){
