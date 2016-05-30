@@ -132,7 +132,7 @@ netcdf_create_from_list <- function(filename, variables, time_dim, coord_dim, va
           coord_var <- paste("coord", name, sep = "_")
           vars[[coord_var]] <-
             ncvar_def(coord_var, "", list(nr_dim))
-          if (class(dim_values) %in% c("factor", "character")) {
+          if (class(index_table[[coord_dim]]) %in% c("factor", "character")) {
             values[[coord_var]] <-
               as.integer(factor(index_table[[coord_dim]])) - 1
           } else {
