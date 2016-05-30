@@ -91,7 +91,7 @@ netcdf_create_from_list <- function(filename, variables, time_dim, coord_dim, va
         dim_values <- element[["values"]]
         new_dim <- ncdim_def(dim_name, "", seq_along(dim_values) - 1)
         dims[[element[["dimension"]]]] <- new_dim
-        dim_factors[[dim_name]] <- dim_values
+        if (class(element[["values"]]) %in% c("character", "factor")) dim_factors[[dim_name]] <- dim_values
       }
       vars[[name]] <- ncvar_def(name, "", dims[[element[["dimension"]]]])
       values[[name]] <- element[["values"]]
@@ -132,7 +132,7 @@ netcdf_create_from_list <- function(filename, variables, time_dim, coord_dim, va
           coord_var <- paste("coord", name, sep = "_")
           vars[[coord_var]] <-
             ncvar_def(coord_var, "", list(nr_dim))
-          if (class(element[[coord_dim]]) %in% c("factor", "character")) {
+          if (class(dim_valuesfs) %in% c("factor", "character")) {
             values[[coord_var]] <-
               as.integer(factor(index_table[[coord_dim]])) - 1
           } else {
@@ -153,7 +153,7 @@ netcdf_create_from_list <- function(filename, variables, time_dim, coord_dim, va
         } else {
           new_dim <- ncdim_def(dim_name, "", seq_along(unique(dim_values)) - 1)
           dims[[dim_name]] <- new_dim
-          dim_factors[[dim_name]] <- dim_values
+          if (class(dim_values) %in% c("character", "factor")) dim_factors[[dim_name]] <- dim_values
         }
 
         var_dims <- c(var_dims, list(dims[[dim_name]]))
