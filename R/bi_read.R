@@ -19,7 +19,6 @@
 #' @importFrom reshape2 melt
 #' @importFrom ncdf4 nc_close
 #' @importFrom data.table data.table setkeyv setDF is.data.table
-#' @importFrom R.utils extract.array
 #' @export
 bi_read <- function(read, vars, dims, missval.threshold, variables, time_dim, vector, thin, verbose)
 {
@@ -102,10 +101,10 @@ bi_read <- function(read, vars, dims, missval.threshold, variables, time_dim, ve
       if (prod(value_dims) > 1) {
         ## more than just one value
         if (!missing(thin) && "np" %in% dim_names) {
-          indices <- sapply(value_dims[-length(value_dims)], seq_len)
+          indices <- lapply(value_dims[-length(value_dims)], seq_len)
           indices <-
-            c(indices, list(seq(1, value_dims[length(value_dims)], thin)))
-          all_values <- R.utils::extract.array(all_values, indices = indices)
+            c(indices, list(seq(thin, value_dims[length(value_dims)], thin)))
+          all_values <- do.call("[", c(list(all_values), indices))
         }
 
         mav <- data.table::data.table(reshape2::melt(all_values, varnames = rev(dim_names)))
