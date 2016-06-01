@@ -135,6 +135,7 @@ netcdf_create_from_list <- function(filename, variables, time_dim, coord_dim, va
           if (class(index_table[[coord_dim]]) %in% c("factor", "character")) {
             values[[coord_var]] <-
               as.integer(factor(index_table[[coord_dim]])) - 1
+            dim_factors[[name]] <- unique(index_table[[coord_dim]])
           } else {
             values[[coord_var]] <- index_table[[coord_dim]]
           }

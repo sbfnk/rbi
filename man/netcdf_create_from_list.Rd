@@ -20,7 +20,7 @@ if it already exists.}
 \item{value_column}{if any \code{variables} are data frames, which column contains the values (default: "value")}
 }
 \value{
-None, but creates a NetCDF file at the specified path.
+A list of factors in extra dimensions, if any
 }
 \description{
 Internal function that creates a NetCDF file given a list.
