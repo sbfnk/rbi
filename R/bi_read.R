@@ -101,13 +101,21 @@ bi_read <- function(read, vars, dims, missval.threshold, variables, time_dim, ve
       if (prod(value_dims) > 1) {
         ## more than just one value
         if (!missing(thin) && "np" %in% dim_names) {
-          indices <- lapply(value_dims[-length(value_dims)], seq_len)
-          indices <-
-            c(indices, list(seq(thin, value_dims[length(value_dims)], thin)))
-          all_values <- do.call("[", c(list(all_values), indices))
+          if (thin <= last(value_dims)) {
+            indices <- lapply(value_dims[-length(value_dims)], seq_len)
+            indices <-
+              c(indices, list(seq(thin, last(value_dims), thin)))
+            all_values <- do.call("[", c(list(all_values), indices, list(drop = FALSE)))
+          } else {
+            stop("Thinning interval too large.")
+          }
         }
 
         mav <- data.table::data.table(reshape2::melt(all_values, varnames = rev(dim_names)))
+
+        if (!missing(thin) && "np" %in% dim_names) {
+          mav[["np"]] <- mav[["np"]] * thin
+        }
         ## reorder duplicates
         cols <- setdiff(colnames(mav), "value")
         data.table::setkeyv(mav, cols)
