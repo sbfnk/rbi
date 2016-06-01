@@ -78,7 +78,7 @@ bi_read <- function(read, vars, dims, missval.threshold, variables, time_dim, ve
   for (var_name in var_names) {
     if (!missing(verbose) && verbose)
     {
-      message(var_name)
+      message(date(), " ", var_name)
     }
     var <- nc[["var"]][[var_name]]
     if (missing(variables) || var$name %in% variables) {
