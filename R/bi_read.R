@@ -101,10 +101,10 @@ bi_read <- function(read, vars, dims, missval.threshold, variables, time_dim, ve
       if (prod(value_dims) > 1) {
         ## more than just one value
         if (!missing(thin) && "np" %in% dim_names) {
-          if (thin <= last(value_dims)) {
+          if (thin <= tail(value_dims, 1)) {
             indices <- lapply(value_dims[-length(value_dims)], seq_len)
             indices <-
-              c(indices, list(seq(thin, last(value_dims), thin)))
+              c(indices, list(seq(thin, tail(value_dims, 1), thin)))
             all_values <- do.call("[", c(list(all_values), indices, list(drop = FALSE)))
           } else {
             stop("Thinning interval too large.")
