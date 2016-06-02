@@ -7,7 +7,7 @@
 #' @param filename a path to a NetCDF file to write the variable into, which will be overwritten
 #' if it already exists.
 #' @param variables a \code{list}
-#' @param time_dim the name of the time dimension, if one exists; "nr" by default
+#' @param time_dim the name of the time dimension, if one exists
 #' @param coord_dim the name of the coordinate dimension,  if one exists
 #' @param value_column if any \code{variables} are data frames, which column contains the values (default: "value")
 #' @details
@@ -66,6 +66,7 @@ netcdf_create_from_list <- function(filename, variables, time_dim, coord_dim, va
   values <- list()
   for (name in names(variables)){
     element <- variables[[name]]
+    time_index <- NULL
     if ("list" %in% class(element)) {
       element_names <- names(element)
       if ("dimension" %in% element_names){
@@ -117,10 +118,11 @@ netcdf_create_from_list <- function(filename, variables, time_dim, coord_dim, va
         unique(as.data.frame(element)[, intersect(colnames(element), index_cols), drop = FALSE])
       if (nrow(index_table) > 0) {
         nr_values <- seq_len(nrow(index_table)) - 1
-        nr_dim <- ncdim_def("nr", "", nr_values)
-        dims[["nr"]] <- nr_dim
+        time_index <- paste("nr", name, sep = "_")
+        nr_dim <- ncdim_def(time_index, "", nr_values)
+        dims[[time_index]] <- nr_dim
         var_dims <- c(var_dims, list(nr_dim))
-        names(var_dims)[length(var_dims)] <- "nr"
+        names(var_dims)[length(var_dims)] <- time_index
 
         if (!missing(time_dim) && time_dim %in% cols)
         {
@@ -161,9 +163,11 @@ netcdf_create_from_list <- function(filename, variables, time_dim, coord_dim, va
         names(var_dims)[length(var_dims)] <- col
       }
       ## order variables
-      order_cols <- rev(c("nr", cols))
-      var_dims <-
-        var_dims[names(var_dims)[order(match(names(var_dims), order_cols))]]
+      if (!is.null(time_index)) {
+        order_cols <- rev(c(time_index, cols))
+        var_dims <-
+          var_dims[names(var_dims)[order(match(names(var_dims), order_cols))]]
+      }
       vars[[name]] <- ncvar_def(name, "", var_dims)
       values[[name]] <- element[[value_column]]
     } else if (length(intersect(typeof(element), c("double", "integer"))) > 0) {
