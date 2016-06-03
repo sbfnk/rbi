@@ -63,10 +63,17 @@ libbi <- setRefClass("libbi",
       methods = list(
         initialize = function(client, model, model_file_name,
                               config, global_options, path_to_libbi,
-                              working_folder, run = FALSE,
+                              working_folder, dims, run = FALSE,
                               overwrite = FALSE, ...){
           result <<- list()
-          dims <<- list()
+          libbi_dims <- list()
+          if (!missing(dims)) {
+            for (dim_name in names(dims))
+            {
+              libbi_dims[[dim_name]] <- factor(dims[[dim_name]])
+            }
+          }
+          dims <<- libbi_dims
           run_flag <<- FALSE
           if (missing(client)){
             print("you didn't provide a 'client' to libbi, it's kinda weird; default to 'sample'.")
