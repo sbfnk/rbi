@@ -187,7 +187,7 @@ bi_model <- setRefClass("bi_model",
 
             }
 
-            return(bi_model(lines = fix_model))
+            model <<- fix_model
         },
         propose_prior = function() {
           new_model <- bi_model(lines = .self$model)
