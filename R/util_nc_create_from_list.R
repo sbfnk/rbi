@@ -134,9 +134,9 @@ netcdf_create_from_list <- function(filename, variables, time_dim, coord_dim, va
           coord_var <- paste("coord", name, sep = "_")
           vars[[coord_var]] <-
             ncvar_def(coord_var, "", list(nr_dim))
-          if (class(index_table[[coord_dim]] %in% c("numeric", "integer")) &&
-              as.integer(index_table[[coord_dim]]) == index_table[[coord_dim]] &&
-              unique(index_table[[coord_dim]]) == seq_len(max(index_table[[coord_dim]])))
+          if (class(index_table[[coord_dim]]) %in% c("numeric", "integer") &&
+              length(setdiff(as.integer(index_table[[coord_dim]]), index_table[[coord_dim]])) == 0 &&
+              lnegth(setdiff(seq_len(max(index_table[[coord_dim]])), unique(index_table[[coord_dim]]))) == 0)
           {
             values[[coord_var]] <- index_table[[coord_dim]]
           } else
@@ -160,9 +160,9 @@ netcdf_create_from_list <- function(filename, variables, time_dim, coord_dim, va
         } else {
           new_dim <- ncdim_def(dim_name, "", seq_along(unique(dim_values)) - 1)
           dims[[dim_name]] <- new_dim
-          if (!(class(dim_values %in% c("numeric", "integer")) &&
-                as.integer(dim_values) == dim_values &&
-                unique(dim_values) == seq_len(max(dim_values))))
+          if (!(class(dim_values) %in% c("numeric", "integer") &&
+                length(setdiff(as.integer(dim_values), dim_values)) == 0 &&
+                length(setdiff(seq_len(max(dim_values)), unique(dim_values))) == 0))
           {
             dim_factors[[dim_name]] <- dim_values
           }
