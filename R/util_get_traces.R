@@ -54,10 +54,11 @@ get_traces <- function(run, all = FALSE, model, ...) {
   }
       
   wide_list <- lapply(names(res), function(param) {
-      extra.dims <- setdiff(colnames(res[[param]]), c("np", "param", "value"))
+    extra.dims <- setdiff(colnames(res[[param]]), c("np", "param", "value"))
     if (length(extra.dims) > 0) {
       df <- dcast(res[[param]],
-                  as.formula(paste("np", paste(extra.dims, collapse = "+"), sep = "~")))
+                  as.formula(paste("np", paste(extra.dims, collapse = "+"), sep = "~")),
+                  value.var = "value")
       names(df)[-1] <- paste(param, names(df)[-1], sep = ".")
     } else {
       df <- res[[param]]
