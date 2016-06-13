@@ -284,7 +284,13 @@ libbi <- setRefClass("libbi",
                         sep = "\n"))
           command <<- paste(c(cdcommand, paste(launchcommand, stdoutput_redir_name)), collapse = ";")
 #           command_dryparse <<- paste(c(cdcommand, paste(launchcommand, "--dry-parse")), collapse = ";")
-          system(command, intern = TRUE)
+          ret <- system(command)
+          if (ret > 0) {
+            if (!verbose) {
+              writeLines(readLines(stdoutput_file_name))
+            }
+            stop("LibBi terminated with an error.")
+          }
           if (verbose) print("... LibBi has finished!")
           libbi_result <-
             list(output_file_name = absolute_path(filename=.self$output_file_name, 
