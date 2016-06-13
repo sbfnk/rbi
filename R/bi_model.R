@@ -238,11 +238,12 @@ bi_model <- setRefClass("bi_model",
           model <<- gsub("\\{(.+)$", "{\n\\1", model)
           ## make sure there is a line break before closing braces
           model <<- gsub("^(.+)\\}", "\\1\n}", model)
+          ## replace semicolons with newlines
+          model <<- gsub(";", "\n", model)
           ## remove trailing spaces
           model <<- gsub("[[:space:]]*$", "", model)
           ## remove initial spaces
           model <<- gsub("^[[:space:]]*", "", model)
-
           ## remove empty lines
           model <<- model[model!=""]
 
