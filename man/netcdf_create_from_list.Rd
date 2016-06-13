@@ -13,7 +13,7 @@ if it already exists.}
 
 \item{variables}{a \code{list}}
 
-\item{time_dim}{the name of the time dimension, if one exists; "nr" by default}
+\item{time_dim}{the name of the time dimension, if one exists}
 
 \item{coord_dim}{the name of the coordinate dimension,  if one exists}
 
