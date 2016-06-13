@@ -11,10 +11,10 @@ bi_generate_dataset(endtime, noutputs, ...)
 
 \item{noutputs}{number of output points to be extracted from the hidden process; default is noutputs = endtime.}
 
-\item{...}{arguments to be passed to \code{\link{libbi}} (with run = TRUE), especially 'model'}
+\item{...}{arguments to be passed to \code{\link{libbi}} (with run = TRUE)}
 }
 \value{
-path to the output file.
+generated data set
 }
 \description{
 This is a wrapper around \code{libbi sample --target joint}, to generate
