@@ -6,12 +6,13 @@
 #' synthetic dataset from a model. Parameters can be passed via the 'init' option
 #' (see \code{\link{libbi_run}}, otherwise they are generated from the prior specified
 #' in the model.
+#' @param model model from which to generate the data set
 #' @param endtime final time index, so that data is generated from time 0 to time "endtime".
 #' @param noutputs number of output points to be extracted from the hidden process; default is noutputs = endtime.
-#' @param ... arguments to be passed to \code{\link{libbi}} (with run = TRUE), especially 'model'
-#' @return path to the output file.
+#' @param ... arguments to be passed to \code{\link{libbi}} (with run = TRUE)
+#' @return generated data set
 #' @export
-bi_generate_dataset <- function(endtime, noutputs, ...){
+bi_generate_dataset <- function(model, endtime, noutputs, ...){
   if (missing(endtime)){
     stop("please specify the final time index!")
   }
@@ -27,7 +28,7 @@ bi_generate_dataset <- function(endtime, noutputs, ...){
   global_options[["nsamples"]] <- 1
 
   bi_object <- libbi$new(client = "sample", global_options = global_options,
-                         run = TRUE, ...)
-  return(bi_read(bi_object))
+                         run = TRUE, model = model, ...)
+  return(bi_read(bi_object, vars = model$get_vars("obs")))
 }
 
