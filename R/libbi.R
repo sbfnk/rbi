@@ -170,11 +170,9 @@ libbi <- setRefClass("libbi",
               global_options[[option]] <<- dot_options[[option]]
           }
 
-          if (run == TRUE) {
-            .self$run(from_init = TRUE, ...)
-          }
+          .self$run(from_init = TRUE, run = run, ...)
         },
-        run = function(add_options, output_file_name, stdoutput_file_name, init, input, obs, time_dim, from_init = FALSE, ...){
+        run = function(add_options, output_file_name, stdoutput_file_name, init, input, obs, time_dim, from_init = FALSE, run = TRUE, ...){
 
           ## if run from init, check if any of the global options are actually our option
           if (from_init) {
@@ -235,75 +233,79 @@ libbi <- setRefClass("libbi",
 
           ## overwrite global and additional option, i.e. if this
           ## is run again it should use the file given here
-          add_options <- merge_by_name(add_options, file_options)
           global_options <<- merge_by_name(global_options, file_options)
 
-          options <- option_list(getOption("libbi_args"), global_options, add_options, list(...))
-          opt_string <- option_string(options)
-          verbose <- ("verbose" %in% names(options) && options[["verbose"]] == TRUE)
+          if (run)
+          {
+            add_options <- merge_by_name(add_options, file_options)
 
-          if (missing(output_file_name)){
-            output_file_name <<- tempfile(pattern=paste(.self$model$name, "output", sep = "_"),
-                                          fileext=".nc",
-                                          tmpdir=absolute_path(.self$working_folder))
-          } else {
-            output_file_name <<- absolute_path(output_file_name, getwd())
-          }
-          if (missing(stdoutput_file_name) && !verbose) {
-            stdoutput_file_name <- tempfile(pattern="output", fileext=".txt",
+            options <- option_list(getOption("libbi_args"), global_options, add_options, list(...))
+            opt_string <- option_string(options)
+            verbose <- ("verbose" %in% names(options) && options[["verbose"]] == TRUE)
+
+            if (missing(output_file_name)){
+              output_file_name <<- tempfile(pattern=paste(.self$model$name, "output", sep = "_"),
+                                            fileext=".nc",
                                             tmpdir=absolute_path(.self$working_folder))
-          }
-
-          if (verbose) {
-            stdoutput_redir_name <- ""
-          } else {
-            stdoutput_redir_name <- paste(">", stdoutput_file_name, "2>&1")
-          }
-
-          if (.self$model_file_name == "") {
-            run_model_file <- tempfile(pattern=.self$model$name, fileext=".bi",
-                                       tmpdir=.self$working_folder)
-            model$write_model_file(run_model_file)
-          } else {
-            run_model_file <- .self$model_file_name
-          }
-
-          if (.self$model_folder == .self$working_folder) {
-            rel_model_file <- basename(run_model_file)
-          } else {
-            rel_model_file <- run_model_file
-          }
-
-          cdcommand <- paste("cd", .self$working_folder)
-          launchcommand <- paste(.self$base_command_string, opt_string,
-                                 "--output-file", .self$output_file_name,
-                                 "--model-file", rel_model_file)
-          if (verbose) print("Launching LibBi with the following commands:")
-          if (verbose)
-            print(paste(c(cdcommand, launchcommand, stdoutput_redir_name),
-                        sep = "\n"))
-          command <<- paste(c(cdcommand, paste(launchcommand, stdoutput_redir_name)), collapse = ";")
-#           command_dryparse <<- paste(c(cdcommand, paste(launchcommand, "--dry-parse")), collapse = ";")
-          ret <- system(command)
-          if (ret > 0) {
-            if (!verbose) {
-              writeLines(readLines(stdoutput_file_name))
+            } else {
+              output_file_name <<- absolute_path(output_file_name, getwd())
             }
-            stop("LibBi terminated with an error.")
+            if (missing(stdoutput_file_name) && !verbose) {
+              stdoutput_file_name <- tempfile(pattern="output", fileext=".txt",
+                                              tmpdir=absolute_path(.self$working_folder))
+            }
+
+            if (verbose) {
+              stdoutput_redir_name <- ""
+            } else {
+              stdoutput_redir_name <- paste(">", stdoutput_file_name, "2>&1")
+            }
+
+            if (.self$model_file_name == "") {
+              run_model_file <- tempfile(pattern=.self$model$name, fileext=".bi",
+                                         tmpdir=.self$working_folder)
+              model$write_model_file(run_model_file)
+            } else {
+              run_model_file <- .self$model_file_name
+            }
+
+            if (.self$model_folder == .self$working_folder) {
+              rel_model_file <- basename(run_model_file)
+            } else {
+              rel_model_file <- run_model_file
+            }
+
+            cdcommand <- paste("cd", .self$working_folder)
+            launchcommand <- paste(.self$base_command_string, opt_string,
+                                   "--output-file", .self$output_file_name,
+                                   "--model-file", rel_model_file)
+            if (verbose) print("Launching LibBi with the following commands:")
+            if (verbose)
+              print(paste(c(cdcommand, launchcommand, stdoutput_redir_name),
+                          sep = "\n"))
+            command <<- paste(c(cdcommand, paste(launchcommand, stdoutput_redir_name)), collapse = ";")
+                                        #           command_dryparse <<- paste(c(cdcommand, paste(launchcommand, "--dry-parse")), collapse = ";")
+            ret <- system(command)
+            if (ret > 0) {
+              if (!verbose) {
+                writeLines(readLines(stdoutput_file_name))
+              }
+              stop("LibBi terminated with an error.")
+            }
+            if (verbose) print("... LibBi has finished!")
+            libbi_result <-
+              list(output_file_name = absolute_path(filename=.self$output_file_name, 
+                                                    dirname=.self$working_folder),
+                   command = launchcommand)
+            if (nchar(.self$model_file_name) > 0){
+              libbi_result["model_file_name"] = .self$model_file_name
+            }
+            if (!missing(stdoutput_file_name)){
+              libbi_result["stdoutput_file_name"] = absolute_path(filename=stdoutput_file_name, dirname=.self$model_file_name)
+            }
+            run_flag <<- TRUE
+            result <<- libbi_result
           }
-          if (verbose) print("... LibBi has finished!")
-          libbi_result <-
-            list(output_file_name = absolute_path(filename=.self$output_file_name, 
-                                                  dirname=.self$working_folder),
-                 command = launchcommand)
-          if (nchar(.self$model_file_name) > 0){
-            libbi_result["model_file_name"] = .self$model_file_name
-          }
-          if (!missing(stdoutput_file_name)){
-            libbi_result["stdoutput_file_name"] = absolute_path(filename=stdoutput_file_name, dirname=.self$model_file_name)
-          }
-          run_flag <<- TRUE
-          result <<- libbi_result
         },
         rerun = function(add_options, ...){
           if (!run_flag) {
