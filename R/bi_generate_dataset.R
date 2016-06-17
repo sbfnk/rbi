@@ -28,6 +28,6 @@ bi_generate_dataset <- function(endtime, noutputs, ...){
 
   bi_object <- libbi$new(client = "sample", global_options = global_options,
                          run = TRUE, ...)
-  return(bi_read(bi_object))
+  return(bi_object)
 }
 
