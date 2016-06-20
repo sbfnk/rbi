@@ -40,7 +40,7 @@ A good starting point is to look at the included demos:
  demo(PZ_filtering)        ## filtering
 ```
 
-For a documentation of all available functions, have a look at the [reference manual] (https://github.com/sbfnk/RBi/raw/master/RBi.pdf).
+For a documentation of all available functions, have a look at the [reference manual] (https://github.com/libbi/RBi/raw/master/RBi.pdf).
 
 Using coda
 ==========
