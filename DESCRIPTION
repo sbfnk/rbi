@@ -10,7 +10,6 @@ Depends:
 Imports:
     reshape2,
     ncdf4
-LinkingTo: Rcpp
 Suggests:
 Description: R interface to LibBi
 License: GPL (>= 3)
