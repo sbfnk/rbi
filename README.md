@@ -19,7 +19,7 @@ The easiest way to install `RBi` is to use the `devtools` package:
 ```r
 # install.packages("devtools")
 library(devtools)
-install_github("sbfnk/RBi")
+install_github("libbi/RBi")
 ```
 
 It has only been tested on GNU/Linux and OS X, but it should mostly work everywhere `R` works.
