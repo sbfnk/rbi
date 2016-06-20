@@ -2,9 +2,11 @@ Package: RBi
 Version: 0.3
 Date: 2016-06-20
 Title: R interface to LibBi
-Author: Pierre E. Jacob <pierre.jacob.work@gmail.com>, Anthony Lee
-    <awllee@gmail.com>, Sebastian Funk <sebastian.funk@lshtm.ac.uk>
-Maintainer: Pierre E. Jacob <pierre.jacob.work@gmail.com>
+Author: Pierre E. Jacob <pierre.jacob.work@gmail.com>,
+        Anthony Lee <awllee@gmail.com>,
+        Sebastian Funk <sebastian.funk@lshtm.ac.uk>
+Maintainer: Pierre E. Jacob <pierre.jacob.work@gmail.com>,
+            Sebastian Funk <sebastian.funk@lshtm.ac.uk>
 Depends:
     methods
 Imports:
