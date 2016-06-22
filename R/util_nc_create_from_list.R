@@ -112,7 +112,7 @@ netcdf_create_from_list <- function(filename, variables, time_dim, coord_dim, va
         numeric_cols <- setdiff(numeric_cols, value_column)
         if (length(numeric_cols) == 1) {
           time_dim <- numeric_cols
-        } else {
+        } else if (length(numeric_cols) > 1){
           stop("Could not decide on time dimension between ", numeric_cols)
         }
       }
@@ -124,7 +124,10 @@ netcdf_create_from_list <- function(filename, variables, time_dim, coord_dim, va
         guessed_coord <- setdiff(colnames(element), exclude)
         if (length(guessed_coord) == 1) {
           coord_dim <- guessed_coord
+        } else if (length(guessed_coord) > 1){
+          stop("Could not decide on coord dimension between ", guessed_coord)
         }
+
       }
       if (!is.null(time_dim)) index_cols <- c(index_cols, time = time_dim)
       if (!is.null(coord_dim)) index_cols <- c(index_cols, coord = coord_dim)
