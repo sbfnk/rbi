@@ -133,8 +133,6 @@ netcdf_create_from_list <- function(filename, variables, time_dim, coord_dim, va
       ## first, check for time and coord columns
       index_table <-
         unique(as.data.frame(element)[, intersect(colnames(element), index_cols), drop = FALSE])
-      ##:ess-bp-start::browser@nil:##
-browser(expr=is.null(.ESSBP.[["@6@"]]));##:ess-bp-end:##
       if (nrow(index_table) > 0) {
         nr_values <- seq_len(nrow(index_table)) - 1
         time_index <- paste("nr", name, sep = "_")
