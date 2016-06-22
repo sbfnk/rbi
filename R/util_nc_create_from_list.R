@@ -10,6 +10,8 @@
 #' @param time_dim the name of the time dimension, if one exists
 #' @param coord_dim the name of the coordinate dimension,  if one exists
 #' @param value_column if any \code{variables} are data frames, which column contains the values (default: "value")
+#' @param guess_time whether to guess time dimension; this would be a numerical column in the data frame given which is not the \code{value_column}; only one such column must exist
+#' @param guess_coord whether to guess the coordinate dimension; this would be a column with varying value which is not the time or value column
 #' @details
 #'
 #' The list of variables must follow the following rules. Each element
@@ -41,7 +43,7 @@
 #' netcdf_create_from_list(filename, variables)
 #' bi_file_ncdump(filename)
 #' @importFrom ncdf4 nc_open nc_close ncdim_def ncvar_def nc_create ncvar_put
-netcdf_create_from_list <- function(filename, variables, time_dim, coord_dim, value_column = "value", guess_coord = FALSE){
+netcdf_create_from_list <- function(filename, variables, time_dim, coord_dim, value_column = "value", guess_time = TRUE, guess_coord = FALSE){
   filename <- normalizePath(filename, "/", FALSE)
   if (!("list" %in% class(variables))){
     stop("'variables' should be a list")
@@ -49,16 +51,17 @@ netcdf_create_from_list <- function(filename, variables, time_dim, coord_dim, va
   if (is.null(names(variables)) || any(names(variables) == "")) {
     stop("'variables' must be named")
   }
-  if (!missing(time_dim) && length(grep("^time", time_dim)) > 0) {
-    stop("'time_dim' must not start with 'time'")
-  }
-  if (!missing(coord_dim) && guess_coord) {
+  if (missing(coord_dim)) {
+    coord_dim <- NULL
+  } else if (guess_coord) {
     stop("'coord_dim' must not be given is guess_cord is TRUE")
   }
 
-  index_cols <- c()
-  if (!missing(time_dim)) index_cols <- c(index_cols, time = time_dim)
-  if (!missing(coord_dim)) index_cols <- c(index_cols, coord = coord_dim)
+  if (missing(time_dim)) {
+    time_dim <- NULL
+  } else if (guess_time) {
+    stop("'time_dim' must not be given is guess_cord is TRUE")
+  }
 
   dims <- list()
   dim_factors <- list()
@@ -66,8 +69,11 @@ netcdf_create_from_list <- function(filename, variables, time_dim, coord_dim, va
   values <- list()
   for (name in names(variables)){
     element <- variables[[name]]
+    index_cols <- c()
+    if (guess_time) time_dim <- NULL
+    if (guess_coord) coord_dim <- NULL
     time_index <- NULL
-    if ("list" %in% class(element)) {
+    if ("list" %in% class(element)) { ## element is a list of values and dimensions
       element_names <- names(element)
       if ("dimension" %in% element_names){
         if (class(element[["dimension"]]) != "character"){
@@ -96,26 +102,39 @@ netcdf_create_from_list <- function(filename, variables, time_dim, coord_dim, va
       }
       vars[[name]] <- ncvar_def(name, "", dims[[element[["dimension"]]]])
       values[[name]] <- element[["values"]]
-    } else if (length(intersect(class(element), c("data.frame"))) > 0) {
+    } else if (length(intersect(class(element), c("data.frame"))) > 0) { # element is a data frame
+      cols <- colnames(element)
       if (!(value_column %in% colnames(element))) {
         stop("any elements of 'variables' that are a data frame must have a '", value_column, "' column")
       }
+      if (guess_time) {
+        numeric_cols <- cols[which(sapply(cols, function(x) { class(element[[x]]) %in% c("integer", "numeric") }))]
+        numeric_cols <- setdiff(numeric_cols, value_column)
+        if (length(numeric_cols) == 1) {
+          time_dim <- numeric_cols
+        } else {
+          stop("Could not decide on time dimension between ", numeric_cols)
+        }
+      }
       if (guess_coord) {
         exclude <- value_column
-        if (!missing(time_dim)) {
+        if (!is.null(time_dim)) {
           exclude <- c(exclude, time_dim)
         }
         guessed_coord <- setdiff(colnames(element), exclude)
         if (length(guessed_coord) == 1) {
           coord_dim <- guessed_coord
-          index_cols <- c(index_cols, coord_dim)
         }
       }
-      var_dims <- list()
+      if (!is.null(time_dim)) index_cols <- c(index_cols, time = time_dim)
+      if (!is.null(coord_dim)) index_cols <- c(index_cols, coord = coord_dim)
+
+       var_dims <- list()
       ## first, check for time and coord columns
-      cols <- colnames(element)
       index_table <-
         unique(as.data.frame(element)[, intersect(colnames(element), index_cols), drop = FALSE])
+      ##:ess-bp-start::browser@nil:##
+browser(expr=is.null(.ESSBP.[["@6@"]]));##:ess-bp-end:##
       if (nrow(index_table) > 0) {
         nr_values <- seq_len(nrow(index_table)) - 1
         time_index <- paste("nr", name, sep = "_")
@@ -124,13 +143,13 @@ netcdf_create_from_list <- function(filename, variables, time_dim, coord_dim, va
         var_dims <- c(var_dims, list(nr_dim))
         names(var_dims)[length(var_dims)] <- time_index
 
-        if (!missing(time_dim) && time_dim %in% cols)
+        if (!is.null(time_dim) && time_dim %in% cols)
         {
           time_var <- paste("time", name, sep = "_")
           vars[[time_var]] <- ncvar_def(time_var, "", list(nr_dim))
           values[[time_var]] <- index_table[[time_dim]]
         }
-        if (!missing(coord_dim) && coord_dim %in% cols) {
+        if (!is.null(coord_dim) && coord_dim %in% cols) {
           coord_var <- paste("coord", name, sep = "_")
           vars[[coord_var]] <-
             ncvar_def(coord_var, "", list(nr_dim))
