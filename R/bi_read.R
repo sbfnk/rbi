@@ -11,16 +11,16 @@
 #' @param vars variables to read; if not given, all will be read
 #' @param dims factors for dimensions
 #' @param missval.threshold upper threshold for the likelihood
-#' @param variables only extract given variables (for space saving)
-#' @param time_dim name of time dimension (if any)
+#' @param time_name name of time dimension (if any)
+#' @param coord_name name of coord dimension (if any)
 #' @param vector if TRUE, will return results as vectors, not data.frames.
 #' @param thin thinning (keep only 1/thin of samples)
 #' @return list of results
 #' @importFrom reshape2 melt
 #' @importFrom ncdf4 nc_close
-#' @importFrom data.table data.table setkeyv setDF is.data.table
+#' @importFrom data.table data.table setkeyv setDF is.data.table merge
 #' @export
-bi_read <- function(read, vars, dims, missval.threshold, variables, time_dim, vector, thin, verbose)
+bi_read <- function(read, vars, dims, missval.threshold, time_name, coord_name, vector, thin, verbose)
 {
 
   nc <- bi_open(read)
@@ -34,60 +34,49 @@ bi_read <- function(read, vars, dims, missval.threshold, variables, time_dim, ve
     }
   }
 
-  var_names <- unname(sapply(nc[["var"]], function(x) { x[["name"]] }))
+  all_var_names <- unname(sapply(nc[["var"]], function(x) { x[["name"]] }))
 
-  time_var_names <- var_names[grep("^time", var_names)]
-  var_names <- var_names[!(var_names %in% time_var_names)]
+  time_coord_names <- c()
+  var_names <- list()
+  ## special variables
+  arg_names <- names(as.list(match.call()[-1]))
+  for (type in c("coord", "time")) {
+    time_coord_names[type] <- ifelse(paste(type, "name", sep = "_") %in% arg_names, get(paste(type, "name", sep = "_")), type)
+    var_names[[type]] <- grep(paste0("^", type), all_var_names, value = TRUE)
+  }
+  var_names[["other"]] <- setdiff(all_var_names, unlist(var_names))
+
   if (!missing(vars)) {
-    missing_vars <- setdiff(vars, union(var_names, time_var_names))
+    missing_vars <- setdiff(vars, var_names[["other"]])
     if (length(missing_vars) > 0) {
       warning("Variable(s) ", missing_vars, " not found")
     }
-    var_names <- intersect(union(var_names, time_var_names), vars)
   }
 
-  ## read time variables
+  ## read dimensions
+  var_dims <- list()
+  for (type in names(var_names)) {
+    var_dims[[type]] <- list()
+    for (var_name in var_names[[type]]) {
+      var <- nc[["var"]][[var_name]]
+      dim_names <- sapply(var$dim, function(x) {
+        ifelse(x$len > 1, x$name, "") # ncvar_get ignores dimensions of length 1
+      })
 
-  time_vars <- list()
-  for (var_name in time_var_names) {
-    var <- nc[["var"]][[var_name]]
-    time_values <- read_var_input(nc, var_name)
-    dim_names <- sapply(var$dim, function(x) {
-      ifelse(x$len > 1, x$name, "") # ncvar_get ignores dimensions of length 1
-    })
-
-    time_vars[[dim_names[1]]] <- time_values
-  }
-
-  ## guess time dimension if not given
-  if (missing(time_dim)) {
-    if (any(grep("_", names(time_vars)))) {
-      prefixes <- sub("_.*$", "", names(time_vars))
-      if (length(unique(prefixes)) == 1) {
-        time_dim <- prefixes[1]
-      } else {
-        time_dim <- NULL
-      }
-    } else {
-      time_dim <- NULL
+      var_dims[[type]][[var_name]] <- dim_names[nchar(dim_names) > 0]
     }
   }
 
-  ## read other variables
-
-  for (var_name in var_names) {
+  ## associate time and coord variables
+  ## read variables
+  for (var_name in var_names[["other"]]) {
     if (!missing(verbose) && verbose)
     {
       message(date(), " ", var_name)
     }
-    var <- nc[["var"]][[var_name]]
-    if (missing(variables) || var$name %in% variables) {
-      all_values <- read_var_input(nc, var$name)
-
-      dim_names <- sapply(var$dim, function(x) {
-        ifelse(x$len > 1, x$name, "") # ncvar_get ignores dimensions of length 1
-      })
-      dim_names <- dim_names[nchar(dim_names) > 0]
+    if (missing(vars) || var_name %in% vars) {
+      all_values <- read_var_input(nc, var_name)
+      dim_names <- var_dims[["other"]][[var_name]]
 
       if (any(duplicated(dim_names))) {
         duplicated_dim_names <- dim_names[duplicated(dim_names)]
@@ -99,21 +88,37 @@ bi_read <- function(read, vars, dims, missval.threshold, variables, time_dim, ve
 
       value_dims <- dim(all_values)
       if (prod(value_dims) > 1) {
-        ## more than just one value
-        if (!missing(thin) && "np" %in% dim_names) {
-          if (thin <= tail(value_dims, 1)) {
-            indices <- lapply(value_dims[-length(value_dims)], seq_len)
-            indices <-
-              c(indices, list(seq(thin, tail(value_dims, 1), thin)))
-            all_values <- do.call("[", c(list(all_values), indices, list(drop = FALSE)))
-          } else {
-            stop("Thinning interval too large.")
+        mav <- data.table::data.table(reshape2::melt(all_values, varnames = rev(dim_names)))
+
+        ## find matching and coord variables
+        all_matching_dims <- c()
+        for (type in names(time_coord_names)) {
+          matching_dims <- unlist(var_dims[[type]][unlist(var_dims[[type]]) %in% dim_names])
+          matching_vars <- names(matching_dims)
+          all_matching_dims <- union(all_matching_dims,  matching_dims)
+          if (length(matching_vars) == 1)  {
+            merge_values <- read_var_input(nc, matching_vars)
+            mav_merge <- data.table::data.table(reshape2::melt(merge_values, varnames = rev(matching_dims), value.name = time_coord_names[type]))
+            mav <- merge(mav_merge, mav, by = unname(matching_dims))
+          } else if (length(matching_vars) > 1) {
+            stop("Found multiple matching time variables for ", var_name, ": ", matching_vars)
           }
         }
 
-        mav <- data.table::data.table(reshape2::melt(all_values, varnames = rev(dim_names)))
+        for (var in all_matching_dims) mav[[var]] <- NULL
 
         if (!missing(thin) && "np" %in% dim_names) {
+          ## more than just one value
+          if (!missing(thin) && "np" %in% dim_names) {
+            if (thin <= tail(value_dims, 1)) {
+              indices <- lapply(value_dims[-length(value_dims)], seq_len)
+              indices <-
+                c(indices, list(seq(thin, tail(value_dims, 1), thin)))
+              all_values <- do.call("[", c(list(all_values), indices, list(drop = FALSE)))
+            } else {
+              stop("Thinning interval too large.")
+            }
+          }
           mav[["np"]] <- mav[["np"]] * thin
         }
         ## reorder duplicates
@@ -133,38 +138,34 @@ bi_read <- function(read, vars, dims, missval.threshold, variables, time_dim, ve
         }
       }
 
-      for (current.dim in dim_names) {
-        if (!missing(dims) && current.dim %in% names(dims)) {
-          mav[[current.dim]] <-
-            factor(mav[[current.dim]], labels = dims[[current.dim]])
-        } else if (current.dim %in% names(time_vars)) {
-          mav[[current.dim]] <- time_vars[[current.dim]][mav[[current.dim]]]
-          if (!is.null(time_dim)) {
-            names(mav)[which(names(mav) == current.dim)] <- time_dim
-          }
-        } else {
-          mav[[current.dim]] <- mav[[current.dim]] - 1
+      if (!missing(dims) && length(dims) == 1 && "coord" %in% colnames(mav)) setnames(mav, "coord", names(dims))
+
+      for (col in colnames(mav)) {
+        if (!missing(dims) && col %in% names(dims)) {
+          mav[[col]] <- factor(mav[[col]], labels = dims[[col]])
+        } else if (!(col %in% time_coord_names)) {
+          mav[[col]] <- mav[[col]] - 1
         }
       }
 
       if (!missing(vector) && vector) {
-        res[[var$name]] <- mav$value
+        res[[var_name]] <- mav$value
       } else {
         if (data.table::is.data.table(mav)) {
-          res[[var$name]] <- data.table::setDF(mav)
+          res[[var_name]] <- data.table::setDF(mav)
         } else {
-          res[[var$name]] <- mav
+          res[[var_name]] <- mav
         }
       }
     }
   }
 
-    if (typeof(file) == "character") nc_close(nc)
+  if (typeof(file) == "character") nc_close(nc)
 
-    ## if only one variable has been requested, return data frame
-    if (!missing(vars) && length(vars) == 1 && length(res) > 0) {
-      res <- res[[1]]
-    }
+  ## if only one variable has been requested, return data frame
+  if (!missing(vars) && length(vars) == 1 && length(res) > 0) {
+    res <- res[[1]]
+  }
 
   return(res)
 }
