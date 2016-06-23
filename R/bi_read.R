@@ -87,8 +87,25 @@ bi_read <- function(read, vars, dims, missval.threshold, time_name, coord_name, 
       }
 
       value_dims <- dim(all_values)
+
       if (prod(value_dims) > 1) {
+        ## thinning
+        if (!missing(thin) && "np" %in% dim_names) {
+          ## more than just one value
+          if (!missing(thin) && "np" %in% dim_names) {
+            if (thin <= tail(value_dims, 1)) {
+              indices <- lapply(value_dims[-length(value_dims)], seq_len)
+              indices <-
+                c(indices, list(seq(thin, tail(value_dims, 1), thin)))
+              all_values <- do.call("[", c(list(all_values), indices, list(drop = FALSE)))
+            } else {
+              stop("Thinning interval too large.")
+            }
+          }
+        }
+
         mav <- data.table::data.table(reshape2::melt(all_values, varnames = rev(dim_names)))
+        if (!missing(thin)) mav[["np"]] <- mav[["np"]] * thin
 
         ## find matching and coord variables
         all_matching_dims <- c()
@@ -107,20 +124,6 @@ bi_read <- function(read, vars, dims, missval.threshold, time_name, coord_name, 
 
         for (var in all_matching_dims) mav[[var]] <- NULL
 
-        if (!missing(thin) && "np" %in% dim_names) {
-          ## more than just one value
-          if (!missing(thin) && "np" %in% dim_names) {
-            if (thin <= tail(value_dims, 1)) {
-              indices <- lapply(value_dims[-length(value_dims)], seq_len)
-              indices <-
-                c(indices, list(seq(thin, tail(value_dims, 1), thin)))
-              all_values <- do.call("[", c(list(all_values), indices, list(drop = FALSE)))
-            } else {
-              stop("Thinning interval too large.")
-            }
-          }
-          mav[["np"]] <- mav[["np"]] * thin
-        }
         ## reorder duplicates
         cols <- setdiff(colnames(mav), "value")
         data.table::setkeyv(mav, cols)
@@ -143,7 +146,7 @@ bi_read <- function(read, vars, dims, missval.threshold, time_name, coord_name, 
       for (col in colnames(mav)) {
         if (!missing(dims) && col %in% names(dims)) {
           mav[[col]] <- factor(mav[[col]], labels = dims[[col]])
-        } else if (!(col %in% time_coord_names)) {
+        } else if (!(col %in% c(time_coord_names, "value"))) {
           mav[[col]] <- mav[[col]] - 1
         }
       }
