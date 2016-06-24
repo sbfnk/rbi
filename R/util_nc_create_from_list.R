@@ -44,7 +44,9 @@
 #' bi_file_ncdump(filename)
 #' @importFrom ncdf4 nc_open nc_close ncdim_def ncvar_def nc_create ncvar_put
 netcdf_create_from_list <- function(filename, variables, time_dim, coord_dim, value_column = "value", guess_time = TRUE, guess_coord = FALSE){
+  ## get file name
   filename <- normalizePath(filename, "/", FALSE)
+  ## argument consistency checks
   if (!("list" %in% class(variables))){
     stop("'variables' should be a list")
   }
@@ -63,18 +65,23 @@ netcdf_create_from_list <- function(filename, variables, time_dim, coord_dim, va
     stop("'time_dim' must not be given is guess_cord is TRUE")
   }
 
-  dims <- list()
-  dim_factors <- list()
-  vars <- list()
-  values <- list()
-  for (name in names(variables)){
+  ## initialise variables
+  dims <- list() ## dimension variables created with nc_dim
+  dim_factors <- list() ## factors for created dimension variables
+  vars <- list() ## variables created with nc_var
+  values <- list() ## values in the variables
+  for (name in names(variables)){ ## loop over list of variables
+    ## get list element
     element <- variables[[name]]
     index_cols <- c()
+    ## reset time and coord dim if we're guessing
     if (guess_time) time_dim <- NULL
     if (guess_coord) coord_dim <- NULL
+    ## reset time index dimension name
     time_index <- NULL
     if ("list" %in% class(element)) { ## element is a list of values and dimensions
       element_names <- names(element)
+      ## checks
       if ("dimension" %in% element_names){
         if (class(element[["dimension"]]) != "character"){
           stop("the key 'dimension' of each element of 'variables' should be of type 'character'")
@@ -94,19 +101,23 @@ netcdf_create_from_list <- function(filename, variables, time_dim, coord_dim, va
           stop("two elements of 'variables' with same dimension name should have equal size")
         }
       } else {
+        ## define dimension if given
         dim_name <- element[["dimension"]]
         dim_values <- element[["values"]]
-        new_dim <- ncdim_def(dim_name, "", seq_along(dim_values) - 1)
-        dims[[element[["dimension"]]]] <- new_dim
-        if (class(element[["values"]]) %in% c("character", "factor")) dim_factors[[dim_name]] <- dim_values
+        if (class(element[["values"]]) %in% c("character", "factor")) {
+          dim_factors[[dim_name]] <- union(dim_factors[[dim_name]], dim_values)
+        }
       }
+      ## get variable values
       vars[[name]] <- ncvar_def(name, "", dims[[element[["dimension"]]]])
       values[[name]] <- element[["values"]]
     } else if (length(intersect(class(element), c("data.frame"))) > 0) { # element is a data frame
       cols <- colnames(element)
+      ## check
       if (!(value_column %in% colnames(element))) {
         stop("any elements of 'variables' that are a data frame must have a '", value_column, "' column")
       }
+      ## guess time dimension: numeric/integer column that isn't the value column
       if (guess_time) {
         numeric_cols <- cols[which(sapply(cols, function(x) { class(element[[x]]) %in% c("integer", "numeric") }))]
         numeric_cols <- setdiff(numeric_cols, value_column)
@@ -116,23 +127,26 @@ netcdf_create_from_list <- function(filename, variables, time_dim, coord_dim, va
           stop("Could not decide on time dimension between ", numeric_cols)
         }
       }
+      ## guess coord dimension: a column that is not the time or value column
       if (guess_coord) {
         exclude <- value_column
         if (!is.null(time_dim)) {
           exclude <- c(exclude, time_dim)
         }
         guessed_coord <- setdiff(colnames(element), exclude)
-        if (length(guessed_coord) == 1) {
+        if (length(guessed_coord) == 1) { ## found a unique coord dimension
           coord_dim <- guessed_coord
         } else if (length(guessed_coord) > 1){
           stop("Could not decide on coord dimension between ", guessed_coord)
         }
 
       }
+      ## add time and coord dimensions to vector of index columns
       if (!is.null(time_dim)) index_cols <- c(index_cols, time = time_dim)
       if (!is.null(coord_dim)) index_cols <- c(index_cols, coord = coord_dim)
 
        var_dims <- list()
+      ## list of dimensions
       ## first, check for time and coord columns
       index_table <-
         unique(as.data.frame(element)[, intersect(colnames(element), index_cols), drop = FALSE])
@@ -152,18 +166,12 @@ netcdf_create_from_list <- function(filename, variables, time_dim, coord_dim, va
         }
         if (!is.null(coord_dim) && coord_dim %in% cols) {
           coord_var <- paste("coord", name, sep = "_")
-          vars[[coord_var]] <-
-            ncvar_def(coord_var, "", list(nr_dim))
-          if (class(index_table[[coord_dim]]) %in% c("numeric", "integer") &&
-              length(setdiff(as.integer(index_table[[coord_dim]]), index_table[[coord_dim]])) == 0 &&
-              lnegth(setdiff(seq_len(max(index_table[[coord_dim]])), unique(index_table[[coord_dim]]))) == 0)
+          values[[coord_var]] <- index_table[[coord_dim]]
+          if (!(class(index_table[[coord_dim]]) %in% c("numeric", "integer") &&
+                length(setdiff(as.integer(index_table[[coord_dim]]), index_table[[coord_dim]])) == 0 &&
+                length(setdiff(seq_len(max(index_table[[coord_dim]])), unique(index_table[[coord_dim]]))) == 0))
           {
-            values[[coord_var]] <- index_table[[coord_dim]]
-          } else
-          {
-            values[[coord_var]] <-
-              as.integer(factor(index_table[[coord_dim]])) - 1
-            dim_factors[[coord_dim]] <- unique(index_table[[coord_dim]])
+            dim_factors[[coord_dim]] <- union(dim_factors[[coord_dim]], unique(index_table[[coord_dim]]))
           }
         }
       }
@@ -210,6 +218,17 @@ netcdf_create_from_list <- function(filename, variables, time_dim, coord_dim, va
     }
   }
 
+  ## factorise coord variable
+  if (!is.null(coord_dim)) {
+    for (coord_var in grep("^coord_", names(values), value = TRUE)) {
+      if (coord_dim %in% names(dim_factors)) {
+        values[[coord_var]] <- as.integer(factor(values[[coord_var]], levels = dim_factors[[coord_dim]])) - 1
+      }
+
+      var_dims <- dims[sub("^coord", "nr", coord_var)]
+      vars[[coord_var]] <- ncvar_def(coord_var, "", var_dims)
+    }
+  }
   nc <- nc_create(filename, vars)
 
   for (name in names(vars)) {
