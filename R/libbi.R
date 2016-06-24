@@ -6,7 +6,7 @@
 #' Upon creating a new libbi object, the following arguments can be given.
 #' Once the instance is created, \code{libbi} can be run through the \code{run}
 #' method documented in \code{\link{libbi_run}}. Note that \code{\link{libbi}} objects can be plotted using \code{\link{plot}} if the \code{RBi.helpers} package is loaded.
-#' 
+#'
 #' @param client is either "draw", "filter", "sample"... see LibBi documentation.
 #' @param model either a character vector giving the path to a model file (typically ending in ".bi"), or a \code{bi_model} object
 #' @param config path to a configuration file, containing multiple arguments
@@ -17,11 +17,11 @@
 #' @param init init file (given as file name or \code{libbi} object or a list of data frames
 #' @param obs observation file (given as file name or \code{libbi} object or a list of data frames
 #' @param run (boolean) whether to run the model
-#' using the \code{which} Unix command, after having loaded "~/.bashrc" if present; 
+#' using the \code{which} Unix command, after having loaded "~/.bashrc" if present;
 #' if unsuccessful it tries "~/PathToBiBin/libbi"; if unsuccessful again it fails.
 #' @examples
 #' bi_object <- libbi$new(client = "sample",
-#'                        model = system.file(package="bi", "PZ.bi"), 
+#'                        model = system.file(package="bi", "PZ.bi"),
 #'                        global_options = list(sampler = "smc2"))
 #' @seealso \code{\link{libbi_run}}
 #' @export libbi
@@ -33,7 +33,7 @@ NULL
 #' @description
 #' The method \code{run} of an instance of \code{\link{libbi}}
 #' allows to launch \code{libbi} with a particular set of command line
-#' arguments. 
+#' arguments.
 #'
 #' @param add_options additional arguments to pass to the call to \code{libbi}
 #' @param output_file_name path to the result file (which will be overwritten)
@@ -43,20 +43,20 @@ NULL
 #' @param obs observations of the model, either supplied as a list of values and/or data frames, or a (netcdf) file name, or a \code{\link{libbi}} object which has been run (in which case the output of that run is used as observations)
 #' @param verbose if TRUE, will run libbi with the '--verbose' option
 #' @param ... any onrecognised options will be added to \code{add_options}
-#' @return a list containing the absolute paths to the results; it is stored in the 
+#' @return a list containing the absolute paths to the results; it is stored in the
 #' \code{result} field of the instance of \code{\link{libbi}}.
 #' @seealso \code{\link{libbi}}
 #' @examples
 #' bi_object <- libbi$new(client = "sample",
-#'                        model_file_name = system.file(package="bi", "PZ.bi"), 
+#'                        model_file_name = system.file(package="bi", "PZ.bi"),
 #'                        global_options = list(sampler = "smc2"))
 #' bi_object$run(add_options=list(nthreads = 1), verbose = TRUE)
 #' bi_file_summary(bi_object$result$output_file_name)
 NULL
 
 libbi <- setRefClass("libbi",
-      fields = c("client", "config", "global_options", "path_to_libbi", 
-                 "model", "model_file_name", "model_folder", 
+      fields = c("client", "config", "global_options", "path_to_libbi",
+                 "model", "model_file_name", "model_folder",
                  "base_command_string", "command", "command_dryparse", "result",
                  "working_folder", "output_file_name", "run_flag",
                  "dims"),
