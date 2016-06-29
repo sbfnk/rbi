@@ -169,7 +169,7 @@ bi_model <- setRefClass("bi_model",
               ## remove assignments
               assignments <-
                 grep(paste0(var,
-                            "[[:space:]]*(\\[[^]]*\\])?[[:space:]]*(~|=|<-)"),
+                            "(/dt)?[[:space:]]*(\\[[^]]*\\])?[[:space:]]*(~|=|<-)"),
                      fix_model)
               if (length(assignments) > 0) {
                 fix_model <- fix_model[-assignments]
