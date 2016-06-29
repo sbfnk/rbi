@@ -43,7 +43,7 @@
 #' netcdf_create_from_list(filename, variables)
 #' bi_file_ncdump(filename)
 #' @importFrom ncdf4 nc_open nc_close ncdim_def ncvar_def nc_create ncvar_put
-netcdf_create_from_list <- function(filename, variables, time_dim, coord_dim, value_column = "value", guess_time = TRUE, guess_coord = FALSE){
+netcdf_create_from_list <- function(filename, variables, time_dim, coord_dim, value_column = "value", guess_time = FALSE, guess_coord = FALSE){
   ## get file name
   filename <- normalizePath(filename, "/", FALSE)
   ## argument consistency checks

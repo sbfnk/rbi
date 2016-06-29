@@ -213,6 +213,7 @@ libbi <- setRefClass("libbi",
               if (file == "obs") ## guess coord
               {
                 write_opts[["guess_coord"]] <- TRUE
+                write_opts[["guess_time"]] <- TRUE
               }
               if (!missing(time_dim)) write_opts[["time_dim"]] <- time_dim
               file_dims <- do.call(bi_write, write_opts)
