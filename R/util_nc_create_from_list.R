@@ -62,7 +62,7 @@ netcdf_create_from_list <- function(filename, variables, time_dim, coord_dim, va
   if (missing(time_dim)) {
     time_dim <- NULL
   } else if (guess_time) {
-    stop("'time_dim' must not be given is guess_cord is TRUE")
+    guess_time <- FALSE
   }
 
   ## initialise variables
