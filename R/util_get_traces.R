@@ -47,7 +47,7 @@ get_traces <- function(run, all = FALSE, model, ...) {
       if (all) {
         res <- run
       } else {
-        res <- run[intersect(names(run), model$get_vars("params"))]
+        res <- run[intersect(names(run), model$get_vars("param"))]
       }
   } else {
       stop("'run' must be a 'libbi' object or a file name or a list of data frames.")
