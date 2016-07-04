@@ -173,7 +173,7 @@ netcdf_create_from_list <- function(filename, variables, time_dim, coord_dim, va
           {
             if (any(class(index_table[[coord_dim]]) == "factor"))
             {
-              dim_factors[[coord_dim]] <- union(dim_factors[[coord_dim]], levels(index_table[[coord_dim]])
+              dim_factors[[coord_dim]] <- union(dim_factors[[coord_dim]], levels(index_table[[coord_dim]]))
             } else
             {
               dim_factors[[coord_dim]] <- union(dim_factors[[coord_dim]], unique(index_table[[coord_dim]]))
