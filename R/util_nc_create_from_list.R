@@ -167,11 +167,17 @@ netcdf_create_from_list <- function(filename, variables, time_dim, coord_dim, va
         if (!is.null(coord_dim) && coord_dim %in% cols) {
           coord_var <- paste("coord", name, sep = "_")
           values[[coord_var]] <- index_table[[coord_dim]]
-          if (!(class(index_table[[coord_dim]]) %in% c("numeric", "integer") &&
+          if (!any(class(index_table[[coord_dim]]) %in% c("numeric", "integer") &&
                 length(setdiff(as.integer(index_table[[coord_dim]]), index_table[[coord_dim]])) == 0 &&
                 length(setdiff(seq_len(max(index_table[[coord_dim]])), unique(index_table[[coord_dim]]))) == 0))
           {
-            dim_factors[[coord_dim]] <- union(dim_factors[[coord_dim]], unique(index_table[[coord_dim]]))
+            if (any(class(index_table[[coord_dim]]) == "factor"))
+            {
+              dim_factors[[coord_dim]] <- union(dim_factors[[coord_dim]], levels(index_table[[coord_dim]])
+            } else
+            {
+              dim_factors[[coord_dim]] <- union(dim_factors[[coord_dim]], unique(index_table[[coord_dim]]))
+            }
           }
         }
       }
