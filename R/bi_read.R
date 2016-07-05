@@ -49,8 +49,16 @@ bi_read <- function(read, vars, dims, missval.threshold, time_name, coord_name, 
   if (!missing(vars)) {
     missing_vars <- setdiff(vars, var_names[["other"]])
     if (length(missing_vars) > 0) {
-      warning("Variable(s) ", missing_vars, " not found")
+      if (all(vars %in% c(var_names[["coord"]], var_names[["time"]]))) {
+        ## we're actually reading the time/coord vars
+        var_names[["coord"]] <- character(0)
+        var_names[["time"]] <- character(0)
+        var_names[["other"]] <- vars
+      } else {
+        warning("Variable(s) ", missing_vars, " not found")
+      }
     }
+    var_names[["other"]] <- intersect(vars, var_names[["other"]])
   }
 
   ## read dimensions
