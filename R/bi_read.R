@@ -98,15 +98,16 @@ bi_read <- function(read, vars, dims, missval.threshold, time_name, coord_name, 
 
         for (i in seq_along(np_indices))
         {
-          do.call('[<-',
-                  c(list(all_values),
-                    unname(lapply(rev(dim_lengths), seq_len)),
-                    list(i),
-                    list(read_var_input(nc, var_name,
-                                        start = c(np_indices[i],
-                                                  rep(1,
-                                                      length(dim_lengths))),
-                                        count = c(1, dim_lengths)))))
+          all_values <-
+            do.call('[<-',
+                    c(list(all_values),
+                      unname(lapply(rev(dim_lengths), seq_len)),
+                      list(i),
+                      list(read_var_input(nc, var_name,
+                                          start = c(np_indices[i],
+                                                    rep(1,
+                                                        length(dim_lengths))),
+                                          count = c(1, dim_lengths)))))
         }
       } else {
         all_values <- read_var_input(nc, var_name)
