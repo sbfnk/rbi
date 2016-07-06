@@ -13,12 +13,13 @@
 #' @param model a model to get the parameter names from; not needed if
 #'     'run' is given as a \code{\link{libbi}} object or 'all' is set
 #'     to TRUE
+#' @param burnin proportion of iterations to discard as burn-in
 #' @param ... parameters to \code{bi_read} (e.g., dimensions)
 #' @return data frame with parameter traces; this can be fed to
 #'     \code{coda} routines
 #' @importFrom reshape2 dcast
 #' @export
-get_traces <- function(run, all = FALSE, model, ...) {
+get_traces <- function(run, all = FALSE, model, burnin, ...) {
 
   read_options <- list(...)
 
@@ -52,7 +53,11 @@ get_traces <- function(run, all = FALSE, model, ...) {
   } else {
       stop("'run' must be a 'libbi' object or a file name or a list of data frames.")
   }
-      
+
+  if (!missing(burnin) && !(burnin > 0 && burnin < 1)) {
+    stop("'burnin' must be between 0 and 1.")
+  }
+
   wide_list <- lapply(names(res), function(param) {
     extra.dims <- setdiff(colnames(res[[param]]), c("np", "param", "value"))
     if (length(extra.dims) > 0) {
@@ -67,5 +72,11 @@ get_traces <- function(run, all = FALSE, model, ...) {
     df[, -1, drop = FALSE]
   })
 
-  return(do.call(cbind, wide_list))
+  ret <- do.call(cbind, wide_list)
+
+  if (!missing(burnin)) {
+    ret <- ret[-seq_len(floor(burnin * nrow(ret))), ]
+  }
+
+  return(ret)
 }
