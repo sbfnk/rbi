@@ -219,12 +219,15 @@ netcdf_create_from_list <- function(filename, variables, time_dim, coord_dim, va
       }
       ## order variables
       if (!is.null(time_index)) {
-        order_cols <- rev(c(time_index, data_cols))
+        order_cols <- c(data_cols, time_index)
         var_dims <-
           var_dims[names(var_dims)[order(match(names(var_dims), order_cols))]]
+        table_order <- c(time_dim, rev(names(var_dims)))
+      } else {
+        table_order <- rev(names(var_dims))
       }
 
-      new_order <- lapply(rev(setdiff(colnames(element), value_column)), function(x) {element[[x]]})
+      new_order <- lapply(intersect(table_order, colnames(element)), function(x) {element[[x]]})
       if (length(new_order) > 0) {
         element <- element[do.call(order, new_order), ]
       }

@@ -140,7 +140,7 @@ bi_read <- function(read, vars, dims, missval.threshold, time_name, coord_name, 
         for (type in names(time_coord_names)) {
           matching_dims <- unlist(var_dims[[type]][unlist(var_dims[[type]]) %in% dim_names])
           matching_vars <- names(matching_dims)
-          all_matching_dims <- union(all_matching_dims,  matching_dims)
+          all_matching_dims <- union(all_matching_dims, matching_dims)
           if (length(matching_vars) == 1)  {
             merge_values <- read_var_input(nc, matching_vars)
             mav_merge <- data.table::data.table(reshape2::melt(merge_values, varnames = rev(matching_dims), value.name = time_coord_names[type]))
@@ -150,7 +150,14 @@ bi_read <- function(read, vars, dims, missval.threshold, time_name, coord_name, 
           }
         }
 
-        for (var in all_matching_dims) mav[[var]] <- NULL
+        for (var in all_matching_dims) {
+          mav[[var]] <- NULL
+        }
+        table_order <- c(setdiff(colnames(mav), c(time_coord_names, "value")),
+                         intersect(colnames(mav), time_coord_names),
+                         "value")
+
+        mav <- mav[, table_order, with = FALSE]
 
         ## reorder duplicates
         cols <- setdiff(colnames(mav), "value")
