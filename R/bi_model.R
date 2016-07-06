@@ -303,12 +303,14 @@ bi_model <- setRefClass("bi_model",
           clean_model()
         },
         remove_lines = function(num) {
-          if (length(grep("[\\{\\}]", model[num])) %% 2 == 1) {
-            stop("Removing lines would create unbalanced braces.")
-          }
-          model <<- model[-num]
+          if (length(num) > 0) {
+            if (length(grep("[\\{\\}]", model[num])) %% 2 == 1) {
+              stop("Removing lines would create unbalanced braces.")
+            }
+            model <<- model[-num]
 
-          clean_model()
+            clean_model()
+          }
         },
         set_name = function(name) {
           if (length(model) > 0) {

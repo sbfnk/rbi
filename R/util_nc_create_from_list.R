@@ -43,7 +43,7 @@
 #' netcdf_create_from_list(filename, variables)
 #' bi_file_ncdump(filename)
 #' @importFrom ncdf4 nc_open nc_close ncdim_def ncvar_def nc_create ncvar_put
-netcdf_create_from_list <- function(filename, variables, time_dim, coord_dim, value_column = "value", guess_time = FALSE, guess_coord = FALSE){
+netcdf_create_from_list <- function(filename, variables, time_dim, coord_dim, value_column = "value", guess_time = FALSE, guess_coord = FALSE, verbose){
   ## get file name
   filename <- normalizePath(filename, "/", FALSE)
   ## argument consistency checks
@@ -71,6 +71,10 @@ netcdf_create_from_list <- function(filename, variables, time_dim, coord_dim, va
   vars <- list() ## variables created with nc_var
   values <- list() ## values in the variables
   for (name in names(variables)){ ## loop over list of variables
+    if (!missing(verbose) && verbose)
+    {
+      message(date(), " Preparing ", name)
+    }
     ## get list element
     element <- variables[[name]]
     index_cols <- c()
@@ -139,13 +143,14 @@ netcdf_create_from_list <- function(filename, variables, time_dim, coord_dim, va
         } else if (length(guessed_coord) > 1){
           stop("Could not decide on coord dimension between ", guessed_coord)
         }
-
       }
+
+      if (is.null(time_dim) && "time" %in% colnames(element)) time_dim <- "time"
       ## add time and coord dimensions to vector of index columns
       if (!is.null(time_dim)) index_cols <- c(index_cols, time = time_dim)
       if (!is.null(coord_dim)) index_cols <- c(index_cols, coord = coord_dim)
 
-       var_dims <- list()
+      var_dims <- list()
       ## list of dimensions
       ## first, check for time and coord columns
       index_table <-
@@ -182,6 +187,13 @@ netcdf_create_from_list <- function(filename, variables, time_dim, coord_dim, va
         }
       }
       data_cols <- setdiff(cols, c(index_cols, value_column))
+      if ("time" %in% data_cols) {
+        stop("Can't have a time dimension called 'time'; try setting 'time_dim = \"time\"'.")
+      }
+      if ("coord" %in% data_cols) {
+        stop("Can't have a coord dimension called 'coord'; try setting 'coord_dim = \"coord\"'.")
+      }
+
       for (col in rev(data_cols)) {
         dim_name <- col
         ## strip trailing numbers, these indicate duplicate dimensions
@@ -207,10 +219,16 @@ netcdf_create_from_list <- function(filename, variables, time_dim, coord_dim, va
       }
       ## order variables
       if (!is.null(time_index)) {
-        order_cols <- rev(c(time_index, cols))
+        order_cols <- rev(c(time_index, data_cols))
         var_dims <-
           var_dims[names(var_dims)[order(match(names(var_dims), order_cols))]]
       }
+
+      new_order <- lapply(rev(setdiff(colnames(element), value_column)), function(x) {element[[x]]})
+      if (length(new_order) > 0) {
+        element <- element[do.call(order, new_order), ]
+      }
+
       vars[[name]] <- ncvar_def(name, "", var_dims)
       values[[name]] <- element[[value_column]]
     } else if (length(intersect(typeof(element), c("double", "integer"))) > 0) {
@@ -238,6 +256,10 @@ netcdf_create_from_list <- function(filename, variables, time_dim, coord_dim, va
   nc <- nc_create(filename, vars)
 
   for (name in names(vars)) {
+    if (!missing(verbose) && verbose)
+    {
+      message(date(), " Writing ", name)
+    }
     ncvar_put(nc, vars[[name]], values[[name]])
   }
 

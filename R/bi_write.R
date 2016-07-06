@@ -3,10 +3,10 @@
 #' @aliases bi_write
 #' @title Create (init or observation) files for LibBi
 #' @description
-#' This function creates an init file to specify 
+#' This function creates an init file to specify
 #' parameter values and initial conditions. This file
 #' can then be passed to \code{libbi} using the \code{--init-file} option.
-#' 
+#'
 #' @param filename a path to a NetCDF file to write the variables into, which will be overwritten
 #' if it already exists.
 #' @param variables a \code{list} object, which names should be the variable names and values should be either single values, vectors of equal length, or data frames; or a single element of the type
@@ -27,7 +27,7 @@ bi_write <- function(filename, variables, timed, ...){
   }
   variables_with_dim <- variables
   for (name in names(vector_variables)){
-    dim <- ifelse(!missing(timed) && timed, "nr", "ns")
+    dim <- ifelse(!missing(timed) && timed, "time", "ns")
     vars <- data.frame(value = variables[[name]], dim = seq_along(variables[[name]]) - 1)
     names(vars)[2] <- dim
     variables_with_dim[[name]] <- vars
