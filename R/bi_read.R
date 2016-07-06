@@ -83,8 +83,34 @@ bi_read <- function(read, vars, dims, missval.threshold, time_name, coord_name, 
       message(date(), " ", var_name)
     }
     if (missing(vars) || var_name %in% vars) {
-      all_values <- read_var_input(nc, var_name)
       dim_names <- var_dims[["other"]][[var_name]]
+      if ("np" %in% dim_names && !missing(thin)) {
+        dim_lengths <- sapply(seq_along(dim_names), function(x)
+        {
+          nc[["var"]][[var_name]][["dim"]][[x]][["len"]]
+        })
+        names(dim_lengths) <- dim_names
+        np_indices <- seq(1, dim_lengths["np"], by = thin)
+        dim_lengths["np"] <- length(np_indices)
+
+        all_values <- array(dim = rev(dim_lengths))
+        dim_lengths <- dim_lengths[-which(names(dim_lengths) == "np")]
+
+        for (i in seq_along(np_indices))
+        {
+          do.call('[<-',
+                  c(list(all_values),
+                    unname(lapply(rev(dim_lengths), seq_len)),
+                    list(i),
+                    list(read_var_input(nc, var_name,
+                                        start = c(np_indices[i],
+                                                  rep(1,
+                                                      length(dim_lengths))),
+                                        count = c(1, dim_lengths)))))
+        }
+      } else {
+        all_values <- read_var_input(nc, var_name)
+      }
 
       if (any(duplicated(dim_names))) {
         duplicated_dim_names <- dim_names[duplicated(dim_names)]
@@ -97,23 +123,7 @@ bi_read <- function(read, vars, dims, missval.threshold, time_name, coord_name, 
       value_dims <- dim(all_values)
 
       if (prod(value_dims) > 1) {
-        ## thinning
-        if (!missing(thin) && "np" %in% dim_names) {
-          ## more than just one value
-          if (!missing(thin) && "np" %in% dim_names) {
-            if (thin <= tail(value_dims, 1)) {
-              indices <- lapply(value_dims[-length(value_dims)], seq_len)
-              indices <-
-                c(indices, list(seq(thin, tail(value_dims, 1), thin)))
-              all_values <- do.call("[", c(list(all_values), indices, list(drop = FALSE)))
-            } else {
-              stop("Thinning interval too large.")
-            }
-          }
-        }
-
         mav <- data.table::data.table(reshape2::melt(all_values, varnames = rev(dim_names)))
-        if (!missing(thin)) mav[["np"]] <- mav[["np"]] * thin
 
         ## find matching and coord variables
         all_matching_dims <- c()

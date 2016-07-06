@@ -5,10 +5,11 @@
 ##' @param coord (optional) Demsions index.
 ##' @param ps (optional) Path indices.
 ##' @param ts (optional) Time indices.
+##' @param ... options for ncvar_get
 ##' @return read values
 ##' @author Lawrence Murray, \email{lawrence.murray@@csiro.au}
 ##' @importFrom ncdf4 ncvar_get
-read_var_input <- function(nc, name, coord, ps, ts){
+read_var_input <- function(nc, name, coord, ps, ts, ...){
   # check arguments
   # if nargin < 2 || nargin > 5
   # print_usage ();
@@ -43,7 +44,7 @@ read_var_input <- function(nc, name, coord, ps, ts){
 #     ts = 1:T
 #   }
   # read
-  values = ncvar_get(nc, name)
+  values = ncvar_get(nc, name, ...)
   if (is.null(dim(values))){
     return(values)
   } else {
