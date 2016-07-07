@@ -101,6 +101,8 @@ bi_read <- function(read, vars, dims, missval.threshold, time_name, coord_name, 
 
         all_values <- array(dim = rev(dim_lengths))
 
+        if (verbose) pb <- txtProgressBar(min = 0, max = length(np_indices), char = ".", style = 1)
+
         for (i in seq_along(np_indices))
         {
           dim_list <- lapply(rev(dim_lengths), seq_len)
@@ -117,7 +119,9 @@ bi_read <- function(read, vars, dims, missval.threshold, time_name, coord_name, 
                       list(read_var_input(nc, var_name,
                                           start = start_vec,
                                           count = count_vec))))
+          if (verbose) setTxtProgressBar(pb, i)
         }
+        if (verbose) close(pb)
       } else {
         all_values <- read_var_input(nc, var_name)
       }
