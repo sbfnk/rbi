@@ -109,10 +109,10 @@ bi_read <- function(read, vars, dims, missval.threshold, time_name, coord_name, 
           dim_list[["np"]] <- i
           start_vec <- dim_lengths
           start_vec[] <- 1
-          start_vec["np"] <- i
+          start_vec["np"] <- np_indices[i]
           count_vec <- dim_lengths
           count_vec["np"] <- 1
-           all_values <-
+          all_values <-
             do.call('[<-',
                     c(list(all_values),
                       unname(dim_list),
