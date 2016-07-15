@@ -73,10 +73,7 @@ bi_read <- function(read, vars, dims, missval.threshold, time_name, coord_name, 
     var_dims[[type]] <- list()
     for (var_name in var_names[[type]]) {
       var <- nc[["var"]][[var_name]]
-      dim_names <- sapply(var$dim, function(x) {
-        ifelse(x$len > 1, x$name, "") # ncvar_get ignores dimensions of length 1
-      })
-
+      dim_names <- sapply(var$dim, function(x) { x$name })
       var_dims[[type]][[var_name]] <- dim_names[nchar(dim_names) > 0]
     }
   }
