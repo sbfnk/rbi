@@ -87,12 +87,12 @@ bi_read <- function(read, vars, dims, missval.threshold, time_name, coord_name, 
     }
     if (missing(vars) || var_name %in% vars) {
       dim_names <- var_dims[["other"]][[var_name]]
-      if ("np" %in% dim_names && !missing(thin)) {
-        dim_lengths <- sapply(seq_along(dim_names), function(x)
-        {
-          nc[["var"]][[var_name]][["dim"]][[x]][["len"]]
-        })
-        names(dim_lengths) <- dim_names
+      dim_lengths <- sapply(seq_along(dim_names), function(x)
+      {
+        nc[["var"]][[var_name]][["dim"]][[x]][["len"]]
+      })
+      names(dim_lengths) <- dim_names
+      if ("np" %in% dim_names && !missing(thin) && thin > 1) {
         np_indices <- seq(1, dim_lengths["np"], by = thin)
         dim_lengths["np"] <- length(np_indices)
 
@@ -120,6 +120,7 @@ bi_read <- function(read, vars, dims, missval.threshold, time_name, coord_name, 
         }
         if (!missing(verbose) && verbose) close(pb)
       } else {
+        dim_names <- dim_names[dim_lengths > 1]
         all_values <- read_var_input(nc, var_name)
       }
 
