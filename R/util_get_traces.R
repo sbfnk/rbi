@@ -19,7 +19,7 @@
 #'     \code{coda} routines
 #' @importFrom reshape2 dcast
 #' @export
-get_traces <- function(run, all = FALSE, model, burnin, ...) {
+get_traces <- function(run, model, burnin, all = FALSE, ...) {
 
   read_options <- list(...)
 
