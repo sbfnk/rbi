@@ -4,7 +4,7 @@
 \alias{get_traces}
 \title{Get the parameter traces}
 \usage{
-get_traces(run, all = FALSE, model, ...)
+get_traces(run, model, burnin, all = FALSE, ...)
 }
 \arguments{
 \item{run}{a \code{\link{libbi}} object which has been run, or a
@@ -12,12 +12,14 @@ list of data frames containing parameter traces (as returned by
 from \code{bi_read}); if it is not a \code{\link{libbi}}
 object, either 'all' must be TRUE or a model given}
 
-\item{all}{whether all variables in the run file should be
-considered (otherwise, just parameters)}
-
 \item{model}{a model to get the parameter names from; not needed if
 'run' is given as a \code{\link{libbi}} object or 'all' is set
 to TRUE}
+
+\item{burnin}{proportion of iterations to discard as burn-in}
+
+\item{all}{whether all variables in the run file should be
+considered (otherwise, just parameters)}
 
 \item{...}{parameters to \code{bi_read} (e.g., dimensions)}
 }
