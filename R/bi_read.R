@@ -164,7 +164,6 @@ bi_read <- function(read, vars, dims, missval.threshold, time_name, coord_name, 
         ## reorder duplicates
         cols <- setdiff(colnames(mav), "value")
         data.table::setkeyv(mav, cols)
-        ## mav <- mav[do.call(order, mav[cols]), ]
         rownames(mav) <- seq_len(nrow(mav))
       } else {
         ## fixed value

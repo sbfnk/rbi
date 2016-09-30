@@ -1,16 +1,15 @@
 Package: RBi
 Version: 0.4
 Date: 2016-09-28
-Title: R interface to LibBi
+Title: R Interface to LibBi
 Author: Pierre E. Jacob <pierre.jacob.work@gmail.com>,
         Anthony Lee <awllee@gmail.com>,
         Sebastian Funk <sebastian.funk@lshtm.ac.uk>
 Maintainer: Pierre E. Jacob <pierre.jacob.work@gmail.com>,
             Sebastian Funk <sebastian.funk@lshtm.ac.uk>
-Depends:
-    methods
 Imports:
     reshape2,
+    data.table,
     ncdf4
 Suggests:
 Description: R interface to LibBi
