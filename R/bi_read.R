@@ -18,7 +18,7 @@
 #' @return list of results
 #' @importFrom reshape2 melt
 #' @importFrom ncdf4 nc_close
-#' @importFrom data.table data.table setkeyv setDF is.data.table merge
+#' @importFrom data.table data.table setkeyv setDF is.data.table
 #' @export
 bi_read <- function(read, vars, dims, missval.threshold, time_name, coord_name, vector, thin, verbose)
 {
