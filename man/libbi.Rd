@@ -23,7 +23,7 @@
 \item{obs}{observation file (given as file name or \code{libbi} object or a list of data frames}
 
 \item{run}{(boolean) whether to run the model
-using the \code{which} Unix command, after having loaded "~/.bashrc" if present; 
+using the \code{which} Unix command, after having loaded "~/.bashrc" if present;
 if unsuccessful it tries "~/PathToBiBin/libbi"; if unsuccessful again it fails.}
 }
 \description{
@@ -34,7 +34,7 @@ method documented in \code{\link{libbi_run}}. Note that \code{\link{libbi}} obje
 }
 \examples{
 bi_object <- libbi$new(client = "sample",
-                       model = system.file(package="bi", "PZ.bi"), 
+                       model = system.file(package="bi", "PZ.bi"),
                        global_options = list(sampler = "smc2"))
 }
 \seealso{

@@ -4,7 +4,7 @@
 \alias{read_var_input}
 \title{Read variable from NetCDF file.}
 \usage{
-read_var_input(nc, name, coord, ps, ts)
+read_var_input(nc, name, coord, ps, ts, ...)
 }
 \arguments{
 \item{nc}{NetCDF file handle}
@@ -16,6 +16,8 @@ read_var_input(nc, name, coord, ps, ts)
 \item{ps}{(optional) Path indices.}
 
 \item{ts}{(optional) Time indices.}
+
+\item{...}{options for ncvar_get}
 }
 \value{
 read values

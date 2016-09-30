@@ -15,14 +15,12 @@ if it already exists.}
 \item{timed}{if TRUE, any elements of \code{variables} that are vectors will be assumed to have a time dimension}
 
 \item{...}{arguments passed to \code{\link{netcdf_create_from_list}}}
-
-\item{time_dim}{name of the time dimension, if one exists}
 }
 \value{
 None, but creates a NetCDF file at the specified path.
 }
 \description{
-This function creates an init file to specify 
+This function creates an init file to specify
 parameter values and initial conditions. This file
 can then be passed to \code{libbi} using the \code{--init-file} option.
 }

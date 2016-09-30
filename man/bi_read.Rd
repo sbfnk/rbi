@@ -4,8 +4,8 @@
 \alias{bi_read}
 \title{Bi Read}
 \usage{
-bi_read(read, vars, dims, missval.threshold, variables, time_dim, vector, thin,
-  verbose)
+bi_read(read, vars, dims, missval.threshold, time_name, coord_name, vector,
+  thin, verbose)
 }
 \arguments{
 \item{read}{either a path to a NetCDF file, or a NetCDF connection created using \code{nc_open}, or a \code{\link{libbi}} object from which to read the output}
@@ -16,9 +16,9 @@ bi_read(read, vars, dims, missval.threshold, variables, time_dim, vector, thin,
 
 \item{missval.threshold}{upper threshold for the likelihood}
 
-\item{variables}{only extract given variables (for space saving)}
+\item{time_name}{name of time dimension (if any)}
 
-\item{time_dim}{name of time dimension (if any)}
+\item{coord_name}{name of coord dimension (if any)}
 
 \item{vector}{if TRUE, will return results as vectors, not data.frames.}
 

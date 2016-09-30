@@ -23,7 +23,7 @@
 \item{...}{any onrecognised options will be added to \code{add_options}}
 }
 \value{
-a list containing the absolute paths to the results; it is stored in the 
+a list containing the absolute paths to the results; it is stored in the
 \code{result} field of the instance of \code{\link{libbi}}.
 }
 \description{
@@ -33,7 +33,7 @@ arguments.
 }
 \examples{
 bi_object <- libbi$new(client = "sample",
-                       model_file_name = system.file(package="bi", "PZ.bi"), 
+                       model_file_name = system.file(package="bi", "PZ.bi"),
                        global_options = list(sampler = "smc2"))
 bi_object$run(add_options=list(nthreads = 1), verbose = TRUE)
 bi_file_summary(bi_object$result$output_file_name)
