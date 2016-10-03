@@ -11,8 +11,7 @@ Depends:
 Imports:
     reshape2,
     data.table,
-    ncdf4,
-    stringr
+    ncdf4
 Suggests:
 Description: Provides an R interface to LibBi, a LIBrary for Bayesian inference.
 License: GPL (>= 3)

@@ -24,7 +24,6 @@
 #'                        model = system.file(package="bi", "PZ.bi"),
 #'                        global_options = list(sampler = "smc2"))
 #' @seealso \code{\link{libbi_run}}
-#' @importFrom stringr str_sub str_detect
 #' @export libbi
 NULL 
 #' @rdname libbi_run
@@ -135,32 +134,18 @@ libbi <- setRefClass("libbi",
             global_options <<- option_list(global_options)
 
           if (missing(path_to_libbi)){
-            # That's a bit tricky then because we really need to know where libbi is.
-            # Maybe the system knows where libbi is
-            path_to_libbi <<- suppressWarnings(system("which libbi", TRUE))
-            if (length(.self$path_to_libbi) == 0){
-              # Else try to get the path to libbi from a folder called PathToBiBin
-              # created by the user with a command like 'ln -s actual_path ~/PathToBiBin'.
-              path_to_libbi <<- try(tools::file_path_as_absolute("~/PathToBiBin/libbi"), TRUE)
-              if (inherits(.self$path_to_libbi, "try-error")){
-                # then we can try to find libbi if there's a path in the bashrc file
-                bashrc <- try(system("cat ~/.bashrc", intern = TRUE), TRUE)
-                if (length(bashrc) > 0){
-                  # there is a bashrc file so we will read the exports from it
-                  lineswithPATH <- bashrc[stringr::str_detect(bashrc, "PATH")]
-                  exportPath <- lineswithPATH[stringr::str_detect(lineswithPATH, "export")]
-                  exportPath <- lineswithPATH[stringr::str_sub(exportPath, start=1, end=1) != "#"]
-                  exportPathcmd <- paste(exportPath, collapse=";")
-                  # then we execute the export commands and try to locate libbi
-                  path_to_libbi <<- system(gsub(";;", ";", 
-                                               paste(exportPathcmd, "which libbi", sep = ";")),
-                                          intern<-TRUE)
-                }
-              }
+            if ("path_to_libbi" %in% names(.Options)) {
+              path_to_libbi <<- .Options[["path_to_libbi"]]
+            } else {
+              # Maybe the system knows where libbi is
+              path_to_libbi <<- Sys.which("libbi")
             }
-          } else {
-            # check that the user provided a path to an existing file
-            path_to_libbi <<- tools::file_path_as_absolute(path_to_libbi)
+            if (length(.self$path_to_libbi) == 0){
+              stop("Could not locate libbi, please either provide the path to the libbi binary via the 'path_to_libbi' option, or set the PATH to contain the directory that contains the in ~/.Renviron or set it in your R session via options(path_to_libbi = \"insert_path_here\")")
+            }
+          }
+          if (!file.exists(paste0(path_to_libbi, "/", "libbi"))) {
+            stop("Could not locate libbi in ", path_to_libbi)
           }
           base_command_string <<- paste(.self$path_to_libbi, .self$client,
                                         .self$config)
