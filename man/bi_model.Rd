@@ -12,7 +12,7 @@ Once the instance is created, the model can either be fed to a \code{\link{libbi
 object.
 }
 \examples{
-bi_sir <- bi_model$new(filename = "sir.bi")
+bi_sir <- bi_model(filename = "sir.bi")
 }
 \seealso{
 \code{\link{bi_model_fix}}, \code{\link{bi_model_propose_prior}}, \code{\link{bi_model_insert_lines}}, \code{\link{bi_model_update_lines}}, \code{\link{bi_model_remove_lines}}, \code{\link{bi_model_write_model_file}},

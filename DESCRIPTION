@@ -5,8 +5,7 @@ Title: R Interface to LibBi
 Author: Pierre E. Jacob <pierre.jacob.work@gmail.com>,
         Anthony Lee <awllee@gmail.com>,
         Sebastian Funk <sebastian.funk@lshtm.ac.uk>
-Maintainer: Pierre E. Jacob <pierre.jacob.work@gmail.com>,
-            Sebastian Funk <sebastian.funk@lshtm.ac.uk>
+Maintainer: Sebastian Funk <sebastian.funk@lshtm.ac.uk>
 Depends:
     methods
 Imports:
@@ -15,7 +14,7 @@ Imports:
     ncdf4,
     stringr
 Suggests:
-Description: R interface to LibBi
+Description: Provides an R interface to LibBi, a LIBrary for Bayesian inference.
 License: GPL (>= 3)
 URL: https://github.com/libbi/RBi
 BugReports: 

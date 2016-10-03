@@ -18,6 +18,7 @@
 #' @return data frame with parameter traces; this can be fed to
 #'     \code{coda} routines
 #' @importFrom reshape2 dcast
+#' @importFrom stats as.formula
 #' @export
 get_traces <- function(run, model, burnin, all = FALSE, ...) {
 

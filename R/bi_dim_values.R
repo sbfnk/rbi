@@ -4,6 +4,7 @@
 #' @description
 #' This function returns the values of a dimension in a NetCDF file.
 #' @param filename path to a NetCDF file
+#' @param dim name of the dimension to check
 #' @return dimension values
 #' @export
 #' @importFrom ncdf4 nc_open nc_close

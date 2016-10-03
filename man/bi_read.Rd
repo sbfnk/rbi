@@ -20,9 +20,11 @@ bi_read(read, vars, dims, missval.threshold, time_name, coord_name, vector,
 
 \item{coord_name}{name of coord dimension (if any)}
 
-\item{vector}{if TRUE, will return results as vectors, not data.frames.}
+\item{vector}{if TRUE, will return results as vectors, not data.frames}
 
 \item{thin}{thinning (keep only 1/thin of samples)}
+
+\item{verbose}{if TRUE, will print variables as they are read}
 }
 \value{
 list of results

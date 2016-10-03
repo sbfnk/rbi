@@ -13,12 +13,14 @@
 #' @param missval.threshold upper threshold for the likelihood
 #' @param time_name name of time dimension (if any)
 #' @param coord_name name of coord dimension (if any)
-#' @param vector if TRUE, will return results as vectors, not data.frames.
+#' @param vector if TRUE, will return results as vectors, not data.frames
 #' @param thin thinning (keep only 1/thin of samples)
+#' @param verbose if TRUE, will print variables as they are read
 #' @return list of results
 #' @importFrom reshape2 melt
 #' @importFrom ncdf4 nc_close
-#' @importFrom data.table data.table setkeyv setDF is.data.table
+#' @importFrom data.table data.table setkeyv setnames setDF is.data.table
+#' @importFrom utils setTxtProgressBar txtProgressBar
 #' @export
 bi_read <- function(read, vars, dims, missval.threshold, time_name, coord_name, vector, thin, verbose)
 {
@@ -48,7 +50,7 @@ bi_read <- function(read, vars, dims, missval.threshold, time_name, coord_name, 
     intersect(sapply(nc[["dim"]], function(x) {x[["name"]]}),
               time_coord_names)
   if (length(forbidden_names) > 0) {
-    stop("Can't have a dimension called ", paste(forbiden_names, sep = ", "), ".")
+    stop("Can't have a dimension called ", paste(forbidden_names, sep = ", "), ".")
   }
   var_names[["other"]] <- setdiff(all_var_names, unlist(var_names))
 
@@ -177,7 +179,9 @@ bi_read <- function(read, vars, dims, missval.threshold, time_name, coord_name, 
         }
       }
 
-      if (!missing(dims) && length(dims) == 1 && "coord" %in% colnames(mav)) setnames(mav, "coord", names(dims))
+      if (!missing(dims) && length(dims) == 1 && "coord" %in% colnames(mav)) {
+        data.table::setnames(mav, "coord", names(dims))
+      }
 
       for (col in colnames(mav)) {
         if (!missing(dims) && col %in% names(dims)) {

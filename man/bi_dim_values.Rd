@@ -8,6 +8,8 @@ bi_dim_values(filename, dim)
 }
 \arguments{
 \item{filename}{path to a NetCDF file}
+
+\item{dim}{name of the dimension to check}
 }
 \value{
 dimension values
