@@ -24,6 +24,7 @@
 #'                        model = system.file(package="bi", "PZ.bi"),
 #'                        global_options = list(sampler = "smc2"))
 #' @seealso \code{\link{libbi_run}}
+#' @importFrom stringr str_sub str_detect
 #' @export libbi
 NULL 
 #' @rdname libbi_run

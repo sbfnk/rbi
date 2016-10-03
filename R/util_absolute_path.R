@@ -7,6 +7,7 @@
 #' 
 #' @param filename name of a file, absolute or relative to a folder
 #' @param dirname name of a folder where the file is supposed to be
+#' @importFrom stringr str_sub
 #' @export
 #
 absolute_path <- function(filename, dirname){

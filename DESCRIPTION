@@ -12,7 +12,8 @@ Depends:
 Imports:
     reshape2,
     data.table,
-    ncdf4
+    ncdf4,
+    stringr
 Suggests:
 Description: R interface to LibBi
 License: GPL (>= 3)
