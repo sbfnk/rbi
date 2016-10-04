@@ -150,7 +150,7 @@ libbi <- setRefClass("libbi",
             path_to_libbi <<- paste0(.self$path_to_libbi, "/libbi")
           }
           if (!file.exists(.self$path_to_libbi)) {
-            stop("Could not find libbi executable", path_to_libbi)
+            stop("Could not find libbi executable ", path_to_libbi)
           }
           base_command_string <<- paste(.self$path_to_libbi, .self$client,
                                         .self$config)
