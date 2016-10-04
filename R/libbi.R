@@ -122,10 +122,18 @@ libbi <- setRefClass("libbi",
           if (missing(config)){
             config <<- ""
           } else {
-            if (model_folder == "") {
-              config <<- config
+            config_str <- config
+            if (substr(config_str, 1, 1) == "@") {
+              config_str <- substr(config_str, 2, nchar(config_str))
+            }
+            if (model_folder != "") {
             } else {
-              config <<- paste0(" @", absolute_path(filename=config, dirname=model_folder))
+              config_str <- absolute_path(filename = config_str, dirname = model_folder)
+            }
+            if (file.exists(config_str)) {
+              config <<- config_str
+            } else {
+              stop("Could not find config file ", config_str)
             }
           }
           if (missing(global_options))
@@ -134,11 +142,11 @@ libbi <- setRefClass("libbi",
             global_options <<- option_list(global_options)
 
           if (missing(path_to_libbi)){
-            if ("path_to_libbi" %in% names(.Options)) {
-              path_to_libbi <<- .Options[["path_to_libbi"]]
-            } else {
+            if (is.null(getOption("path_to_libbi"))) {
               # Maybe the system knows where libbi is
               path_to_libbi <<- Sys.which("libbi")
+            } else {
+              path_to_libbi <<- getOption("path_to_libbi")
             }
             if (length(.self$path_to_libbi) == 0){
               stop("Could not locate libbi, please either provide the path to the libbi binary via the 'path_to_libbi' option, or set the PATH to contain the directory that contains the in ~/.Renviron or set it in your R session via options(path_to_libbi = \"insert_path_here\")")
@@ -152,16 +160,16 @@ libbi <- setRefClass("libbi",
           if (!file.exists(.self$path_to_libbi)) {
             stop("Could not find libbi executable ", path_to_libbi)
           }
-          base_command_string <<- paste(.self$path_to_libbi, .self$client,
-                                        .self$config)
+          base_command_string <<- paste(.self$path_to_libbi, .self$client)
 
           dot_options <- list(...)
           for (option in names(dot_options))
           {
               global_options[[option]] <<- dot_options[[option]]
+              dot_options[[option]] <- NULL
           }
 
-          .self$run(from_init = TRUE, run = run, ...)
+          return(do.call(.self$run,  c(list(from_init = TRUE, run = run), dot_options)))
         },
         run = function(add_options, output_file_name, stdoutput_file_name, init, input, obs, time_dim, from_init = FALSE, run = TRUE, ...){
 
@@ -231,7 +239,9 @@ libbi <- setRefClass("libbi",
           {
             add_options <- merge_by_name(add_options, file_options)
 
-            options <- option_list(getOption("libbi_args"), global_options, add_options, list(...))
+            options <- option_list(getOption("libbi_args"),
+                                   paste(readLines(.self$config), collapse = " "), 
+                                   global_options, add_options, list(...))
             if ("end-time" %in% names(options) && !("noutputs" %in% names(options))) {
               options[["noutputs"]] <- options[["end-time"]]
             }
@@ -301,46 +311,6 @@ libbi <- setRefClass("libbi",
             run_flag <<- TRUE
             result <<- libbi_result
           }
-        },
-        rerun = function(add_options, ...){
-          if (!run_flag) {
-            stop("The model should be run before running 'rerun'")
-          }
-
-          if (missing(add_options))
-          {
-            add_options <- list()
-          }
-
-          options <- option_list(getOption("libbi_args"), global_options, add_options, list(...))
-          opt_string <- option_string(option_list)
-          verbose <- ("verbose" %in% names(options) && options[["verbose"]] == TRUE)
-
-          if (missing(verbose)) verbose <- FALSE
-
-          if (.self$model_file_name == "") {
-            run_model_file <- tempfile(pattern=.self$model$name, fileext=".bi",
-                                       tmpdir=.self$working_folder)
-            model$write_model_file(run_model_file)
-          } else {
-            run_model_file <- .self$model_file_name
-          }
-
-          if (.self$model_folder == .self$working_folder) {
-            rel_model_file <- basename(run_model_file)
-          } else {
-            rel_model_file <- run_model_file
-          }
-
-          cdcommand <- paste("cd", .self$working_folder)
-          launchcommand <- paste(.self$base_command_string, opt_string,
-                                 "--output-file", .self$output_file_name,
-                                 "--model-file", rel_model_file)
-          command_dryparse <<- paste(c(cdcommand, paste(launchcommand, "--dry-parse")), collapse = ";")
-          if (verbose) print("Launching LibBi with the following commands:")
-          if (verbose) print(.self$command_dryparse)
-          system(.self$command_dryparse, intern = TRUE)
-          if (verbose) print("... LibBi has finished!")
         },
         clone = function(model, ...) {
           if (missing(model)) {

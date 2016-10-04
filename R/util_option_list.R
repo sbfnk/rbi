@@ -19,7 +19,7 @@ option_list <- function(...){
       ## remove trailing blanks
       option_string <- sub("[[:space:]]*$", "", option_string)
 
-      option_list <- lapply(option_string, function(x) {
+      string_list <- lapply(option_string, function(x) {
         ## check if it has an optional argument
         opt_split <- strsplit(x, "(=|[[:space:]])[[:space:]]*")[[1]]
         if (length(opt_split) > 1) {
@@ -35,16 +35,17 @@ option_list <- function(...){
         return(ret)
       })
 
-      option_names <- sapply(option_list, names)
-      option_list <- lapply(option_list, function(x) unname(x))
-      options[names] <- option_list
+      option_names <- gsub("_", "-", sapply(string_list, names))
+      string_list <- lapply(string_list, function(x) unname(x))
+
+      options[option_names] <- string_list
     } else if (is.list(string)) {
+      names(string) <- gsub("_", "-", names(string))
       options[names(string)] <- string
     } else {
       stop("arguments to 'option_list' must be lists or character vectors")
     }
   }
-
 
   return(options)
 }
