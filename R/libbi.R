@@ -160,7 +160,7 @@ libbi <- setRefClass("libbi",
           {
               global_options[[option]] <<- dot_options[[option]]
           }
-
+          
           .self$run(from_init = TRUE, run = run, ...)
         },
         run = function(add_options, output_file_name, stdoutput_file_name, init, input, obs, time_dim, from_init = FALSE, run = TRUE, ...){
@@ -277,6 +277,7 @@ libbi <- setRefClass("libbi",
                           sep = "\n"))
             command <<- paste(c(cdcommand, paste(launchcommand, stdoutput_redir_name)), collapse = ";")
                                         #           command_dryparse <<- paste(c(cdcommand, paste(launchcommand, "--dry-parse")), collapse = ";")
+           
             ret <- system(command)
             if (ret > 0) {
               if (!verbose) {
