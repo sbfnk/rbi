@@ -13,7 +13,7 @@ absolute_path <- function(filename, dirname){
   if (missing(dirname)){
     dirname <- ""
   }
-  if (strsub(filename, 1, 1) == "/"){
+  if (substr(filename, 1, 1) == "/"){
     #the filename is already absolute
     result <- normalizePath(filename, "/", FALSE)
   } else {
