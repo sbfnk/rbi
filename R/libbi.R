@@ -239,8 +239,13 @@ libbi <- setRefClass("libbi",
           {
             add_options <- merge_by_name(add_options, file_options)
 
-            options <- option_list(getOption("libbi_args"),
-                                   paste(readLines(.self$config), collapse = " "), 
+            if (nchar(.self$config) > 0) {
+              file_options <- paste(readLines(.self$config), collapse = " ") 
+            } else {
+              file_options <- list()
+            }
+
+            options <- option_list(getOption("libbi_args"), file_options, 
                                    global_options, add_options, list(...))
             if ("end-time" %in% names(options) && !("noutputs" %in% names(options))) {
               options[["noutputs"]] <- options[["end-time"]]
