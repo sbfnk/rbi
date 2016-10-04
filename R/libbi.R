@@ -232,6 +232,9 @@ libbi <- setRefClass("libbi",
             add_options <- merge_by_name(add_options, file_options)
 
             options <- option_list(getOption("libbi_args"), global_options, add_options, list(...))
+            if ("end-time" %in% names(options) && !("noutputs" %in% names(options))) {
+              options[["noutputs"]] <- options[["end-time"]]
+            }
             opt_string <- option_string(options)
             verbose <- ("verbose" %in% names(options) && options[["verbose"]] == TRUE)
 

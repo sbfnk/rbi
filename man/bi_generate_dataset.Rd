@@ -4,22 +4,19 @@
 \alias{bi_generate_dataset}
 \title{Bi Generate Dataset}
 \usage{
-bi_generate_dataset(endtime, noutputs, ...)
+bi_generate_dataset(...)
 }
 \arguments{
-\item{endtime}{final time index, so that data is generated from time 0 to time "endtime".}
-
-\item{noutputs}{number of output points to be extracted from the hidden process; default is noutputs = endtime.}
-
-\item{...}{arguments to be passed to \code{\link{libbi}} (with run = TRUE)}
+\item{...}{arguments to be passed to \code{\link{libbi}} (with run = TRUE), especially 'end_time'}
 }
 \value{
 generated data set
 }
 \description{
-This is a wrapper around \code{libbi sample --target joint}, to generate
+This is a wrapper around \code{libbi sample --target joint --nsamples 1}, to generate a
 synthetic dataset from a model. Parameters can be passed via the 'init' option
 (see \code{\link{libbi_run}}, otherwise they are generated from the prior specified
-in the model.
+in the model. The end time should be specified using the "end_time" option. If this is not given,
+only a parameter set is sampled.
 }
 
