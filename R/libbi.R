@@ -143,9 +143,14 @@ libbi <- setRefClass("libbi",
             if (length(.self$path_to_libbi) == 0){
               stop("Could not locate libbi, please either provide the path to the libbi binary via the 'path_to_libbi' option, or set the PATH to contain the directory that contains the in ~/.Renviron or set it in your R session via options(path_to_libbi = \"insert_path_here\")")
             }
+          } else {
+            path_to_libbi <<- path_to_libbi
           }
-          if (!file.exists(paste0(path_to_libbi, "/", "libbi"))) {
-            stop("Could not locate libbi in ", path_to_libbi)
+          if (!grepl("libbi$", .self$path_to_libbi)) {
+            path_to_libbi <<- paste0(.self$path_to_libbi, "/libbi")
+          }
+          if (!file.exists(.self$path_to_libbi)) {
+            stop("Could not find libbi executable", path_to_libbi)
           }
           base_command_string <<- paste(.self$path_to_libbi, .self$client,
                                         .self$config)
