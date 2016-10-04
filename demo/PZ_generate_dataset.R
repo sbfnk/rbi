@@ -20,6 +20,8 @@ T <- 100
 # First let's generate a dataset without specifying parameters
 # so the parameters and initial conditions are drawn from the prior distribution
 # which is specified in the model file.
+# if libbi throws an error here, try passing the "working_folder" argument to
+# 'bi_generate_dataset' and look for the issue in the ".PZ" subdirectory
 dataset1 <- bi_generate_dataset(endtime=T, model=PZ)
 # Read results
 output1 <- bi_read(dataset1, c("P_obs", "sigma"))
