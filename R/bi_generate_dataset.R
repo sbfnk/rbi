@@ -12,19 +12,27 @@
 #' @return generated data set
 #' @export
 bi_generate_dataset <- function(endtime, noutputs, ...){
-  if (missing(endtime)){
+  full_config <- !is.null(list(...)[['config']])
+
+  if (missing(endtime) & full_config==F){
     stop("please specify the final time index!")
   }
 
-  global_options <- list()
-  if (missing(noutputs)) {
+  if (missing(noutputs) & full_config==F) {
     #noutputs missing, default to endtime
     noutputs <- endtime
-  } 
-  global_options[["end-time"]] <- endtime
-  global_options[["noutputs"]] <- endtime
-  global_options[["target"]] <- "joint"
-  global_options[["nsamples"]] <- 1
+  }
+
+  global_options <- list()
+
+  if (full_config == F){
+    global_options[["end-time"]] <- endtime
+    global_options[["noutputs"]] <- endtime
+    global_options[["target"]] <- "joint"
+    global_options[["nsamples"]] <- 1
+  } else if(is.null(list(...)[['working_folder']])){
+    stop("Cannot use a config file without specifying working_folder.")
+  }
 
   bi_object <- libbi$new(client = "sample", global_options = global_options,
                          run = TRUE, ...)
