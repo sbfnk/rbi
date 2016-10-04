@@ -22,7 +22,7 @@ T <- 100
 # which is specified in the model file.
 # if libbi throws an error here, try passing the "working_folder" argument to
 # 'bi_generate_dataset' and look for the issue in the ".PZ" subdirectory
-dataset1 <- bi_generate_dataset(endtime=T, model=PZ)
+dataset1 <- bi_generate_dataset(end_time=T, model=PZ)
 # Read results
 output1 <- bi_read(dataset1, c("P_obs", "sigma"))
 
@@ -34,7 +34,7 @@ g1 <- qplot(x = seq_along(P_obs1), y = P_obs1, geom = "line") + geom_line(colour
 g1 <- g1 + xlab("time") + ylab(paste("P_obs with sigma=", round(sigma1, 2)))
 # Then generate dataset with a specified set of parameter values;
 # the parameters left unspecified are drawn from the prior.
-dataset2 <- bi_generate_dataset(endtime=T, model=PZ,
+dataset2 <- bi_generate_dataset(end_time=T, model=PZ,
                                 init = list(sigma = 0.5))
 output2 <- bi_read(dataset2, c("P_obs", "sigma"))
 
