@@ -31,7 +31,7 @@ bi_file_summary(bi_object$result$output_file_name)
 bi_read(bi_object$result$output_file_name, vars = "mu")
 # Let's have a look at the filtering means
 # First, get the particles
-logw <- xtabs(value ~ nr + np, data = bi_read(bi_object, "logweight"))
+logw <- xtabs(value ~ time + np, data = bi_read(bi_object, "logweight"))
 P <- bi_read(bi_object, "P")$value
 Z <- bi_read(bi_object, "Z")$value
 # Then compute the filtering means
