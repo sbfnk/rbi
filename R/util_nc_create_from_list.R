@@ -1,6 +1,5 @@
 #' @rdname netcdf_create_from_list
 #' @name netcdf_create_from_list
-#' @aliases netcdf_create_from_list
 #' @title Create NetCDF File from R list
 #' @description
 #' Internal function that creates a NetCDF file given a list.
@@ -33,16 +32,6 @@
 #' @note Two elements of the given list can possibly have the same
 #'   dimension name.
 #' @return A list of factors in extra dimensions, if any
-#' @examples
-#' filename <- tempfile(pattern="dummy", fileext=".nc")
-#' a <- list(values = 1:3, dimension = "dim_a")
-#' b <- list(values = 1:5, dimension = "dim_b")
-#' c <- list(values = 5:9, dimension = "dim_b")
-#' d <- 3
-#' e <- data.frame(dim_a = rep(1:3, time = 2), dim_c = rep(1:2, each = 3), value = 1:6)
-#' variables <- list(a=a, b=b, c=c, d=d, e=e)
-#' netcdf_create_from_list(filename, variables)
-#' bi_file_ncdump(filename)
 #' @importFrom ncdf4 nc_open nc_close ncdim_def ncvar_def nc_create ncvar_put
 netcdf_create_from_list <- function(filename, variables, time_dim, coord_dim, value_column = "value", guess_time = FALSE, guess_coord = FALSE, verbose){
   ## get file name

@@ -1,4 +1,4 @@
-#' RBi is an interface to \code{libbi}, a library for Bayesian Inference
+#' \code{rbi} is an interface to \code{libbi}, a library for Bayesian Inference
 #' 
 #' The package includes a wrapper for the \code{libbi} script, allowing
 #' to launch the \code{libbi} command from within R. 
@@ -15,7 +15,7 @@
 #' }
 #' 
 #'
-#'@name RBi-package
+#'@name rbi-package
 #'@aliases rbi RBi
 #'@docType package
 #'@title RBi - R interface for \code{libbi}
@@ -25,10 +25,16 @@
 #'@keywords package
 #'@examples
 #'
-#'  demo(PZ_generate_dataset)
-#'  demo(PZ_PMMH)
-#'  demo(PZ_SMC2)
-#'  demo(PZ_filtering)
+#' example_output_file <- system.file(package="rbi", "example_output.nc")
+#' bi_file_summary(example_output_file)
+#' mu_sigma <- bi_read(example_output_file, c("mu", "sigma"))
+#' bi_write("mu_sigma.nc", mu_sigma)
+#'
+#' ## examples for running libbi from rbi (will take a few minutes)
+#' \dontrun{demo(PZ_generate_dataset)}
+#' \dontrun{demo(PZ_PMMH)}
+#' \dontrun{demo(PZ_SMC2)}
+#' \dontrun{demo(PZ_filtering)}
 #'
 NULL
 
