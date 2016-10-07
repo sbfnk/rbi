@@ -130,7 +130,7 @@ libbi <- setRefClass("libbi",
               path_to_libbi <<- getOption("path_to_libbi")
             }
             if (nchar(.self$path_to_libbi) == 0){
-              stop("Could not locate libbi, please either provide the path to the libbi binary via the 'path_to_libbi' option, or set the PATH to contain the directory that contains the in ~/.Renviron or set it in your R session via options(path_to_libbi = \"insert_path_here\")")
+              stop("Could not locate libbi, please either provide the path to the libbi binary via the 'path_to_libbi' option, or set the PATH to contain the directory that contains the binary in ~/.Renviron or set it in your R session via options(path_to_libbi = \"insert_path_here\")")
             }
           } else {
             path_to_libbi <<- path_to_libbi
