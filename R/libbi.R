@@ -290,14 +290,13 @@ libbi <- setRefClass("libbi",
             }
             if (verbose) print("... LibBi has finished!")
             libbi_result <-
-              list(output_file_name = absolute_path(filename=.self$output_file_name, 
-                                                    dirname=.self$working_folder),
+              list(output_file_name = .self$output_file_name,
                    command = launchcommand)
             if (nchar(.self$model_file_name) > 0){
               libbi_result["model_file_name"] = .self$model_file_name
             }
             if (!missing(stdoutput_file_name)){
-              libbi_result["stdoutput_file_name"] = absolute_path(filename=stdoutput_file_name, dirname=.self$model_file_name)
+              libbi_result["stdoutput_file_name"] = absolute_path(filename=stdoutput_file_name, dirname=getwd())
             }
             run_flag <<- TRUE
             result <<- libbi_result
@@ -325,12 +324,12 @@ libbi <- setRefClass("libbi",
           cat("Wrapper around LibBi\n")
           cat("* client: ", .self$client, "\n")
           cat("* path to working folder:", .self$working_folder, "\n")
-          if (.self$model_file_name != "") {
-            cat("* path to model file:", .self$model_file_name, "\n")
+          cat("* path to model file:", .self$model_file_name, "\n")
+          if (class(.self$output_file_name) != "uninitializedField") {
+            cat("* path to output_file:", .self$output_file_name, "\n")
           }
-          cat("* path to LibBi binary:", .self$path_to_libbi, "\n")
         }
-        )
+      )
       )
 
 
