@@ -56,7 +56,7 @@ NULL
 libbi <- setRefClass("libbi",
       fields = c("client", "config", "global_options", "path_to_libbi",
                  "model", "model_file_name",
-                 "base_command_string", "command", "command_dryparse", "result",
+                 "base_command_string", "command", "result",
                  "working_folder", "output_file_name", "run_flag",
                  "dims"),
       methods = list(
@@ -282,7 +282,6 @@ libbi <- setRefClass("libbi",
               print(paste(c(cdcommand, launchcommand, stdoutput_redir_name),
                           sep = "\n"))
             command <<- paste(c(cdcommand, paste(launchcommand, stdoutput_redir_name)), collapse = ";")
-                                        #           command_dryparse <<- paste(c(cdcommand, paste(launchcommand, "--dry-parse")), collapse = ";")
             ret <- system(command)
             if (ret > 0) {
               if (!verbose) {
