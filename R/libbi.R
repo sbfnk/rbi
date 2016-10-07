@@ -167,8 +167,14 @@ libbi <- setRefClass("libbi",
             add_options <- option_list(add_options)
           }
 
+          if (nchar(.self$config) > 0) {
+            config_file_options <- paste(readLines(.self$config), collapse = " ") 
+          } else {
+            config_file_options <- list()
+          }
+
           ## get model
-          options <- option_list(getOption("libbi_args"), global_options, add_options, list(...))
+          options <- option_list(getOption("libbi_args"), config_file_options, global_options, add_options, list(...))
           if ("model-file" %in% names(options)) {
             if (is.null(.self$model)) {
               model_file_name <<- absolute_path(options[["model-file"]], getwd())
@@ -232,22 +238,15 @@ libbi <- setRefClass("libbi",
             }
           }
 
-          ## overwrite global and additional option, i.e. if this
+          ## overwrite global additional option, i.e. if this
           ## is run again it should use the file given here
           global_options <<- merge_by_name(global_options, file_options)
 
           if (run)
           {
-            add_options <- merge_by_name(add_options, file_options)
-
-            if (nchar(.self$config) > 0) {
-              file_options <- paste(readLines(.self$config), collapse = " ") 
-            } else {
-              file_options <- list()
-            }
-
             ## re-read options
-            options <- option_list(getOption("libbi_args"), global_options, add_options, list(...))
+            options <- option_list(getOption("libbi_args"), config_file_options,
+                                   global_options, add_options, file_options, list(...))
             if ("end-time" %in% names(options) && !("noutputs" %in% names(options))) {
               options[["noutputs"]] <- options[["end-time"]]
             }
