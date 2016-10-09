@@ -1,0 +1,4 @@
+PZ_generate_dataset Generate a dataset from the phytoplankton-zooplankton model
+PZ_PMMH             Sample from the posterior distribution using particle Markov-chain Metropolis-Hastings   
+PZ_SMC2             Sample from the posterior distribution using SMC^2
+PZ_filtering        Perform particle filtering
