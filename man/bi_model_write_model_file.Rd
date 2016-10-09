@@ -13,7 +13,7 @@ the return value of the \code{\link{writeLines}} call.
 Writes a bi model to a file given by \code{filename}. The extension '.bi' will be added if necessary.
 }
 \examples{
-model_file_name <- system.file(package="bi", "PZ.bi")
+model_file_name <- system.file(package="rbi", "PZ.bi")
 PZ <- bi_model(filename = model_file_name)
 PZ$write_model_file("PZ")
 }

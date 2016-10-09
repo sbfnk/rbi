@@ -17,7 +17,7 @@ the updated bi model
 Inserts one or more lines into a libbi model. If one of \code{before} or \code{after} is given, the line(s) will be inserted before or after a given line number, respectively. If neither is given, the line(s) will be added at the end.
 }
 \examples{
-model_file_name <- system.file(package="bi", "PZ.bi")
+model_file_name <- system.file(package="rbi", "PZ.bi")
 PZ <- bi_model(filename = model_file_name)
 PZ$insert_lines(lines = "noise beta", after = 8)
 }

@@ -9,7 +9,8 @@
 #' @param filename is the file name of the model file
 #' @importFrom methods new
 #' @examples
-#' bi_sir <- bi_model(filename = "sir.bi")
+#' model_file_name <- system.file(package="rbi", "PZ.bi")
+#' PZ <- bi_model(filename = model_file_name)
 #' @seealso \code{\link{bi_model_fix}}, \code{\link{bi_model_propose_prior}}, \code{\link{bi_model_insert_lines}}, \code{\link{bi_model_update_lines}}, \code{\link{bi_model_remove_lines}}, \code{\link{bi_model_write_model_file}}, 
 #' @export bi_model
 NULL 
@@ -23,7 +24,7 @@ NULL
 #' @return a bi model object of the new model
 #' @seealso \code{\link{bi_model}}
 #' @examples
-#' model_file_name <- system.file(package="bi", "PZ.bi")
+#' model_file_name <- system.file(package="rbi", "PZ.bi")
 #' PZ <- bi_model(filename = model_file_name)
 #' PZ$fix(alpha = 0)
 NULL 
@@ -36,7 +37,7 @@ NULL
 #' @return a bi model object of the new model
 #' @seealso \code{\link{bi_model}}
 #' @examples
-#' model_file_name <- system.file(package="bi", "PZ.bi")
+#' model_file_name <- system.file(package="rbi", "PZ.bi")
 #' PZ <- bi_model(filename = model_file_name)
 #' PZ$propose_prior()
 NULL 
@@ -52,7 +53,7 @@ NULL
 #' @return the updated bi model
 #' @seealso \code{\link{bi_model}}
 #' @examples
-#' model_file_name <- system.file(package="bi", "PZ.bi")
+#' model_file_name <- system.file(package="rbi", "PZ.bi")
 #' PZ <- bi_model(filename = model_file_name)
 #' PZ$insert_lines(lines = "noise beta", after = 8)
 NULL 
@@ -67,7 +68,7 @@ NULL
 #' @return the updated bi model
 #' @seealso \code{\link{bi_model}}
 #' @examples
-#' model_file_name <- system.file(package="bi", "PZ.bi")
+#' model_file_name <- system.file(package="rbi", "PZ.bi")
 #' PZ <- bi_model(filename = model_file_name)
 #' PZ$update_lines(23, "alpha ~ normal(mu, sigma)")
 NULL 
@@ -81,7 +82,7 @@ NULL
 #' @return the updated bi model
 #' @seealso \code{\link{bi_model}}
 #' @examples
-#' model_file_name <- system.file(package="bi", "PZ.bi")
+#' model_file_name <- system.file(package="rbi", "PZ.bi")
 #' PZ <- bi_model(filename = model_file_name)
 #' PZ$remove_lines(2)
 NULL 
@@ -95,7 +96,7 @@ NULL
 #' @return the return value of the \code{\link{writeLines}} call.
 #' @seealso \code{\link{bi_model}}
 #' @examples
-#' model_file_name <- system.file(package="bi", "PZ.bi")
+#' model_file_name <- system.file(package="rbi", "PZ.bi")
 #' PZ <- bi_model(filename = model_file_name)
 #' PZ$write_model_file("PZ")
 NULL 

@@ -13,7 +13,7 @@ a bi model object of the new model
 Replaces all variables with fixed values as given in 'fixed'; note that this will not replace differential equations and lead to an error if applied to states that are changed inside an "ode" block
 }
 \examples{
-model_file_name <- system.file(package="bi", "PZ.bi")
+model_file_name <- system.file(package="rbi", "PZ.bi")
 PZ <- bi_model(filename = model_file_name)
 PZ$fix(alpha = 0)
 }

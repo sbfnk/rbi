@@ -15,7 +15,7 @@ the updated bi model
 Updates one or more lines in a libbi model.
 }
 \examples{
-model_file_name <- system.file(package="bi", "PZ.bi")
+model_file_name <- system.file(package="rbi", "PZ.bi")
 PZ <- bi_model(filename = model_file_name)
 PZ$update_lines(23, "alpha ~ normal(mu, sigma)")
 }

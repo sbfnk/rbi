@@ -10,7 +10,7 @@ a bi model object of the new model
 Generates a version of the model where the proposal blocks are replaced by the prior blocks. This is useful for exploration of the likelihood surface.
 }
 \examples{
-model_file_name <- system.file(package="bi", "PZ.bi")
+model_file_name <- system.file(package="rbi", "PZ.bi")
 PZ <- bi_model(filename = model_file_name)
 PZ$propose_prior()
 }
