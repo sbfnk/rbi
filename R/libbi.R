@@ -23,7 +23,7 @@
 #' bi_object <- libbi$new(client = "sample",
 #'                        model = system.file(package="rbi", "PZ.bi"),
 #'                        global_options = list(sampler = "smc2"))
-#' @seealso \code{\link{libbi_run}}
+#' @seealso \code{\link{libbi_run}}, \code{\link{libbi_clone}}
 #' @export libbi
 NULL 
 #' @rdname libbi_run
@@ -39,10 +39,8 @@ NULL
 #' @param init initialisation of the model, either supplied as a list of values and/or data frames, or a (netcdf) file name, or a \code{\link{libbi}} object which has been run (in which case the output of that run is used as input)
 #' @param input input of the model, either supplied as a list of values and/or data frames, or a (netcdf) file name, or a \code{\link{libbi}} object which has been run (in which case the output of that run is used as input)
 #' @param obs observations of the model, either supplied as a list of values and/or data frames, or a (netcdf) file name, or a \code{\link{libbi}} object which has been run (in which case the output of that run is used as observations)
-#' @param verbose if TRUE, will run libbi with the '--verbose' option
+#' @param time_dim The time dimension in any R objects that have been passed (\code{init}, \code{input}) and \code{obs}); if not given, will be guessed
 #' @param ... any onrecognised options will be added to \code{add_options}
-#' @return a list containing the absolute paths to the results; it is stored in the
-#' \code{result} field of the instance of \code{\link{libbi}}.
 #' @seealso \code{\link{libbi}}
 #' @examples
 #' bi_object <- libbi$new(client = "sample",
@@ -51,13 +49,34 @@ NULL
 #' bi_object$run(add_options=list(nthreads = 1), verbose = TRUE)
 #' bi_file_summary(bi_object$result$output_file_name)
 NULL
+#' @rdname libbi_clone
+#' @name libbi_clone
+#' @title Clone a libbi object
+#'
+#' @param model a libbi model (or path to a model file), if the cloned libbi object is to use a different model
+#' @param ... any options to the new \code{libbi} object
+#' @seealso \code{\link{libbi}}
+#' @examples
+#' bi_object <- libbi$new(client = "sample",
+#'                        model = system.file(package="rbi", "PZ.bi"),
+#'                        global_options = list(sampler = "smc2"))
+#' bi_object_new <- bi_object$clone()
+NULL
 
 libbi <- setRefClass("libbi",
-      fields = c("client", "config", "global_options", "path_to_libbi",
-                 "model", "model_file_name",
-                 "base_command_string", "command", "result",
-                 "working_folder", "output_file_name", "run_flag",
-                 "dims"),
+      fields = list(client = "character",
+                    config = "character",
+                    global_options = "list",
+                    path_to_libbi = "character",
+                    model = "bi_model",
+                    model_file_name = "character",
+                    base_command_string = "character",
+                    command = "character",
+                    result = "list",
+                    working_folder = "character",
+                    output_file_name = "character",
+                    run_flag = "logical",
+                    dims = "list"),
       methods = list(
         initialize = function(client, model,
                               config, global_options, path_to_libbi,
@@ -149,9 +168,13 @@ libbi <- setRefClass("libbi",
               dot_options[[option]] <- NULL
           }
 
-          return(do.call(.self$run,  c(list(from_init = TRUE, run = run), dot_options)))
+          return(do.call(.self$.run,  c(list(from_init = TRUE, run = run), dot_options)))
         },
-        run = function(add_options, stdoutput_file_name, init, input, obs, time_dim, from_init = FALSE, run = TRUE, ...){
+        run = function(add_options, stdoutput_file_name, init, input, obs, time_dim, ...){
+          "Run libbi"
+          .run(add_options, stdoutput_file_name, init, input, obs, time_dim, ...)
+        },
+        .run = function(add_options, stdoutput_file_name, init, input, obs, time_dim, from_init = FALSE, run = TRUE, ...){
 
           ## if run from init, check if any of the global options are actually our option
           if (from_init) {
@@ -302,6 +325,7 @@ libbi <- setRefClass("libbi",
           }
         },
         clone = function(model, ...) {
+          "Clone a libbi object"
           if (missing(model)) {
             new_model <- .self$model$clone()
           } else

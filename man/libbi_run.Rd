@@ -14,13 +14,9 @@
 
 \item{obs}{observations of the model, either supplied as a list of values and/or data frames, or a (netcdf) file name, or a \code{\link{libbi}} object which has been run (in which case the output of that run is used as observations)}
 
-\item{verbose}{if TRUE, will run libbi with the '--verbose' option}
+\item{time_dim}{The time dimension in any R objects that have been passed (\code{init}, \code{input}) and \code{obs}); if not given, will be guessed}
 
 \item{...}{any onrecognised options will be added to \code{add_options}}
-}
-\value{
-a list containing the absolute paths to the results; it is stored in the
-\code{result} field of the instance of \code{\link{libbi}}.
 }
 \description{
 The method \code{run} of an instance of \code{\link{libbi}}

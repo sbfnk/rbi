@@ -38,6 +38,6 @@ bi_object <- libbi$new(client = "sample",
                        global_options = list(sampler = "smc2"))
 }
 \seealso{
-\code{\link{libbi_run}}
+\code{\link{libbi_run}}, \code{\link{libbi_clone}}
 }
 

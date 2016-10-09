@@ -11,7 +11,7 @@
 #' @examples
 #' model_file_name <- system.file(package="rbi", "PZ.bi")
 #' PZ <- bi_model(filename = model_file_name)
-#' @seealso \code{\link{bi_model_fix}}, \code{\link{bi_model_propose_prior}}, \code{\link{bi_model_insert_lines}}, \code{\link{bi_model_update_lines}}, \code{\link{bi_model_remove_lines}}, \code{\link{bi_model_write_model_file}}, 
+#' @seealso \code{\link{bi_model_fix}}, \code{\link{bi_model_propose_prior}}, \code{\link{bi_model_get_lines}}, \code{\link{bi_model_insert_lines}}, \code{\link{bi_model_update_lines}}, \code{\link{bi_model_remove_lines}}, \code{\link{bi_model_set_name}}, \code{\link{bi_model_write_model_file}}, \code{\link{bi_model_clone}}
 #' @export bi_model
 NULL 
 #' @rdname bi_model_fix
@@ -41,6 +41,20 @@ NULL
 #' PZ <- bi_model(filename = model_file_name)
 #' PZ$propose_prior()
 NULL 
+#' @rdname bi_model_get_lines
+#' @name bi_model_get_lines
+#' @title Get lines in a libbi model
+#' @description
+#' Gets a libbi model as character vector.
+#'
+#' @param spaces Number of spaces of indentation
+#' @return the libbi model as character vector
+#' @seealso \code{\link{bi_model}}
+#' @examples
+#' model_file_name <- system.file(package="rbi", "PZ.bi")
+#' PZ <- bi_model(filename = model_file_name)
+#' PZ$get_lines()
+NULL 
 #' @rdname bi_model_insert_lines
 #' @name bi_model_insert_lines
 #' @title Insert lines in a libbi model
@@ -64,7 +78,7 @@ NULL
 #' Updates one or more lines in a libbi model.
 #'
 #' @param num line number(s) to update
-#' @param lines vector of iline(s)
+#' @param lines vector of line(s)
 #' @return the updated bi model
 #' @seealso \code{\link{bi_model}}
 #' @examples
@@ -86,6 +100,20 @@ NULL
 #' PZ <- bi_model(filename = model_file_name)
 #' PZ$remove_lines(2)
 NULL 
+#' @rdname bi_model_set_name
+#' @name bi_model_set_name
+#' @title Set the name of a bi model
+#' @description
+#' Changes the name of a bi model (first line of the .bi file) to the specified name.
+#'
+#' @param name Name of the model
+#' @return the updated bi model
+#' @seealso \code{\link{bi_model}}
+#' @examples
+#' model_file_name <- system.file(package="rbi", "PZ.bi")
+#' PZ <- bi_model(filename = model_file_name)
+#' PZ$set_model("new_PZ")
+NULL
 #' @rdname bi_model_write_model_file
 #' @name bi_model_write_model_file
 #' @title Writes a bi model to a file.
@@ -100,9 +128,22 @@ NULL
 #' PZ <- bi_model(filename = model_file_name)
 #' PZ$write_model_file("PZ")
 NULL 
+#' @rdname bi_model_clone
+#' @name bi_model_clone
+#' @title Clones a model (returning a new object with the same properties)
+#'
+#' @return cloned model
+#' @seealso \code{\link{bi_model}}
+#' @examples
+#' model_file_name <- system.file(package="rbi", "PZ.bi")
+#' PZ <- bi_model(filename = model_file_name)
+#' PZ2 <- PZ$clone()
+NULL 
+
 
 bi_model <- setRefClass("bi_model",
-      fields = c("model", "name"),
+      fields = list(model = "character",
+                    name = "character"),
       methods = list(
         initialize = function(filename, lines) {
           if (!missing(filename) && !missing(lines)) {
@@ -119,14 +160,13 @@ bi_model <- setRefClass("bi_model",
           } else if (!missing(lines)) {
             model <<- lines
           } else {
-            warning("Neither 'filename' or 'lines' has been given. ",
-                    "Will initialise an empty model")
-            model <<- c()
+            model <<- character(0)
           }
 
           clean_model()
         },
         fix = function(...){
+          "Fix a parameter, variable or noise term in the model"
 
             fix_model <- model
 
@@ -193,6 +233,7 @@ bi_model <- setRefClass("bi_model",
             clean_model()
         },
         propose_prior = function() {
+          "Change a libbi model to make the prior the proposal distribution"
           new_model <- bi_model(lines = .self$model)
 
           ## remove parameter proposal
@@ -254,10 +295,11 @@ bi_model <- setRefClass("bi_model",
             name <<- gsub("[[:space:]]*$", "", name)
             name <<- gsub("^[[:space:]]*", "", name)
           } else {
-            name <<- NULL
+            name <<- character(0)
           }
         }, 
         get_lines = function(spaces = 2) {
+          "Get the lines of a libbi model as character vectore"
           lines <- c()
           indent <- 0
           for (i in seq_along(model)) {
@@ -277,6 +319,7 @@ bi_model <- setRefClass("bi_model",
           return(lines)
         },
         insert_lines = function(lines, before, after) {
+          "Insert lines in a libbi model"
           if (!missing(before)) {
             if (!missing(after)) {
               stop("Must give at most one of 'before' or 'after'")
@@ -300,11 +343,13 @@ bi_model <- setRefClass("bi_model",
           clean_model()
         }, 
         update_lines = function(num, lines) {
+          "Update lines in a libbi model"
           model[num] <<- lines
 
           clean_model()
         },
         remove_lines = function(num) {
+          "Remove lines in a libbi model"
           if (length(num) > 0) {
             if (length(grep("[\\{\\}]", model[num])) %% 2 == 1) {
               stop("Removing lines would create unbalanced braces.")
@@ -315,6 +360,7 @@ bi_model <- setRefClass("bi_model",
           }
         },
         set_name = function(name) {
+          "Set model name"
           if (length(model) > 0) {
             if (grepl("model [[:graph:]]+ \\{", model[1])) {
               model[1] <<-
@@ -330,11 +376,12 @@ bi_model <- setRefClass("bi_model",
           clean_model()
         }, 
         write_model_file = function(filename) {
+          "Write model to file"
           if (!grepl("\\.bi$", filename)) {
             filename <- paste(filename, "bi", sep = ".")
           }
           model_name <- sub("\\.bi$", "", basename(filename))
-          
+
           writeLines(.self$get_lines(), con = filename, sep = "\n")
         },
         find_block = function(name) {
