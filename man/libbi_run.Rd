@@ -6,8 +6,6 @@
 \arguments{
 \item{add_options}{additional arguments to pass to the call to \code{libbi}}
 
-\item{output_file_name}{path to the result file (which will be overwritten)}
-
 \item{stdoutput_file_name}{path to a file to text file to report the output of \code{libbi}}
 
 \item{init}{initialisation of the model, either supplied as a list of values and/or data frames, or a (netcdf) file name, or a \code{\link{libbi}} object which has been run (in which case the output of that run is used as input)}
@@ -31,7 +29,7 @@ arguments.
 }
 \examples{
 bi_object <- libbi$new(client = "sample",
-                       model_file_name = system.file(package="rbi", "PZ.bi"),
+                       model = system.file(package="rbi", "PZ.bi"),
                        global_options = list(sampler = "smc2"))
 bi_object$run(add_options=list(nthreads = 1), verbose = TRUE)
 bi_file_summary(bi_object$result$output_file_name)

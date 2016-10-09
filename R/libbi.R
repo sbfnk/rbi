@@ -35,7 +35,6 @@ NULL
 #' arguments.
 #'
 #' @param add_options additional arguments to pass to the call to \code{libbi}
-#' @param output_file_name path to the result file (which will be overwritten)
 #' @param stdoutput_file_name path to a file to text file to report the output of \code{libbi}
 #' @param init initialisation of the model, either supplied as a list of values and/or data frames, or a (netcdf) file name, or a \code{\link{libbi}} object which has been run (in which case the output of that run is used as input)
 #' @param input input of the model, either supplied as a list of values and/or data frames, or a (netcdf) file name, or a \code{\link{libbi}} object which has been run (in which case the output of that run is used as input)
@@ -47,7 +46,7 @@ NULL
 #' @seealso \code{\link{libbi}}
 #' @examples
 #' bi_object <- libbi$new(client = "sample",
-#'                        model_file_name = system.file(package="rbi", "PZ.bi"),
+#'                        model = system.file(package="rbi", "PZ.bi"),
 #'                        global_options = list(sampler = "smc2"))
 #' bi_object$run(add_options=list(nthreads = 1), verbose = TRUE)
 #' bi_file_summary(bi_object$result$output_file_name)
@@ -55,12 +54,12 @@ NULL
 
 libbi <- setRefClass("libbi",
       fields = c("client", "config", "global_options", "path_to_libbi",
-                 "model", "model_file_name", "model_folder",
-                 "base_command_string", "command", "command_dryparse", "result",
+                 "model", "model_file_name",
+                 "base_command_string", "command", "result",
                  "working_folder", "output_file_name", "run_flag",
                  "dims"),
       methods = list(
-        initialize = function(client, model, model_file_name,
+        initialize = function(client, model,
                               config, global_options, path_to_libbi,
                               working_folder, dims, run = FALSE,
                               overwrite = FALSE, ...){
@@ -80,35 +79,17 @@ libbi <- setRefClass("libbi",
           } else {
             client <<- client
           }
-          if (missing(model) && missing(model_file_name)) {
-              stop("you need to provide 'model', either a 'bi_model' object or a path to a valid model file in LibBi's syntax")
-          }
 
-          if (missing(model_file_name)){
-            model_file_name <<- ""
-            model_folder <<- ""
+          if (missing(model)) {
+            model <<- NULL
+          } else {
             if (is.character(model)) {
+              model_file_name <<- model
               model <<- bi_model(model)
             } else if ("bi_model" %in% class(model)) {
               model <<- model
             } else {
               stop("'model' must be either a 'bi_model' object or a path to a valid model file in LibBi's syntax")
-            }
-          } else {
-            model_file_name <<- absolute_path(model_file_name)
-            model_folder <<- dirname(.self$model_file_name)
-            if (missing(model)) {
-              model <<- bi_model(model_file_name)
-            } else {
-              if (file.exists(model_file_name)) {
-                if (overwrite) {
-                  model$write_modeL_file(model_file_name)
-                } else {
-                  stop("existing 'model_file_name' and 'model' given,  but overwrite is FALSE. Cowardly refusing to overwrite ", model_file_name)
-                }
-              } else {
-                model$write_modeL_file(model_file_name)
-              }
             }
           }
 
@@ -116,6 +97,9 @@ libbi <- setRefClass("libbi",
             working_folder <<- tempdir()
           } else {
             working_folder <<- absolute_path(working_folder)
+            if (!dir.exists(working_folder)) {
+              dir.create(working_folder)
+            }
           }
 
           if (missing(config)){
@@ -125,16 +109,13 @@ libbi <- setRefClass("libbi",
             if (substr(config_str, 1, 1) == "@") {
               config_str <- substr(config_str, 2, nchar(config_str))
             }
-            if (model_folder != "") {
-            } else {
-              config_str <- absolute_path(filename = config_str, dirname = model_folder)
-            }
             if (file.exists(config_str)) {
               config <<- config_str
             } else {
               stop("Could not find config file ", config_str)
             }
           }
+
           if (missing(global_options))
             global_options <<- list()
           else
@@ -148,7 +129,7 @@ libbi <- setRefClass("libbi",
               path_to_libbi <<- getOption("path_to_libbi")
             }
             if (nchar(.self$path_to_libbi) == 0){
-              stop("Could not locate libbi, please either provide the path to the libbi binary via the 'path_to_libbi' option, or set the PATH to contain the directory that contains the in ~/.Renviron or set it in your R session via options(path_to_libbi = \"insert_path_here\")")
+              stop("Could not locate libbi, please either provide the path to the libbi binary via the 'path_to_libbi' option, or set the PATH to contain the directory that contains the binary in ~/.Renviron or set it in your R session via options(path_to_libbi = \"insert_path_here\")")
             }
           } else {
             path_to_libbi <<- path_to_libbi
@@ -170,7 +151,7 @@ libbi <- setRefClass("libbi",
 
           return(do.call(.self$run,  c(list(from_init = TRUE, run = run), dot_options)))
         },
-        run = function(add_options, output_file_name, stdoutput_file_name, init, input, obs, time_dim, from_init = FALSE, run = TRUE, ...){
+        run = function(add_options, stdoutput_file_name, init, input, obs, time_dim, from_init = FALSE, run = TRUE, ...){
 
           ## if run from init, check if any of the global options are actually our option
           if (from_init) {
@@ -183,6 +164,32 @@ libbi <- setRefClass("libbi",
             add_options <- list()
           } else {
             add_options <- option_list(add_options)
+          }
+
+          if (nchar(.self$config) > 0) {
+            config_file_options <- paste(readLines(.self$config), collapse = " ") 
+          } else {
+            config_file_options <- list()
+          }
+
+          ## get model
+          options <- option_list(getOption("libbi_args"), config_file_options, global_options, add_options, list(...))
+          if ("model-file" %in% names(options)) {
+            if (is.null(.self$model)) {
+              model_file_name <<- absolute_path(options[["model-file"]], getwd())
+              model <<- bi_model(model_file_name)
+            } else {
+              warning("'model-file' and 'model' options both provided. Will ignore 'model-file'.")
+            }
+          } else {
+            if (is.null(.self$model)) {
+              stop("A model must be provided via the 'model-file' or 'model' option.")
+            } else {
+              model_file_name <<- tempfile(pattern=paste(.self$model$name, "model", sep = "_"),
+                                           fileext=".bi",
+                                           tmpdir=absolute_path(.self$working_folder))
+              model$write_model_file(.self$model_file_name)
+            }
           }
 
           ## read file options: input, init, obs
@@ -230,35 +237,31 @@ libbi <- setRefClass("libbi",
             }
           }
 
-          ## overwrite global and additional option, i.e. if this
+          ## overwrite global additional option, i.e. if this
           ## is run again it should use the file given here
           global_options <<- merge_by_name(global_options, file_options)
 
           if (run)
           {
-            add_options <- merge_by_name(add_options, file_options)
-
-            if (nchar(.self$config) > 0) {
-              file_options <- paste(readLines(.self$config), collapse = " ") 
-            } else {
-              file_options <- list()
-            }
-
-            options <- option_list(getOption("libbi_args"), file_options, 
-                                   global_options, add_options, list(...))
+            ## re-read options
+            options <- option_list(getOption("libbi_args"), config_file_options,
+                                   global_options, add_options, file_options, list(...))
             if ("end-time" %in% names(options) && !("noutputs" %in% names(options))) {
               options[["noutputs"]] <- options[["end-time"]]
             }
-            opt_string <- option_string(options)
-            verbose <- ("verbose" %in% names(options) && options[["verbose"]] == TRUE)
-
-            if (missing(output_file_name)){
+            if (!("output-file" %in% names(options))) {
               output_file_name <<- tempfile(pattern=paste(.self$model$name, "output", sep = "_"),
                                             fileext=".nc",
                                             tmpdir=absolute_path(.self$working_folder))
             } else {
-              output_file_name <<- absolute_path(output_file_name, getwd())
+              output_file_name <<- absolute_path(options[["output-file"]], getwd())
             }
+            options[["output-file"]] <- .self$output_file_name
+            options[["model-file"]] <- .self$model_file_name
+
+            opt_string <- option_string(options)
+            verbose <- ("verbose" %in% names(options) && options[["verbose"]] == TRUE)
+
             if (missing(stdoutput_file_name) && !verbose) {
               stdoutput_file_name <- tempfile(pattern="output", fileext=".txt",
                                               tmpdir=absolute_path(.self$working_folder))
@@ -270,30 +273,13 @@ libbi <- setRefClass("libbi",
               stdoutput_redir_name <- paste(">", stdoutput_file_name, "2>&1")
             }
 
-            if (.self$model_file_name == "") {
-              run_model_file <- tempfile(pattern=.self$model$name, fileext=".bi",
-                                         tmpdir=.self$working_folder)
-              model$write_model_file(run_model_file)
-            } else {
-              run_model_file <- .self$model_file_name
-            }
-
-            if (.self$model_folder == .self$working_folder) {
-              rel_model_file <- basename(run_model_file)
-            } else {
-              rel_model_file <- run_model_file
-            }
-
             cdcommand <- paste("cd", .self$working_folder)
-            launchcommand <- paste(.self$base_command_string, opt_string,
-                                   "--output-file", .self$output_file_name,
-                                   "--model-file", rel_model_file)
+            launchcommand <- paste(.self$base_command_string, opt_string)
             if (verbose) print("Launching LibBi with the following commands:")
             if (verbose)
               print(paste(c(cdcommand, launchcommand, stdoutput_redir_name),
                           sep = "\n"))
             command <<- paste(c(cdcommand, paste(launchcommand, stdoutput_redir_name)), collapse = ";")
-                                        #           command_dryparse <<- paste(c(cdcommand, paste(launchcommand, "--dry-parse")), collapse = ";")
             ret <- system(command)
             if (ret > 0) {
               if (!verbose) {
@@ -303,14 +289,13 @@ libbi <- setRefClass("libbi",
             }
             if (verbose) print("... LibBi has finished!")
             libbi_result <-
-              list(output_file_name = absolute_path(filename=.self$output_file_name, 
-                                                    dirname=.self$working_folder),
+              list(output_file_name = .self$output_file_name,
                    command = launchcommand)
             if (nchar(.self$model_file_name) > 0){
               libbi_result["model_file_name"] = .self$model_file_name
             }
             if (!missing(stdoutput_file_name)){
-              libbi_result["stdoutput_file_name"] = absolute_path(filename=stdoutput_file_name, dirname=.self$model_file_name)
+              libbi_result["stdoutput_file_name"] = absolute_path(filename=stdoutput_file_name, dirname=getwd())
             }
             run_flag <<- TRUE
             result <<- libbi_result
@@ -338,12 +323,12 @@ libbi <- setRefClass("libbi",
           cat("Wrapper around LibBi\n")
           cat("* client: ", .self$client, "\n")
           cat("* path to working folder:", .self$working_folder, "\n")
-          if (.self$model_file_name != "") {
-            cat("* path to model file:", .self$model_file_name, "\n")
+          cat("* path to model file:", .self$model_file_name, "\n")
+          if (class(.self$output_file_name) != "uninitializedField") {
+            cat("* path to output_file:", .self$output_file_name, "\n")
           }
-          cat("* path to LibBi binary:", .self$path_to_libbi, "\n")
         }
-        )
+      )
       )
 
 
