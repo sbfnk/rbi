@@ -15,7 +15,7 @@ Changes the name of a bi model (first line of the .bi file) to the specified nam
 \examples{
 model_file_name <- system.file(package="rbi", "PZ.bi")
 PZ <- bi_model(filename = model_file_name)
-PZ$set_model("new_PZ")
+PZ$set_name("new_PZ")
 }
 \seealso{
 \code{\link{bi_model}}

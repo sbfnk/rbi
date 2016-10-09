@@ -8,6 +8,9 @@
 
 \item{...}{any options to the new \code{libbi} object}
 }
+\description{
+Returns a copy of the libbi object with exactly the same properties as the original object (except for any parameters given to the \code{clone} call)
+}
 \examples{
 bi_object <- libbi$new(client = "sample",
                        model = system.file(package="rbi", "PZ.bi"),

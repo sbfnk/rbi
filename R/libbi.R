@@ -53,6 +53,8 @@ NULL
 #' @name libbi_clone
 #' @title Clone a libbi object
 #'
+#' @description
+#' Returns a copy of the libbi object with exactly the same properties as the original object (except for any parameters given to the \code{clone} call)
 #' @param model a libbi model (or path to a model file), if the cloned libbi object is to use a different model
 #' @param ... any options to the new \code{libbi} object
 #' @seealso \code{\link{libbi}}

@@ -6,6 +6,9 @@
 \value{
 cloned model
 }
+\description{
+Returns a copy of the model with exactly the same content as the original model.
+}
 \examples{
 model_file_name <- system.file(package="rbi", "PZ.bi")
 PZ <- bi_model(filename = model_file_name)

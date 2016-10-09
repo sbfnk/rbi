@@ -112,7 +112,7 @@ NULL
 #' @examples
 #' model_file_name <- system.file(package="rbi", "PZ.bi")
 #' PZ <- bi_model(filename = model_file_name)
-#' PZ$set_model("new_PZ")
+#' PZ$set_name("new_PZ")
 NULL
 #' @rdname bi_model_write_model_file
 #' @name bi_model_write_model_file
@@ -131,7 +131,8 @@ NULL
 #' @rdname bi_model_clone
 #' @name bi_model_clone
 #' @title Clones a model (returning a new object with the same properties)
-#'
+#' @description
+#' Returns a copy of the model with exactly the same content as the original model.
 #' @return cloned model
 #' @seealso \code{\link{bi_model}}
 #' @examples
