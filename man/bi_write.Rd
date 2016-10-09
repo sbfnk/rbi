@@ -24,4 +24,15 @@ This function creates an init file to specify
 parameter values and initial conditions. This file
 can then be passed to \code{libbi} using the \code{--init-file} option.
 }
+\examples{
+filename <- tempfile(pattern="dummy", fileext=".nc")
+a <- list(values = 1:3, dimension = "dim_a")
+b <- list(values = 1:5, dimension = "dim_b")
+c <- list(values = 5:9, dimension = "dim_b")
+d <- 3
+e <- data.frame(dim_a = rep(1:3, time = 2), dim_c = rep(1:2, each = 3), value = 1:6)
+variables <- list(a=a, b=b, c=c, d=d, e=e)
+bi_write(filename, variables)
+bi_file_ncdump(filename)
+}
 

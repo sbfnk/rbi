@@ -13,6 +13,16 @@
 #' @param timed if TRUE, any elements of \code{variables} that are vectors will be assumed to have a time dimension
 #' @param ... arguments passed to \code{\link{netcdf_create_from_list}}
 #' @return None, but creates a NetCDF file at the specified path.
+#' @examples
+#' filename <- tempfile(pattern="dummy", fileext=".nc")
+#' a <- list(values = 1:3, dimension = "dim_a")
+#' b <- list(values = 1:5, dimension = "dim_b")
+#' c <- list(values = 5:9, dimension = "dim_b")
+#' d <- 3
+#' e <- data.frame(dim_a = rep(1:3, time = 2), dim_c = rep(1:2, each = 3), value = 1:6)
+#' variables <- list(a=a, b=b, c=c, d=d, e=e)
+#' bi_write(filename, variables)
+#' bi_file_ncdump(filename)
 #' @export
 bi_write <- function(filename, variables, timed, ...){
   filename <- normalizePath(filename, "/", FALSE)
