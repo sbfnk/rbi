@@ -1,6 +1,5 @@
 #' @rdname bi_write
 #' @name bi_write
-#' @aliases bi_write
 #' @title Create (init or observation) files for LibBi
 #' @description
 #' This function creates an init file to specify
