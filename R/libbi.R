@@ -103,7 +103,7 @@ libbi <- setRefClass("libbi",
             }
           }
 
-          if (missing(config)){
+          if (missing(config) || config == ""){
             config <<- ""
           } else {
             config_str <- config
