@@ -5,7 +5,7 @@
 #' \code{libbi} allows to call \code{libbi}.
 #' Upon creating a new libbi object, the following arguments can be given.
 #' Once the instance is created, \code{libbi} can be run through the \code{run}
-#' method documented in \code{\link{libbi_run}}. Note that \code{\link{libbi}} objects can be plotted using \code{\link{plot}} if the \code{RBi.helpers} package is loaded.
+#' method documented in \code{\link{libbi_run}}. Note that \code{\link{libbi}} objects can be plotted using \code{\link{plot}} if the \code{rbi.helpers} package is loaded.
 #'
 #' @param client is either "draw", "filter", "sample"... see LibBi documentation.
 #' @param model either a character vector giving the path to a model file (typically ending in ".bi"), or a \code{bi_model} object
@@ -21,14 +21,13 @@
 #' if unsuccessful it tries "~/PathToBiBin/libbi"; if unsuccessful again it fails.
 #' @examples
 #' bi_object <- libbi$new(client = "sample",
-#'                        model = system.file(package="bi", "PZ.bi"),
+#'                        model = system.file(package="rbi", "PZ.bi"),
 #'                        global_options = list(sampler = "smc2"))
 #' @seealso \code{\link{libbi_run}}
 #' @export libbi
 NULL 
 #' @rdname libbi_run
 #' @name libbi_run
-#' @aliases libbi_run  bi_run  libbi
 #' @title Using the LibBi wrapper to launch LibBi
 #' @description
 #' The method \code{run} of an instance of \code{\link{libbi}}
@@ -48,7 +47,7 @@ NULL
 #' @seealso \code{\link{libbi}}
 #' @examples
 #' bi_object <- libbi$new(client = "sample",
-#'                        model_file_name = system.file(package="bi", "PZ.bi"),
+#'                        model_file_name = system.file(package="rbi", "PZ.bi"),
 #'                        global_options = list(sampler = "smc2"))
 #' bi_object$run(add_options=list(nthreads = 1), verbose = TRUE)
 #' bi_file_summary(bi_object$result$output_file_name)

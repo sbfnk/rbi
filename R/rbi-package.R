@@ -15,7 +15,7 @@
 #' }
 #' 
 #'
-#'@name RBi-package
+#'@name rbi-package
 #'@aliases rbi RBi
 #'@docType package
 #'@title RBi - R interface for \code{libbi}

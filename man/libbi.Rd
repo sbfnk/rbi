@@ -30,11 +30,11 @@ if unsuccessful it tries "~/PathToBiBin/libbi"; if unsuccessful again it fails.}
 \code{libbi} allows to call \code{libbi}.
 Upon creating a new libbi object, the following arguments can be given.
 Once the instance is created, \code{libbi} can be run through the \code{run}
-method documented in \code{\link{libbi_run}}. Note that \code{\link{libbi}} objects can be plotted using \code{\link{plot}} if the \code{RBi.helpers} package is loaded.
+method documented in \code{\link{libbi_run}}. Note that \code{\link{libbi}} objects can be plotted using \code{\link{plot}} if the \code{rbi.helpers} package is loaded.
 }
 \examples{
 bi_object <- libbi$new(client = "sample",
-                       model = system.file(package="bi", "PZ.bi"),
+                       model = system.file(package="rbi", "PZ.bi"),
                        global_options = list(sampler = "smc2"))
 }
 \seealso{

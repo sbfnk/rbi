@@ -2,14 +2,11 @@
 
 rm(list = ls(all.names=TRUE))
 unlink(".RData")
-try(detach(package:RBi, unload = TRUE), silent = TRUE)
-library(RBi, quietly = TRUE)
+try(detach(package:rbi, unload = TRUE), silent = TRUE)
+library(rbi, quietly = TRUE)
 
-library('ggplot2', quietly = TRUE)
-library('gridExtra', quietly = TRUE)
-
-# the PZ model file is included in RBi and can be found there:
-model_file_name <- system.file(package="RBi", "PZ.bi")
+# the PZ model file is included in rbi and can be found there:
+model_file_name <- system.file(package="rbi", "PZ.bi")
 
 # assign model variable
 PZ <- bi_model(model_file_name)
@@ -29,9 +26,10 @@ output1 <- bi_read(dataset1, c("P_obs", "sigma"))
 P_obs1 <- output1[["P_obs"]]$value
 sigma1 <- output1[["sigma"]]
 
-theme_set(theme_bw())
-g1 <- qplot(x = seq_along(P_obs1), y = P_obs1, geom = "line") + geom_line(colour = "orange")
-g1 <- g1 + xlab("time") + ylab(paste("P_obs with sigma=", round(sigma1, 2)))
+par(mfrow = c(2, 1))
+plot(seq_along(P_obs1), P_obs1, type = "l", col = "orange", xlab = "time",
+     ylab = paste("P_obs with sigma=", round(sigma1, 2)))
+
 # Then generate dataset with a specified set of parameter values;
 # the parameters left unspecified are drawn from the prior.
 dataset2 <- bi_generate_dataset(end_time=T, model=PZ,
@@ -40,13 +38,13 @@ output2 <- bi_read(dataset2, c("P_obs", "sigma"))
 
 P_obs2 <- output2[["P_obs"]]$value
 sigma2 <- output2[["sigma"]]
-g2 <- qplot(x = seq_along(P_obs2), y = P_obs2, geom = "line") + geom_line(colour = "orange")
-g2 <- g2 + xlab("time") + ylab(paste("P_obs with sigma=", round(sigma2, 2)))
-grid.arrange(g1,g2)
 
-## alternatively, one could plot using the 'RBi.helpers package'
+plot(seq_along(P_obs2), P_obs2, type = "l", col = "orange", xlab = "time",
+     ylab = paste("P_obs with sigma=", round(sigma2, 2)))
+
+## alternatively, one could plot using the 'rbi.helpers package'
 ##
-## library('RBi.helpers')
+## library('rbi.helpers')
 ##
 ## plot(dataset1)
 ## plot(dataset2)

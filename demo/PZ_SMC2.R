@@ -1,13 +1,10 @@
 rm(list = ls(all.names=TRUE))
 unlink(".RData")
-try(detach(package:RBi, unload = TRUE), silent = TRUE)
-library(RBi, quietly = TRUE)
+try(detach(package:rbi, unload = TRUE), silent = TRUE)
+library(rbi, quietly = TRUE)
 
-library('ggplot2', quietly = TRUE)
-library('gridExtra', quietly = TRUE)
-
-# the PZ model file is included in RBi and can be found there:
-model_file_name <- system.file(package="RBi", "PZ.bi")
+# the PZ model file is included in rbi and can be found there:
+model_file_name <- system.file(package="rbi", "PZ.bi")
 
 # assign model variable
 PZ <- bi_model(model_file_name)
@@ -33,14 +30,16 @@ bi_file_summary(bi_object$result$output_file_name)
 logweight <- bi_read(bi_object, "logweight")$value
 weight <- log2normw(logweight)
 mu <- bi_read(bi_object, "mu")$value
-g1 <- qplot(x = mu, y = ..density.., weight = weight, geom = "histogram") + xlab(expression(mu))
 sigma <- bi_read(bi_object, "sigma")$value
-g2 <- qplot(x = sigma, y = ..density.., weight = weight, geom = "histogram") + xlab(expression(sigma))
-grid.arrange(g1, g2)
 
-## or plot using RBi.helpers
+par(mfrow = c(2, 1))
+
+hist(mu, xlab = expression(mu), main = "", breaks = 30, freq = FALSE)
+hist(sigma, xlab = expression(sigma), main = "", breaks = 30, freq = FALSE)
+
+## or plot using rbi.helpers
 ##
-## library('RBi.helpers')
+## library('rbi.helpers')
 
 ## ## plot filtered trajectories
 ## plot(bi_object)
