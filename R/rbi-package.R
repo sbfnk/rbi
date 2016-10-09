@@ -1,4 +1,4 @@
-#' RBi is an interface to \code{libbi}, a library for Bayesian Inference
+#' \code{rbi} is an interface to \code{libbi}, a library for Bayesian Inference
 #' 
 #' The package includes a wrapper for the \code{libbi} script, allowing
 #' to launch the \code{libbi} command from within R. 
