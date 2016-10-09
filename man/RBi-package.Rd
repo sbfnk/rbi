@@ -16,13 +16,13 @@ to launch the \code{libbi} command from within R.
 It also provides various utility functions to browse the output from \code{libbi},
 for instance to plot the results.
 
-The package will ultimately be made of various components.
+The package is made of various components:
 \itemize{
-\item First there is a wrapper around \code{libbi} called 
-\code{\link{libbi}}.
-\item Then there are funtions to manipulate the results of the \code{libbi} command,
+\item A wrapper around \code{libbi} called \code{\link{libbi}}.
+\item A \code{\link{bi_model}} class that can be used to load and manipulate \code{libbi} models
+\item Functions to manipulate the results of the \code{libbi} command,
 which are stored in NetCDF files. Those functions allow to extract variables of
-interest, and to plot them in various ways.
+interest.
 }
 }
 \examples{
