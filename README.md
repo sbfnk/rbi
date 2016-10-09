@@ -25,7 +25,14 @@ install_github("libbi/rbi")
 
 It has only been tested on GNU/Linux and OS X, but it should mostly work everywhere `R` works.
 
-If you want to use `rbi` as a wrapper to [libbi] (https://github.com/libbi/LibBi) then you need a working version of [libbi] (https://github.com/libbi/LibBi). To install `libbi` on a Mac or unix, the easiest way is via the [libbi homebrew tap](https://github.com/sbfnk/homebrew-libbi). The path to `libbi` script can be passed as an argument to rbi, otherwise the package tries to find it automatically using the `which` linux/unix command.
+If you want to use `rbi` as a wrapper to [libbi] (https://github.com/libbi/LibBi) then you need a working version of [libbi] (https://github.com/libbi/LibBi). To install `libbi` on a Mac or Unix, the easiest way is via the homebrew-science tap: Install [Homebrew](http://brew.sh) (on OS X) or [Linuxbrew](http://linuxbrew.sh) (on linux), then issue the following commands (using a command shell, i.e. Terminal or similar):
+
+```sh
+brew tap homebrew/science
+brew install libbi
+``` 
+
+The path to `libbi` script can be passed as an argument to `rbi`, otherwise the package tries to find it automatically using the `which` linux/unix command.
 
 If you just want to process the output from [libbi] (https://github.com/libbi/LibBi), then you do not need to have [libbi] (https://github.com/libbi/LibBi) installed.
 
