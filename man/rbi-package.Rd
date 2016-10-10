@@ -30,6 +30,11 @@ interest.
  demo(PZ_PMMH)
  demo(PZ_SMC2)
  demo(PZ_filtering)
+example_output_file <- system.file(package="rbi", "example_output.nc")
+bi_file_summary(example_output_file)
+mu_sigma <- bi_read(example_output_file, c("mu", "sigma"))
+bi_write("mu_sigma.nc", mu_sigma)
+
 
 }
 \author{
