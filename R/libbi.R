@@ -46,8 +46,10 @@ NULL
 #' bi_object <- libbi$new(client = "sample",
 #'                        model = system.file(package="rbi", "PZ.bi"),
 #'                        global_options = list(sampler = "smc2"))
-#' bi_object$run(add_options=list(nthreads = 1), verbose = TRUE)
-#' bi_file_summary(bi_object$result$output_file_name)
+#' \dontrun{bi_object$run(add_options=list(nthreads = 1), verbose = TRUE)}
+#' if (length(bi_object$result) > 0) {
+#'   bi_file_summary(bi_object$result$output_file_name)
+#' }
 NULL
 #' @rdname libbi_clone
 #' @name libbi_clone
