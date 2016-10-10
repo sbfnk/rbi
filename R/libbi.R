@@ -170,19 +170,25 @@ libbi <- setRefClass("libbi",
               dot_options[[option]] <- NULL
           }
 
-          return(do.call(.self$.run,  c(list(from_init = TRUE, run = run), dot_options)))
+          return(do.call(.self$run, c(list(run_from_init = run), dot_options)))
         },
         run = function(add_options, stdoutput_file_name, init, input, obs, time_dim, ...){
           "Run libbi"
-          .run(add_options, stdoutput_file_name, init, input, obs, time_dim, ...)
-        },
-        .run = function(add_options, stdoutput_file_name, init, input, obs, time_dim, from_init = FALSE, run = TRUE, ...){
 
-          ## if run from init, check if any of the global options are actually our option
-          if (from_init) {
+          ## get hidden options 'run_from_init'; if this is passed, 'run' has
+          ## been called from init and any run options have to be removed from
+          ## the options that will be passed to libbi
+          ## the user and removed form the dot-expanded options
+          passed_options <- list(...)
+          ## if run from init, check if any of the dot-expanded options assigned
+          if ("run_from_init" %in% names(passed_options)) {
+            run_libbi <- passed_options[["run_from_init"]]
+            passed_options[["run_from_init"]] <- NULL
             for (run_option in intersect(names(match.call(expand.dots = FALSE)), names(global_options))) {
               global_options[[run_option]] <<- NULL
             }
+          } else {
+            run_libbi <- TRUE
           }
 
           if (missing(add_options)){
@@ -198,7 +204,7 @@ libbi <- setRefClass("libbi",
           }
 
           ## get model
-          options <- option_list(getOption("libbi_args"), config_file_options, global_options, add_options, list(...))
+          options <- option_list(getOption("libbi_args"), config_file_options, global_options, add_options, passed_options)
           if ("model-file" %in% names(options)) {
             if (is.null(.self$model)) {
               model_file_name <<- absolute_path(options[["model-file"]], getwd())
@@ -266,11 +272,11 @@ libbi <- setRefClass("libbi",
           ## is run again it should use the file given here
           global_options <<- merge_by_name(global_options, file_options)
 
-          if (run)
+          if (run_libbi)
           {
             ## re-read options
             options <- option_list(getOption("libbi_args"), config_file_options,
-                                   global_options, add_options, file_options, list(...))
+                                   global_options, add_options, file_options, passed_options)
             if ("end-time" %in% names(options) && !("noutputs" %in% names(options))) {
               options[["noutputs"]] <- options[["end-time"]]
             }
