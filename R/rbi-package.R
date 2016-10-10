@@ -25,15 +25,16 @@
 #'@keywords package
 #'@examples
 #'
-#'  demo(PZ_generate_dataset)
-#'  demo(PZ_PMMH)
-#'  demo(PZ_SMC2)
-#'  demo(PZ_filtering)
 #' example_output_file <- system.file(package="rbi", "example_output.nc")
 #' bi_file_summary(example_output_file)
 #' mu_sigma <- bi_read(example_output_file, c("mu", "sigma"))
 #' bi_write("mu_sigma.nc", mu_sigma)
 #'
+#' ## examples for running libbi from rbi (will take a few minutes)
+#' \dontrun{demo(PZ_generate_dataset)}
+#' \dontrun{demo(PZ_PMMH)}
+#' \dontrun{demo(PZ_SMC2)}
+#' \dontrun{demo(PZ_filtering)}
 #'
 NULL
 
