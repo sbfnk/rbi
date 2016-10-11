@@ -175,6 +175,7 @@ libbi <- setRefClass("libbi",
           return(do.call(.self$run, c(list(run_from_init = run), dot_options)))
         },
         run = function(add_options, stdoutput_file_name, init, input, obs, time_dim, ...){
+          "Run libbi"
           ## get hidden options 'run_from_init'; if this is passed, 'run' has
           ## been called from init and any run options have to be removed from
           ## the options that will be passed to libbi
