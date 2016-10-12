@@ -44,7 +44,7 @@ NULL
 #' @seealso \code{\link{libbi}}
 #' @examples
 #' bi_object <- libbi$new(client = "sample",
-#'                        model = system.file(package="bi", "PZ.bi"),
+#'                        model = system.file(package="rbi", "PZ.bi"),
 #'                        global_options = list(sampler = "smc2"))
 #' \dontrun{bi_object$run(add_options=list(nthreads = 1), verbose = TRUE)}
 #' if (length(bi_object$result) > 0) {
