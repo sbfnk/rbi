@@ -39,7 +39,7 @@ bi_write("mu_sigma.nc", mu_sigma)
 
 }
 \author{
-Pierre E. Jacob \email{pierre.jacob.work@gmail.com}, Anthony Lee \email{awllee@gmail.com}, Lawrence Murray \email{lawrence.murray@csiro.au}, Sebastian Funk \email{sebastian.funk@lshtm.ac.uk}
+Pierre E. Jacob \email{pierre.jacob.work@gmail.com}, Sebastian Funk \email{sebastian.funk@lshtm.ac.uk}
 }
 \references{
 \url{http://libbi.org/}
