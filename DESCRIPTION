@@ -1,11 +1,11 @@
 Package: rbi
-Version: 0.4
-Date: 2016-09-28
+Version: 0.4.1
+Date: 2016-10-12
 Title: R Interface to LibBi
 Authors@R: c(
         person("Pierre E.", "Jacob", email = "pierre.jacob.work@gmail.com", role = "aut"),
-        person("Anthony", "Lee", email = "awllee@gmail.com", role = "aut"),
-        person("Lawrence M.", "Murray", email = "lawrence.murray@csiro.au", role = "aut"),
+        person("Anthony", "Lee", email = "awllee@gmail.com", role = "ctb"),
+        person("Lawrence M.", "Murray", email = "lawrence.murray@csiro.au", role = "ctb"),
         person("Sebastian", "Funk", email = "sebastian.funk@lshtm.ac.uk", role = c("aut", "cre"))
         )
 Depends:
@@ -14,8 +14,8 @@ Imports:
     reshape2,
     data.table,
     ncdf4
-Description: Provides a complete R interface to LibBi, a library for Bayesian inference. This includes functions for running libbi with R objects (for initialisation, input and observations), for manipulating libbi models, for reading and writing libbi input/output files and for providing traces for coda.
-License: GPL (>= 3)
+Description: Provides a complete R interface to LibBi, a library for Bayesian inference. This includes functions for manipulating libbi models, for reading and writing libbi input/output files, for converting libbi output to provide traces for coda, and (optionally) for running libbi from R.
+License: GPL-3
 URL: https://github.com/libbi/RBi
 BugReports: https://github.com/libbi/RBi/issues
 SystemRequirements: libbi (>= 1.2.0)

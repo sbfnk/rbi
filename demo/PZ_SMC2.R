@@ -23,7 +23,7 @@ bi_object <- libbi$new(client="sample", model=PZ, sampler = "smc2")
 print(bi_object)
 
 # Once happy with the settings, launch bi.
-bi_object$run(add_options = list("end-time" = T, noutputs = T, nsamples = 128, nparticles = 128, nthreads = 1), verbose = TRUE, obs = synthetic_dataset, init = init_parameters, stdoutput_file_name = tempfile(pattern="smc2output", fileext=".txt"))
+bi_object$run(add_options = list("end-time" = T, noutputs = T, nsamples = 128, nparticles = 128, nthreads = 1), obs = synthetic_dataset, init = init_parameters, stdoutput_file_name = tempfile(pattern="smc2output", fileext=".txt"))
 # It can be a good idea to look at the result file
 bi_file_summary(bi_object$result$output_file_name)
 # Have a look at the posterior distribution
