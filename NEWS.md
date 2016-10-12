@@ -1,9 +1,9 @@
-# rbi 0.5
+# rbi 0.4.1
 
 * Change package name to lower case
 * Tidy up for CRAN submission
 * Fix finding libbi path
-* Improve handling of config options (#2, @tyler-abbot)
+* Fix handling of config options (#2, @tyler-abbot)
 * Fix options in `bi_generate_dataset` (#3, #5, @tyler-abbot)
 * Fix demos (#1, #6, @tyler-abbot)
 * Remove `stringr` dependency
