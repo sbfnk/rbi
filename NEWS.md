@@ -1,3 +1,5 @@
+# rbi 0.4.1.9000
+
 # rbi 0.4.1
 
 * Change package name to lower case
