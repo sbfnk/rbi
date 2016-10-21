@@ -16,11 +16,10 @@ Installation
 - `ncdf4`
 - `data.table`
 
-The easiest way to install the latest version of `rbi` is via CRAN:
+The easiest way to install the latest stable version of `rbi` is via CRAN:
 
 ```r
 install.packages('rbi')
-library('rbi')
 ```
 
 Alternatively, the current development version can be installed using the `devtools` package
