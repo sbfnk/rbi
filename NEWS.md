@@ -1,5 +1,8 @@
 # rbi 0.4.1.9000
 
+* "client" is now an option to libbi$run
+* Fix bug in parsing options in libbi$initialize
+
 # rbi 0.4.1
 
 * Change package name to lower case

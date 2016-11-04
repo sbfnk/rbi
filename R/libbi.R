@@ -7,7 +7,6 @@
 #' Once the instance is created, \code{libbi} can be run through the \code{run}
 #' method documented in \code{\link{libbi_run}}. Note that \code{\link{libbi}} objects can be plotted using \code{\link{plot}} if the \code{rbi.helpers} package is loaded.
 #'
-#' @param client is either "draw", "filter", "sample"... see LibBi documentation.
 #' @param model either a character vector giving the path to a model file (typically ending in ".bi"), or a \code{bi_model} object
 #' @param config path to a configuration file, containing multiple arguments
 #' @param global_options additional arguments to pass to the call to \code{libbi}, on top of the ones in the config file
@@ -96,12 +95,6 @@ libbi <- setRefClass("libbi",
           }
           dims <<- libbi_dims
           run_flag <<- FALSE
-          if (missing(client)){
-            print("you didn't provide a 'client' to libbi, it's kinda weird; default to 'sample'.")
-            client <<- "sample"
-          } else {
-            client <<- client
-          }
 
           if (missing(model)) {
             model <<- NULL
@@ -165,16 +158,9 @@ libbi <- setRefClass("libbi",
           }
           base_command_string <<- paste(.self$path_to_libbi, .self$client)
 
-          dot_options <- list(...)
-          for (option in names(dot_options))
-          {
-              global_options[[option]] <<- dot_options[[option]]
-              dot_options[[option]] <- NULL
-          }
-
-          return(do.call(.self$run, c(list(run_from_init = run), dot_options)))
+          return(do.call(.self$run, c(list(run_from_init = run), list(...))))
         },
-        run = function(add_options, stdoutput_file_name, init, input, obs, time_dim, ...){
+        run = function(client, add_options, stdoutput_file_name, init, input, obs, time_dim, ...){
           "Run libbi"
 
           ## get hidden options 'run_from_init'; if this is passed, 'run' has
@@ -186,11 +172,19 @@ libbi <- setRefClass("libbi",
           if ("run_from_init" %in% names(passed_options)) {
             run_libbi <- passed_options[["run_from_init"]]
             passed_options[["run_from_init"]] <- NULL
-            for (run_option in intersect(names(match.call(expand.dots = FALSE)), names(global_options))) {
-              global_options[[run_option]] <<- NULL
+            for (run_option in names(passed_options)) {
+              global_options[[run_option]] <<- passed_options[[run_option]]
+              passed_options[[run_option]] <- NULL
             }
           } else {
             run_libbi <- TRUE
+          }
+
+          if (missing(client)){
+            message("No client provided; default to 'sample'.")
+            client <<- "sample"
+          } else {
+            client <<- client
           }
 
           if (missing(add_options)){
@@ -200,7 +194,7 @@ libbi <- setRefClass("libbi",
           }
 
           if (nchar(.self$config) > 0) {
-            config_file_options <- paste(readLines(.self$config), collapse = " ") 
+            config_file_options <- paste(readLines(.self$config), collapse = " ")
           } else {
             config_file_options <- list()
           }
@@ -358,7 +352,7 @@ libbi <- setRefClass("libbi",
           cat("* client: ", .self$client, "\n")
           cat("* path to working folder:", .self$working_folder, "\n")
           cat("* path to model file:", .self$model_file_name, "\n")
-          if (class(.self$output_file_name) != "uninitializedField") {
+          if (length(.self$output_file_name) > 0) {
             cat("* path to output_file:", .self$output_file_name, "\n")
           }
         }
