@@ -30,7 +30,7 @@ get_traces <- function(run, model, burnin, all = FALSE, ...) {
     } else {
       warning("Given model will overwrite model contained in given 'run'.")
     }
-    read_options <- c(read_options, list(read = run$output_file_name))
+    read_options <- c(read_options, list(read = run$result$output_file_name))
   } else {
     read_options <- c(read_options, list(read = run))
   }
@@ -67,7 +67,12 @@ get_traces <- function(run, model, burnin, all = FALSE, ...) {
                   value.var = "value")
       names(df)[-1] <- paste(param, names(df)[-1], sep = ".")
     } else {
-      df <- res[[param]]
+      if (prod(dim(res[[param]])) == 1) {
+        ## just a single value
+        df <- data.frame(np = 0, value = res[[param]])
+      } else {
+        df <- res[[param]]
+      }
       names(df)[which(names(df) == "value")] <- param
     }
     df[, -1, drop = FALSE]
