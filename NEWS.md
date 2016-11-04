@@ -2,6 +2,7 @@
 
 * "client" is now an option to libbi$run
 * Fix bug in parsing options in libbi$initialize
+* Fix bug in get_traces if there is only one sample
 
 # rbi 0.4.1
 
