@@ -73,7 +73,6 @@ libbi <- setRefClass("libbi",
                     path_to_libbi = "character",
                     model = "bi_model",
                     model_file_name = "character",
-                    base_command_string = "character",
                     command = "character",
                     result = "list",
                     working_folder = "character",
@@ -137,26 +136,7 @@ libbi <- setRefClass("libbi",
           else
             global_options <<- option_list(global_options)
 
-          if (missing(path_to_libbi)){
-            if (is.null(getOption("path_to_libbi"))) {
-              # Maybe the system knows where libbi is
-              path_to_libbi <<- Sys.which("libbi")
-            } else {
-              path_to_libbi <<- getOption("path_to_libbi")
-            }
-            if (nchar(.self$path_to_libbi) == 0){
-              stop("Could not locate libbi, please either provide the path to the libbi binary via the 'path_to_libbi' option, or set the PATH to contain the directory that contains the binary in ~/.Renviron or set it in your R session via options(path_to_libbi = \"insert_path_here\")")
-            }
-          } else {
-            path_to_libbi <<- path_to_libbi
-          }
-          if (!grepl("libbi$", .self$path_to_libbi)) {
-            path_to_libbi <<- paste0(.self$path_to_libbi, "/libbi")
-          }
-          if (!file.exists(.self$path_to_libbi)) {
-            stop("Could not find libbi executable ", path_to_libbi)
-          }
-          base_command_string <<- paste(.self$path_to_libbi, .self$client)
+          if (!missing(path_to_libbi)) path_to_libbi <<- path_to_libbi
 
           return(do.call(.self$run, c(list(run_from_init = run), list(...))))
         },
@@ -180,10 +160,7 @@ libbi <- setRefClass("libbi",
             run_libbi <- TRUE
           }
 
-          if (missing(client)){
-            message("No client provided; default to 'sample'.")
-            client <<- "sample"
-          } else {
+          if (!missing(client)){
             client <<- client
           }
 
@@ -270,6 +247,10 @@ libbi <- setRefClass("libbi",
 
           if (run_libbi)
           {
+            if (length(.self$client) == 0) {
+              message("No client provided; default to 'sample'.")
+              client <<- "sample"
+            }
             ## re-read options
             options <- option_list(getOption("libbi_args"), config_file_options,
                                    global_options, add_options, file_options, passed_options)
@@ -300,8 +281,29 @@ libbi <- setRefClass("libbi",
               stdoutput_redir_name <- paste(">", stdoutput_file_name, "2>&1")
             }
 
+            if (length(path_to_libbi) == 0) {
+              if (is.null(getOption("path_to_libbi"))) {
+                                        # Maybe the system knows where libbi is
+                path_to_libbi <<- Sys.which("libbi")
+              } else {
+                path_to_libbi <<- getOption("path_to_libbi")
+              }
+              if (nchar(.self$path_to_libbi) == 0){
+                stop("Could not locate libbi, please either provide the path to the libbi binary via the 'path_to_libbi' option, or set the PATH to contain the directory that contains the binary in ~/.Renviron or set it in your R session via options(path_to_libbi = \"insert_path_here\")")
+              }
+            } else {
+              path_to_libbi <<- path_to_libbi
+            }
+            if (!grepl("libbi$", .self$path_to_libbi)) {
+              path_to_libbi <<- paste0(.self$path_to_libbi, "/libbi")
+            }
+            if (!file.exists(.self$path_to_libbi)) {
+              stop("Could not find libbi executable ", path_to_libbi)
+            }
+            base_command_string <- paste(.self$path_to_libbi, .self$client)
+
             cdcommand <- paste("cd", .self$working_folder)
-            launchcommand <- paste(.self$base_command_string, opt_string)
+            launchcommand <- paste(base_command_string, opt_string)
             if (verbose) print("Launching LibBi with the following commands:")
             if (verbose)
               print(paste(c(cdcommand, launchcommand, stdoutput_redir_name),
