@@ -9,12 +9,12 @@ Authors@R: c(
         person("Sebastian", "Funk", email = "sebastian.funk@lshtm.ac.uk", role = c("aut", "cre"))
         )
 Depends:
-    methods
+    methods,
+    data.table
 Imports:
     reshape2,
-    data.table,
     ncdf4
-Description: Provides a complete R interface to LibBi, a library for Bayesian inference (see http://libbi.org for more information). This includes functions for manipulating LibBi models, for reading and writing LibBi input/output files, for converting LibBi output to provide traces for use with the coda package, and for running LibBi from R.
+Description: Provides a complete R interface to LibBi, a library for Bayesian inference (see <http://libbi.org> for more information). This includes functions for manipulating LibBi models, for reading and writing LibBi input/output files, for converting LibBi output to provide traces for use with the coda package, and for running LibBi from R.
 License: GPL-3
 URL: https://github.com/libbi/RBi
 BugReports: https://github.com/libbi/RBi/issues

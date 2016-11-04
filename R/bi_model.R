@@ -5,7 +5,7 @@
 #' \code{bi_model} creates a model object for \code{Rbi} from a libbi file.
 #' Once the instance is created, the model can either be fed to a \code{\link{libbi}}
 #' object.
-#' 
+#'
 #' @param filename is the file name of the model file
 #' @importFrom methods new
 #' @examples
@@ -13,7 +13,7 @@
 #' PZ <- bi_model(filename = model_file_name)
 #' @seealso \code{\link{bi_model_fix}}, \code{\link{bi_model_propose_prior}}, \code{\link{bi_model_get_lines}}, \code{\link{bi_model_insert_lines}}, \code{\link{bi_model_update_lines}}, \code{\link{bi_model_remove_lines}}, \code{\link{bi_model_set_name}}, \code{\link{bi_model_write_model_file}}, \code{\link{bi_model_clone}}
 #' @export bi_model
-NULL 
+NULL
 #' @rdname bi_model_fix
 #' @name bi_model_fix
 #' @title Fix noise term, state or parameter of a libbi model
@@ -27,7 +27,7 @@ NULL
 #' model_file_name <- system.file(package="rbi", "PZ.bi")
 #' PZ <- bi_model(filename = model_file_name)
 #' PZ$fix(alpha = 0)
-NULL 
+NULL
 #' @rdname bi_model_propose_prior
 #' @name bi_model_propose_prior
 #' @title Propose from the prior in a libbi model
@@ -40,7 +40,7 @@ NULL
 #' model_file_name <- system.file(package="rbi", "PZ.bi")
 #' PZ <- bi_model(filename = model_file_name)
 #' PZ$propose_prior()
-NULL 
+NULL
 #' @rdname bi_model_get_lines
 #' @name bi_model_get_lines
 #' @title Get lines in a libbi model
@@ -54,7 +54,7 @@ NULL
 #' model_file_name <- system.file(package="rbi", "PZ.bi")
 #' PZ <- bi_model(filename = model_file_name)
 #' PZ$get_lines()
-NULL 
+NULL
 #' @rdname bi_model_insert_lines
 #' @name bi_model_insert_lines
 #' @title Insert lines in a libbi model
@@ -70,7 +70,7 @@ NULL
 #' model_file_name <- system.file(package="rbi", "PZ.bi")
 #' PZ <- bi_model(filename = model_file_name)
 #' PZ$insert_lines(lines = "noise beta", after = 8)
-NULL 
+NULL
 #' @rdname bi_model_update_lines
 #' @name bi_model_update_lines
 #' @title Update line(s) in a libbi model
@@ -85,7 +85,7 @@ NULL
 #' model_file_name <- system.file(package="rbi", "PZ.bi")
 #' PZ <- bi_model(filename = model_file_name)
 #' PZ$update_lines(23, "alpha ~ normal(mu, sigma)")
-NULL 
+NULL
 #' @rdname bi_model_remove_lines
 #' @name bi_model_remove_lines
 #' @title Remove line(s) in a libbi model
@@ -99,7 +99,7 @@ NULL
 #' model_file_name <- system.file(package="rbi", "PZ.bi")
 #' PZ <- bi_model(filename = model_file_name)
 #' PZ$remove_lines(2)
-NULL 
+NULL
 #' @rdname bi_model_set_name
 #' @name bi_model_set_name
 #' @title Set the name of a bi model
@@ -127,7 +127,7 @@ NULL
 #' model_file_name <- system.file(package="rbi", "PZ.bi")
 #' PZ <- bi_model(filename = model_file_name)
 #' PZ$write_model_file("PZ")
-NULL 
+NULL
 #' @rdname bi_model_clone
 #' @name bi_model_clone
 #' @title Clones a model (returning a new object with the same properties)
@@ -139,7 +139,7 @@ NULL
 #' model_file_name <- system.file(package="rbi", "PZ.bi")
 #' PZ <- bi_model(filename = model_file_name)
 #' PZ2 <- PZ$clone()
-NULL 
+NULL
 
 
 bi_model <- setRefClass("bi_model",
