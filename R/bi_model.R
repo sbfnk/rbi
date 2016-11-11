@@ -59,7 +59,7 @@ NULL
 #' @name bi_model_insert_lines
 #' @title Insert lines in a libbi model
 #' @description
-#' Inserts one or more lines into a libbi model. If one of \code{before} or \code{after} is given, the line(s) will be inserted before or after a given line number, respectively. If neither is given, the line(s) will be added at the end.
+#' Inserts one or more lines into a libbi model. If one of \code{before} or \code{after} is given, the line(s) will be inserted before or after a given line number or block name, respectively. If one of \code{at_beginning of} or \code{at_end_of} is given, the lines will be inserted at the beginning/end of the block, respectively
 #'
 #' @param before line number before which to insert line(s)
 #' @param after line number after which to insert line(s)
@@ -319,18 +319,39 @@ bi_model <- setRefClass("bi_model",
           }
           return(lines)
         },
-        insert_lines = function(lines, before, after) {
+        insert_lines = function(lines, before, after, at_beginning_of, at_end_of) {
           "Insert lines in a libbi model"
-          if (!missing(before)) {
-            if (!missing(after)) {
-              stop("Must give at most one of 'before' or 'after'")
-            } else {
+          args <- match.call()
+          arg_name <- setdiff(names(args), c("", "lines"))
+          if (length(arg_name) != 1) {
+            stop("insert_lines needs exactly two arguments, 'lines' and one of 'before', 'after', 'at_beginning_of' or 'at_end_of'")
+          }
+          arg <- args[[arg_name]]
+
+          if (arg_name %in% c("before", "after") && is.numeric(arg)) {
+            if (arg_name <- "before") {
               after <- before - 1
             }
-          }
-
-          if (after > length(model)) {
-            stop("model only has ", length(model), " lines, higher requested.")
+            if (after > length(model)) {
+              stop("model only has ", length(model), " lines, higher requested.")
+            }
+          } else {
+            block_lines <- .self$find_block(arg)
+            if (length(block_lines) > 0) {
+              if (arg_name == "before") {
+                after <- block_lines[1] - 1
+              } else if (arg_name == "after") {
+                after <- block_lines[2]
+              } else if (arg_name == "at_beginning_of") {
+                after <- block_lines[1]
+              } else if (arg_name == "at_end_of") {
+                after <- block_lines[2] - 1
+              } else {
+                stop("Unknown argument: ", arg_name)
+              }
+            } else {
+              stop("Could not find block ", arg)
+            }
           }
 
           if (after == 0) {
@@ -340,9 +361,8 @@ bi_model <- setRefClass("bi_model",
           } else {
             model <<- c(model[1:after], lines, model[(after+1):length(model)])
           }
-
           clean_model()
-        }, 
+        },
         update_lines = function(num, lines) {
           "Update lines in a libbi model"
           model[num] <<- lines
@@ -387,13 +407,10 @@ bi_model <- setRefClass("bi_model",
         },
         find_block = function(name) {
           lines <- .self$model
-          sub_line <-
-            grep(paste0("[[:space:]]*sub[[:space:]]+", name, "[[:space:]]*\\{"),
-                 lines)
+          sub_regexp <- paste0("[[:space:]]*(sub[[:space:]]+)?", name, "[[:space:]]*\\{")
+          sub_line <- grep(sub_regexp, lines)
           if (length(sub_line) == 1) {
-            lines[sub_line] <- sub(paste0("[[:space:]]*sub[[:space:]]+", name,
-                                          "[[:space:]]*\\{"), "", 
-                                   lines[sub_line])
+            lines[sub_line] <- sub(sub_regexp, "", lines[sub_line])
             open_braces <- 1
             line <- sub_line - 1
             while(open_braces > 0) {
@@ -406,7 +423,7 @@ bi_model <- setRefClass("bi_model",
           } else {
             return(integer(0))
           }
-        }, 
+        },
         get_block = function(name) {
           block <- .self$find_block(name)
           if (length(block) > 0) {
@@ -423,7 +440,7 @@ bi_model <- setRefClass("bi_model",
           } else {
             return(NA)
           }
-        }, 
+        },
         remove_block = function(name) {
           block <- find_block(name)
           if (length(block) > 0) {

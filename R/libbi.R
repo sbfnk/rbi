@@ -360,5 +360,3 @@ libbi <- setRefClass("libbi",
         }
       )
       )
-
-
