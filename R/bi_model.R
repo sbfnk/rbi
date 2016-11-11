@@ -407,7 +407,7 @@ bi_model <- setRefClass("bi_model",
         },
         find_block = function(name) {
           lines <- .self$model
-          sub_regexp <- paste0("[[:space:]]*(sub[[:space:]]+)?", name, "[[:space:]]*\\{")
+          sub_regexp <- paste0("^[[:space:]]*(sub[[:space:]]+)?[[:space:]]*", name, "[[:space:]]*\\{")
           sub_line <- grep(sub_regexp, lines)
           if (length(sub_line) == 1) {
             lines[sub_line] <- sub(sub_regexp, "", lines[sub_line])
