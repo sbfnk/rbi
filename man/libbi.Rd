@@ -4,8 +4,6 @@
 \alias{libbi}
 \title{LibBi Wrapper}
 \arguments{
-\item{client}{is either "draw", "filter", "sample"... see LibBi documentation.}
-
 \item{model}{either a character vector giving the path to a model file (typically ending in ".bi"), or a \code{bi_model} object}
 
 \item{config}{path to a configuration file, containing multiple arguments}
