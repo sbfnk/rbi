@@ -3,6 +3,7 @@
 * "client" is now an option to libbi$run
 * Fix bug in parsing options in libbi$initialize
 * Fix bug in get_traces if there is only one sample
+* bi_model$insert_lines can now work with blocks
 
 # rbi 0.4.1
 
