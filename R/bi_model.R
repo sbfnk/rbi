@@ -341,11 +341,11 @@ bi_model <- setRefClass("bi_model",
               if (arg_name == "before") {
                 after <- block_lines[1] - 1
               } else if (arg_name == "after") {
-                after <- block_lines[2]
+                after <- block_lines[length(block_lines)]
               } else if (arg_name == "at_beginning_of") {
                 after <- block_lines[1]
               } else if (arg_name == "at_end_of") {
-                after <- block_lines[2] - 1
+                after <- block_lines[length(block_lines)] - 1
               } else {
                 stop("Unknown argument: ", arg_name)
               }
