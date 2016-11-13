@@ -73,12 +73,12 @@ libbi <- setRefClass("libbi",
                     path_to_libbi = "character",
                     model = "bi_model",
                     model_file_name = "character",
+                    working_folder = "character",
+                    dims = "list",
                     command = "character",
                     result = "list",
-                    working_folder = "character",
                     output_file_name = "character",
-                    run_flag = "logical",
-                    dims = "list"),
+                    run_flag = "logical"),
       methods = list(
         initialize = function(client, model,
                               config, global_options, path_to_libbi,
@@ -330,23 +330,48 @@ libbi <- setRefClass("libbi",
             result <<- libbi_result
           }
         },
-        clone = function(model, ...) {
+        clone = function(client, config, global_options, path_to_libbi, model, working_folder, dims, ...) {
           "Clone a libbi object"
+
+          new_libbi_options <- list()
+
+          if (missing(client)) {
+            new_libbi_options[["client"]] <- .self$client
+          } else {
+            new_libbi_options[["client"]] <- client
+          }
+          if (missing(config)) {
+            new_libbi_options[["config"]] <- .self$config
+          } else {
+            new_libbi_options[["config"]] <- config
+          }
+          if (missing(global_options)) {
+            new_libbi_options[["global_options"]] <- .self$global_options
+          } else {
+            new_libbi_options[["global_options"]] <- global_options
+          }
+          if (missing(path_to_libbi)) {
+            new_libbi_options[["path_to_libbi"]] <- .self$path_to_libbi
+          } else {
+            new_libbi_options[["path_to_libbi"]] <- path_to_libbi
+          }
           if (missing(model)) {
-            new_model <- .self$model$clone()
-          } else
-          {
-            new_model <- model
+            new_libbi_options[["model"]] <- .self$model$clone()
+          } else {
+            new_libbi_options[["model"]] <- model
+          }
+          if (missing(working_folder)) {
+            new_libbi_options[["working_folder"]] <- .self$working_folder
+          } else {
+            new_libbi_options[["working_folder"]] <- working_folder
+          }
+          if (missing(dims)) {
+            new_libbi_options[["dims"]] <- .self$dims
+          } else {
+            new_libbi_options[["dims"]] <- dims
           }
 
-          new_wrapper <- libbi(client = .self$client,
-                               model = new_model,
-                               config = .self$config,
-                               global_options = .self$global_options,
-                               path_to_libbi = .self$path_to_libbi,
-                               working_folder = .self$working_folder,
-                               ...)
-          new_wrapper$dims = .self$dims
+          new_wrapper <- do.call(libbi, c(new_libbi_options, list(...)))
           return(new_wrapper)
         },
         show = function(){
