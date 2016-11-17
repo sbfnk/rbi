@@ -319,7 +319,8 @@ libbi <- setRefClass("libbi",
             if (verbose) print("... LibBi has finished!")
             libbi_result <-
               list(output_file_name = .self$output_file_name,
-                   command = launchcommand)
+                   command = launchcommand,
+                   options = options)
             if (nchar(.self$model_file_name) > 0){
               libbi_result["model_file_name"] = .self$model_file_name
             }
