@@ -1,9 +1,10 @@
-# rbi 0.4.1.9000
+# rbi 0.5.0
 
 * "client" is now an option to libbi$run
 * Fix bug in parsing options in libbi$initialize
 * Fix bug in get_traces if there is only one sample
 * bi_model$insert_lines can now work with blocks
+* Improve cloning, where all initialising parameters can now be passed
 
 # rbi 0.4.1
 
