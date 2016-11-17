@@ -21,6 +21,8 @@
 #' e <- data.frame(dim_a = rep(1:3, time = 2), dim_c = rep(1:2, each = 3), value = 1:6)
 #' variables <- list(a=a, b=b, c=c, d=d, e=e)
 #' bi_write(filename, variables)
+#' bi_file_summary(filename)
+#' bi_read(filename)
 #' @export
 bi_write <- function(filename, variables, timed, ...){
   filename <- normalizePath(filename, "/", FALSE)
