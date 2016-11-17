@@ -80,8 +80,7 @@ libbi <- setRefClass("libbi",
                     output_file_name = "character",
                     run_flag = "logical"),
       methods = list(
-        initialize = function(client, model,
-                              config, global_options, path_to_libbi,
+        initialize = function(model, config, global_options, path_to_libbi,
                               working_folder, dims, run = FALSE,
                               overwrite = FALSE, ...){
           result <<- list()
