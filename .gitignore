@@ -9,3 +9,4 @@ vignettes/*.log
 vignettes/*.tex
 Rplots.pdf
 *.Rproj
+revdep/
