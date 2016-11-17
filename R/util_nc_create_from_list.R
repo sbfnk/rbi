@@ -98,9 +98,21 @@ netcdf_create_from_list <- function(filename, variables, time_dim, coord_dim, va
         ## define dimension if given
         dim_name <- element[["dimension"]]
         dim_values <- element[["values"]]
-        if (class(element[["values"]]) %in% c("character", "factor")) {
-          dim_factors[[dim_name]] <- union(dim_factors[[dim_name]], dim_values)
+        if (dim_name %in% names(dims)) {
+          if (length(dim_values) != dims[[dim_name]]$len) {
+            stop("Two dimensions of name '", dim_name, "' have different lengths")
+          }
+        } else {
+          new_dim <- ncdim_def(dim_name, "", seq_along(unique(dim_values)) - 1)
+          dims[[dim_name]] <- new_dim
+          if (!(class(dim_values) %in% c("numeric", "integer") &&
+                length(setdiff(as.integer(dim_values), dim_values)) == 0 &&
+                length(setdiff(seq_len(max(dim_values)), unique(dim_values))) == 0))
+          {
+            dim_factors[[dim_name]] <- dim_values
+          }
         }
+
       }
       ## get variable values
       vars[[name]] <- ncvar_def(name, "", dims[[element[["dimension"]]]])
