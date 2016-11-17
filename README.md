@@ -58,7 +58,7 @@ A good starting point is to look at the included demos:
 Using coda
 ==========
 
-`rbi` contains the `get_traces` method which provides an interface to [coda](https://cran.r-project.org/web/packages/coda/index.html).
+`rbi` contains the `get_traces` method which provides an interface to [coda](https://cran.r-project.org/package=coda).
 
 Other packages
 ==============
