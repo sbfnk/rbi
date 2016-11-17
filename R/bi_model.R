@@ -329,6 +329,7 @@ bi_model <- setRefClass("bi_model",
             stop("insert_lines needs exactly two arguments, 'lines' and one of 'before', 'after', 'at_beginning_of' or 'at_end_of'")
           }
           arg <- args[[arg_name]]
+          if (is.numeric(arg)) arg <- as.integer(arg)
 
           if (arg_name %in% c("before", "after") && is.integer(arg)) {
             if (arg_name == "before") {
