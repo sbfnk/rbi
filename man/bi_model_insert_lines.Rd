@@ -4,11 +4,15 @@
 \alias{bi_model_insert_lines}
 \title{Insert lines in a libbi model}
 \arguments{
+\item{lines}{vector or line(s)}
+
 \item{before}{line number before which to insert line(s)}
 
 \item{after}{line number after which to insert line(s)}
 
-\item{lines}{vector or line(s)}
+\item{at_beginning_of}{block at the beginning of which to insert lines(s)}
+
+\item{at_end_of}{block at the end of which to insert lines(s)}
 }
 \value{
 the updated bi model

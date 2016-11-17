@@ -61,9 +61,11 @@ NULL
 #' @description
 #' Inserts one or more lines into a libbi model. If one of \code{before} or \code{after} is given, the line(s) will be inserted before or after a given line number or block name, respectively. If one of \code{at_beginning of} or \code{at_end_of} is given, the lines will be inserted at the beginning/end of the block, respectively
 #'
+#' @param lines vector or line(s)
 #' @param before line number before which to insert line(s)
 #' @param after line number after which to insert line(s)
-#' @param lines vector or line(s)
+#' @param at_beginning_of block at the beginning of which to insert lines(s)
+#' @param at_end_of block at the end of which to insert lines(s)
 #' @return the updated bi model
 #' @seealso \code{\link{bi_model}}
 #' @examples
@@ -328,8 +330,8 @@ bi_model <- setRefClass("bi_model",
           }
           arg <- args[[arg_name]]
 
-          if (arg_name %in% c("before", "after") && is.numeric(arg)) {
-            if (arg_name <- "before") {
+          if (arg_name %in% c("before", "after") && is.integer(arg)) {
+            if (arg_name == "before") {
               after <- before - 1
             }
             if (after > length(model)) {
