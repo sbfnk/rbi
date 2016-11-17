@@ -2,7 +2,6 @@
 
 export(bi_dim_len)
 export(bi_dim_values)
-export(bi_file_ncdump)
 export(bi_file_summary)
 export(bi_generate_dataset)
 export(bi_model)
