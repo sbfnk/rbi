@@ -102,6 +102,21 @@ NULL
 #' PZ <- bi_model(filename = model_file_name)
 #' PZ$remove_lines(2)
 NULL
+#' @rdname bi_model_replace_all
+#' @name bi_model_replace_all
+#' @title replace all instances of one string with another
+#' @description
+#' Replace all instances of one string with another in a libbi model
+#'
+#' @param old the string to be replaced
+#' @param new the string to replace the old string
+#' @return the updated bi model
+#' @seealso \code{\link{bi_model}}
+#' @examples
+#' model_file_name <- system.file(package="rbi", "PZ.bi")
+#' PZ <- bi_model(filename = model_file_name)
+#' PZ$replace_all("alpha", "beta")
+NULL
 #' @rdname bi_model_set_name
 #' @name bi_model_set_name
 #' @title Set the name of a bi model
@@ -382,6 +397,11 @@ bi_model <- setRefClass("bi_model",
 
             clean_model()
           }
+        },
+        replace_all = function(old, new) {
+          "Replace all instances of a string with another in a libbi model"
+          model <<- gsub(old, new, model)
+          clean_model()
         },
         set_name = function(name) {
           "Set model name"
