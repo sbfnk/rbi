@@ -17,7 +17,7 @@
 #' @param ... parameters to \code{bi_read} (e.g., dimensions)
 #' @return data frame with parameter traces; this can be fed to
 #'     \code{coda} routines
-#' @importFrom reshape2 dcast
+#' @importFrom data.table data.table dcast
 #' @importFrom stats as.formula
 #' @export
 get_traces <- function(run, model, burnin, all = FALSE, ...) {
@@ -62,9 +62,10 @@ get_traces <- function(run, model, burnin, all = FALSE, ...) {
   wide_list <- lapply(names(res), function(param) {
     extra.dims <- setdiff(colnames(res[[param]]), c("np", "param", "value"))
     if (length(extra.dims) > 0) {
-      df <- dcast(res[[param]],
-                  as.formula(paste("np", paste(extra.dims, collapse = "+"), sep = "~")),
-                  value.var = "value")
+      df <-
+        dcast(data.table(res[[param]]),
+              as.formula(paste("np", paste(extra.dims, collapse = "+"),
+                               sep = "~")), value.var = "value")
       names(df)[-1] <- paste(param, names(df)[-1], sep = ".")
     } else {
       if (prod(dim(res[[param]])) == 1) {
