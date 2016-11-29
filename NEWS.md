@@ -1,3 +1,5 @@
+# rbi 0.5.0.9999
+
 # rbi 0.5.0
 
 * "client" is now an option to libbi$run
