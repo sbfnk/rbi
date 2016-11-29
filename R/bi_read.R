@@ -17,10 +17,13 @@
 #' @param thin thinning (keep only 1/thin of samples)
 #' @param verbose if TRUE, will print variables as they are read
 #' @return list of results
-#' @importFrom reshape2 melt
 #' @importFrom ncdf4 nc_close
+#' @importFrom reshape2 melt
 #' @importFrom data.table data.table setkeyv setnames setDF is.data.table
 #' @importFrom utils setTxtProgressBar txtProgressBar
+#' @examples
+#' example_output_file <- system.file(package="rbi", "example_output.nc")
+#' d <- bi_read(example_output_file)
 #' @export
 bi_read <- function(read, vars, dims, missval.threshold, time_name, coord_name, vector, thin, verbose)
 {
@@ -137,7 +140,7 @@ bi_read <- function(read, vars, dims, missval.threshold, time_name, coord_name, 
       value_dims <- dim(all_values)
 
       if (prod(value_dims) > 1) {
-        mav <- data.table::data.table(reshape2::melt(all_values, varnames = rev(dim_names)))
+        mav <- data.table(reshape2::melt(all_values, varnames = rev(dim_names)))
 
         ## find matching time and coord variables
         all_matching_dims <- c()
@@ -147,7 +150,7 @@ bi_read <- function(read, vars, dims, missval.threshold, time_name, coord_name, 
           all_matching_dims <- union(all_matching_dims, matching_dims)
           if (length(matching_vars) == 1)  {
             merge_values <- read_var_input(nc, matching_vars)
-            mav_merge <- data.table::data.table(reshape2::melt(merge_values, varnames = rev(matching_dims), value.name = time_coord_names[type]))
+            mav_merge <- data.table(reshape2::melt(merge_values, varnames = rev(matching_dims), value.name = time_coord_names[type]))
             mav <- merge(mav_merge, mav, by = unname(matching_dims))
           } else if (length(matching_vars) > 1) {
             stop("Found multiple matching time variables for ", var_name, ": ", matching_vars)
@@ -165,7 +168,7 @@ bi_read <- function(read, vars, dims, missval.threshold, time_name, coord_name, 
 
         ## reorder duplicates
         cols <- setdiff(colnames(mav), "value")
-        data.table::setkeyv(mav, cols)
+        setkeyv(mav, cols)
         rownames(mav) <- seq_len(nrow(mav))
       } else {
         ## fixed value
@@ -180,7 +183,7 @@ bi_read <- function(read, vars, dims, missval.threshold, time_name, coord_name, 
       }
 
       if (!missing(dims) && length(dims) == 1 && "coord" %in% colnames(mav)) {
-        data.table::setnames(mav, "coord", names(dims))
+        setnames(mav, "coord", names(dims))
       }
 
       for (col in colnames(mav)) {
@@ -194,8 +197,8 @@ bi_read <- function(read, vars, dims, missval.threshold, time_name, coord_name, 
       if (!missing(vector) && vector) {
         res[[var_name]] <- mav$value
       } else {
-        if (data.table::is.data.table(mav)) {
-          res[[var_name]] <- data.table::setDF(mav)
+        if (is.data.table(mav)) {
+          res[[var_name]] <- setDF(mav)
         } else {
           res[[var_name]] <- mav
         }

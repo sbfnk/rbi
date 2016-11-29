@@ -34,6 +34,5 @@ e <- data.frame(dim_a = rep(1:3, time = 2), dim_c = rep(1:2, each = 3), value = 
 variables <- list(a=a, b=b, c=c, d=d, e=e)
 bi_write(filename, variables)
 bi_file_summary(filename)
-bi_read(filename)
 }
 

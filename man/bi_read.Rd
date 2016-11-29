@@ -35,4 +35,8 @@ This function reads all variable from a NetCDF file or the output of a
 The file can be specified as a string to the filepath, in which
 case a NetCDF connection is opened, or directly as a NetCDF connection.
 }
+\examples{
+example_output_file <- system.file(package="rbi", "example_output.nc")
+d <- bi_read(example_output_file)
+}
 
