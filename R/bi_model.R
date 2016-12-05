@@ -452,8 +452,7 @@ bi_model <- setRefClass("bi_model",
           if (length(block) > 0) {
             lines <- .self$model[block]
             lines[1] <-
-              sub(paste0("^[[:space:]]*sub[[:space:]]+", name, "[[:space:]]*\\{"),
-                  "", lines[1])
+              sub(paste0("^[[:space:]]*(sub[[:space:]]+)?", name, "[[:space:]]*\\{"), "", lines[1])
             lines[length(lines)] <- sub("\\}[[:space:]]*$", "", lines[length(lines)])
             empty_lines <- grep("^[[:space:]]*$", lines)
             if (length(empty_lines) > 0) {
