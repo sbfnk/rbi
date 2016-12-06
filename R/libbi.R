@@ -33,19 +33,19 @@ NULL
 #' allows to launch \code{libbi} with a particular set of command line
 #' arguments.
 #'
-#' @param add_options additional arguments to pass to the call to \code{libbi}
+#' @param options additional arguments to pass to the call to \code{libbi}
 #' @param stdoutput_file_name path to a file to text file to report the output of \code{libbi}
 #' @param init initialisation of the model, either supplied as a list of values and/or data frames, or a (netcdf) file name, or a \code{\link{libbi}} object which has been run (in which case the output of that run is used as input)
 #' @param input input of the model, either supplied as a list of values and/or data frames, or a (netcdf) file name, or a \code{\link{libbi}} object which has been run (in which case the output of that run is used as input)
 #' @param obs observations of the model, either supplied as a list of values and/or data frames, or a (netcdf) file name, or a \code{\link{libbi}} object which has been run (in which case the output of that run is used as observations)
 #' @param time_dim The time dimension in any R objects that have been passed (\code{init}, \code{input}) and \code{obs}); if not given, will be guessed
-#' @param ... any onrecognised options will be added to \code{add_options}
+#' @param ... any unrecognised options will be added to \code{options}
 #' @seealso \code{\link{libbi}}
 #' @examples
 #' bi_object <- libbi$new(client = "sample",
 #'                        model = system.file(package="rbi", "PZ.bi"),
 #'                        global_options = list(sampler = "smc2"))
-#' \dontrun{bi_object$run(add_options=list(nthreads = 1), verbose = TRUE)}
+#' \dontrun{bi_object$run(options=list(nthreads = 1), verbose = TRUE)}
 #' if (length(bi_object$result) > 0) {
 #'   bi_file_summary(bi_object$result$output_file_name)
 #' }
@@ -139,7 +139,7 @@ libbi <- setRefClass("libbi",
 
           return(do.call(.self$run, c(list(run_from_init = run), list(...))))
         },
-        run = function(client, add_options, stdoutput_file_name, init, input, obs, time_dim, ...){
+        run = function(client, options, stdoutput_file_name, init, input, obs, time_dim, ...){
           "Run libbi"
 
           ## get hidden options 'run_from_init'; if this is passed, 'run' has
@@ -163,10 +163,10 @@ libbi <- setRefClass("libbi",
             client <<- client
           }
 
-          if (missing(add_options)){
-            add_options <- list()
+          if (missing(options)){
+            options <- list()
           } else {
-            add_options <- option_list(add_options)
+            options <- option_list(options)
           }
 
           if (nchar(.self$config) > 0) {
@@ -176,10 +176,10 @@ libbi <- setRefClass("libbi",
           }
 
           ## get model
-          options <- option_list(getOption("libbi_args"), config_file_options, global_options, add_options, passed_options)
-          if ("model-file" %in% names(options)) {
+          all_options <- option_list(getOption("libbi_args"), config_file_options, global_options, options, passed_options)
+          if ("model-file" %in% names(all_options)) {
             if (is.null(.self$model)) {
-              model_file_name <<- absolute_path(options[["model-file"]], getwd())
+              model_file_name <<- absolute_path(all_options[["model-file"]], getwd())
               model <<- bi_model(model_file_name)
             } else {
               warning("'model-file' and 'model' options both provided. Will ignore 'model-file'.")
@@ -251,23 +251,23 @@ libbi <- setRefClass("libbi",
               client <<- "sample"
             }
             ## re-read options
-            options <- option_list(getOption("libbi_args"), config_file_options,
-                                   global_options, add_options, file_options, passed_options)
-            if ("end-time" %in% names(options) && !("noutputs" %in% names(options))) {
+            all_options <- option_list(getOption("libbi_args"), config_file_options,
+                                       global_options, options, file_options, passed_options)
+            if ("end-time" %in% names(all_options) && !("noutputs" %in% names(all_options))) {
               options[["noutputs"]] <- options[["end-time"]]
             }
-            if (!("output-file" %in% names(options))) {
+            if (!("output-file" %in% names(all_options))) {
               output_file_name <<- tempfile(pattern=paste(.self$model$name, "output", sep = "_"),
                                             fileext=".nc",
                                             tmpdir=absolute_path(.self$working_folder))
             } else {
-              output_file_name <<- absolute_path(options[["output-file"]], getwd())
+              output_file_name <<- absolute_path(all_options[["output-file"]], getwd())
             }
-            options[["output-file"]] <- .self$output_file_name
-            options[["model-file"]] <- .self$model_file_name
+            all_options[["output-file"]] <- .self$output_file_name
+            all_options[["model-file"]] <- .self$model_file_name
 
-            opt_string <- option_string(options)
-            verbose <- ("verbose" %in% names(options) && options[["verbose"]] == TRUE)
+            opt_string <- option_string(all_options)
+            verbose <- ("verbose" %in% names(all_options) && all_options[["verbose"]] == TRUE)
 
             if (missing(stdoutput_file_name) && !verbose) {
               stdoutput_file_name <- tempfile(pattern="output", fileext=".txt",
@@ -319,7 +319,7 @@ libbi <- setRefClass("libbi",
             libbi_result <-
               list(output_file_name = .self$output_file_name,
                    command = launchcommand,
-                   options = options)
+                   options = all_options)
             if (nchar(.self$model_file_name) > 0){
               libbi_result["model_file_name"] = .self$model_file_name
             }
