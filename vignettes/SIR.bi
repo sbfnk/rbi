@@ -50,6 +50,6 @@ model SIR {
   }
 
   sub observation {
-    Incidence ~ truncated_gaussian(mean = p_rep * Z, std = sqrt(p_rep * (1 - p_rep) * Z), lower = 0)
+    Incidence ~ gaussian(mean = p_rep * Z, std = sqrt(p_rep * (1 - p_rep) * Z))
   }
 }
