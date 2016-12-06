@@ -11,7 +11,6 @@
 #' @param vars variables to read; if not given, all will be read
 #' @param dims factors for dimensions
 #' @param missval.threshold upper threshold for the likelihood
-#' @param time_name name of time dimension (if any)
 #' @param coord_name name of coord dimension (if any)
 #' @param vector if TRUE, will return results as vectors, not data.frames
 #' @param thin thinning (keep only 1/thin of samples)
@@ -25,7 +24,7 @@
 #' example_output_file <- system.file(package="rbi", "example_output.nc")
 #' d <- bi_read(example_output_file)
 #' @export
-bi_read <- function(read, vars, dims, missval.threshold, time_name, coord_name, vector, thin, verbose)
+bi_read <- function(read, vars, dims, missval.threshold, coord_name, vector, thin, verbose)
 {
 
   nc <- bi_open(read)
