@@ -50,7 +50,6 @@ model SIR {
   }
 
   sub observation {
-    Incidence ~ gaussian(mean = p_rep * Z, std = sqrt(p_rep * (1 - p_rep) * Z))
-    Incidence <- max(0, Incidence)
+    Incidence ~ max(gaussian(mean = p_rep * Z, std = sqrt(p_rep * (1 - p_rep) * Z)), 0)
   }
 }
