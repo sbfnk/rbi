@@ -1,7 +1,7 @@
 Bayesian inference for state-space models with R
 =============
 
-[rbi] (https://github.com/libbi/RBi) is an `R` interface to [libbi] (https://github.com/libbi/LibBi), a library for Bayesian inference.
+[rbi] (https://github.com/libbi/RBi) is an `R` interface to [libbi] (http://libbi.org), a library for Bayesian inference.
 
 It mainly contains:
 - various functions to retrieve and process the results from libbi (which are in NetCDF format)
@@ -32,7 +32,7 @@ install_github("libbi/rbi")
 
 The `rbi` package has only been tested on GNU/Linux and OS X, but it should mostly work everywhere `R` works.
 
-If you want to use `rbi` as a wrapper to [libbi](https://github.com/libbi/LibBi) then you need a working version of [libbi](https://github.com/libbi/LibBi). To install `libbi` on a Mac or Unix, the easiest way is via the homebrew-science tap: Install [Homebrew](http://brew.sh) (on OS X) or [Linuxbrew](http://linuxbrew.sh) (on linux), then issue the following commands (using a command shell, i.e. Terminal or similar):
+If you want to use `rbi` as a wrapper to [libbi](https://github.com/libbi/LibBi) then you need a working version of [libbi](https://github.com/libbi/LibBi). To install `libbi` on a Mac or Unix, the easiest way is via the [homebrew-science](http://brew.sh/homebrew-science/) tap: Install [Homebrew](http://brew.sh) (on OS X) or [Linuxbrew](http://linuxbrew.sh) (on linux), then issue the following commands (using a command shell, i.e. Terminal or similar):
 
 ```sh
 brew tap homebrew/science
