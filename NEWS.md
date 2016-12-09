@@ -1,5 +1,7 @@
 # rbi 0.5.0.9999
 
+* Fix bug in reading in the coord dimension(s) in bi_read
+
 # rbi 0.5.0
 
 * "client" is now an option to libbi$run

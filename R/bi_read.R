@@ -188,7 +188,7 @@ bi_read <- function(read, vars, dims, missval.threshold, coord_name, vector, thi
       for (col in colnames(mav)) {
         if (!missing(dims) && col %in% names(dims)) {
           mav[[col]] <- factor(mav[[col]], labels = dims[[col]])
-        } else if (!(col %in% c("value", time_coord_names["time"]))) {
+        } else if (!(col %in% c("value", time_coord_names[c("time", "coord")]))) {
           mav[[col]] <- mav[[col]] - 1
         }
       }
