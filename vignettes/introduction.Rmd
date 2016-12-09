@@ -15,12 +15,12 @@ vignette: >
 
 ### Latest Version: _0.5.0_  &nbsp; <small>(17 November 2016)</small>
 
-The package has been tested on macOS and Linux. It requires a working installation of **LibBI**, which is easiest done using the [homebrew-science](http://brew.sh/homebrew-science/) tap.: Install [Homebrew](http://brew.sh) (on OS X) or [Linuxbrew](http://linuxbrew.sh) (on linux), then issue the following commands (using a command shell, i.e. Terminal or similar):
+The package has been tested on macOS and Linux. It requires a working installation of **LibBI**, which is easiest done using the [homebrew-science](http://brew.sh/homebrew-science/) tap: Install [Homebrew](http://brew.sh) (on OS X) or [Linuxbrew](http://linuxbrew.sh) (on linux), then issue the following commands (using a command shell, i.e. Terminal or similar):
 
-```sh
+```{sh eval=FALSE}
 brew tap homebrew/science
 brew install libbi
-``` 
+```
 
 If you have any trouble installing **LibBi** you can get help on the [libbi Users](https://groups.google.com/forum/#!forum/libbi-users) mailing list.
 
@@ -37,13 +37,13 @@ The **RBi** package requires `R` (>= 3.2.0) as well as the packages:
 
 The easiest way to install the latest stable version of **RBi** is via CRAN. The package name is `rbi` (all lowercase):
 
-```r
+```{r eval=FALSE}
 install.packages('rbi')
 ```
 
 Alternatively, the current development version can be installed using the `devtools` package
 
-```r
+```{r eval=FALSE}
 # install.packages("devtools")
 library('devtools')
 install_github("libbi/rbi")
@@ -53,7 +53,7 @@ install_github("libbi/rbi")
 
 Use
 
-```R
+```{R}
 library('rbi')
 ```
 to load the package.
@@ -70,32 +70,32 @@ The package also provides two methods for interacting with the [NetCDF](http://w
 
 As an example, we consider a simplified version of the SIR model discussed in [Del Moral et al. (2014)](https://arxiv.org/abs/1405.4081). This is included with the **rbi** package and can be loaded with
 
-```R
+```{R}
 model_file <- system.file(package="rbi", "SIR.bi") # get full file name from package
 SIRmodel <- bi_model(model_file) # load model
-``` 
+```
 
 The `SIRmodel` object now contains the model, which can be displayed with
 
-```R
+```{R}
 SIRmodel
 ```
 
 A part of the model can be shown with, for example,
 
-```R
+```{R}
 SIRmodel$get_lines()[35:38]
 ```
 
 or
 
-```R
+```{R}
 SIRmodel$get_block("parameter")
 ```
 
 To get a list of states, you can use
 
-```R
+```{R}
 SIRmodel$get_vars("state")
 ```
 
@@ -109,19 +109,19 @@ Lastly, `write_model_file` writes a model to a file, and `clone` creates a new `
 
 First, let's create a data set from the SIR model.
 
-```R
+```{R}
 SIRdata <- bi_generate_dataset(SIRmodel, end_time=16*7, noutputs=16, input = list(N=1000))
 ```
 
 This simulates the model a single time from time 0 until time 16*7 (e.g., 16 weeks with a daily time step), producing 16 output (one a week). The `input` argument specifies an input data set, which is necessary because the model has an `input` variable `N`, which will be set to 0 if not specified:
 
-```R
+```{R}
 SIRmodel$get_vars("input")
 ```
 
 The `bi_generate_dataset` function returns a `libbi` object:
 
-```R
+```{R}
 SIRdata
 ```
 
@@ -129,13 +129,13 @@ Note that, if no `working_folder` is specified, the model and output files will 
 
 The generated dataset can be viewed and/or stored in a variable using `bi_read`:
 
-```R
+```{R}
 res <- bi_read(SIRdata)
 ```
 
 The `bi_read` function takes the name of a NetCDF file or a `libbi` object (in which case it locates the output file) and stores the contents in a list of data frames or vectors, depending on the dimensionality of the contents:
 
-```R
+```{R}
 names(res)
 res$p_R0
 res$Incidence
@@ -145,7 +145,7 @@ res$Incidence
 
 The `libbi` class manages the interaction with **LibBi** such as sampling from the prior or posterior distribution.
 
-```R
+```{R}
 bi <- libbi(SIRmodel)
 ```
 
@@ -153,15 +153,15 @@ This initialises a `libbi` object called `bi` with the model created earlier.
 
 Let's perform inference using Particle Markov-chain Metropolis Hastings (PMMH).
 
-```R
+```{R}
 bi$run(client="sample", init=list(N=1000), nsamples=1000, end_time=16*7, noutputs=16, nparticles=64, obs=SIRdata)
 ```
 
-This samples from the posterior distribution. If samples from the prior or joint distribution are desired instead, you can use `target="prior"` or `target="joint"`, respectively. Input, init and observation files can be specified using the `init`, `input`, `obs` options, respectively. They can each be specified either as the name of a NetCDF file containing the data (i.e., a character vector of length one, a `libbi` object (in which case the output file will be taken), or a list of data frames or numeric vectors). In the case of the command above, `init` is specified as a list, and `obs` as a `libbi` object. The 'Incidence' variable of the `SIRdata` object will be taken as observations. 
+This samples from the posterior distribution. If samples from the prior or joint distribution are desired instead, you can use `target="prior"` or `target="joint"`, respectively. Input, init and observation files can be specified using the `init`, `input`, `obs` options, respectively. They can each be specified either as the name of a NetCDF file containing the data (i.e., a character vector of length one, a `libbi` object (in which case the output file will be taken), or a list of data frames or numeric vectors). In the case of the command above, `init` is specified as a list, and `obs` as a `libbi` object. The `Incidence` variable of the `SIRdata` object will be taken as observations. 
 
-The time dimension (or column, if a data frame) in the passed `init`, `input` and/or `obs` files can be specified using the `time_dim` option. If this is not given, it will be assumed to be 'time', if such a dimension exists or, if not, any numeric column not called `value` (or the contents of the 'value_column' option). If this does not produce a unique column name, an error will be thrown. All other dimensions/columns in the passed options will be interpreted as additional dimensions in the data, and stored in the `dims` field of the `libbi` object.
+The time dimension (or column, if a data frame) in the passed `init`, `input` and/or `obs` files can be specified using the `time_dim` option. If this is not given, it will be assumed to be `time`, if such a dimension exists or, if not, any numeric column not called `value` (or the contents of the `value_column` option). If this does not produce a unique column name, an error will be thrown. All other dimensions/columns in the passed options will be interpreted as additional dimensions in the data, and stored in the `dims` field of the `libbi` object.
 
-Any other options (apart from `stdoutput_file_name`, see the [Debugging](#debugging) section) will be passed on to the command `libbi` -- for a complete list, see the [LibBi manual](http://libbi.org/docs/LibBi-Manual.pdf). Hyphens can be replaced by underscores so as not to confuse R (see 'end_time'). Any arguments starting with 'enable'/'disable' can be specified as boolean (e.g., 'assert=TRUE'). Any 'dry-' options can be specified with a '"dry"' argument, e.g., 'parse="dry"'.
+Any other options (apart from `stdoutput_file_name`, see the [Debugging](#debugging) section) will be passed on to the command `libbi` -- for a complete list, see the [LibBi manual](http://libbi.org/docs/LibBi-Manual.pdf). Hyphens can be replaced by underscores so as not to confuse R (see `end_time`). Any arguments starting with `enable`/`disable` can be specified as boolean (e.g., `assert=TRUE`). Any `dry-` options can be specified with a `"dry"` argument, e.g., `parse="dry"`.
 
 # Getting the results of an MCMC run
 
