@@ -529,7 +529,7 @@ bi_model <- setRefClass("bi_model",
               names <- sub("=.*$", "", names)
             }
             ## remove spaces
-            names <- sub("[[:space:]]", "", names)
+            names <- gsub("[[:space:]]", "", names)
             names_vec <- unlist(strsplit(names, ","))
             return(names_vec)
           } else {
