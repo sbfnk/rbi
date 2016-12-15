@@ -41,6 +41,19 @@ NULL
 #' PZ <- bi_model(filename = model_file_name)
 #' PZ$propose_prior()
 NULL
+#' @rdname bi_model_obs_to_noise
+#' @name bi_model_obs_to_noise
+#' @title Copy observation variables into noise variables with "__sample_ prepended"
+#' @description
+#' This is used by libbi$run if \code{sample_obs} is set to TRUE
+#'
+#' @return a bi model object of the new model
+#' @seealso \code{\link{bi_model}}
+#' @examples
+#' model_file_name <- system.file(package="rbi", "PZ.bi")
+#' PZ <- bi_model(filename = model_file_name)
+#' PZ$obs_to_noise()
+NULL
 #' @rdname bi_model_get_lines
 #' @name bi_model_get_lines
 #' @title Get lines in a libbi model
@@ -260,6 +273,21 @@ bi_model <- setRefClass("bi_model",
 
           prior_initial <- new_model$get_block("initial")
           new_model$add_block("proposal_initial", lines = prior_initial)
+
+          return(new_model)
+        },
+        obs_to_noise = function() {
+          "Copy obs variables to state variables (with '__sample_' prepended)"
+
+          new_model <- bi_model(lines = .self$model)
+          obs_block <- get_block("observation")
+          obs_variables <- get_vars("obs")
+
+          obs_var_pattern <- paste0("^(", paste(obs_variables, collapse = "|"), ")")
+          state_block <- sub(obs_var_pattern, "__sample_\\1", obs_block)
+          new_model$insert_lines(state_block, at_end_of = "transition")
+          state_variables <- paste0("__sample_", obs_variables)
+          new_model$insert_lines(paste("noise ", paste(state_variables, collapse = ", ")), after = 1)
 
           return(new_model)
         },

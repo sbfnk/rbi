@@ -23,8 +23,9 @@
 #'                        model = system.file(package="rbi", "PZ.bi"),
 #'                        global_options = list(sampler = "smc2"))
 #' @seealso \code{\link{libbi_run}}, \code{\link{libbi_clone}}
+#' @importFrom ncdf4 nc_open nc_close ncvar_rename
 #' @export libbi
-NULL 
+NULL
 #' @rdname libbi_run
 #' @name libbi_run
 #' @title Using the LibBi wrapper to launch LibBi
@@ -163,6 +164,8 @@ libbi <- setRefClass("libbi",
             client <<- client
           }
 
+          if (missing(sample_obs)) sample_obs <- FALSE
+
           if (missing(options)){
             options <- list()
           } else {
@@ -265,6 +268,16 @@ libbi <- setRefClass("libbi",
             }
             all_options[["output-file"]] <- .self$output_file_name
             all_options[["model-file"]] <- .self$model_file_name
+            if (sample_obs) {
+              sample_model <- .self$model$obs_to_noise()
+              sample_model_file_name <- tempfile(pattern=paste(.self$model$name, "model", sep = "_"),
+                                                  fileext=".bi",
+                                                  tmpdir=absolute_path(.self$working_folder))
+              sample_model$write(sample_model_file_name)
+              all_options[["model-file"]] <- sample_model_file_name
+            } else {
+              all_options[["model-file"]] <- .self$model_file_name
+            }
 
             opt_string <- option_string(all_options)
             verbose <- ("verbose" %in% names(all_options) && all_options[["verbose"]] == TRUE)
@@ -316,6 +329,13 @@ libbi <- setRefClass("libbi",
               stop("LibBi terminated with an error.")
             }
             if (verbose) print("... LibBi has finished!")
+            if (sample_obs) {
+              nc <- nc_open(.self$output_file_name, write=TRUE)
+              for (obs_name in sample_model$get_vars("obs")) {
+                ncvar_rename(nc, paste0("__sample_", obs_name), obs_name)
+              }
+              nc_close(nc)
+            }
             libbi_result <-
               list(output_file_name = .self$output_file_name,
                    command = launchcommand,

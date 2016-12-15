@@ -154,7 +154,7 @@ This initialises a `libbi` object called `bi` with the model created earlier.
 Let's perform inference using Particle Markov-chain Metropolis Hastings (PMMH).
 
 ```{R}
-bi$run(client="sample", init=list(N=1000), nsamples=1000, end_time=16*7, noutputs=16, nparticles=64, obs=SIRdata)
+bi$run(client="sample", input=list(N=1000), nsamples=1000, end_time=16*7, noutputs=16, nparticles=256, obs=SIRdata, sample_obs=TRUE)
 ```
 
 This samples from the posterior distribution. If samples from the prior or joint distribution are desired instead, you can use `target="prior"` or `target="joint"`, respectively. Input, init and observation files can be specified using the `init`, `input`, `obs` options, respectively. They can each be specified either as the name of a NetCDF file containing the data (i.e., a character vector of length one, a `libbi` object (in which case the output file will be taken), or a list of data frames or numeric vectors). In the case of the command above, `init` is specified as a list, and `obs` as a `libbi` object. The `Incidence` variable of the `SIRdata` object will be taken as observations. 
