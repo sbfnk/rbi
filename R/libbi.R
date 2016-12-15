@@ -194,7 +194,7 @@ libbi <- setRefClass("libbi",
               model_file_name <<- tempfile(pattern=paste(.self$model$name, "model", sep = "_"),
                                            fileext=".bi",
                                            tmpdir=absolute_path(.self$working_folder))
-              model$write_model_file(.self$model_file_name)
+              model$write(.self$model_file_name)
             }
           }
 

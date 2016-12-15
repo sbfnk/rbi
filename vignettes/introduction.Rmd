@@ -103,7 +103,7 @@ Moreover, there are various methods for manipulating a model, such as `remove_bl
 
 The `fix` method fixes a variable to one value (see [The libbi class](#the-libbi-class) where it used to derive the deterministic skeleton of a stochastic model).
 
-Lastly, `write_model_file` writes a model to a file, and `clone` creates a new `bi_model` object which is an exact copy of the original one.
+Lastly, `write` writes a model to a file, and `clone` creates a new `bi_model` object which is an exact copy of the original one.
 
 # Generating a dataset
 

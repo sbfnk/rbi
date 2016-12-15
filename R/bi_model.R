@@ -11,7 +11,7 @@
 #' @examples
 #' model_file_name <- system.file(package="rbi", "PZ.bi")
 #' PZ <- bi_model(filename = model_file_name)
-#' @seealso \code{\link{bi_model_fix}}, \code{\link{bi_model_propose_prior}}, \code{\link{bi_model_get_lines}}, \code{\link{bi_model_insert_lines}}, \code{\link{bi_model_update_lines}}, \code{\link{bi_model_remove_lines}}, \code{\link{bi_model_set_name}}, \code{\link{bi_model_write_model_file}}, \code{\link{bi_model_clone}}
+#' @seealso \code{\link{bi_model_fix}}, \code{\link{bi_model_propose_prior}}, \code{\link{bi_model_get_lines}}, \code{\link{bi_model_insert_lines}}, \code{\link{bi_model_update_lines}}, \code{\link{bi_model_remove_lines}}, \code{\link{bi_model_set_name}}, \code{\link{bi_model_write}}, \code{\link{bi_model_clone}}
 #' @export bi_model
 NULL
 #' @rdname bi_model_fix
@@ -144,8 +144,8 @@ NULL
 #' PZ <- bi_model(filename = model_file_name)
 #' PZ$set_name("new_PZ")
 NULL
-#' @rdname bi_model_write_model_file
-#' @name bi_model_write_model_file
+#' @rdname bi_model_write
+#' @name bi_model_write
 #' @title Writes a bi model to a file.
 #' @description
 #' Writes a bi model to a file given by \code{filename}. The extension '.bi' will be added if necessary.
@@ -156,7 +156,7 @@ NULL
 #' @examples
 #' model_file_name <- system.file(package="rbi", "PZ.bi")
 #' PZ <- bi_model(filename = model_file_name)
-#' PZ$write_model_file("PZ")
+#' PZ$write("PZ")
 NULL
 #' @rdname bi_model_clone
 #' @name bi_model_clone
@@ -446,8 +446,12 @@ bi_model <- setRefClass("bi_model",
                         "}")
           }
           clean_model()
-        }, 
+        },
         write_model_file = function(filename) {
+          warning("'write_model_file' is deprecated and will be removed in version 0.7. Use 'write'.")
+          .self$write(filename)
+        },
+        write = function(filename) {
           "Write model to file"
           if (!grepl("\\.bi$", filename)) {
             filename <- paste(filename, "bi", sep = ".")
