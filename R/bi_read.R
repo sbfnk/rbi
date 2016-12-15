@@ -207,10 +207,5 @@ bi_read <- function(read, vars, dims, missval.threshold, coord_name, vector, thi
 
   if (typeof(file) == "character") nc_close(nc)
 
-  ## if only one variable has been requested, return data frame
-  if (!missing(vars) && length(vars) == 1 && length(res) > 0) {
-    res <- res[[1]]
-  }
-
   return(res)
 }
