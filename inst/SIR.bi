@@ -3,6 +3,7 @@
  */
 model SIR {
   const h = 7; // incidence time step
+  const N = 1000; // population size
   
   noise n_transmission;  // noise term
   noise n_recovery;  // noise term
