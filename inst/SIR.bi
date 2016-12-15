@@ -10,8 +10,6 @@ model SIR {
 
   state S, I, R, Z;  // susceptible, infectious, recovered
 
-  input N; // population size
-
   obs Incidence;  // observations
 
   param p_rep; //reporting rate

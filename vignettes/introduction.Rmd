@@ -110,7 +110,7 @@ Lastly, `write` writes a model to a file, and `clone` creates a new `bi_model` o
 First, let's create a data set from the SIR model.
 
 ```{R}
-SIRdata <- bi_generate_dataset(SIRmodel, end_time=16*7, noutputs=16, input = list(N=1000))
+SIRdata <- bi_generate_dataset(SIRmodel, end_time=16*7, noutputs=16)
 ```
 
 This simulates the model a single time from time 0 until time 16*7 (e.g., 16 weeks with a daily time step), producing 16 output (one a week). The `input` argument specifies an input data set, which is necessary because the model has an `input` variable `N`, which will be set to 0 if not specified:
