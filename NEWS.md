@@ -1,6 +1,10 @@
 # rbi 0.5.0.9999
 
+* new 'sample_obs' option to libbi$run, to sample posterior observations
+* improved option handling; there is now only one 'options' option
+* Fix bug in bi_model$get_vars that didn't remove all spaces
 * Fix bug in reading in the coord dimension(s) in bi_read
+* Fix bug in bi_model$fix that ignored input variables
 
 # rbi 0.5.0
 
