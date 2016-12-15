@@ -4,8 +4,7 @@
 \alias{bi_read}
 \title{Bi Read}
 \usage{
-bi_read(read, vars, dims, missval.threshold, time_name, coord_name, vector,
-  thin, verbose)
+bi_read(read, vars, dims, missval.threshold, coord_name, vector, thin, verbose)
 }
 \arguments{
 \item{read}{either a path to a NetCDF file, or a NetCDF connection created using \code{nc_open}, or a \code{\link{libbi}} object from which to read the output}
@@ -15,8 +14,6 @@ bi_read(read, vars, dims, missval.threshold, time_name, coord_name, vector,
 \item{dims}{factors for dimensions}
 
 \item{missval.threshold}{upper threshold for the likelihood}
-
-\item{time_name}{name of time dimension (if any)}
 
 \item{coord_name}{name of coord dimension (if any)}
 

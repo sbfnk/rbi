@@ -205,13 +205,14 @@ bi_model <- setRefClass("bi_model",
 
             ## variables that are to be fixed
             var_str <-
-                paste0("^[[:space:]]*(noise|param|state|const)[[:space:]]+(",
+                paste0("^[[:space:]]*(noise|param|state|input|const)[[:space:]]+(",
                        paste(names(fixed), collapse = "|"), ")([[:space:][]|$)")
             var_line_nbs <- grep(var_str, fix_model)
 
             var_vec <- c(.self$get_vars("noise"),
                          .self$get_vars("param"),
                          .self$get_vars("state"),
+                         .self$get_vars("input"),
                          .self$get_vars("const"))
 
             unmatched_names <- setdiff(names(fixed), var_vec)
@@ -230,7 +231,7 @@ bi_model <- setRefClass("bi_model",
                     first_const_line <- var_line_nbs[1]
                 } else
                 {
-                    first_const_line <- grep("^[[:space:]]*(noise|param|state|const)[[:space:]]+", fix_model)[1]
+                    first_const_line <- grep("^[[:space:]]*(noise|param|state|input|const)[[:space:]]+", fix_model)[1]
                 }
                 fix_model <-
                     c(fix_model[1:(first_const_line - 1)],
