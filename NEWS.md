@@ -2,6 +2,7 @@
 
 * new 'sample_obs' option to libbi$run, to sample posterior observations
 * improved option handling; there is now only one 'options' option
+* overloaded subset operators in bi_model
 * Fix bug in bi_model$get_vars that didn't remove all spaces
 * Fix bug in reading in the coord dimension(s) in bi_read
 * Fix bug in bi_model$fix that ignored input variables

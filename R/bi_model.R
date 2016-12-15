@@ -171,7 +171,6 @@ NULL
 #' PZ2 <- PZ$clone()
 NULL
 
-
 bi_model <- setRefClass("bi_model",
       fields = list(model = "character",
                     name = "character"),
@@ -557,3 +556,12 @@ bi_model <- setRefClass("bi_model",
         }
       )
 )
+
+`[.bi_model` = function(x, i) {
+  x$get_lines(spaces=0)[i]
+}
+
+`[<-.bi_model` = function(x, i, value) {
+  x$update_lines(i, value)
+  x
+}
