@@ -249,7 +249,7 @@ libbi <- setRefClass("libbi",
           if (run_libbi)
           {
             if (length(.self$client) == 0) {
-              message("No client provided; default to 'sample'.")
+              warning("No client provided; default to 'sample'.")
               client <<- "sample"
             }
             ## re-read options
