@@ -29,7 +29,7 @@ model SIR {
     S <- N - 1
     I <- 1
     R <- 0
-    Z <- 0
+    Z <- 1
   }
 
   sub transition {
