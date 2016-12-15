@@ -9,7 +9,6 @@
 #'
 #' @param model either a character vector giving the path to a model file (typically ending in ".bi"), or a \code{bi_model} object
 #' @param config path to a configuration file, containing multiple arguments
-#' @param global_options additional arguments to pass to the call to \code{libbi}, on top of the ones in the config file
 #' @param working_folder path to a folder from which to run \code{libbi}; default to a temporary folder.
 #' @param path_to_libbi path to \code{libbi} binary; by default it tries to locate \code{libbi}
 #' @param input input file (given as file name or \code{libbi} object or a list of data frames
@@ -21,7 +20,7 @@
 #' @examples
 #' bi_object <- libbi$new(client = "sample",
 #'                        model = system.file(package="rbi", "PZ.bi"),
-#'                        global_options = list(sampler = "smc2"))
+#'                        options = list(sampler = "smc2"))
 #' @seealso \code{\link{libbi_run}}, \code{\link{libbi_clone}}
 #' @importFrom ncdf4 nc_open nc_close ncvar_rename
 #' @export libbi
@@ -45,7 +44,7 @@ NULL
 #' @examples
 #' bi_object <- libbi$new(client = "sample",
 #'                        model = system.file(package="rbi", "PZ.bi"),
-#'                        global_options = list(sampler = "smc2"))
+#'                        options = list(sampler = "smc2"))
 #' \dontrun{bi_object$run(options=list(nthreads = 1), verbose = TRUE)}
 #' if (length(bi_object$result) > 0) {
 #'   bi_file_summary(bi_object$result$output_file_name)
@@ -63,14 +62,14 @@ NULL
 #' @examples
 #' bi_object <- libbi$new(client = "sample",
 #'                        model = system.file(package="rbi", "PZ.bi"),
-#'                        global_options = list(sampler = "smc2"))
+#'                        options = list(sampler = "smc2"))
 #' bi_object_new <- bi_object$clone()
 NULL
 
 libbi <- setRefClass("libbi",
       fields = list(client = "character",
                     config = "character",
-                    global_options = "list",
+                    options = "list",
                     path_to_libbi = "character",
                     model = "bi_model",
                     model_file_name = "character",
@@ -81,7 +80,7 @@ libbi <- setRefClass("libbi",
                     output_file_name = "character",
                     run_flag = "logical"),
       methods = list(
-        initialize = function(model, config, global_options, path_to_libbi,
+        initialize = function(model, config, options, path_to_libbi,
                               working_folder, dims, run = FALSE,
                               overwrite = FALSE, ...){
           result <<- list()
@@ -131,16 +130,16 @@ libbi <- setRefClass("libbi",
             }
           }
 
-          if (missing(global_options))
-            global_options <<- list()
+          if (missing(options))
+            options <<- list()
           else
-            global_options <<- option_list(global_options)
+            options <<- option_list(options)
 
           if (!missing(path_to_libbi)) path_to_libbi <<- path_to_libbi
 
           return(do.call(.self$run, c(list(run_from_init = run), list(...))))
         },
-        run = function(client, options, stdoutput_file_name, init, input, obs, time_dim, ...){
+        run = function(client, options, stdoutput_file_name, init, input, obs, time_dim, sample_obs, ...){
           "Run libbi"
 
           ## get hidden options 'run_from_init'; if this is passed, 'run' has
@@ -153,7 +152,7 @@ libbi <- setRefClass("libbi",
             run_libbi <- passed_options[["run_from_init"]]
             passed_options[["run_from_init"]] <- NULL
             for (run_option in names(passed_options)) {
-              global_options[[run_option]] <<- passed_options[[run_option]]
+              options[[run_option]] <<- passed_options[[run_option]]
               passed_options[[run_option]] <- NULL
             }
           } else {
@@ -167,9 +166,9 @@ libbi <- setRefClass("libbi",
           if (missing(sample_obs)) sample_obs <- FALSE
 
           if (missing(options)){
-            options <- list()
+            new_options <- list()
           } else {
-            options <- option_list(options)
+            new_options <- option_list(options)
           }
 
           if (nchar(.self$config) > 0) {
@@ -179,7 +178,7 @@ libbi <- setRefClass("libbi",
           }
 
           ## get model
-          all_options <- option_list(getOption("libbi_args"), config_file_options, global_options, options, passed_options)
+          all_options <- option_list(getOption("libbi_args"), config_file_options, .self$options, new_options, passed_options)
           if ("model-file" %in% names(all_options)) {
             if (is.null(.self$model)) {
               model_file_name <<- absolute_path(all_options[["model-file"]], getwd())
@@ -202,17 +201,17 @@ libbi <- setRefClass("libbi",
           args <- match.call()
           file_types <- c("input", "init", "obs")
           file_args <- intersect(names(args), file_types)
-          ## assign file args to global_options
-          for (arg in file_args) global_options[[arg]] <<- get(arg)
-          global_file_options <- intersect(names(global_options), file_types)
+          ## assign file args to global options
+          for (arg in file_args) options[[arg]] <<- get(arg)
+          global_file_options <- intersect(names(.self$options), file_types)
 
           file_options <- list()
 
           ## loop over global options that are file args
           for (file in global_file_options) {
-            arg <- global_options[[file]]
+            arg <- .self$options[[file]]
             ## unset global option (we set the file option instead later)
-            global_options[[file]] <<- NULL
+            options[[file]] <<- NULL
             if (is.list(arg)) {
               arg_file_name <-
                 tempfile(pattern=paste(.self$model$name, file, sep = "_"), 
@@ -245,7 +244,7 @@ libbi <- setRefClass("libbi",
 
           ## overwrite global additional option, i.e. if this
           ## is run again it should use the file given here
-          global_options <<- merge_by_name(global_options, file_options)
+          options <<- merge_by_name(.self$options, file_options)
 
           if (run_libbi)
           {
@@ -255,9 +254,9 @@ libbi <- setRefClass("libbi",
             }
             ## re-read options
             all_options <- option_list(getOption("libbi_args"), config_file_options,
-                                       global_options, options, file_options, passed_options)
+                                       .self$options, new_options, file_options, passed_options)
             if ("end-time" %in% names(all_options) && !("noutputs" %in% names(all_options))) {
-              options[["noutputs"]] <- options[["end-time"]]
+              all_options[["noutputs"]] <- all_options[["end-time"]]
             }
             if (!("output-file" %in% names(all_options))) {
               output_file_name <<- tempfile(pattern=paste(.self$model$name, "output", sep = "_"),
@@ -266,8 +265,9 @@ libbi <- setRefClass("libbi",
             } else {
               output_file_name <<- absolute_path(all_options[["output-file"]], getwd())
             }
+            options <<- all_options
             all_options[["output-file"]] <- .self$output_file_name
-            all_options[["model-file"]] <- .self$model_file_name
+
             if (sample_obs) {
               sample_model <- .self$model$obs_to_noise()
               sample_model_file_name <- tempfile(pattern=paste(.self$model$name, "model", sep = "_"),
@@ -338,8 +338,7 @@ libbi <- setRefClass("libbi",
             }
             libbi_result <-
               list(output_file_name = .self$output_file_name,
-                   command = launchcommand,
-                   options = all_options)
+                   command = launchcommand)
             if (nchar(.self$model_file_name) > 0){
               libbi_result["model_file_name"] = .self$model_file_name
             }
@@ -350,7 +349,7 @@ libbi <- setRefClass("libbi",
             result <<- libbi_result
           }
         },
-        clone = function(client, config, global_options, path_to_libbi, model, working_folder, dims, ...) {
+        clone = function(client, config, options, path_to_libbi, model, working_folder, dims, ...) {
           "Clone a libbi object"
 
           new_libbi_options <- list()
@@ -365,10 +364,10 @@ libbi <- setRefClass("libbi",
           } else {
             new_libbi_options[["config"]] <- config
           }
-          if (missing(global_options)) {
-            new_libbi_options[["global_options"]] <- .self$global_options
+          if (missing(options)) {
+            new_libbi_options[["options"]] <- .self$options
           } else {
-            new_libbi_options[["global_options"]] <- global_options
+            new_libbi_options[["options"]] <- option_list(.self$options, options)
           }
           if (missing(path_to_libbi)) {
             new_libbi_options[["path_to_libbi"]] <- .self$path_to_libbi

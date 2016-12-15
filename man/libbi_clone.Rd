@@ -14,7 +14,7 @@ Returns a copy of the libbi object with exactly the same properties as the origi
 \examples{
 bi_object <- libbi$new(client = "sample",
                        model = system.file(package="rbi", "PZ.bi"),
-                       global_options = list(sampler = "smc2"))
+                       options = list(sampler = "smc2"))
 bi_object_new <- bi_object$clone()
 }
 \seealso{

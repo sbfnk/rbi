@@ -16,10 +16,10 @@ bi_generate_dataset <- function(...){
   ## }
 
   dot_options <- list(...)
-  if ("global_options" %in% dot_options) {
-    global_options <- dot_options[["global_options"]]
+  if ("options" %in% dot_options) {
+    options <- dot_options[["options"]]
   } else {
-    global_options <- list()
+    options <- list()
   }
 
   if ("endtime" %in% names(dot_options)) {
@@ -27,11 +27,11 @@ bi_generate_dataset <- function(...){
     names(dot_options)[which(names(dot_options) == "endtime")] <- "end_time"
   }
 
-  global_options[["target"]] <- "joint"
-  global_options[["nsamples"]] <- 1
+  options[["target"]] <- "joint"
+  options[["nsamples"]] <- 1
 
   libbi_new_options <-
-    c(list(client = "sample", global_options = global_options, run = TRUE),
+    c(list(client = "sample", options = options, run = TRUE),
       dot_options)
 
   bi_object <- do.call(libbi$new, libbi_new_options)
