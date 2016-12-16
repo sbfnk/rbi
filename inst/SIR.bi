@@ -16,7 +16,6 @@ model SIR {
   param p_R0; // basic reproduction number
   param p_d_infection; // duration of infection
 
-
   sub parameter {
     p_rep ~ uniform(0,1)
     p_R0 ~ uniform(1,3)
@@ -35,12 +34,12 @@ model SIR {
     n_transmission ~ wiener() // noise terms
     n_recovery ~ wiener() // noise terms
 
-    Z <- (t_now % h == 0 ? 0 : Z) // reset incidence
+    Z <- (t_now % 7 == 0 ? 0 : Z) // reset incidence
 
     inline i_beta = p_R0 / p_d_infection * exp(n_transmission)
     inline i_gamma = 1 / p_d_infection * exp(n_recovery)
 
-    ode {
+    ode (alg='RK5(4)', atoler=1e-10) {
       dS/dt = - i_beta * S * I / N
       dI/dt = i_beta * S * I / N - i_gamma * I
       dR/dt = i_gamma * I
