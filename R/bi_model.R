@@ -558,7 +558,7 @@ bi_model <- setRefClass("bi_model",
 )
 
 `[.bi_model` = function(x, i) {
-  x$get_lines(spaces=0)[i]
+  x$get_lines()[i]
 }
 
 `[<-.bi_model` = function(x, i, value) {
