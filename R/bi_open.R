@@ -19,7 +19,7 @@ bi_open <- function(read)
     if (!read$run_flag) {
       stop("The libbi object should be run first")
     }
-    nc <- nc_open(tools::file_path_as_absolute(read$result$output_file_name))
+    nc <- nc_open(tools::file_path_as_absolute(read$output_file_name))
   } else {
     stop("'read' must be a string, ncdf4 or libbi object.")
   }

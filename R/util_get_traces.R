@@ -30,7 +30,7 @@ get_traces <- function(run, model, burnin, all = FALSE, ...) {
     } else {
       warning("Given model will overwrite model contained in given 'run'.")
     }
-    read_options <- c(read_options, list(read = run$result$output_file_name))
+    read_options <- c(read_options, list(read = run$output_file_name))
   } else {
     read_options <- c(read_options, list(read = run))
   }

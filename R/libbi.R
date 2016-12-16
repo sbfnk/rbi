@@ -34,7 +34,7 @@ NULL
 #' arguments.
 #'
 #' @param options additional arguments to pass to the call to \code{libbi}
-#' @param stdoutput_file_name path to a file to text file to report the output of \code{libbi}
+#' @param log_file_name path to a file to text file to report the output of \code{libbi}
 #' @param init initialisation of the model, either supplied as a list of values and/or data frames, or a (netcdf) file name, or a \code{\link{libbi}} object which has been run (in which case the output of that run is used as input)
 #' @param input input of the model, either supplied as a list of values and/or data frames, or a (netcdf) file name, or a \code{\link{libbi}} object which has been run (in which case the output of that run is used as input)
 #' @param obs observations of the model, either supplied as a list of values and/or data frames, or a (netcdf) file name, or a \code{\link{libbi}} object which has been run (in which case the output of that run is used as observations)
@@ -46,8 +46,8 @@ NULL
 #'                        model = system.file(package="rbi", "PZ.bi"),
 #'                        options = list(sampler = "smc2"))
 #' \dontrun{bi_object$run(options=list(nthreads = 1), verbose = TRUE)}
-#' if (length(bi_object$result) > 0) {
-#'   bi_file_summary(bi_object$result$output_file_name)
+#' if (bi_object$run_flag) {
+#'   bi_file_summary(bi_object$output_file_name)
 #' }
 NULL
 #' @rdname libbi_clone
@@ -76,14 +76,12 @@ libbi <- setRefClass("libbi",
                     working_folder = "character",
                     dims = "list",
                     command = "character",
-                    result = "list",
                     output_file_name = "character",
                     run_flag = "logical"),
       methods = list(
         initialize = function(model, config, options, path_to_libbi,
                               working_folder, dims, run = FALSE,
                               overwrite = FALSE, ...){
-          result <<- list()
           libbi_dims <- list()
           if (!missing(dims)) {
             for (dim_name in names(dims))
@@ -139,7 +137,7 @@ libbi <- setRefClass("libbi",
 
           return(do.call(.self$run, c(list(run_from_init = run), list(...))))
         },
-        run = function(client, options, stdoutput_file_name, init, input, obs, time_dim, sample_obs, ...){
+        run = function(client, options, log_file_name, init, input, obs, time_dim, sample_obs, ...){
           "Run libbi"
 
           ## get hidden options 'run_from_init'; if this is passed, 'run' has
@@ -236,7 +234,7 @@ libbi <- setRefClass("libbi",
                 stop("The libbi object for '", arg, "' should be run first")
               }
               file_options[[paste(file, "file", sep = "-")]] <-
-                arg$result$output_file_name
+                arg$output_file_name
             } else {
               stop("'", file, "' must be a list, string or 'libbi' object.")
             }
@@ -282,15 +280,17 @@ libbi <- setRefClass("libbi",
             opt_string <- option_string(all_options)
             verbose <- ("verbose" %in% names(all_options) && all_options[["verbose"]] == TRUE)
 
-            if (missing(stdoutput_file_name) && !verbose) {
-              stdoutput_file_name <- tempfile(pattern="output", fileext=".txt",
-                                              tmpdir=absolute_path(.self$working_folder))
+            if (missing(log_file_name) && !verbose) {
+              log_file_name <<- tempfile(pattern="output", fileext=".txt",
+                                               tmpdir=absolute_path(.self$working_folder))
+            } else if (!missing(log_file_name)) {
+              log_file_name <<- absolute_path(filename=log_file_name, dirname=getwd())
             }
 
             if (verbose) {
-              stdoutput_redir_name <- ""
+              log_redir_name <- ""
             } else {
-              stdoutput_redir_name <- paste(">", stdoutput_file_name, "2>&1")
+              log_redir_name <- paste(">", log_file_name, "2>&1")
             }
 
             if (length(path_to_libbi) == 0) {
@@ -315,16 +315,15 @@ libbi <- setRefClass("libbi",
             base_command_string <- paste(.self$path_to_libbi, .self$client)
 
             cdcommand <- paste("cd", .self$working_folder)
-            launchcommand <- paste(base_command_string, opt_string)
+            command <<- paste(cdcommand, base_command_string, opt_string, collapse=";")
             if (verbose) print("Launching LibBi with the following commands:")
             if (verbose)
-              print(paste(c(cdcommand, launchcommand, stdoutput_redir_name),
-                          sep = "\n"))
-            command <<- paste(c(cdcommand, paste(launchcommand, stdoutput_redir_name)), collapse = ";")
-            ret <- system(command)
+              print(paste(c(.self$command, log_redir_name), sep = "\n"))
+            runcommand <<- paste(.self$command, log_redir_name)
+            ret <- system(runcommand)
             if (ret > 0) {
               if (!verbose) {
-                writeLines(readLines(stdoutput_file_name))
+                writeLines(readLines(log_file_name))
               }
               stop("LibBi terminated with an error.")
             }
@@ -336,17 +335,7 @@ libbi <- setRefClass("libbi",
               }
               nc_close(nc)
             }
-            libbi_result <-
-              list(output_file_name = .self$output_file_name,
-                   command = launchcommand)
-            if (nchar(.self$model_file_name) > 0){
-              libbi_result["model_file_name"] = .self$model_file_name
-            }
-            if (!missing(stdoutput_file_name)){
-              libbi_result["stdoutput_file_name"] = absolute_path(filename=stdoutput_file_name, dirname=getwd())
-            }
             run_flag <<- TRUE
-            result <<- libbi_result
           }
         },
         clone = function(client, config, options, path_to_libbi, model, working_folder, dims, ...) {
