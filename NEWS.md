@@ -1,18 +1,19 @@
 # rbi 0.5.0.9999
 
-* new 'sample_obs' option to libbi$run, to sample posterior observations
+* new `sample_obs` option to `libbi$run`, to sample posterior observations
 * improved option handling; there is now only one 'options' option
-* overloaded subset operators in bi_model
-* Fix bug in bi_model$get_vars that didn't remove all spaces
-* Fix bug in reading in the coord dimension(s) in bi_read
-* Fix bug in bi_model$fix that ignored input variables
+* overloaded subset operators in `bi_model`
+* removed obsolete `result` field in the `libbi` object
+* Fix bug in `bi_model$get_vars` that didn't remove all spaces
+* Fix bug in reading in the coord dimension(s) in `bi_read`
+* Fix bug in `bi_model$fix` that ignored input variables
 
 # rbi 0.5.0
 
-* "client" is now an option to libbi$run
-* Fix bug in parsing options in libbi$initialize
-* Fix bug in get_traces if there is only one sample
-* bi_model$insert_lines can now work with blocks
+* `client` is now an option to `libbi$run`
+* Fix bug in parsing options in `libbi$initialize`
+* Fix bug in `get_traces` if there is only one sample
+* `bi_model$insert_lines` can now work with blocks
 * Improve cloning, where all initialising parameters can now be passed
 
 # rbi 0.4.1
