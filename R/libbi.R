@@ -77,6 +77,7 @@ libbi <- setRefClass("libbi",
                     dims = "list",
                     command = "character",
                     output_file_name = "character",
+                    log_file_name = "character",
                     run_flag = "logical"),
       methods = list(
         initialize = function(model, config, options, path_to_libbi,
@@ -134,6 +135,8 @@ libbi <- setRefClass("libbi",
             options <<- option_list(options)
 
           if (!missing(path_to_libbi)) path_to_libbi <<- path_to_libbi
+
+          log_file_name <<- ""
 
           return(do.call(.self$run, c(list(run_from_init = run), list(...))))
         },
@@ -287,10 +290,10 @@ libbi <- setRefClass("libbi",
               log_file_name <<- absolute_path(filename=log_file_name, dirname=getwd())
             }
 
-            if (verbose) {
+            if (verbose || nchar(.self$log_file_name) == 0) {
               log_redir_name <- ""
             } else {
-              log_redir_name <- paste(">", log_file_name, "2>&1")
+              log_redir_name <- paste(">", .self$log_file_name, "2>&1")
             }
 
             if (length(path_to_libbi) == 0) {
@@ -315,15 +318,15 @@ libbi <- setRefClass("libbi",
             base_command_string <- paste(.self$path_to_libbi, .self$client)
 
             cdcommand <- paste("cd", .self$working_folder)
-            command <<- paste(cdcommand, base_command_string, opt_string, collapse=";")
+            command <<- paste(c(cdcommand, paste(base_command_string, opt_string)), collapse=";")
             if (verbose) print("Launching LibBi with the following commands:")
             if (verbose)
               print(paste(c(.self$command, log_redir_name), sep = "\n"))
-            runcommand <<- paste(.self$command, log_redir_name)
+            runcommand <- paste(.self$command, log_redir_name)
             ret <- system(runcommand)
             if (ret > 0) {
               if (!verbose) {
-                writeLines(readLines(log_file_name))
+                writeLines(readLines(.self$log_file_name))
               }
               stop("LibBi terminated with an error.")
             }
