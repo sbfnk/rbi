@@ -6,7 +6,7 @@
 \arguments{
 \item{options}{additional arguments to pass to the call to \code{libbi}}
 
-\item{stdoutput_file_name}{path to a file to text file to report the output of \code{libbi}}
+\item{log_file_name}{path to a file to text file to report the output of \code{libbi}}
 
 \item{init}{initialisation of the model, either supplied as a list of values and/or data frames, or a (netcdf) file name, or a \code{\link{libbi}} object which has been run (in which case the output of that run is used as input)}
 
@@ -28,8 +28,8 @@ bi_object <- libbi$new(client = "sample",
                        model = system.file(package="rbi", "PZ.bi"),
                        options = list(sampler = "smc2"))
 \dontrun{bi_object$run(options=list(nthreads = 1), verbose = TRUE)}
-if (length(bi_object$result) > 0) {
-  bi_file_summary(bi_object$result$output_file_name)
+if (bi_object$run_flag) {
+  bi_file_summary(bi_object$output_file_name)
 }
 }
 \seealso{
