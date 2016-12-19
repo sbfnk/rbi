@@ -543,10 +543,34 @@ bi_model <- setRefClass("bi_model",
       )
 )
 
+#' @name `[`
+#' @title Subset of model lines
+#' @description
+#' Extracts a subset of lines from the model
+#' @examples
+#' model_file_name <- system.file(package="rbi", "PZ.bi")
+#' PZ <- bi_model(filename = model_file_name)
+#' PZ[3:5]
+#' @export
+#' @param x A bi_model
+#' @param i A vector of line numbers
 `[.bi_model` = function(x, i) {
   x$get_lines()[i]
 }
 
+#' @name `[<-`
+#' @title Subset assignment to mode lines
+#' @description
+#' Assigns new character strings a subset of lines from the model
+#' @examples
+#' model_file_name <- system.file(package="rbi", "PZ.bi")
+#' PZ <- bi_model(filename = model_file_name)
+#' PZ[3:4] <- c("const e = 0.4", "const m_l = 0.05")
+#' @export
+#' @param x A bi_model
+#' @param i A vector of line numbers
+#' @param value A vector of the same length as \code{i}, containing the
+#'   replacement strings 
 `[<-.bi_model` = function(x, i, value) {
   x$update_lines(i, value)
   x
