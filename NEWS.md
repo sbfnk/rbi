@@ -1,5 +1,6 @@
 # rbi 0.5.0.9999
 
+* `bi_contents` to quickly get the variables in an NetCDF file
 * new `sample_obs` option to `libbi$run`, to sample posterior observations
 * improved option handling; there is now only one 'options' option
 * overloaded subset operators in `bi_model`
