@@ -205,7 +205,7 @@ bi_read <- function(read, vars, dims, missval.threshold, coord_name, vector, thi
     }
   }
 
-  if (typeof(file) == "character") nc_close(nc)
+  if (typeof(read) %in% c("character", "libbi")) nc_close(nc)
 
   return(res)
 }
