@@ -1,6 +1,6 @@
 Package: rbi
-Version: 0.5.0
-Date: 2016-11-17
+Version: 0.6.0
+Date: 2016-12-19
 Title: R Interface to LibBi
 Authors@R: c(
         person("Pierre E.", "Jacob", email = "pierre.jacob.work@gmail.com", role = "aut"),
@@ -26,3 +26,4 @@ BugReports: https://github.com/libbi/RBi/issues
 SystemRequirements: libbi (>= 1.2.0)
 LazyLoad: no
 RoxygenNote: 5.0.1
+VignetteBuilder: knitr

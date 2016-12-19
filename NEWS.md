@@ -1,4 +1,4 @@
-# rbi 0.5.0.9999
+# rbi 0.6.0
 
 * `bi_contents` to quickly get the variables in an NetCDF file
 * new `sample_obs` option to `libbi$run`, to sample posterior observations
