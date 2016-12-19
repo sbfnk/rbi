@@ -10,3 +10,4 @@ vignettes/*.tex
 Rplots.pdf
 *.Rproj
 revdep/
+inst/doc

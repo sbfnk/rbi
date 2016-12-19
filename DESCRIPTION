@@ -16,7 +16,9 @@ Imports:
     ncdf4
 Suggests:
     coda,
-    rbi.helpers
+    rbi.helpers,
+    knitr,
+    rmarkdown
 Description: Provides a complete R interface to LibBi, a library for Bayesian inference (see <http://libbi.org> for more information). This includes functions for manipulating LibBi models, for reading and writing LibBi input/output files, for converting LibBi output to provide traces for use with the coda package, and for running LibBi from R.
 License: GPL-3
 URL: https://github.com/libbi/RBi
