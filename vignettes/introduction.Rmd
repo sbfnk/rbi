@@ -264,13 +264,13 @@ and visualise parameter traces and densities with
 plot(traces)
 ```
 
-Has the chain converged to the stationary distribution? Compare the marginal posterior distributions to the "correct" parameters used to generate the data set:
+Compare this to the marginal posterior distributions to the "correct" parameters used to generate the data set:
 
 ```{R}
 dataset[bi$model$get_vars("param")]
 ```
 
-For more details on using **coda**, see the website of the [coda package](https://cran.r-project.org/package=coda). For more plotting functionality, see the `plot_libbi` function in [RBi.helpers](https://github.com/sbfnk/rbi.helpers).
+For more details on using **coda** to further analyse the chains, see the website of the [coda package](https://cran.r-project.org/package=coda). For more plotting functionality, see the `plot_libbi` function in [RBi.helpers](https://github.com/sbfnk/rbi.helpers).
 
 # Debugging
 
