@@ -41,19 +41,6 @@ NULL
 #' PZ <- bi_model(filename = model_file_name)
 #' PZ$propose_prior()
 NULL
-#' @rdname bi_model_obs_to_noise
-#' @name bi_model_obs_to_noise
-#' @title Copy observation variables into noise variables with "__sample_ prepended"
-#' @description
-#' This is used by libbi$run if \code{sample_obs} is set to TRUE
-#'
-#' @return a bi model object of the new model
-#' @seealso \code{\link{bi_model}}
-#' @examples
-#' model_file_name <- system.file(package="rbi", "PZ.bi")
-#' PZ <- bi_model(filename = model_file_name)
-#' PZ$obs_to_noise()
-NULL
 #' @rdname bi_model_get_lines
 #' @name bi_model_get_lines
 #' @title Get lines in a libbi model
