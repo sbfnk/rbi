@@ -4,7 +4,9 @@
 \alias{libbi_run}
 \title{Using the LibBi wrapper to launch LibBi}
 \arguments{
-\item{options}{additional arguments to pass to the call to \code{libbi}}
+\item{options}{list of additional arguments to pass to the call to \code{libbi}}
+
+\item{add_options}{deprecated, replaced by \code{options}}
 
 \item{log_file_name}{path to a file to text file to report the output of \code{libbi}}
 

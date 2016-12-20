@@ -9,6 +9,8 @@
 #'
 #' @param model either a character vector giving the path to a model file (typically ending in ".bi"), or a \code{bi_model} object
 #' @param config path to a configuration file, containing multiple arguments
+#' @param options list of additional arguments to pass to the call to \code{libbi}
+#' @param global_options deprecated, replaced by \code{options}
 #' @param working_folder path to a folder from which to run \code{libbi}; default to a temporary folder.
 #' @param path_to_libbi path to \code{libbi} binary; by default it tries to locate \code{libbi}
 #' @param input input file (given as file name or \code{libbi} object or a list of data frames
@@ -33,7 +35,8 @@ NULL
 #' allows to launch \code{libbi} with a particular set of command line
 #' arguments.
 #'
-#' @param options additional arguments to pass to the call to \code{libbi}
+#' @param options list of additional arguments to pass to the call to \code{libbi}
+#' @param add_options deprecated, replaced by \code{options}
 #' @param log_file_name path to a file to text file to report the output of \code{libbi}
 #' @param init initialisation of the model, either supplied as a list of values and/or data frames, or a (netcdf) file name, or a \code{\link{libbi}} object which has been run (in which case the output of that run is used as input)
 #' @param input input of the model, either supplied as a list of values and/or data frames, or a (netcdf) file name, or a \code{\link{libbi}} object which has been run (in which case the output of that run is used as input)
@@ -80,9 +83,15 @@ libbi <- setRefClass("libbi",
                     log_file_name = "character",
                     run_flag = "logical"),
       methods = list(
-        initialize = function(model, config, options, path_to_libbi,
+        initialize = function(model, config, options, global_options,
+                              path_to_libbi,
                               working_folder, dims, run = FALSE,
                               overwrite = FALSE, ...){
+          if (!missing(global_options))
+          {
+            stop("'global_options' is deprecated. Use 'options' instead")
+          }
+
           libbi_dims <- list()
           if (!missing(dims)) {
             for (dim_name in names(dims))
@@ -140,8 +149,13 @@ libbi <- setRefClass("libbi",
 
           return(do.call(.self$run, c(list(run_from_init = run), list(...))))
         },
-        run = function(client, options, log_file_name, init, input, obs, time_dim, sample_obs, ...){
+        run = function(client, options, add_options, log_file_name, init, input, obs, time_dim, sample_obs, ...){
           "Run libbi"
+
+          if (!missing(add_options))
+          {
+            stop("'add_options' is deprecated. Use 'options' instead")
+          }
 
           ## get hidden options 'run_from_init'; if this is passed, 'run' has
           ## been called from init and any run options have to be removed from

@@ -8,6 +8,10 @@
 
 \item{config}{path to a configuration file, containing multiple arguments}
 
+\item{options}{list of additional arguments to pass to the call to \code{libbi}}
+
+\item{global_options}{deprecated, replaced by \code{options}}
+
 \item{working_folder}{path to a folder from which to run \code{libbi}; default to a temporary folder.}
 
 \item{path_to_libbi}{path to \code{libbi} binary; by default it tries to locate \code{libbi}}
