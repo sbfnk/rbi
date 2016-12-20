@@ -238,7 +238,7 @@ Any other options (apart from `log_file_name`, see the [Debugging](#debugging) s
 Let's get the results of the preceding `run` command:
 
 ```{R}
-bi_contents(posterior)
+bi_contents(bi)
 posterior <- bi_read(bi)
 str(posterior)
 ```
