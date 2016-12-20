@@ -23,7 +23,7 @@ pre code {
 
 [RBi](https://github.com/libbi/RBi) is an `R` interface to [LibBi](http://libbi.org), a library for Bayesian inference with state-space models using high-performance computer hardware.
 
-### Latest Version: _0.5.0_  &nbsp; <small>(17 November 2016)</small>
+### Latest Version: _0.6.0_  &nbsp; <small>(20 December 2016)</small>
 
 The package has been tested on macOS and Linux. It requires a working installation of **LibBI**, which is easiest done using the [homebrew-science](http://brew.sh/homebrew-science/) tap: Install [Homebrew](http://brew.sh) (on OS X) or [Linuxbrew](http://linuxbrew.sh) (on linux), then issue the following commands (using a command shell, i.e. Terminal or similar):
 
@@ -238,6 +238,7 @@ Any other options (apart from `log_file_name`, see the [Debugging](#debugging) s
 Let's get the results of the preceding `run` command:
 
 ```{R}
+bi_contents(posterior)
 posterior <- bi_read(bi)
 str(posterior)
 ```
