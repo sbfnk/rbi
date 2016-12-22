@@ -435,7 +435,7 @@ bi_model <- setRefClass("bi_model",
           clean_model()
         },
         write_model_file = function(filename) {
-          warning("'write_model_file' is deprecated and will be removed in version 0.7. Use 'write'.")
+          stop("'write_model_file' is deprecated and will be removed in version 0.7. Use 'write'.")
           .self$write(filename)
         },
         write = function(filename) {

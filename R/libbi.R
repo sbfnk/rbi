@@ -89,7 +89,7 @@ libbi <- setRefClass("libbi",
                               overwrite = FALSE, ...){
           if (!missing(global_options))
           {
-            stop("'global_options' is deprecated. Use 'options' instead")
+            stop("'global_options' is deprecated. Use 'options' instead, or pass them directly as arguments to libbi.")
           }
 
           libbi_dims <- list()
@@ -149,12 +149,17 @@ libbi <- setRefClass("libbi",
 
           return(do.call(.self$run, c(list(run_from_init = run), list(...))))
         },
-        run = function(client, options, add_options, log_file_name, init, input, obs, time_dim, sample_obs, ...){
+        run = function(client, options, add_options, log_file_name, stdoutput_file_name, init, input, obs, time_dim, sample_obs, ...){
           "Run libbi"
 
           if (!missing(add_options))
           {
-            stop("'add_options' is deprecated. Use 'options' instead")
+            stop("'add_options' is deprecated. Use 'options' instead, or pass them directly as arguments to libbi$run.")
+          }
+
+          if (!missing(stdoutput_file_name))
+          {
+            stop("'stdoutput_file_name' is deprecated. Use 'log_file_name' instead.")
           }
 
           ## get hidden options 'run_from_init'; if this is passed, 'run' has
