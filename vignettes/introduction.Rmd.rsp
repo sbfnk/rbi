@@ -3,9 +3,14 @@
 
   %\VignetteIndexEntry{Introduction to RBi}
   %\VignetteAuthor{Sebastian Funk}
+  %\VignetteKeyword{rbi}
+  %\VignetteKeyword{package}
+  %\VignetteKeyword{vignette}
   %\VignetteTangle{FALSE}
   %\VignetteEngine{R.rsp::rsp}
 --------------------------------------------------------------------"%>
+
+<% t0 <- Sys.time() %>
 
 <style>
 pre {
@@ -19,7 +24,7 @@ pre code {
 
 # <%@meta name="title"%>
 
-<%@meta name="author"%> on <%=format(as.Date(R.rsp$date), format="%B %d, %Y")%>
+<%@meta name="author"%> on <%=format(as.Date(Sys.Date()), format="%B %d, %Y")%>
 
 [RBi](https://github.com/libbi/RBi) is an `R` interface to [LibBi](http://libbi.org), a library for Bayesian inference with state-space models using high-performance computer hardware.
 
@@ -115,6 +120,8 @@ Moreover, there are various methods for manipulating a model, such as `remove_bl
 The `fix` method fixes a variable to one value. This can be useful, for example, to run the deterministic equivalent of a stochastic model for testing purposes.
 
 Lastly, `write` writes a model to a file, and `clone` creates a new `bi_model` object which is an exact copy of the original one.
+
+To get documentation for any of these methods, use the links in the documentation for `bi_model`, or directly using `?bi_model_` followed by the function name, for example `?bi_model_write`.
 
 # Generating a dataset
 
@@ -284,3 +291,10 @@ If `libbi` throws an error, it is best to investigate with `verbose = TRUE`, and
 
 # References
  * Murray, L.M. (2013). [Bayesian state-space modelling on high-performance hardware using LibBi](https://arxiv.org/abs/1306.3277).
+
+# Appendix
+## Session information
+```{R echo=FALSE}
+sessionInfo()
+```
+Total processing time was <%=dt <- round(Sys.time()-t0, digits=2)%> <%=attr(dt, "units")%>.
