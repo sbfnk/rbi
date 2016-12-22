@@ -17,9 +17,13 @@ pre code {
 }
 </style>
 
+# <%@meta name="title"%>
+
+<%@meta name="author"%> on <%=format(as.Date(R.rsp$date), format="%B %d, %Y")%>
+
 [RBi](https://github.com/libbi/RBi) is an `R` interface to [LibBi](http://libbi.org), a library for Bayesian inference with state-space models using high-performance computer hardware.
 
-### Latest Version: _0.6.0_  &nbsp; <small>(22 December 2016)</small>
+### Latest Version: _0.6.0_
 
 The package has been tested on macOS/OSX and Linux. It requires a working installation of **LibBI**, which is easiest done using the [homebrew-science](http://brew.sh/homebrew-science/) tap: Install [Homebrew](http://brew.sh) (on OS X) or [Linuxbrew](http://linuxbrew.sh) (on linux), then issue the following commands (using a command shell, i.e. Terminal or similar):
 
