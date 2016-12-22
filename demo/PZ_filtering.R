@@ -22,22 +22,24 @@ synthetic_dataset <- bi_generate_dataset(end_time=T, model=PZ,
 bi_object <- libbi$new(client="filter", model=PZ)
 print(bi_object)
 # Once happy with the settings, launch bi.
-bi_object$run(add_options = list(nparticles = 8192, nthreads = 1, end_time = T, noutputs = T), verbose = TRUE, obs = synthetic_dataset, init = init_parameters)
+bi_object$run(nparticles = 8192, nthreads = 1, end_time = T, noutputs = T, obs = synthetic_dataset, init = init_parameters)
 # It can be a good idea to look at the result file
-bi_file_summary(bi_object$result$output_file_name)
-bi_read(bi_object$result$output_file_name, vars = "mu")
+bi_file_summary(bi_object$output_file_name)
+bi_read(bi_object$output_file_name, vars = "mu")
 # Let's have a look at the filtering means
 # First, get the particles
-logw <- xtabs(value ~ time + np, data = bi_read(bi_object, "logweight"))
-P <- bi_read(bi_object, "P")$value
-Z <- bi_read(bi_object, "Z")$value
+output <- bi_read(bi_object)
+logw <- xtabs(value ~ time + np, data = output$logweight)
+P <- output$P$value
+Z <- output$Z$value
 # Then compute the filtering means
 w = t(apply(X=logw, MARGIN=1, FUN=log2normw))
 Pmeans = apply(X = P*w, MARGIN=1, FUN=sum)
 Zmeans = apply(X = Z*w, MARGIN=1, FUN=sum)
 # Finally retrieve the original values used to generate the data
-P_original <- bi_read(synthetic_dataset, "P")$value
-Z_original <- bi_read(synthetic_dataset, "Z")$value
+synthetic_data <- bi_read(synthetic_dataset)
+P_original <- synthetic_data$P$value
+Z_original <- synthetic_data$Z$value
 # And now plot the estimated states along with the original "unknown" states
 # taken from the synthetic dataset
 
