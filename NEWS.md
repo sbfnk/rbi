@@ -1,6 +1,7 @@
 # rbi 0.6.0
 
 * `bi_contents` to quickly get the variables in an NetCDF file
+* `generate_seed` to generate a seed for a `libbi` run
 * new `sample_obs` option to `libbi$run`, to sample posterior observations
 * improved option handling; there is now only one 'options' option
 * overloaded subset operators in `bi_model`
