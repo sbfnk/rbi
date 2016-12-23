@@ -1,3 +1,5 @@
+# rbi 0.6.0.9999
+
 # rbi 0.6.0
 
 * `bi_contents` to quickly get the variables in an NetCDF file
