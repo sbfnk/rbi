@@ -10,8 +10,6 @@
   %\VignetteEngine{R.rsp::rsp}
 --------------------------------------------------------------------"%>
 
-<% t0 <- Sys.time() %>
-
 <style>
 pre {
   overflow-x: auto;
@@ -291,10 +289,3 @@ If `libbi` throws an error, it is best to investigate with `verbose = TRUE`, and
 
 # References
  * Murray, L.M. (2013). [Bayesian state-space modelling on high-performance hardware using LibBi](https://arxiv.org/abs/1306.3277).
-
-# Appendix
-## Session information
-```{R echo=FALSE}
-sessionInfo()
-```
-Total processing time was <%=dt <- round(Sys.time()-t0, digits=2)%> <%=attr(dt, "units")%>.
