@@ -13,6 +13,7 @@
 #' using the \code{which} Unix command, after having loaded "~/.bashrc" if present;
 #' if unsuccessful it tries "~/PathToBiBin/libbi"; if unsuccessful again it fails.
 #' @param dims any named dimensions, as list of character vectors
+#' @return a \code{\link{libbi}} object
 #' @examples
 #' bi_object <- libbi(model = system.file(package="rbi", "PZ.bi"))
 #' @seealso \code{\link{sample}}, \code{\link{filter}}, \code{\link{optimise}}, \code{\link{rewrite}}
@@ -58,7 +59,8 @@ libbi <- function(model, global_options,
                    output_file_name="",
                    log_file_name="",
                    timestamp=.POSIXct(NA),
-                   run_flag=FALSE), class="libbi")
+                   run_flag=FALSE,
+                   .cache=list(data=list(), thin=integer(0))), class="libbi")
   return(do.call(run, c(list(x=new_obj, client=character(0), list(...)))))
 }
 
@@ -70,12 +72,15 @@ run <- function(x, ...) UseMethod("run")
 #' @description
 #' The method \code{run} of an instance of \code{\link{libbi}}
 #' allows to launch \code{LibBi} with a particular set of command line
-#' arguments.
+#' arguments. Normally, this function would not be run by the user, but instead one of the client functions \code{\link{sample}}, \code{\link{filter}}, or \code{\link{optimise}}, or \code{\link{rewrite}}, which pass any options on to \code{run}. Note that any options specified here are stored in the \code{\link{libbi}} object and do not have to be specified again if another command is run on the object.
 #'
+#' @param x a \code{\link{libbi}} object
+#' @param client client to pass to LibBi
 #' @param options list of additional arguments to pass to the call to \code{LibBi}
 #' @param config path to a configuration file, containing multiple arguments
 #' @param add_options deprecated, replaced by \code{options}
 #' @param log_file_name path to a file to text file to report the output of \code{LibBi}
+#' @param stdoutput_file_name deprecated; use log_file_name instead
 #' @param init initialisation of the model, either supplied as a list of values and/or data frames, or a (netcdf) file name, or a \code{\link{libbi}} object which has been run (in which case the output of that run is used as input)
 #' @param input input of the model, either supplied as a list of values and/or data frames, or a (netcdf) file name, or a \code{\link{libbi}} object which has been run (in which case the output of that run is used as input)
 #' @param obs observations of the model, either supplied as a list of values and/or data frames, or a (netcdf) file name, or a \code{\link{libbi}} object which has been run (in which case the output of that run is used as observations)
@@ -91,6 +96,7 @@ run <- function(x, ...) UseMethod("run")
 #'   bi_file_summary(bi_object$output_file_name)
 #' }
 #' @importFrom ncdf4 nc_open nc_close ncvar_rename
+#' @return a \code{\link{libbi}} object, except if \code{client} is 'rewrite',  in which case a \code{\link{bi_model}} object will be returned
 #' @export
 run.libbi <- function(x, client, options, config, add_options, log_file_name, stdoutput_file_name, init, input, obs, time_dim, working_folder, sample_obs, ...){
   if (!missing(add_options))
@@ -150,7 +156,7 @@ run.libbi <- function(x, client, options, config, add_options, log_file_name, st
       x$model_file_name <- tempfile(pattern=paste(x$model$name, "model", sep = "_"),
                                     fileext=".bi",
                                     tmpdir=absolute_path(x$working_folder))
-      x$model$write(x$model_file_name)
+      write(x$model, x$model_file_name)
     }
   }
 
@@ -190,7 +196,7 @@ run.libbi <- function(x, client, options, config, add_options, log_file_name, st
       file_options[[paste(file, "file", sep = "-")]] <- arg
     } else if (class(arg) == "libbi") {
       if (!arg$run_flag) {
-        stop("The libbi object for '", arg, "' should be run first")
+        stop("The libbi object for '", arg, "' should be run first (using sample, filter or optimise).")
       }
       file_options[[paste(file, "file", sep = "-")]] <-
         arg$output_file_name
@@ -229,7 +235,7 @@ run.libbi <- function(x, client, options, config, add_options, log_file_name, st
       sample_model_file_name <- tempfile(pattern=paste(x$model$name, "model", sep = "_"),
                                          fileext=".bi",
                                          tmpdir=absolute_path(x$working_folder))
-      sample_model$write(sample_model_file_name)
+      write(sample_model, sample_model_file_name)
       all_options[["model-file"]] <- sample_model_file_name
     } else {
       all_options[["model-file"]] <- x$model_file_name
@@ -291,8 +297,6 @@ run.libbi <- function(x, client, options, config, add_options, log_file_name, st
       }
       nc_close(nc)
     }
-    ##:ess-bp-start::browser@nil:##
-browser(expr=is.null(.ESSBP.[["@9@"]]));##:ess-bp-end:##
     if (client == "rewrite") {
       model_lines <- readLines(x$log_file_name)
       first_model_line <-
@@ -312,14 +316,27 @@ browser(expr=is.null(.ESSBP.[["@9@"]]));##:ess-bp-end:##
 #' @title Print information about a LibBi object
 #' @export
 print.libbi <- function(x){
-          cat("Wrapper around LibBi\n")
-          cat("* path to working folder:", x$working_folder, "\n")
-          cat("* path to model file:", x$model_file_name, "\n")
-          if (nchar(x$output_file_name) > 0) {
-            cat("* path to output_file:", x$output_file_name, "\n")
-          } else {
-            cat("* LibBi has not been run yet\n")
-          }
+    cat("Wrapper around LibBi\n")
+    cat("* path to working folder:", x$working_folder, "\n")
+    cat("* path to model file:", x$model_file_name, "\n")
+    if (nchar(x$output_file_name) > 0) {
+        cat("* path to output_file:", x$output_file_name, "\n")
+    } else {
+        cat("* LibBi has not been run yet\n")
+    }
+}
+
+`cache<-` <- function(x, ...) UseMethod("cache<-")
+`cache<-.libbi` <- function(x, value) {
+    value$thin <- as.integer(value$thin)
+    for (name in names(value$data)) {
+        if (!(name %in% names(x$.cache$data) &&
+              value$thin == x$.cahe$thin)) {
+            x$.cache$data[[name]] <- value$data[[name]]
+            x$.cache$thin[[name]] <- value$thin
+        }
+    }
+    return(x)
 }
 
 #' @export
@@ -329,9 +346,10 @@ sample <- function(x, ...) UseMethod("sample")
 #' @title Using the LibBi wrapper to sample
 #' @description
 #' The method \code{sample} of an instance of \code{\link{libbi}}
-#' allows to launch \code{libbi} to sample from a (prior, posterior or joint) distribution. See the options to \link{\code{run}} for how to specify the various components of sampling with LibBi, and the LibBi manual for all options that can be passed when the client is \code{sample}.
+#' allows to launch \code{libbi} to sample from a (prior, posterior or joint) distribution. See the options to \code{\link{run}} for how to specify the various components of sampling with LibBi, and the LibBi manual for all options that can be passed when the client is \code{sample}.
 #' @param x a \code{\link{libbi}} object
-#' @param ... options to be passed to \link{\code{run}}
+#' @param ... options to be passed to \code{\link{run}}
+#' @return a \code{\link{libbi}} object
 #' @export
 sample.libbi <- function(x, ...){
   run.libbi(x, client="sample", ...)
@@ -348,9 +366,10 @@ filter <- function(x, ...) UseMethod("filter")
 #' @title Using the LibBi wrapper to filter
 #' @description
 #' The method \code{filter} of an instance of \code{\link{libbi}}
-#' allows to launch \code{libbi} to filter state trajectories. See the options to \link{\code{run}} for how to specify the various components of sampling with LibBi, and the LibBi manual for all options that can be passed when the client is \code{filter}.
+#' allows to launch \code{libbi} to filter state trajectories. See the options to \code{\link{run}} for how to specify the various components of sampling with LibBi, and the LibBi manual for all options that can be passed when the client is \code{filter}.
 #' @param x a \code{\link{libbi}} object
-#' @param ... options to be passed to \link{\code{run}}
+#' @param ... options to be passed to \code{\link{run}}
+#' @return a \code{\link{libbi}} object
 #' @export
 filter.libbi <- function(x, ...){
   run.libbi(x, client="filter", ...)
@@ -367,9 +386,10 @@ optimise <- function(x, ...) UseMethod("optimise")
 #' @title Using the LibBi wrapper to optimise
 #' @description
 #' The method \code{optimise} of an instance of \code{\link{libbi}}
-#' allows to launch \code{libbi} to optimise the parameters with respect to the likelihood or posterior distribution. See the options to \link{\code{run}} for how to specify the various components of sampling with LibBi, and the LibBi manual for all options that can be passed when the client is \code{optimise}. 
+#' allows to launch \code{libbi} to optimise the parameters with respect to the likelihood or posterior distribution. See the options to \code{\link{run}} for how to specify the various components of sampling with LibBi, and the LibBi manual for all options that can be passed when the client is \code{optimise}. 
 #' @param x a \code{\link{libbi}} object
-#' @param ... options to be passed to \link{\code{run}}
+#' @param ... options to be passed to \code{\link{run}}
+#' @return a \code{\link{libbi}} object
 #' @export
 optimise.libbi <- function(x, ...){
   run.libbi(x, client="optimise", ...)
@@ -387,8 +407,9 @@ rewrite <- function(x, ...) UseMethod("rewrite")
 #' @description
 #' The method \code{rewrite} of an instance of \code{\link{libbi}}
 #' allows to launch \code{LibBi} to rewrite a model to inspect its internal representation in \code{LibBi}
-#' #' @param x a \code{\link{libbi}} object
-#' @param ... options to be passed to \link{\code{run}}
+#' @param x a \code{\link{libbi}} object
+#' @param ... options to be passed to \code{\link{run}}
+#' @return a \code{\link{bi_model}} object
 #' @export
 rewrite.libbi <- function(x, ...){
   run.libbi(x, client="rewrite", ...)
