@@ -3,41 +3,30 @@
 \name{libbi}
 \alias{libbi}
 \title{LibBi Wrapper}
+\usage{
+libbi(model, global_options, path_to_libbi, dims, ...)
+}
 \arguments{
 \item{model}{either a character vector giving the path to a model file (typically ending in ".bi"), or a \code{bi_model} object}
 
-\item{config}{path to a configuration file, containing multiple arguments}
-
-\item{options}{list of additional arguments to pass to the call to \code{libbi}}
-
 \item{global_options}{deprecated, replaced by \code{options}}
 
-\item{working_folder}{path to a folder from which to run \code{libbi}; default to a temporary folder.}
-
-\item{path_to_libbi}{path to \code{libbi} binary; by default it tries to locate \code{libbi}}
-
-\item{input}{input file (given as file name or \code{libbi} object or a list of data frames}
-
-\item{init}{init file (given as file name or \code{libbi} object or a list of data frames}
-
-\item{obs}{observation file (given as file name or \code{libbi} object or a list of data frames}
-
-\item{run}{(boolean) whether to run the model
+\item{path_to_libbi}{path to \code{LibBi} binary; by default it tries to locate the \code{libbi} binary
 using the \code{which} Unix command, after having loaded "~/.bashrc" if present;
 if unsuccessful it tries "~/PathToBiBin/libbi"; if unsuccessful again it fails.}
+
+\item{dims}{any named dimensions, as list of character vectors}
 }
 \description{
-\code{libbi} allows to call \code{libbi}.
+\code{libbi} allows to call \code{LibBi}.
 Upon creating a new libbi object, the following arguments can be given.
-Once the instance is created, \code{libbi} can be run through the \code{run}
-method documented in \code{\link{libbi_run}}. Note that \code{\link{libbi}} objects can be plotted using \code{\link{plot}} if the \code{rbi.helpers} package is loaded.
+Once the instance is created, \code{LibBi} can be run through the \code{\link{sample}}, \code{\link{filter}}, or \code{\link{optimise}}, or \code{\link{rewrite}}
+methods. Note that \code{\link{libbi}} objects can be plotted using \code{\link{plot}} if the \code{rbi.helpers} package is loaded.
 }
 \examples{
-bi_object <- libbi$new(client = "sample",
-                       model = system.file(package="rbi", "PZ.bi"),
-                       options = list(sampler = "smc2"))
+bi_object <- libbi(model = system.file(package="rbi", "PZ.bi"))
 }
 \seealso{
-\code{\link{libbi_run}}, \code{\link{libbi_clone}}
+\code{\link{sample}}, \code{\link{filter}}, \code{\link{optimise}}, \code{\link{rewrite}}
 }
 

@@ -2,416 +2,390 @@
 #' @name libbi
 #' @title LibBi Wrapper
 #' @description
-#' \code{libbi} allows to call \code{libbi}.
+#' \code{libbi} allows to call \code{LibBi}.
 #' Upon creating a new libbi object, the following arguments can be given.
-#' Once the instance is created, \code{libbi} can be run through the \code{run}
-#' method documented in \code{\link{libbi_run}}. Note that \code{\link{libbi}} objects can be plotted using \code{\link{plot}} if the \code{rbi.helpers} package is loaded.
+#' Once the instance is created, \code{LibBi} can be run through the \code{\link{sample}}, \code{\link{filter}}, or \code{\link{optimise}}, or \code{\link{rewrite}}
+#' methods. Note that \code{\link{libbi}} objects can be plotted using \code{\link{plot}} if the \code{rbi.helpers} package is loaded.
 #'
 #' @param model either a character vector giving the path to a model file (typically ending in ".bi"), or a \code{bi_model} object
-#' @param config path to a configuration file, containing multiple arguments
-#' @param options list of additional arguments to pass to the call to \code{libbi}
 #' @param global_options deprecated, replaced by \code{options}
-#' @param working_folder path to a folder from which to run \code{libbi}; default to a temporary folder.
-#' @param path_to_libbi path to \code{libbi} binary; by default it tries to locate \code{libbi}
-#' @param input input file (given as file name or \code{libbi} object or a list of data frames
-#' @param init init file (given as file name or \code{libbi} object or a list of data frames
-#' @param obs observation file (given as file name or \code{libbi} object or a list of data frames
-#' @param run (boolean) whether to run the model
+#' @param path_to_libbi path to \code{LibBi} binary; by default it tries to locate the \code{libbi} binary
 #' using the \code{which} Unix command, after having loaded "~/.bashrc" if present;
 #' if unsuccessful it tries "~/PathToBiBin/libbi"; if unsuccessful again it fails.
+#' @param dims any named dimensions, as list of character vectors
 #' @examples
-#' bi_object <- libbi$new(client = "sample",
-#'                        model = system.file(package="rbi", "PZ.bi"),
-#'                        options = list(sampler = "smc2"))
-#' @seealso \code{\link{libbi_run}}, \code{\link{libbi_clone}}
-#' @importFrom ncdf4 nc_open nc_close ncvar_rename
-#' @export libbi
-NULL
-#' @rdname libbi_run
-#' @name libbi_run
+#' bi_object <- libbi(model = system.file(package="rbi", "PZ.bi"))
+#' @seealso \code{\link{sample}}, \code{\link{filter}}, \code{\link{optimise}}, \code{\link{rewrite}}
+#' @export
+libbi <- function(model, global_options,
+                  path_to_libbi, dims, ...){
+  if (!missing(global_options))
+  {
+    stop("'global_options' is deprecated. Use 'options' instead, or pass them directly as arguments to libbi.")
+  }
+
+  libbi_dims <- list()
+  if (!missing(dims)) {
+    for (dim_name in names(dims))
+    {
+      libbi_dims[[dim_name]] <- factor(dims[[dim_name]])
+    }
+  }
+
+  if (missing(model)) {
+    stop("A 'model' must be given to libbi")
+  } else {
+    if (is.character(model)) {
+      model_file_name <- model
+      model <- bi_model(model_file_name)
+    } else if ("bi_model" %in% class(model)) {
+      model_file_name <- ""
+    } else {
+      stop("'model' must be either a 'bi_model' object or a path to a valid model file in LibBi's syntax")
+    }
+  }
+
+  if (missing(path_to_libbi)) path_to_libbi <- character(0)
+
+  new_obj <-
+    structure(list(options=list(),
+                   path_to_libbi=path_to_libbi,
+                   model=model,
+                   model_file_name=model_file_name,
+                   working_folder="",
+                   dims=libbi_dims,
+                   command="",
+                   output_file_name="",
+                   log_file_name="",
+                   run_flag=FALSE), class="libbi")
+  return(do.call(run, c(list(x=new_obj, client=character(0), list(...)))))
+}
+
+run <- function(x, ...) UseMethod("run")
+
+#' @rdname run
+#' @name run
 #' @title Using the LibBi wrapper to launch LibBi
 #' @description
 #' The method \code{run} of an instance of \code{\link{libbi}}
-#' allows to launch \code{libbi} with a particular set of command line
+#' allows to launch \code{LibBi} with a particular set of command line
 #' arguments.
 #'
-#' @param options list of additional arguments to pass to the call to \code{libbi}
+#' @param options list of additional arguments to pass to the call to \code{LibBi}
+#' @param config path to a configuration file, containing multiple arguments
 #' @param add_options deprecated, replaced by \code{options}
-#' @param log_file_name path to a file to text file to report the output of \code{libbi}
+#' @param log_file_name path to a file to text file to report the output of \code{LibBi}
 #' @param init initialisation of the model, either supplied as a list of values and/or data frames, or a (netcdf) file name, or a \code{\link{libbi}} object which has been run (in which case the output of that run is used as input)
 #' @param input input of the model, either supplied as a list of values and/or data frames, or a (netcdf) file name, or a \code{\link{libbi}} object which has been run (in which case the output of that run is used as input)
 #' @param obs observations of the model, either supplied as a list of values and/or data frames, or a (netcdf) file name, or a \code{\link{libbi}} object which has been run (in which case the output of that run is used as observations)
 #' @param time_dim The time dimension in any R objects that have been passed (\code{init}, \code{input}) and \code{obs}); if not given, will be guessed
+#' @param working_folder path to a folder from which to run \code{LibBi}; default to a temporary folder.
+#' @param sample_obs logical; if set to TRUE, will sample observations
 #' @param ... any unrecognised options will be added to \code{options}
 #' @seealso \code{\link{libbi}}
 #' @examples
-#' bi_object <- libbi$new(client = "sample",
-#'                        model = system.file(package="rbi", "PZ.bi"),
-#'                        options = list(sampler = "smc2"))
-#' \dontrun{bi_object$run(options=list(nthreads = 1), verbose = TRUE)}
+#' bi_object <- libbi(model = system.file(package="rbi", "PZ.bi"))
+#' \dontrun{run(bi_object, options=list(sample="smc2", nthreads = 1), verbose = TRUE)}
 #' if (bi_object$run_flag) {
 #'   bi_file_summary(bi_object$output_file_name)
 #' }
-NULL
-#' @rdname libbi_clone
-#' @name libbi_clone
-#' @title Clone a libbi object
-#'
-#' @description
-#' Returns a copy of the libbi object with exactly the same properties as the original object (except for any parameters given to the \code{clone} call)
-#' @param model a libbi model (or path to a model file), if the cloned libbi object is to use a different model
-#' @param ... any options to the new \code{libbi} object
-#' @seealso \code{\link{libbi}}
-#' @examples
-#' bi_object <- libbi$new(client = "sample",
-#'                        model = system.file(package="rbi", "PZ.bi"),
-#'                        options = list(sampler = "smc2"))
-#' bi_object_new <- bi_object$clone()
-NULL
+#' @importFrom ncdf4 nc_open nc_close ncvar_rename
+#' @export
+run.libbi <- function(x, client, options, config, add_options, log_file_name, stdoutput_file_name, init, input, obs, time_dim, working_folder, sample_obs, ...){
+  if (!missing(add_options))
+  {
+    stop("'add_options' is deprecated. Use 'options' instead, or pass them directly as arguments to libbi$run.")
+  }
 
-libbi <- setRefClass("libbi",
-      fields = list(client = "character",
-                    config = "character",
-                    options = "list",
-                    path_to_libbi = "character",
-                    model = "bi_model",
-                    model_file_name = "character",
-                    working_folder = "character",
-                    dims = "list",
-                    command = "character",
-                    output_file_name = "character",
-                    log_file_name = "character",
-                    run_flag = "logical"),
-      methods = list(
-        initialize = function(model, config, options, global_options,
-                              path_to_libbi,
-                              working_folder, dims, run = FALSE,
-                              overwrite = FALSE, ...){
-          if (!missing(global_options))
-          {
-            stop("'global_options' is deprecated. Use 'options' instead, or pass them directly as arguments to libbi.")
-          }
+  if (!missing(stdoutput_file_name))
+  {
+    stop("'stdoutput_file_name' is deprecated. Use 'log_file_name' instead.")
+  }
 
-          libbi_dims <- list()
-          if (!missing(dims)) {
-            for (dim_name in names(dims))
-            {
-              libbi_dims[[dim_name]] <- factor(dims[[dim_name]])
-            }
-          }
-          dims <<- libbi_dims
-          run_flag <<- FALSE
+  if (missing(sample_obs)) sample_obs <- FALSE
 
-          if (missing(model)) {
-            model <<- NULL
-          } else {
-            if (is.character(model)) {
-              model_file_name <<- model
-              model <<- bi_model(model)
-            } else if ("bi_model" %in% class(model)) {
-              model <<- model
-            } else {
-              stop("'model' must be either a 'bi_model' object or a path to a valid model file in LibBi's syntax")
-            }
-          }
+  if (missing(options)){
+    new_options <- list()
+  } else {
+    new_options <- option_list(options)
+  }
 
-          if (missing(working_folder)){
-            working_folder <<- tempdir()
-          } else {
-            working_folder <<- absolute_path(working_folder)
-            if (!dir.exists(working_folder)) {
-              dir.create(working_folder)
-            }
-          }
+  if (missing(config) || config == ""){
+    config_file_options <- list()
+  } else {
+    config_str <- config
+    if (substr(config_str, 1, 1) == "@") {
+      config_str <- substr(config_str, 2, nchar(config_str))
+    }
+    if (file.exists(config_str)) {
+      config_file_options <- paste(readLines(config_str), collapse = " ")
+    } else {
+      stop("Could not find config file ", config_str)
+    }
+  }
 
-          if (missing(config) || config == ""){
-            config <<- ""
-          } else {
-            config_str <- config
-            if (substr(config_str, 1, 1) == "@") {
-              config_str <- substr(config_str, 2, nchar(config_str))
-            }
-            if (file.exists(config_str)) {
-              config <<- config_str
-            } else {
-              stop("Could not find config file ", config_str)
-            }
-          }
+  if (missing(working_folder)){
+    x$working_folder <- tempdir()
+  } else {
+    x$working_folder <- absolute_path(working_folder)
+    if (!dir.exists(working_folder)) {
+      dir.create(working_folder)
+    }
+  }
 
-          if (missing(options))
-            options <<- list()
-          else
-            options <<- option_list(options)
+  ## get model
+  all_options <- option_list(getOption("libbi_args"), config_file_options, x$options, new_options, list(...))
+  if ("model-file" %in% names(all_options)) {
+    if (is.null(x$model)) {
+      x$model_file_name <- absolute_path(all_options[["model-file"]], getwd())
+      x$model <- bi_model(model_file_name)
+    } else {
+      warning("'model-file' and 'model' options both provided. Will ignore 'model-file'.")
+    }
+  } else {
+    if (is.null(x$model)) {
+      stop("A model must be provided via the 'model-file' or 'model' option.")
+    } else {
+      x$model_file_name <- tempfile(pattern=paste(x$model$name, "model", sep = "_"),
+                                    fileext=".bi",
+                                    tmpdir=absolute_path(x$working_folder))
+      x$model$write(x$model_file_name)
+    }
+  }
 
-          if (!missing(path_to_libbi)) path_to_libbi <<- path_to_libbi
+  ## read file options: input, init, obs
+  args <- match.call()
+  file_types <- c("input", "init", "obs")
+  file_args <- intersect(names(args), file_types)
+  ## assign file args to global options
+  for (arg in file_args) x$options[[arg]] <- get(arg)
+  global_file_options <- intersect(names(x$options), file_types)
 
-          log_file_name <<- ""
+  file_options <- list()
 
-          return(do.call(.self$run, c(list(run_from_init = run), list(...))))
-        },
-        run = function(client, options, add_options, log_file_name, stdoutput_file_name, init, input, obs, time_dim, sample_obs, ...){
-          "Run libbi"
+  ## loop over global options that are file args
+  for (file in global_file_options) {
+    arg <- x$options[[file]]
+    ## unset global option (we set the file option instead later)
+    x$options[[file]] <- NULL
+    if (is.list(arg)) {
+      arg_file_name <-
+        tempfile(pattern=paste(x$model$name, file, sep = "_"), 
+                 fileext=".nc",
+                 tmpdir=absolute_path(x$working_folder))
+      write_opts <- list(filename = arg_file_name,
+                         variables = arg,
+                         timed = TRUE)
+      if (file == "obs") ## guess coord
+      {
+        write_opts[["guess_coord"]] <- TRUE
+        write_opts[["guess_time"]] <- TRUE
+      }
+      if (!missing(time_dim)) write_opts[["time_dim"]] <- time_dim
+      file_dims <- do.call(bi_write, write_opts)
+      x$dims[names(file_dims)] <- file_dims
+      file_options[[paste(file, "file", sep = "-")]] <- arg_file_name
+    } else if (is.character(arg)) {
+      file_options[[paste(file, "file", sep = "-")]] <- arg
+    } else if (class(arg) == "libbi") {
+      if (!arg$run_flag) {
+        stop("The libbi object for '", arg, "' should be run first")
+      }
+      file_options[[paste(file, "file", sep = "-")]] <-
+        arg$output_file_name
+    } else {
+      stop("'", file, "' must be a list, string or 'libbi' object.")
+    }
+  }
 
-          if (!missing(add_options))
-          {
-            stop("'add_options' is deprecated. Use 'options' instead, or pass them directly as arguments to libbi$run.")
-          }
+  ## overwrite global additional option, i.e. if this
+  ## is run again it should use the file given here
+  x$options <- merge_by_name(x$options, file_options)
 
-          if (!missing(stdoutput_file_name))
-          {
-            stop("'stdoutput_file_name' is deprecated. Use 'log_file_name' instead.")
-          }
+  if (length(client) > 0)
+  {
+    ## re-read options
+    all_options <- option_list(getOption("libbi_args"), config_file_options,
+                               x$options, new_options, file_options, list(...))
+    ## adjust options
+    if (client != "rewrite") {
+      if ("end-time" %in% names(all_options) && !("noutputs" %in% names(all_options))) {
+        all_options[["noutputs"]] <- all_options[["end-time"]] - all_options[["start-time"]]
+      }
+      if (!("output-file" %in% names(all_options))) {
+        x$output_file_name <- tempfile(pattern=paste(x$model$name, "output", sep = "_"),
+                                       fileext=".nc",
+                                       tmpdir=absolute_path(x$working_folder))
+      } else {
+        x$output_file_name <- absolute_path(all_options[["output-file"]], getwd())
+      }
+      x$options <- all_options
+      all_options[["output-file"]] <- x$output_file_name
+    }
 
-          ## get hidden options 'run_from_init'; if this is passed, 'run' has
-          ## been called from init and any run options have to be removed from
-          ## the options that will be passed to libbi
-          ## the user and removed form the dot-expanded options
-          passed_options <- list(...)
-          ## if run from init, check if any of the dot-expanded options assigned
-          if ("run_from_init" %in% names(passed_options)) {
-            run_libbi <- passed_options[["run_from_init"]]
-            passed_options[["run_from_init"]] <- NULL
-            for (run_option in names(passed_options)) {
-              options[[run_option]] <<- passed_options[[run_option]]
-              passed_options[[run_option]] <- NULL
-            }
-          } else {
-            run_libbi <- TRUE
-          }
+    if (sample_obs) {
+      sample_model <- x$model$obs_to_noise()
+      sample_model_file_name <- tempfile(pattern=paste(x$model$name, "model", sep = "_"),
+                                         fileext=".bi",
+                                         tmpdir=absolute_path(x$working_folder))
+      sample_model$write(sample_model_file_name)
+      all_options[["model-file"]] <- sample_model_file_name
+    } else {
+      all_options[["model-file"]] <- x$model_file_name
+    }
 
-          if (!missing(client)){
-            client <<- client
-          }
+    opt_string <- option_string(all_options)
+    verbose <- ("verbose" %in% names(all_options) && all_options[["verbose"]] == TRUE)
 
-          if (missing(sample_obs)) sample_obs <- FALSE
+    if (missing(log_file_name) && !verbose) {
+      x$log_file_name <- tempfile(pattern="output", fileext=".txt",
+                                  tmpdir=absolute_path(x$working_folder))
+    } else if (!missing(log_file_name)) {
+      x$log_file_name <- absolute_path(filename=log_file_name, dirname=getwd())
+    }
 
-          if (missing(options)){
-            new_options <- list()
-          } else {
-            new_options <- option_list(options)
-          }
+    if (verbose || nchar(x$log_file_name) == 0) {
+      log_redir_name <- ""
+    } else {
+      log_redir_name <- paste(">", x$log_file_name, "2>&1")
+    }
 
-          if (nchar(.self$config) > 0) {
-            config_file_options <- paste(readLines(.self$config), collapse = " ")
-          } else {
-            config_file_options <- list()
-          }
-
-          ## get model
-          all_options <- option_list(getOption("libbi_args"), config_file_options, .self$options, new_options, passed_options)
-          if ("model-file" %in% names(all_options)) {
-            if (is.null(.self$model)) {
-              model_file_name <<- absolute_path(all_options[["model-file"]], getwd())
-              model <<- bi_model(model_file_name)
-            } else {
-              warning("'model-file' and 'model' options both provided. Will ignore 'model-file'.")
-            }
-          } else {
-            if (is.null(.self$model)) {
-              stop("A model must be provided via the 'model-file' or 'model' option.")
-            } else {
-              model_file_name <<- tempfile(pattern=paste(.self$model$name, "model", sep = "_"),
-                                           fileext=".bi",
-                                           tmpdir=absolute_path(.self$working_folder))
-              model$write(.self$model_file_name)
-            }
-          }
-
-          ## read file options: input, init, obs
-          args <- match.call()
-          file_types <- c("input", "init", "obs")
-          file_args <- intersect(names(args), file_types)
-          ## assign file args to global options
-          for (arg in file_args) options[[arg]] <<- get(arg)
-          global_file_options <- intersect(names(.self$options), file_types)
-
-          file_options <- list()
-
-          ## loop over global options that are file args
-          for (file in global_file_options) {
-            arg <- .self$options[[file]]
-            ## unset global option (we set the file option instead later)
-            options[[file]] <<- NULL
-            if (is.list(arg)) {
-              arg_file_name <-
-                tempfile(pattern=paste(.self$model$name, file, sep = "_"), 
-                         fileext=".nc",
-                         tmpdir=absolute_path(.self$working_folder))
-              write_opts <- list(filename = arg_file_name,
-                                 variables = arg,
-                                 timed = TRUE)
-              if (file == "obs") ## guess coord
-              {
-                write_opts[["guess_coord"]] <- TRUE
-                write_opts[["guess_time"]] <- TRUE
-              }
-              if (!missing(time_dim)) write_opts[["time_dim"]] <- time_dim
-              file_dims <- do.call(bi_write, write_opts)
-              dims[names(file_dims)] <<- file_dims
-              file_options[[paste(file, "file", sep = "-")]] <- arg_file_name
-            } else if (is.character(arg)) {
-              file_options[[paste(file, "file", sep = "-")]] <- arg
-            } else if (class(arg) == "libbi") {
-              if (!arg$run_flag) {
-                stop("The libbi object for '", arg, "' should be run first")
-              }
-              file_options[[paste(file, "file", sep = "-")]] <-
-                arg$output_file_name
-            } else {
-              stop("'", file, "' must be a list, string or 'libbi' object.")
-            }
-          }
-
-          ## overwrite global additional option, i.e. if this
-          ## is run again it should use the file given here
-          options <<- merge_by_name(.self$options, file_options)
-
-          if (run_libbi)
-          {
-            if (length(.self$client) == 0) {
-              warning("No client provided; default to 'sample'.")
-              client <<- "sample"
-            }
-            ## re-read options
-            all_options <- option_list(getOption("libbi_args"), config_file_options,
-                                       .self$options, new_options, file_options, passed_options)
-            if ("end-time" %in% names(all_options) && !("noutputs" %in% names(all_options))) {
-              all_options[["noutputs"]] <- all_options[["end-time"]]
-            }
-            if (!("output-file" %in% names(all_options))) {
-              output_file_name <<- tempfile(pattern=paste(.self$model$name, "output", sep = "_"),
-                                            fileext=".nc",
-                                            tmpdir=absolute_path(.self$working_folder))
-            } else {
-              output_file_name <<- absolute_path(all_options[["output-file"]], getwd())
-            }
-            options <<- all_options
-            all_options[["output-file"]] <- .self$output_file_name
-
-            if (sample_obs) {
-              sample_model <- .self$model$obs_to_noise()
-              sample_model_file_name <- tempfile(pattern=paste(.self$model$name, "model", sep = "_"),
-                                                  fileext=".bi",
-                                                  tmpdir=absolute_path(.self$working_folder))
-              sample_model$write(sample_model_file_name)
-              all_options[["model-file"]] <- sample_model_file_name
-            } else {
-              all_options[["model-file"]] <- .self$model_file_name
-            }
-
-            opt_string <- option_string(all_options)
-            verbose <- ("verbose" %in% names(all_options) && all_options[["verbose"]] == TRUE)
-
-            if (missing(log_file_name) && !verbose) {
-              log_file_name <<- tempfile(pattern="output", fileext=".txt",
-                                               tmpdir=absolute_path(.self$working_folder))
-            } else if (!missing(log_file_name)) {
-              log_file_name <<- absolute_path(filename=log_file_name, dirname=getwd())
-            }
-
-            if (verbose || nchar(.self$log_file_name) == 0) {
-              log_redir_name <- ""
-            } else {
-              log_redir_name <- paste(">", .self$log_file_name, "2>&1")
-            }
-
-            if (length(path_to_libbi) == 0) {
-              if (is.null(getOption("path_to_libbi"))) {
+    if (length(x$path_to_libbi) == 0) {
+      if (is.null(getOption("path_to_libbi"))) {
                                         # Maybe the system knows where libbi is
-                path_to_libbi <<- Sys.which("libbi")
-              } else {
-                path_to_libbi <<- getOption("path_to_libbi")
-              }
-              if (nchar(.self$path_to_libbi) == 0){
-                stop("Could not locate libbi, please either provide the path to the libbi binary via the 'path_to_libbi' option, or set the PATH to contain the directory that contains the binary in ~/.Renviron or set it in your R session via options(path_to_libbi = \"insert_path_here\")")
-              }
-            } else {
-              path_to_libbi <<- path_to_libbi
-            }
-            if (!grepl("libbi$", .self$path_to_libbi)) {
-              path_to_libbi <<- paste0(.self$path_to_libbi, "/libbi")
-            }
-            if (!file.exists(.self$path_to_libbi)) {
-              stop("Could not find libbi executable ", path_to_libbi)
-            }
-            base_command_string <- paste(.self$path_to_libbi, .self$client)
+        x$path_to_libbi <- Sys.which("libbi")
+      } else {
+        x$path_to_libbi <- getOption("path_to_libbi")
+      }
+      if (nchar(x$path_to_libbi) == 0){
+        stop("Could not locate LibBi, please either provide the path to the libbi binary via the 'path_to_libbi' option, or set the PATH to contain the directory that contains the binary in ~/.Renviron or set it in your R session via options(path_to_libbi = \"insert_path_here\")")
+      }
+    }
+    if (!grepl("libbi$", x$path_to_libbi)) {
+      x$path_to_libbi <- paste0(x$path_to_libbi, "/libbi")
+    }
+    if (!file.exists(x$path_to_libbi)) {
+      stop("Could not find libbi executable ", path_to_libbi)
+    }
+    base_command_string <- paste(x$path_to_libbi, client)
 
-            cdcommand <- paste("cd", .self$working_folder)
-            command <<- paste(c(cdcommand, paste(base_command_string, opt_string)), collapse=";")
-            if (verbose) print("Launching LibBi with the following commands:")
-            if (verbose)
-              print(paste(c(.self$command, log_redir_name), sep = "\n"))
-            runcommand <- paste(.self$command, log_redir_name)
-            ret <- system(runcommand)
-            if (ret > 0) {
-              if (!verbose) {
-                writeLines(readLines(.self$log_file_name))
-              }
-              stop("LibBi terminated with an error.")
-            }
-            if (verbose) print("... LibBi has finished!")
-            if (sample_obs) {
-              nc <- nc_open(.self$output_file_name, write=TRUE)
-              for (obs_name in sample_model$get_vars("obs")) {
-                ncvar_rename(nc, paste0("__sample_", obs_name), obs_name)
-              }
-              nc_close(nc)
-            }
-            run_flag <<- TRUE
-          }
-        },
-        clone = function(client, config, options, path_to_libbi, model, working_folder, dims, ...) {
-          "Clone a libbi object"
+    cdcommand <- paste("cd", x$working_folder)
+    x$command <- paste(c(cdcommand, paste(base_command_string, opt_string)), collapse=";")
+    if (verbose) print("Launching LibBi with the following commands:")
+    if (verbose)
+      print(paste(c(x$command, log_redir_name), sep = "\n"))
+    runcommand <- paste(x$command, log_redir_name)
+    ret <- system(runcommand)
+    if (ret > 0) {
+      if (!verbose) {
+        writeLines(readLines(x$log_file_name))
+      }
+      stop("LibBi terminated with an error.")
+    }
+    if (verbose) print("... LibBi has finished!")
+    if (sample_obs) {
+      nc <- nc_open(x$output_file_name, write=TRUE)
+      for (obs_name in sample_model$get_vars("obs")) {
+        ncvar_rename(nc, paste0("__sample_", obs_name), obs_name)
+      }
+      nc_close(nc)
+    }
+    if (client == "rewrite") {
+      model_lines <- readLines(x$log_file_name)
+      first_model_line <-
+        min(grep("^[[:space:]]*model[[:space:]]*", model_lines))
+      model_lines <- model_lines[first_model_line:length(model_lines)]
+      x <- bi_model(lines=model_lines)
+    } else {
+      x$run_flag <- TRUE
+    }
+  }
+  return(x)
+}
 
-          new_libbi_options <- list()
-
-          if (missing(client)) {
-            new_libbi_options[["client"]] <- .self$client
-          } else {
-            new_libbi_options[["client"]] <- client
-          }
-          if (missing(config)) {
-            new_libbi_options[["config"]] <- .self$config
-          } else {
-            new_libbi_options[["config"]] <- config
-          }
-          if (missing(options)) {
-            new_libbi_options[["options"]] <- .self$options
-          } else {
-            new_libbi_options[["options"]] <- option_list(.self$options, options)
-          }
-          if (missing(path_to_libbi)) {
-            new_libbi_options[["path_to_libbi"]] <- .self$path_to_libbi
-          } else {
-            new_libbi_options[["path_to_libbi"]] <- path_to_libbi
-          }
-          if (missing(model)) {
-            new_libbi_options[["model"]] <- .self$model$clone()
-          } else {
-            new_libbi_options[["model"]] <- model
-          }
-          if (missing(working_folder)) {
-            new_libbi_options[["working_folder"]] <- .self$working_folder
-          } else {
-            new_libbi_options[["working_folder"]] <- working_folder
-          }
-          if (missing(dims)) {
-            new_libbi_options[["dims"]] <- .self$dims
-          } else {
-            new_libbi_options[["dims"]] <- dims
-          }
-
-          new_wrapper <- do.call(libbi, c(new_libbi_options, list(...)))
-          return(new_wrapper)
-        },
-        show = function(){
+#' @name print
+#' @rdname print
+#' @title Print information about a LibBi object
+#' @export
+print.libbi <- function(x){
           cat("Wrapper around LibBi\n")
-          cat("* client: ", .self$client, "\n")
-          cat("* path to working folder:", .self$working_folder, "\n")
-          cat("* path to model file:", .self$model_file_name, "\n")
-          if (length(.self$output_file_name) > 0) {
-            cat("* path to output_file:", .self$output_file_name, "\n")
+          cat("* path to working folder:", x$working_folder, "\n")
+          cat("* path to model file:", x$model_file_name, "\n")
+          if (nchar(x$output_file_name) > 0) {
+            cat("* path to output_file:", x$output_file_name, "\n")
+          } else {
+            cat("* LibBi has not been run yet\n")
           }
-        }
-      )
-      )
+}
+
+#' @export
+sample <- function(x, ...) UseMethod("sample")
+#' @name sample
+#' @rdname sample
+#' @title Using the LibBi wrapper to sample
+#' @description
+#' The method \code{sample} of an instance of \code{\link{libbi}}
+#' allows to launch \code{libbi} to sample from a (prior, posterior or joint) distribution. See the options to \link{\code{run}} for how to specify the various components of sampling with LibBi, and the LibBi manual for all options that can be passed when the client is \code{sample}.
+#' @param x a \code{\link{libbi}} object
+#' @param ... options to be passed to \link{\code{run}}
+#' @export
+sample.libbi <- function(x, ...){
+  run.libbi(x, client="sample", ...)
+}
+#' @export
+sample.default <- function(x, ...){
+  base::sample(x, ...)
+}
+
+#' @export
+filter <- function(x, ...) UseMethod("filter")
+#' @name filter
+#' @rdname filter
+#' @title Using the LibBi wrapper to filter
+#' @description
+#' The method \code{filter} of an instance of \code{\link{libbi}}
+#' allows to launch \code{libbi} to filter state trajectories. See the options to \link{\code{run}} for how to specify the various components of sampling with LibBi, and the LibBi manual for all options that can be passed when the client is \code{filter}.
+#' @param x a \code{\link{libbi}} object
+#' @param ... options to be passed to \link{\code{run}}
+#' @export
+filter.libbi <- function(x, ...){
+  run.libbi(x, client="filter", ...)
+}
+#' @export
+filter.default <- function(x, ...){
+  stats::filter(x, ...)
+}
+
+#' @export
+optimise <- function(x, ...) UseMethod("optimise")
+#' @name optimise
+#' @rdname optimise
+#' @title Using the LibBi wrapper to optimise
+#' @description
+#' The method \code{optimise} of an instance of \code{\link{libbi}}
+#' allows to launch \code{libbi} to optimise the parameters with respect to the likelihood or posterior distribution. See the options to \link{\code{run}} for how to specify the various components of sampling with LibBi, and the LibBi manual for all options that can be passed when the client is \code{optimise}. 
+#' @param x a \code{\link{libbi}} object
+#' @param ... options to be passed to \link{\code{run}}
+#' @export
+optimise.libbi <- function(x, ...){
+  run.libbi(x, client="optimise", ...)
+}
+#' @export
+optimise.default <- function(x, ...){
+  stats::optimise(x, ...)
+}
+
+#' @export
+rewrite <- function(x, ...) UseMethod("rewrite")
+#' @name rewrite
+#' @rdname rewrite
+#' @title Using the LibBi wrapper to rewrite
+#' @description
+#' The method \code{rewrite} of an instance of \code{\link{libbi}}
+#' allows to launch \code{LibBi} to rewrite a model to inspect its internal representation in \code{LibBi}
+#' #' @param x a \code{\link{libbi}} object
+#' @param ... options to be passed to \link{\code{run}}
+#' @export
+rewrite.libbi <- function(x, ...){
+  run.libbi(x, client="rewrite", ...)
+}
