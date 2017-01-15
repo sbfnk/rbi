@@ -57,6 +57,7 @@ libbi <- function(model, global_options,
                    command="",
                    output_file_name="",
                    log_file_name="",
+                   timestamp=.POSIXct(NA),
                    run_flag=FALSE), class="libbi")
   return(do.call(run, c(list(x=new_obj, client=character(0), list(...)))))
 }
@@ -290,6 +291,8 @@ run.libbi <- function(x, client, options, config, add_options, log_file_name, st
       }
       nc_close(nc)
     }
+    ##:ess-bp-start::browser@nil:##
+browser(expr=is.null(.ESSBP.[["@9@"]]));##:ess-bp-end:##
     if (client == "rewrite") {
       model_lines <- readLines(x$log_file_name)
       first_model_line <-
@@ -297,6 +300,7 @@ run.libbi <- function(x, client, options, config, add_options, log_file_name, st
       model_lines <- model_lines[first_model_line:length(model_lines)]
       x <- bi_model(lines=model_lines)
     } else {
+      x$timestamp <- file.mtime(x$output_file_name)
       x$run_flag <- TRUE
     }
   }
