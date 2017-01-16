@@ -324,15 +324,51 @@ run.libbi <- function(x, client, options, config, add_options, log_file_name, st
 #' @rdname print
 #' @title Print information about a LibBi object
 #' @export
-print.libbi <- function(x){
-    cat("Wrapper around LibBi\n")
+#' @param x a \code{\link{libbi}} object
+print.libbi <- function(x, verbose=FALSE){
+  cat("Wrapper around LibBi\n")
+  if (verbose) {
     cat("* path to working folder:", x$working_folder, "\n")
     cat("* path to model file:", x$model_file_name, "\n")
     if (nchar(x$output_file_name) > 0) {
-        cat("* path to output_file:", x$output_file_name, "\n")
-    } else {
-        cat("* LibBi has not been run yet\n")
+      cat("* path to output_file:", x$output_file_name, "\n")
     }
+  }
+  cat("======================\n")
+  cat("Model: ", x$model$name, "\n")
+  if (x$run_flag) {
+    assert_output(x)
+    niterations <- bi_dim_len(x$output_file_name, "np")
+    ntimesteps <- range(bi_read(x, "time")[["time"]][["value"]])
+    clock <- bi_read(x, "clock")[["clock"]]
+    contents <- bi_contents(x$output_file_name)
+    states <- intersect(contents, get_vars(x$model, "state"))
+    noises <- intersect(contents, get_vars(x$model, "noise"))
+    params <- intersect(contents, get_vars(x$model, "param"))
+    obs <- intersect(contents, get_vars(x$model, "obs"))
+    cat("Run time: ", round(clock/1000), " seconds\n")
+    cat("Number of samples: ", niterations, "\n")
+    if (length(states) > 0) cat("State trajectories recorded: ", paste(states), "\n")
+    if (length(noises) > 0) cat("Noise trajectories recorded: ", paste(noises), "\n")
+    if (length(obs) > 0) cat("Observation trajectories recorded: ", paste(obs), "\n")
+    if (length(params) > 0) cat("Parameters recorded: ", paste(params), "\n")
+  } else {
+    cat("* LibBi has not been run yet\n")
+  }
+}
+
+#' @name summary
+#' @rdname summary
+#' @title Print summary information about a \code{\link{libbi}} object
+#' @description
+#' This reads in the output file of the \code{\link{[libbi]}} object (which has been run before) and prints summary information of parameters
+#' @export
+##' @param x a \code{\link{libbi}} object
+##' @param thin 
+summary.libbi <- function(x, thin=1){
+  params <- bi_read(x, get_vars(x$model, "param"))
+  summary_table <- t(sapply(params, function(x) summary(x$value)))
+  return(summary_table)
 }
 
 #' @name assert_output
