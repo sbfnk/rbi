@@ -91,6 +91,7 @@ run <- function(x, ...) UseMethod("run")
 #' @param time_dim The time dimension in any R objects that have been passed (\code{init}, \code{input}) and \code{obs}); if not given, will be guessed
 #' @param working_folder path to a folder from which to run \code{LibBi}; default to a temporary folder.
 #' @param sample_obs logical; if set to TRUE, will sample observations
+#' @param chain_init logical; if set to TRUE, will use only the last sample of the init file
 #' @param thin any thinning of MCMC chains (1 means all will be kept, 2 skips every other sample etc.); note that \code{\link{LibBi}} itself will write all data to the disk. Only when the results are read in with \code{\link{bi_read}} will thinning be applied.
 #' @param ... any unrecognised options will be added to \code{options}
 #' @seealso \code{\link{libbi}}
@@ -103,7 +104,7 @@ run <- function(x, ...) UseMethod("run")
 #' @importFrom ncdf4 nc_open nc_close ncvar_rename
 #' @return a \code{\link{libbi}} object, except if \code{client} is 'rewrite',  in which case a \code{\link{bi_model}} object will be returned
 #' @export
-run.libbi <- function(x, client, options, config, add_options, log_file_name, stdoutput_file_name, init, input, obs, time_dim, working_folder, sample_obs, thin, ...){
+run.libbi <- function(x, client, options, config, add_options, log_file_name, stdoutput_file_name, init, input, obs, time_dim, working_folder, sample_obs, chain_init, thin, ...){
   if (!missing(add_options))
   {
     stop("'add_options' is deprecated. Use 'options' instead, or pass them directly as arguments to libbi$run.")
@@ -210,6 +211,19 @@ run.libbi <- function(x, client, options, config, add_options, log_file_name, st
     } else {
       stop("'", file, "' must be a list, string or 'libbi' object.")
     }
+  }
+
+  if (chain_init) {
+    if ("init-np" %in% names(new_options)) {
+      stop("'init-np' should not be give if chain_init=TRUE.")
+    }
+    if (!("init-file" %in% names(file_options))) {
+      stop("chain_init=TRUE but no init file given.")
+    }
+
+    np_dims <- bi_dim_len(file_options[["init-file"]], "np")
+
+    file_options[["init-np"]] <- np_dims-1
   }
 
   ## overwrite global additional option, i.e. if this
