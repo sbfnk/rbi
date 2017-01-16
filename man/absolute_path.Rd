@@ -15,4 +15,5 @@ absolute_path(filename, dirname)
 This function is used to convert relative file paths to absolute file paths
 without checking if the file exists as tools::file_as_absolute_path does
 }
+\keyword{internal}
 

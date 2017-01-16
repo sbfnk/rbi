@@ -322,7 +322,7 @@ run.libbi <- function(x, client, options, config, add_options, log_file_name, st
 
 #' @name print
 #' @rdname print
-#' @title Print information about a LibBi object
+#' @title Print information about a \code{\link{libbi}} object
 #' @export
 #' @param x a \code{\link{libbi}} object
 print.libbi <- function(x, verbose=FALSE){

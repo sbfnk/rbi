@@ -3,6 +3,9 @@
 \name{bi_model}
 \alias{bi_model}
 \title{Bi Model}
+\usage{
+bi_model(filename, lines)
+}
 \arguments{
 \item{filename}{is the file name of the model file}
 }
@@ -16,6 +19,6 @@ model_file_name <- system.file(package="rbi", "PZ.bi")
 PZ <- bi_model(filename = model_file_name)
 }
 \seealso{
-\code{\link{bi_model_fix}}, \code{\link{bi_model_propose_prior}}, \code{\link{bi_model_get_lines}}, \code{\link{bi_model_insert_lines}}, \code{\link{bi_model_update_lines}}, \code{\link{bi_model_remove_lines}}, \code{\link{bi_model_set_name}}, \code{\link{bi_model_write}}, \code{\link{bi_model_clone}}
+\code{\link{fix}}, \code{\link{propose_prior}}, \code{\link{get_lines}}, \code{\link{insert_lines}}, \code{\link{update_lines}}, \code{\link{remove_lines}}, \code{\link{rename}}, \code{\link{write}}, \code{\link{clone}}
 }
 
