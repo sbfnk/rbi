@@ -16,16 +16,10 @@ bi_open <- function(read)
   } else if (class(read) == "ncdf4") {
     nc <- read
   } else if (class(read) == "libbi"){
-    if (!read$run_flag) {
-      stop("The libbi object should be run first")
-    }
-    filename <- tools::file_path_as_absolute(read$output_file_name)
-    if (read$timestamp < file.mtime(filename)) {
-      stop("Output file ", filename, " has been modified since LibBi was run.")
-    }
-    nc <- nc_open(filename)
+    assert_output(read)
+    nc <- nc_open(read$output_file_name)
   } else {
-    stop("'read' must be a string, ncdf4 or libbi object.")
+    stop("'read' must be a string or ncdf4.")
   }
 
   return(nc)

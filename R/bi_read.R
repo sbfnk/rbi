@@ -9,6 +9,7 @@
 #'
 #' @param read either a path to a NetCDF file, or a NetCDF connection created using \code{nc_open}, or a \code{\link{libbi}} object from which to read the output
 #' @param vars variables to read; if not given, all will be read
+#' @param type if 'read' is a \code{\link{libbi}} object, 
 #' @param dims factors for dimensions
 #' @param missval.threshold upper threshold for the likelihood
 #' @param coord_name name of coord dimension (if any)
@@ -29,6 +30,8 @@ bi_read <- function(read, vars, dims, missval.threshold, coord_name, vector, thi
 
   nc <- bi_open(read)
   res <- list()
+
+  thin <- as.integer(ifelse(missing(thin), 1, thin))
 
   if ("libbi" %in% class(read) && !is.null(read$dims)) {
     if (missing(dims)) {
@@ -82,11 +85,26 @@ bi_read <- function(read, vars, dims, missval.threshold, coord_name, vector, thi
     }
   }
 
+  res <- base::vector("list", length(var_names[["other"]]))
+  names(res) <- var_names[["other"]]
+
   ## associate time and coord variables
   ## read variables
-  for (var_name in var_names[["other"]]) {
-    if (!missing(verbose) && verbose)
-    {
+  if (read$use_cache) {
+    cached_other <- sapply(var_names[["other"]], function(x) {
+      return(x %in% names(read$.cache$data) && thin == read$.cache$thin[x])
+    })
+  } else {
+    cached_other <- rep(FALSE, length(var_name[["other"]]))
+  }
+  for (var_name in var_names[["other"]][cached_other]) {
+    if (!missing(verbose) && verbose) {
+      message(date(), " ", var_name, " (cached)")
+    }
+    res[[var_name]] <- read$.cache$data[[var_name]]
+  }
+  for (var_name in var_names[["other"]][!cached_other]) {
+    if (!missing(verbose) && verbose) {
       message(date(), " ", var_name)
     }
     if (missing(vars) || var_name %in% vars) {
@@ -96,7 +114,7 @@ bi_read <- function(read, vars, dims, missval.threshold, coord_name, vector, thi
         nc[["var"]][[var_name]][["dim"]][[x]][["len"]]
       })
       names(dim_lengths) <- dim_names
-      if ("np" %in% dim_names && !missing(thin) && thin > 1) {
+      if ("np" %in% dim_names && thin > 1) {
         np_indices <- seq(1, dim_lengths["np"], by = thin)
         dim_lengths["np"] <- length(np_indices)
 
@@ -206,6 +224,13 @@ bi_read <- function(read, vars, dims, missval.threshold, coord_name, vector, thi
   }
 
   if (typeof(read) %in% c("character", "libbi")) nc_close(nc)
+
+  if ("libbi" %in% class(read) && read$use_cache) {
+    for (name in var_names[["other"]][!cached_other]) {
+      x$.cache$data[[name]] <- res[[name]]
+      x$.cache$thin[[name]] <- thin
+    }
+  }
 
   return(res)
 }

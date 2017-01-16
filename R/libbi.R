@@ -335,8 +335,21 @@ print.libbi <- function(x){
             x$.cache$data[[name]] <- value$data[[name]]
             x$.cache$thin[[name]] <- value$thin
         }
+#' @name assert_output
+#' @rdname assert_output
+#' @title Check that a LibBi wrapper has valid output
+#' @description
+#' This checks that the \code{\link{libbi}} object given has been run (via \code{\link{sample}}, \code{\link{filter}} or \code{\link{optimize}})) and the output file has not been modified since.
+#' @param x a \code{\link{libbi}} object
+#' @keywords internal
+assert_output <- function(x)
+{
+    if (!x$run_flag) {
+      stop("The libbi object must be run first (using sample, filter or optimise).")
     }
-    return(x)
+    if (x$timestamp < file.mtime(x$output_file_name)) {
+      stop("Output file ", filename, " has been modified since LibBi was run.")
+    }
 }
 
 #' @export
