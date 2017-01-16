@@ -223,8 +223,8 @@ clean_model <- function(x) {
   return(x)
 }
 
-#' @rdname lines
-#' @name lines
+#' @rdname get_lines
+#' @name get_lines
 #' @title Get lines in a libbi model
 #' @description
 #' Gets a libbi model as character vector.
@@ -234,7 +234,7 @@ clean_model <- function(x) {
 #' @return the libbi model as character vector
 #' @seealso \code{\link{bi_model}}, \code{\link{`[`}}
 #' @keywords internal
-lines <- function(x, spaces = 2) {
+get_lines <- function(x, spaces = 2) {
   vec <- c()
   indent <- 0
   for (i in seq_along(x$model)) {
