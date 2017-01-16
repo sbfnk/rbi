@@ -224,7 +224,9 @@ run.libbi <- function(x, client, options, config, add_options, log_file_name, st
       x$.cache$thin <- integer(0)
 
       if ("end-time" %in% names(all_options) && !("noutputs" %in% names(all_options))) {
-        all_options[["noutputs"]] <- all_options[["end-time"]] - all_options[["start-time"]]
+        runtime <- all_options[["end-time"]] - ifelse("start-time" %in% names(all_options), all_options[["start-time"]], 0)
+        warning("No 'noputputs' given; will set to 'end-time' - 'start-time' (", runtime, ")")
+        all_options[["noutputs"]] <- runtime
       }
       if (!("output-file" %in% names(all_options))) {
         x$output_file_name <- tempfile(pattern=paste(x$model$name, "output", sep = "_"),
