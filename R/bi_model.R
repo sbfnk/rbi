@@ -10,7 +10,7 @@
 #' @examples
 #' model_file_name <- system.file(package="rbi", "PZ.bi")
 #' PZ <- bi_model(filename = model_file_name)
-#' @seealso \code{\link{fix}}, \code{\link{propose_prior}}, \code{\link{get_lines}}, \code{\link{insert_lines}}, \code{\link{update_lines}}, \code{\link{remove_lines}}, \code{\link{rename}}, \code{\link{write_file}}, \code{\link{clone}}
+#' @seealso \code{\link{fix}}, \code{\link{insert}}, \code{\link{replace}}, \code{\link{remove}}, \code{\link{rename}}, \code{\link{write_file}}
 #' @export bi_model
 bi_model <- function(filename, lines) {
   if (!missing(filename) && !missing(lines)) {
@@ -53,10 +53,8 @@ fix <- function(x, ...) UseMethod("fix")
 #' fix(PZ, alpha = 0)
 #' @export
 fix.bi_model <- function(x, ...) {
-  "Fix a parameter, variable or noise term in the model"
 
   fix_model <- x$model
-
   fixed <- list(...)
 
   ## variables that are to be fixed
@@ -65,11 +63,11 @@ fix.bi_model <- function(x, ...) {
            paste(names(fixed), collapse = "|"), ")([[:space:][]|$)")
   var_line_nbs <- grep(var_str, fix_model)
 
-  var_vec <- c(x$get_vars("noise"),
-               x$get_vars("param"),
-               x$get_vars("state"),
-               x$get_vars("input"),
-               x$get_vars("const"))
+  var_vec <- c(var_names(x, "noise"),
+               var_names(x, "param"),
+               var_names(x, "state"),
+               var_names(x, "input"),
+               var_names(x, "const"))
 
   unmatched_names <- setdiff(names(fixed), var_vec)
 
@@ -130,22 +128,18 @@ propose_prior <- function(x, ...) UseMethod("propose_prior")
 #'
 #' @return a bi model object of the new model
 #' @seealso \code{\link{bi_model}}
-#' @examples
-#' model_file_name <- system.file(package="rbi", "PZ.bi")
-#' PZ <- bi_model(filename = model_file_name)
-#' propose_prior(PZ)
+#' @keywords internal
 propose_prior.bi_model <- function(x) {
-          "Change a libbi model to make the prior the proposal distribution"
-          new_model <- bi_model(lines = x$model)
+  new_model <- bi_model(lines = x$model)
 
-          ## remove parameter proposal
-          prior_parameter <- new_model$get_block("parameter")
-          new_model$add_block("proposal_parameter", lines = prior_parameter)
+  ## remove parameter proposal
+  prior_parameter <- new_model$get_block("parameter")
+  new_model <- add_block(new_model, "proposal_parameter", lines = prior_parameter)
 
-          prior_initial <- new_model$get_block("initial")
-          new_model$add_block("proposal_initial", lines = prior_initial)
+  prior_initial <- new_model$get_block("initial")
+  new_model <- add_block(new_model, "proposal_initial", lines = prior_initial)
 
-          return(new_model)
+  return(new_model)
 }
 
 #' @title Copy obs variables to state variables (with '__sample_' prepended)
@@ -155,18 +149,18 @@ propose_prior.bi_model <- function(x) {
 #' @keywords internal
 #' @param x a \code{\link{bi_model}} object
 obs_to_noise <- function(x) {
-          new_model <- bi_model(lines = x$model)
-          obs_block <- get_block("observation")
-          obs_variables <- get_vars("obs")
+  new_model <- bi_model(lines = x$model)
+  obs_block <- get_block(x, "observation")
+  obs_variables <- var_names(x, "obs")
 
-          obs_var_pattern <- paste0("^(", paste(obs_variables, collapse = "|"), ")")
-          state_block <- sub(obs_var_pattern, "__sample_\\1", obs_block)
-          new_model$insert_lines(state_block, at_end_of = "transition")
-          state_variables <- paste0("__sample_", obs_variables)
-          new_model$insert_lines(paste("noise ", paste(state_variables, collapse = ", ")), after = 1)
+  obs_var_pattern <- paste0("^(", paste(obs_variables, collapse = "|"), ")")
+  state_block <- sub(obs_var_pattern, "__sample_\\1", obs_block)
+  new_model$insert_lines(state_block, at_end_of = "transition")
+  state_variables <- paste0("__sample_", obs_variables)
+  insert_lines(new_model, paste("noise ", paste(state_variables, collapse = ", ")), after = 1)
 
-          return(new_model)
-        }
+  return(new_model)
+}
 
 #' @title Strip model code to its bare bones
 #'
@@ -175,62 +169,62 @@ obs_to_noise <- function(x) {
 #' @keywords internal
 #' @param x a \code{\link{bi_model}} object
 clean_model <- function(x) {
-    ## strip comments
-    x$model <- sub("//.*$", "", x$model)
+  ## strip comments
+  x$model <- sub("//.*$", "", x$model)
 
-    ## remove long comments and merge lines
-    i <- 1
-    comment <- FALSE
-    while (i <= length(x$model)) {
-        x$model[i] <- gsub("/\\*[^(\\*)]*\\*/", "", x$model[i])
-        if (grepl("/\\*", x$model[i])) {
-            x$model[i] <- sub("/\\*.*$", "", x$model[i])
-            comment <- TRUE
-        }
-        if (grepl("\\*/", x$model[i])) {
-            x$model[i] <- sub("^.*\\*/", "", x$model[i])
-            comment <- FALSE
-        }
-
-        if (comment) {
-            x$model <- x$model[-i]
-        } else {
-            if (!comment && grepl("[*-+=/][[:space:]]*$", x$model[i])) {
-                x$model[i] <- paste(x$model[i], x$model[i + 1])
-                x$model <- x$model[-(i + 1)]
-            } else {
-                i <- i + 1
-            }
-        }
+  ## remove long comments and merge lines
+  i <- 1
+  comment <- FALSE
+  while (i <= length(x$model)) {
+    x$model[i] <- gsub("/\\*[^(\\*)]*\\*/", "", x$model[i])
+    if (grepl("/\\*", x$model[i])) {
+      x$model[i] <- sub("/\\*.*$", "", x$model[i])
+      comment <- TRUE
+    }
+    if (grepl("\\*/", x$model[i])) {
+      x$model[i] <- sub("^.*\\*/", "", x$model[i])
+      comment <- FALSE
     }
 
-    ## remove multiple spaces
-    x$model <- gsub("[[:space:]]+", " ", x$model)
-    ## make sure there is a line break after opening braces 
-    x$model <- gsub("\\{(.+)$", "{\n\\1", x$model)
-    ## make sure there is a line break before closing braces
-    x$model <- gsub("^(.+)\\}", "\\1\n}", x$model)
-    ## replace semicolons with newlines
-    x$model <- gsub(";", "\n", x$model)
-    ## remove trailing spaces
-    x$model <- gsub("[[:space:]]*$", "", x$model)
-    ## remove initial spaces
-    x$model <- gsub("^[[:space:]]*", "", x$model)
-    ## remove empty lines
-    x$model <- x$model[x$model!=""]
-
-    if (length(x$model) > 0) {
-        x$name <- gsub("model ", "", gsub("\\{", "", x$model[1]))
-        x$name <- gsub("[[:space:]]*$", "", x$name)
-        x$name <- gsub("^[[:space:]]*", "", x$name)
+    if (comment) {
+      x$model <- x$model[-i]
     } else {
-        x$name <- character(0)
+      if (!comment && grepl("[*-+=/][[:space:]]*$", x$model[i])) {
+        x$model[i] <- paste(x$model[i], x$model[i + 1])
+        x$model <- x$model[-(i + 1)]
+      } else {
+        i <- i + 1
+      }
     }
-    return(x)
+  }
+
+  ## remove multiple spaces
+  x$model <- gsub("[[:space:]]+", " ", x$model)
+  ## make sure there is a line break after opening braces 
+  x$model <- gsub("\\{(.+)$", "{\n\\1", x$model)
+  ## make sure there is a line break before closing braces
+  x$model <- gsub("^(.+)\\}", "\\1\n}", x$model)
+  ## replace semicolons with newlines
+  x$model <- gsub(";", "\n", x$model)
+  ## remove trailing spaces
+  x$model <- gsub("[[:space:]]*$", "", x$model)
+  ## remove initial spaces
+  x$model <- gsub("^[[:space:]]*", "", x$model)
+  ## remove empty lines
+  x$model <- x$model[x$model!=""]
+
+  if (length(x$model) > 0) {
+    x$name <- gsub("model ", "", gsub("\\{", "", x$model[1]))
+    x$name <- gsub("[[:space:]]*$", "", x$name)
+    x$name <- gsub("^[[:space:]]*", "", x$name)
+  } else {
+    x$name <- character(0)
+  }
+  return(x)
 }
 
-#' @rdname get_lines
-#' @name get_lines
+#' @rdname lines
+#' @name lines
 #' @title Get lines in a libbi model
 #' @description
 #' Gets a libbi model as character vector.
@@ -240,25 +234,24 @@ clean_model <- function(x) {
 #' @return the libbi model as character vector
 #' @seealso \code{\link{bi_model}}, \code{\link{`[`}}
 #' @keywords internal
-get_lines <- function(x, spaces = 2) {
-    "Get the lines of a libbi model as character vectore"
-    lines <- c()
-    indent <- 0
-    for (i in seq_along(x$model)) {
-        if (grepl("\\}", x$model[i])) {
-            if (indent > 0) {
-                indent <- indent - 1
-            } else {
-                warning("There seems to be a pair of unbalanced braces")
-            }
-        }
-        indent_spaces <- paste(rep(" ", indent * spaces), collapse = "")
-        lines <- c(lines, paste0(indent_spaces, x$model[i]))
-        if (grepl("\\{", x$model[i])) {
-            indent <- indent + 1
-        }
+lines <- function(x, spaces = 2) {
+  vec <- c()
+  indent <- 0
+  for (i in seq_along(x$model)) {
+    if (grepl("\\}", x$model[i])) {
+      if (indent > 0) {
+        indent <- indent - 1
+      } else {
+        warning("There seems to be a pair of unbalanced braces")
+      }
     }
-    return(lines)
+    indent_spaces <- paste(rep(" ", indent * spaces), collapse = "")
+    vec <- c(vec, paste0(indent_spaces, x$model[i]))
+    if (grepl("\\{", x$model[i])) {
+      indent <- indent + 1
+    }
+  }
+  return(vec)
 }
 
 insert <- function(x, ...) UseMethod("insert")
@@ -281,50 +274,49 @@ insert <- function(x, ...) UseMethod("insert")
 #' PZ <- bi_model(filename = model_file_name)
 #' PZ <- insert_lines(PZ, lines = "noise beta", after = 8)
 insert.bi_model <- function(x, lines, before, after, at_beginning_of, at_end_of) {
-          args <- match.call()
-          arg_name <- setdiff(names(args), c("", "lines"))
-          if (length(arg_name) != 1) {
-            stop("insert_lines needs exactly two arguments, 'lines' and one of 'before', 'after', 'at_beginning_of' or 'at_end_of'")
-          }
-          arg <- get(arg_name)
-          if (is.numeric(arg)) arg <- as.integer(arg)
+  args <- match.call()
+  arg_name <- setdiff(names(args), c("", "lines"))
+  if (length(arg_name) != 1) {
+    stop("insert_lines needs exactly two arguments, 'lines' and one of 'before', 'after', 'at_beginning_of' or 'at_end_of'")
+  }
+  arg <- get(arg_name)
+  if (is.numeric(arg)) arg <- as.integer(arg)
 
-          if (arg_name %in% c("before", "after") && is.integer(arg)) {
-            if (arg_name == "before") {
-              after <- before - 1
-            }
-            if (after > length(model)) {
-              stop("model only has ", length(model), " lines, higher requested.")
-            }
-          } else {
-            block_lines <- x$find_block(arg)
-            if (length(block_lines) > 0) {
-              if (arg_name == "before") {
-                after <- block_lines[1] - 1
-              } else if (arg_name == "after") {
-                after <- block_lines[length(block_lines)]
-              } else if (arg_name == "at_beginning_of") {
-                after <- block_lines[1]
-              } else if (arg_name == "at_end_of") {
-                after <- block_lines[length(block_lines)] - 1
-              } else {
-                stop("Unknown argument: ", arg_name)
-              }
-            } else {
-              stop("Could not find block ", arg)
-            }
-          }
+  if (arg_name %in% c("before", "after") && is.integer(arg)) {
+    if (arg_name == "before") {
+      after <- before - 1
+    }
+    if (after > length(x$model)) {
+      stop("model only has ", length(x$model), " lines, higher requested.")
+    }
+  } else {
+    block_lines <- find_block(x, arg)
+    if (length(block_lines) > 0) {
+      if (arg_name == "before") {
+        after <- block_lines[1] - 1
+      } else if (arg_name == "after") {
+        after <- block_lines[length(block_lines)]
+      } else if (arg_name == "at_beginning_of") {
+        after <- block_lines[1]
+      } else if (arg_name == "at_end_of") {
+        after <- block_lines[length(block_lines)] - 1
+      } else {
+        stop("Unknown argument: ", arg_name)
+      }
+    } else {
+      stop("Could not find block ", arg)
+    }
+  }
 
-          if (after == 0) {
-            model <<- c(lines, model)
-          } else if (after == length(model)) {
-            model <<- c(model[1:after], lines)
-          } else {
-            model <<- c(model[1:after], lines, model[(after+1):length(model)])
-          }
-          clean_model()
-        }
-
+  if (after == 0) {
+    x$model <- c(lines, x$model)
+  } else if (after == length(x$model)) {
+    x$model <- c(x$model[1:after], lines)
+  } else {
+    x$model <- c(x$model[1:after], lines, x$model[(after+1):length(model)])
+  }
+  return(clean_model(x))
+}
 
 #' @rdname replace_lines
 #' @name replace_lines
@@ -345,11 +337,13 @@ replace_lines <- function(x, num, lines) {
 remove <- function(x, ...) UseMethod("remove")
 #' @rdname remove
 #' @name remove
-#' @title Remove line(s) in a libbi model
+#' @title Remove line(s) and/or block(s) in a libbi model
 #' @description
 #' Removes one or more lines in a libbi model.
 #'
+#' @param x a \code{\link{bi_model}} object
 #' @param num line number(s) to remove
+#' @param name a character vector of one or more blocks to remove (e.g., "parameter")
 #' @return the updated bi model
 #' @seealso \code{\link{bi_model}}
 #' @examples
@@ -357,18 +351,25 @@ remove <- function(x, ...) UseMethod("remove")
 #' PZ <- bi_model(filename = model_file_name)
 #' PZ <- remove_lines(PZ, 2)
 #' @export
-remove.bi_model <- function(x, num) {
-  if (length(num) > 0) {
+remove.bi_model <- function(x, num, name) {
+  if (missing(num) && missing(name)) {
+    stop("At least one of 'num' and 'name' must be given")
+  }
+  if (!missing(num)) {
     if (length(grep("[\\{\\}]", x$model[num])) %% 2 == 1) {
       stop("Removing lines would create unbalanced braces.")
     }
     x$model <- x$model[-num]
-    clean_model()
   }
+  if (!missing(name))
+  block <- find_block(name)
+  if (length(block) > 0) {
+    x$model <- x$model[-block]
+  }
+  return(clean_model(x))
 }
 
 rename <- function(x, ...) UseMethod("rename")
-
 #' @rdname rename
 #' @name rename
 #' @title Set the name of a bi model
@@ -385,28 +386,21 @@ rename <- function(x, ...) UseMethod("rename")
 #' PZ <- set_name(PZ, "new_PZ")
 #' @export
 rename.bi_model <- function(x, name) {
-          if (length(model) > 0) {
-            if (grepl("model [[:graph:]]+ \\{", model[1])) {
-              model[1] <<-
-                sub("model [[:graph:]]+ \\{", paste0("model ", name, " {"),
-                    model[1])
-            } else {
-              stop("could not identify model name in first line")
-            }
-          } else {
-            model <<- c(paste0("model ", name, " {"),
-                        "}")
-          }
-          return(clean_model(x))
-        }
-
-write_model_file <- function(x, ...) UseMethod("write_model_file")
-write_model_file.bi_model <- function(x, filename) {
-  stop("'write_model_file' is deprecated and will be removed in version 0.7. Use 'write'.")
-  x$write(filename)
+  if (length(x$model) > 0) {
+    if (grepl("model [[:graph:]]+ \\{", x$model[1])) {
+      x$model[1] <-
+        sub("model [[:graph:]]+ \\{", paste0("model ", name, " {"),
+            x$model[1])
+    } else {
+      stop("could not identify model name in first line")
+    }
+  } else {
+    x$model <- c(paste0("model ", name, " {"), "}")
+  }
+  return(clean_model(x))
 }
 
-write_file <- function(x, ...) UseMethod("write")
+write_file <- function(x, ...) UseMethod("write_file")
 #' @rdname write_file
 #' @name write_file
 #' @title Writes a bi model to a file.
@@ -431,6 +425,12 @@ write_file.bi_model <- function(x, filename) {
 }
 
 find_block <- function(x, ...) UseMethod("find_block")
+#' @title Copy obs variables to state variables (with '__sample_' prepended)
+#'
+#' @return a \code{\link{bi_model}}
+#' @seealso \code{\link{bi_model}}
+#' @keywords internal
+#' @param x a \code{\link{bi_model}} object
 find_block.bi_model <- function(x, name) {
   lines <- x$model
   sub_regexp <- paste0("^[[:space:]]*(sub[[:space:]]+)?[[:space:]]*", name, "[[:space:]]*(\\(.*\\))?[[:space:]]*\\{")
@@ -450,8 +450,13 @@ find_block.bi_model <- function(x, name) {
   }
 }
 
-get_block <- function(x, ...) UseMethod("get_block")
-get_block.bi_model <- function(x, name) {
+#' @title Get the contents of a block in a libbi model
+#'
+#' @return a character vector of the lines in the block
+#' @keywords internal
+#' @param x a \code{\link{bi_model}} object
+#' @param name 
+get_block <- function(x, name) {
   block <- x$find_block(name)
   if (length(block) > 0) {
     lines <- x$model[block]
@@ -468,52 +473,66 @@ get_block.bi_model <- function(x, name) {
   }
 }
 
-remove_block <- function(x, ...) UseMethod("remove_block")
-remove_block.bi_model <- function(x, name) {
-  block <- find_block(name)
-  if (length(block) > 0) {
-    model <<- x$model[-block]
+#' @title Add a block to a libbi model
+#'
+#' @return a \code{\link{bi_model}} object containing the new block
+#' @keywords internal
+#' @param x a \code{\link{bi_model}} object
+#' @param name name of the block
+#' @param lines character vector, lines in the block
+#' @param options any options to the block
+add_block <- function(x, name, lines, options) {
+  x <- remove_block(x, name)
+  x$model <- c(x$model[seq_len(length(x$model) - 1)],
+               ifelse(missing(options), paste("sub", name,"{"),
+                      paste("sub", name, paste0("(", options, ")", "{"))), 
+               paste(lines, sep = "\n"), "}", "}")
+  x <- clean_model(x)
+}
+
+##' Get all variable names of one or more type(s)
+##'
+##' This returns all variable names of a certain type ("param", "state", "obs", "noise", "const") contained in the model of a \code{\link{libbi}} object
+##' @title Get variables
+##' @param x a \code{\link{bi_model}} object
+##' @param type a character vector of one or more types
+##' @param dim logical; if set to TRUE, names will contain dimensions in brackts
+##' @param opt logical; if set to TRUE, names will contain options (e.g., has_output)
+##' @return variable names
+##' @author Sebastian Funk
+##' @keywords internal
+var_names <- function(x, type, dim = FALSE, opt = FALSE) {
+  names_vec <- c()
+  for (for_type in type) {
+    line_nbs <- grep(paste0("^[[:space:]]*", for_type, "[[:space:]]"), x$model)
+    if (length(line_nbs) > 0) {
+      ## remove qualifier
+      names <- sub(paste0("^[[:space:]]*", for_type, "[[:space:]]"), "",
+                   x$model[line_nbs])
+      if (!dim) {
+        ## remove dimensions
+        names <- sub("\\[.*\\]", "", names)
+      }
+      if (!opt) {
+        ## remove options
+        names <- sub("\\(.*\\)", "", names)
+      }
+      if (for_type == "const") {
+        ## remove assignments
+        names <- sub("=.*$", "", names)
+      }
+      ## remove spaces
+      names <- gsub("[[:space:]]", "", names)
+      names_vec <- c(names_vec, unlist(strsplit(names, ",")))
+    }
   }
+  return(names_vec)
 }
 
-add_block <- function(x, ...) UseMethod("add_block")
-add_block.bi_model <- function(x, name, lines, options) {
-  x$remove_block(name)
-  model <<- c(x$model[seq_len(length(x$model) - 1)],
-              ifelse(missing(options), paste("sub", name,"{"),
-                     paste("sub", name, paste0("(", options, ")", "{"))), 
-              paste(lines, sep = "\n"), "}", "}")
-  clean_model()
-}
-
-get_vars <- function(x, ...) UseMethod("get_vars")
-get_vars.bi_model <- function(x, type, dim = FALSE, opt = FALSE) {
-  line_nbs <- grep(paste0("^[[:space:]]*", type, "[[:space:]]"), x$model)
-  if (length(line_nbs) > 0) {
-    ## remove qualifier
-    names <- sub(paste0("^[[:space:]]*", type, "[[:space:]]"), "",
-                 x$model[line_nbs])
-    if (!dim) {
-      ## remove dimensions
-      names <- sub("\\[.*\\]", "", names)
-    }
-    if (!opt) {
-      ## remove options
-      names <- sub("\\(.*\\)", "", names)
-    }
-    if (type == "const") {
-      ## remove assignments
-      names <- sub("=.*$", "", names)
-    }
-    ## remove spaces
-    names <- gsub("[[:space:]]", "", names)
-    names_vec <- unlist(strsplit(names, ","))
-    return(names_vec)
-  } else {
-    return(c())
-  }
-}
-
+#' @title Print the lines of a bi model
+#'
+#' @param x a \code{\link{bi_model}} object
+#' @export
 print.bi_model <- function(x) {
     if (!is.null(x$name)) {
     cat("bi model:", x$name, "\n")
