@@ -69,7 +69,6 @@ libbi <- function(model, global_options,
 }
 
 run <- function(x, ...) UseMethod("run")
-
 #' @rdname run
 #' @name run
 #' @title Using the LibBi wrapper to launch LibBi
@@ -440,8 +439,83 @@ add_output_file <- function(x, file){
   return(x)
 }
 
+save_results <- function(x, ...) UseMethod("save_results")
+#' @name save_results
+#' @rdname save_results
+#' @title Write results of a \code{\link{LibBi}} run to an RDS file
+#' @description
+#' This saves all options, files and outputs of a \code{\link{LibBi}} run to an RDS file specified
+#' @param x a \code{\link{libbi}} object
+#' @param filename name of the RDS file to save to
+#' @param ... any options to \code{\link{saveRDS}}
+#' @export
+save_results.libbi <- function(x, filename, ...) {
+  if (missing(filename)) {
+    stop("Need to specify a file name")
+  }
+  assert_output(x)
+
+  save_obj <- list(model=x$model,
+                   dims=x$dims,
+                   thin=x$thin,
+                   output=bi_read(x))
+
+  options <- x$options
+
+  for (file_type in c("init", "input", "obs")) {
+    file_options <- paste(file_type, "file", sep="-")
+    if (file_option %in% names(options)) {
+      save_obj[[file_type]] <- bi_read(x$options[[file_option]])
+      x$options[[file_option]] <- NULL
+    }
+  }
+
+  save_obj[["options"]] <- options
+
+  saveRDS(save_obj, filename, ...)
+}
+
 #' @export
 read_results <- function(x, ...) UseMethod("read_results")
+#' @name read_results
+#' @rdname read_results
+#' @title Read results of a \code{\link{LibBi}} run from an RDS file. This completely reconstructs the saved \code{\link{LibBi}} object
+#' @description
+#' This reads all options, files and outputs of a \code{\link{LibBi}} run to an RDS file specified
+#' @param x a \code{\link{libbi}} object
+#' @param file name of the RDS file to read
+#' @param use_cache logical; whether to use the cache (default: \code{\link{libbi}} default)
+#' @param ... any options to \code{\link{libbi}}
+#' @return a \code{\link{libbi}} object
+#' @export
+read_results.libbi <- function(x, file, use_cache, ...) {
+  if (missing(file)) {
+    stop("Need to specify a file to read")
+  }
+
+  read_obj <- readRDS(file)
+
+  libbi_options <- list(model=read_obj$model, dims=read_obj$dims,
+                        options=read_obj$options, thin=read_obj$thin)
+
+  for (file_type in c("init", "input", "obs")) {
+    if (file_type %in% names(read_obj)) {
+      libbi_options[[file_type]] <- read_obj[[file_type]]
+    }
+  }
+
+  if (!missing(use_cache)) libbi_options[["use_cache"]] <- use_cache
+
+  output_file_name <-
+    tempfile(pattern=paste(read_obj$model$name, "output", sep = "_"),
+             fileext=".nc")
+  bi_write(output_file_name, read_obj$output)
+
+  new_obj <- libbi(libbi_options)
+  new_obj <- add_output_file(output_file_name)
+
+  return(new_obj)
+}
 
 #' @name print
 #' @rdname print
