@@ -104,22 +104,20 @@ SIRmodel[35:38]
 or
 
 ```{R}
-SIRmodel$get_block("parameter")
+get_block(SIRmodel, "parameter")
 ```
 
 To get a list of states, you can use
 
 ```{R}
-SIRmodel$get_vars("state")
+var_names(SIRmodel, "state")
 ```
 
-Moreover, there are various methods for manipulating a model, such as `remove_block`, `add_block`, `insert_lines`, `update_lines`, `remove_lines`, `set_name`.
+Moreover, there are various methods for manipulating a model, such as `remove`, `insert`, `replace`, `rename`.
 
 The `fix` method fixes a variable to one value. This can be useful, for example, to run the deterministic equivalent of a stochastic model for testing purposes.
 
-Lastly, `write` writes a model to a file, and `clone` creates a new `bi_model` object which is an exact copy of the original one.
-
-To get documentation for any of these methods, use the links in the documentation for `bi_model`, or directly using `?bi_model_` followed by the function name, for example `?bi_model_write`.
+To get documentation for any of these methods, use the links in the documentation for `bi_model`.
 
 # Generating a dataset
 
@@ -172,16 +170,16 @@ This initialises a `libbi` object called `bi` with the model created earlier.
 Let's sample from the prior of the SIR model:
 
 ```{R}
-bi$run(client="sample", target="prior", nsamples=1000, end_time=16*7, noutputs=16)
+sample(bi, target="prior", nsamples=1000, end_time=16*7, noutputs=16)
 ```
 
 This step calls **LibBi** to sample from the prior distribution of the previously specified model, generating 1,000 samples and each time running the model for 16 * 7 = 112 time steps and writing 16 outputs (i.e., every 7 time steps). **LibBi** parses the model, creates C++ code, compiles it and run the model. If the model is run again, it should do so much quicker because it will will use the already compiled C++ code to run the model:
 
 ```{R}
-bi$run()
+sample(bi)
 ```
 
-Any call of `run` preserves options passed to the previous call of `run` and `libbi`, unless they are overwritten by arguments passed to `run` (e.g., passing a new `nsamples` argument). Let's have a closer look at the `bi` object:
+Any call of `sample` preserves options passed to the previous call of `sample` and `libbi`, unless they are overwritten by arguments passed to `sample` (e.g., passing a new `nsamples` argument). Let's have a closer look at the `bi` object:
 
 ```{R}
 str(bi)
@@ -226,12 +224,12 @@ We can see that the time-varying variables are represented as data frames with t
 Let's perform inference using Particle Markov-chain Metropolis Hastings (PMMH). The following command will generate 16 * 10,000 = 160,000 simulations and therefore may take a little while to run (if you want to see the samples progress, use `verbose=TRUE` in the `bi$run` call).
 
 ```{R}
-bi$options$seed <- generate_seed()
-bi$run(client="sample", target="posterior", nparticles=16, obs=SIRdata, sample_obs=TRUE, nsamples=10000)
+seed <- generate_seed()
+bi <- sample(bi,target="posterior", nparticles=16, obs=SIRdata, sample_obs=TRUE, nsamples=10000, seed=seed)
 bi$options$seed
 ```
 
-This samples from the posterior distribution. Remember that options are preserved from previous runs, so we don't need to specify `nsamples`, `end_time` and `noutputs` again, unless we want to change them. The same holds for `seed`, which is why we set it to a (pseudo-)random value as returned by the random generator of **R** using `generate_seed`. An alternative would have been to set `bi$option$seed` to NULL and let **LibBi** set the random seed, but then we could not have inspected it afterwards. The `nparticles` option specifies the number of particles, and the `sample_obs` option tells the `run` command that we also want observation samples from the posterior distribution of trajectories. 
+This samples from the posterior distribution. Remember that options are preserved from previous runs, so we don't need to specify `nsamples`, `end_time` and `noutputs` again, unless we want to change them. The same holds for `seed`, which is why we set it to a (pseudo-)random value as returned by the random generator of **R** using `generate_seed`. An alternative would have been to set `bi$option$seed` to NULL and let **LibBi** set the random seed, but then we could not have inspected it afterwards. The `nparticles` option specifies the number of particles, and the `sample_obs` option tells the `sample` command that we also want observation samples from the posterior distribution of trajectories. 
 
 Input, init and observation files (see the [LibBi manual](http://libbi.org/docs/LibBi-Manual.pdf) for details) can be specified using the `init`, `input`, `obs` options, respectively. They can each be specified either as the name of a NetCDF file containing the data (i.e., a character vector of length one, a `libbi` object (in which case the output file will be taken), or a list of data frames or numeric vectors). In the case of the command above, `init` is specified as a list, and `obs` as a `libbi` object. The `Incidence` variable of the `SIRdata` object will be taken as observations. 
 
@@ -241,12 +239,17 @@ Any other options (apart from `log_file_name`, see the [Debugging](#debugging) s
 
 # Analysing an MCMC run
 
-Let's get the results of the preceding `run` command:
+Let's get the results of the preceding `sample` command:
 
 ```{R}
 bi_contents(bi)
 posterior <- bi_read(bi)
 str(posterior)
+```
+
+To get a summary of the parameters sampled, use
+```{R}
+summary(posterior)
 ```
 
 We can see that this has three more objects than previously when we specified `target="prior"`: `loglikelihood` (the estimated log-likelihood of the parameters at each MCMC step), `logprior` (the estimated log-prior density of the parameters at each MCMC step), and `Incidence` (sampled observations, as we specified `sample_obs=TRUE`).

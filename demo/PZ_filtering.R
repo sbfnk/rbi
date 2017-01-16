@@ -19,10 +19,10 @@ init_parameters <- list(P = 2, Z = 2, mu = 0.5, sigma = 0.3)
 synthetic_dataset <- bi_generate_dataset(end_time=T, model=PZ,
                                          init=init_parameters)
 # Settings
-bi_object <- libbi$new(client="filter", model=PZ)
+bi_object <- libbi(model=PZ)
 print(bi_object)
 # Once happy with the settings, launch bi.
-bi_object$run(nparticles = 8192, nthreads = 1, end_time = T, noutputs = T, obs = synthetic_dataset, init = init_parameters)
+bi_object <- filter(bi_object, nparticles = 8192, nthreads = 1, end_time = T, noutputs = T, obs = synthetic_dataset, init = init_parameters)
 # It can be a good idea to look at the result file
 bi_file_summary(bi_object$output_file_name)
 bi_read(bi_object$output_file_name, vars = "mu")

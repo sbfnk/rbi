@@ -20,14 +20,13 @@ init_parameters <- list(P = 2, Z = 2, mu = 0.5, sigma = 0.3)
 synthetic_dataset <- bi_generate_dataset(end_time=T, model=PZ,
                                          init=init_parameters)
 # Settings
-bi_object <- libbi(client="sample",
-                   model=PZ,
+bi_object <- libbi(model=PZ,
                    obs=synthetic_dataset,
                    init=init_parameters)
 print(bi_object)
 
 # Once happy with the settings, launch bi.
-bi_object$run(end_time=T, noutputs=T, nsamples=128, nparticles=128, nthreads=1, log_file_name=tempfile(pattern="pmmhoutput", fileext=".txt"))
+bi_object <- sample(bi_object, end_time=T, noutputs=T, nsamples=128, nparticles=128, nthreads=1, log_file_name=tempfile(pattern="pmmhoutput", fileext=".txt"))
 # It can be a good idea to look at the result file
 bi_file_summary(bi_object$output_file_name)
 # Have a look at the posterior distribution

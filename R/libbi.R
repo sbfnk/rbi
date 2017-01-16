@@ -79,6 +79,7 @@ run <- function(x, ...) UseMethod("run")
 #'
 #' @param x a \code{\link{libbi}} object
 #' @param client client to pass to LibBi
+#' @param proposal proposal distribution to use; either "model" (default: proposal distribution in the model) or "prior" (propose from the prior distribution)
 #' @param options list of additional arguments to pass to the call to \code{LibBi}
 #' @param config path to a configuration file, containing multiple arguments
 #' @param add_options deprecated, replaced by \code{options}
@@ -89,9 +90,10 @@ run <- function(x, ...) UseMethod("run")
 #' @param obs observations of the model, either supplied as a list of values and/or data frames, or a (netcdf) file name, or a \code{\link{libbi}} object which has been run (in which case the output of that run is used as observations)
 #' @param time_dim The time dimension in any R objects that have been passed (\code{init}, \code{input}) and \code{obs}); if not given, will be guessed
 #' @param working_folder path to a folder from which to run \code{LibBi}; default to a temporary folder.
+#' @param output_all logical; if set to TRUE, all parameters, states and observations will be saved; good for debugging
 #' @param sample_obs logical; if set to TRUE, will sample observations
 #' @param chain_init logical; if set to TRUE, will use only the last sample of the init file
-#' @param thin any thinning of MCMC chains (1 means all will be kept, 2 skips every other sample etc.); note that \code{\link{LibBi}} itself will write all data to the disk. Only when the results are read in with \code{\link{bi_read}} will thinning be applied.
+#' @param thin any thinning of MCMC chains (1 means all will be kept, 2 skips every other sample etc.); note that \code{LibBi} itself will write all data to the disk. Only when the results are read in with \code{\link{bi_read}} will thinning be applied.
 #' @param ... any unrecognised options will be added to \code{options}
 #' @seealso \code{\link{libbi}}
 #' @examples
@@ -103,7 +105,7 @@ run <- function(x, ...) UseMethod("run")
 #' @importFrom ncdf4 nc_open nc_close ncvar_rename
 #' @return a \code{\link{libbi}} object, except if \code{client} is 'rewrite',  in which case a \code{\link{bi_model}} object will be returned
 #' @export
-run.libbi <- function(x, client, options, config, add_options, log_file_name, stdoutput_file_name, init, input, obs, time_dim, working_folder, sample_obs, chain_init, thin, ...){
+run.libbi <- function(x, client, proposal=c("model", "prior"), options, config, add_options, log_file_name, stdoutput_file_name, init, input, obs, time_dim, working_folder, output_all, sample_obs, chain_init, thin, ...){
   if (!missing(add_options))
   {
     stop("'add_options' is deprecated. Use 'options' instead, or pass them directly as arguments to libbi$run.")
@@ -152,7 +154,7 @@ run.libbi <- function(x, client, options, config, add_options, log_file_name, st
   if ("model-file" %in% names(all_options)) {
     if (is.null(x$model)) {
       x$model_file_name <- absolute_path(all_options[["model-file"]], getwd())
-      x$model <- bi_model(model_file_name)
+      x$model <- bi_model(x$model_file_name)
     } else {
       warning("'model-file' and 'model' options both provided. Will ignore 'model-file'.")
     }
@@ -212,7 +214,7 @@ run.libbi <- function(x, client, options, config, add_options, log_file_name, st
     }
   }
 
-  if (chain_init) {
+  if (!missing(chain_init) && chain_init) {
     if ("init-np" %in% names(new_options)) {
       stop("'init-np' should not be give if chain_init=TRUE.")
     }
@@ -256,13 +258,34 @@ run.libbi <- function(x, client, options, config, add_options, log_file_name, st
       all_options[["output-file"]] <- x$output_file_name
     }
 
+    run_model <- x$model
+    run_model_modified <- FALSE
+
+    if (output_all) {
+      no_output_pattern <- "has_output[[:space:]]*=[[:space:]]*0"
+      no_output <- grep(no_output_pattern, get_lines(run_model))
+      updated_lines <- sub(no_output_pattern, "", run_model[no_output])
+      run_model <- replace(run_model, no_output, updated_lines)
+      run_model_modified <- TRUE
+    }
+
+    if (proposal == "prior") {
+      run_model <- propose_prior(run_model)
+      run_model_modified <- TRUE
+    }
+
     if (sample_obs) {
-      sample_model <- x$model$obs_to_noise()
-      sample_model_file_name <- tempfile(pattern=paste(x$model$name, "model", sep = "_"),
-                                         fileext=".bi",
-                                         tmpdir=absolute_path(x$working_folder))
-      write_file(sample_model, sample_model_file_name)
-      all_options[["model-file"]] <- sample_model_file_name
+      run_model <- obs_to_noise(run_model)
+      run_model_modified <- TRUE
+    }
+
+    if (run_model_modified) {
+      run_model_file_name <-
+        tempfile(pattern=paste(run_model$name, "model", sep = "_"),
+                 fileext=".bi",
+                 tmpdir=absolute_path(x$working_folder))
+      write_file(run_model, run_model_file_name)
+      all_options[["model-file"]] <- run_model_file_name
     } else {
       all_options[["model-file"]] <- x$model_file_name
     }
@@ -298,7 +321,7 @@ run.libbi <- function(x, client, options, config, add_options, log_file_name, st
       x$path_to_libbi <- paste0(x$path_to_libbi, "/libbi")
     }
     if (!file.exists(x$path_to_libbi)) {
-      stop("Could not find libbi executable ", path_to_libbi)
+      stop("Could not find libbi executable ", x$path_to_libbi)
     }
     base_command_string <- paste(x$path_to_libbi, client)
 
@@ -318,7 +341,7 @@ run.libbi <- function(x, client, options, config, add_options, log_file_name, st
     if (verbose) print("... LibBi has finished!")
     if (sample_obs) {
       nc <- nc_open(x$output_file_name, write=TRUE)
-      for (obs_name in sample_model$get_vars("obs")) {
+      for (obs_name in var_names(run_model, "obs")) {
         ncvar_rename(nc, paste0("__sample_", obs_name), obs_name)
       }
       nc_close(nc)
@@ -357,8 +380,6 @@ sample.default <- function(x, ...){
   base::sample(x, ...)
 }
 
-#' @export
-filter <- function(x, ...) UseMethod("filter")
 #' @name filter
 #' @rdname filter
 #' @title Using the LibBi wrapper to filter
@@ -372,13 +393,7 @@ filter <- function(x, ...) UseMethod("filter")
 filter.libbi <- function(x, ...){
   run.libbi(x, client="filter", ...)
 }
-#' @export
-filter.default <- function(x, ...){
-  stats::filter(x, ...)
-}
 
-#' @export
-optimise <- function(x, ...) UseMethod("optimise")
 #' @name optimise
 #' @rdname optimise
 #' @title Using the LibBi wrapper to optimise
@@ -391,10 +406,6 @@ optimise <- function(x, ...) UseMethod("optimise")
 #' @export
 optimise.libbi <- function(x, ...){
   run.libbi(x, client="optimise", ...)
-}
-#' @export
-optimise.default <- function(x, ...){
-  stats::optimise(x, ...)
 }
 
 #' @export
@@ -442,9 +453,9 @@ add_output_file <- function(x, file){
 save_results <- function(x, ...) UseMethod("save_results")
 #' @name save_results
 #' @rdname save_results
-#' @title Write results of a \code{\link{LibBi}} run to an RDS file
+#' @title Write results of a \code{LibBi} run to an RDS file
 #' @description
-#' This saves all options, files and outputs of a \code{\link{LibBi}} run to an RDS file specified
+#' This saves all options, files and outputs of a \code{LibBi} run to an RDS file specified
 #' @param x a \code{\link{libbi}} object
 #' @param filename name of the RDS file to save to
 #' @param ... any options to \code{\link{saveRDS}}
@@ -463,8 +474,8 @@ save_results.libbi <- function(x, filename, ...) {
   options <- x$options
 
   for (file_type in c("init", "input", "obs")) {
-    file_options <- paste(file_type, "file", sep="-")
-    if (file_option %in% names(options)) {
+    file_option <- paste(file_type, "file", sep="-")
+    if (file_option %in% names(x$options)) {
       save_obj[[file_type]] <- bi_read(x$options[[file_option]])
       x$options[[file_option]] <- NULL
     }
@@ -479,9 +490,9 @@ save_results.libbi <- function(x, filename, ...) {
 read_results <- function(x, ...) UseMethod("read_results")
 #' @name read_results
 #' @rdname read_results
-#' @title Read results of a \code{\link{LibBi}} run from an RDS file. This completely reconstructs the saved \code{\link{LibBi}} object
+#' @title Read results of a \code{LibBi} run from an RDS file. This completely reconstructs the saved \code{LibBi} object
 #' @description
-#' This reads all options, files and outputs of a \code{\link{LibBi}} run to an RDS file specified
+#' This reads all options, files and outputs of a \code{LibBi} run to an RDS file specified
 #' @param x a \code{\link{libbi}} object
 #' @param file name of the RDS file to read
 #' @param use_cache logical; whether to use the cache (default: \code{\link{libbi}} default)
@@ -520,9 +531,14 @@ read_results.libbi <- function(x, file, use_cache, ...) {
 #' @name print
 #' @rdname print
 #' @title Print information about a \code{\link{libbi}} object
+#' @description
+#' This prints the model name, basic information such as number of iterations
+#'   and timesteps run, as well as a list of variables.
 #' @export
-#' @param x a \code{\link{libbi}} object
-print.libbi <- function(x, verbose=FALSE){
+##' @param x a \code{\link{libbi}} object
+##' @param verbose logical; if TRUE, locations of files and working folder should be printed
+##' @param ... ignored
+print.libbi <- function(x, verbose=FALSE, ...){
   cat("Wrapper around LibBi\n")
   if (verbose) {
     cat("* path to working folder:", x$working_folder, "\n")
@@ -539,10 +555,10 @@ print.libbi <- function(x, verbose=FALSE){
     ntimesteps <- range(bi_read(x, "time")[["time"]][["value"]])
     clock <- bi_read(x, "clock")[["clock"]]
     contents <- bi_contents(x$output_file_name)
-    states <- intersect(contents, get_vars(x$model, "state"))
-    noises <- intersect(contents, get_vars(x$model, "noise"))
-    params <- intersect(contents, get_vars(x$model, "param"))
-    obs <- intersect(contents, get_vars(x$model, "obs"))
+    states <- intersect(contents, var_names(x$model, "state"))
+    noises <- intersect(contents, var_names(x$model, "noise"))
+    params <- intersect(contents, var_names(x$model, "param"))
+    obs <- intersect(contents, var_names(x$model, "obs"))
     cat("Run time: ", round(clock/1000), " seconds\n")
     cat("Number of samples: ", niterations, "\n")
     if (length(states) > 0) cat("State trajectories recorded: ", paste(states), "\n")
@@ -558,13 +574,13 @@ print.libbi <- function(x, verbose=FALSE){
 #' @rdname summary
 #' @title Print summary information about a \code{\link{libbi}} object
 #' @description
-#' This reads in the output file of the \code{\link{[libbi]}} object (which has been run before) and prints summary information of parameters
+#' This reads in the output file of the \code{\link{libbi}} object (which has been run before) and prints summary information of parameters
 #' @export
-##' @param x a \code{\link{libbi}} object
-##' @param thin 
-summary.libbi <- function(x, thin=1){
-  params <- bi_read(x, get_vars(x$model, "param"))
-  summary_table <- t(sapply(params, function(x) summary(x$value)))
+#' @param object a \code{\link{libbi}} object
+#' @param ... ignored
+summary.libbi <- function(object, ...){
+  params <- bi_read(object, var_names(object$model, "param"))
+  summary_table <- t(sapply(params, function(object) summary(object$value)))
   return(summary_table)
 }
 
@@ -581,7 +597,7 @@ assert_output <- function(x)
       stop("The libbi object must be run first (using sample, filter or optimise).")
     }
     if (x$timestamp < file.mtime(x$output_file_name)) {
-      stop("Output file ", filename, " has been modified since LibBi was run.")
+      stop("Output file ", x$output_file_name, " has been modified since LibBi was run.")
     }
 }
 

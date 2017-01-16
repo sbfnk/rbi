@@ -15,7 +15,7 @@ generated data set
 \description{
 This is a wrapper around \code{libbi sample --target joint --nsamples 1}, to generate a
 synthetic dataset from a model. Parameters can be passed via the 'init' option
-(see \code{\link{libbi_run}}, otherwise they are generated from the prior specified
+(see \code{\link{run}}, otherwise they are generated from the prior specified
 in the model. The end time should be specified using the "end_time" option. If this is not given,
 only a parameter set is sampled.
 }

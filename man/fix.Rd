@@ -5,7 +5,7 @@
 \alias{fix.bi_model}
 \title{Fix noise term, state or parameter of a libbi model}
 \usage{
-\method{fix}{bi_model}(x, ...)
+fix.bi_model(x, ...)
 }
 \arguments{
 \item{x}{a \code{\link{bi_model}} object}
@@ -21,7 +21,6 @@ Replaces all variables with fixed values as given ; note that this will not repl
 \examples{
 model_file_name <- system.file(package="rbi", "PZ.bi")
 PZ <- bi_model(filename = model_file_name)
-fix(PZ, alpha = 0)
 }
 \seealso{
 \code{\link{bi_model}}

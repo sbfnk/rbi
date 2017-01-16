@@ -3,12 +3,16 @@
 \name{remove}
 \alias{remove}
 \alias{remove.bi_model}
-\title{Remove line(s) in a libbi model}
+\title{Remove line(s) and/or block(s) in a libbi model}
 \usage{
-\method{remove}{bi_model}(x, num)
+\method{remove}{bi_model}(x, num, name)
 }
 \arguments{
+\item{x}{a \code{\link{bi_model}} object}
+
 \item{num}{line number(s) to remove}
+
+\item{name}{a character vector of one or more blocks to remove (e.g., "parameter")}
 }
 \value{
 the updated bi model

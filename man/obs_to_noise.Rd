@@ -12,6 +12,10 @@ obs_to_noise(x)
 \value{
 a \code{\link{bi_model}}
 }
+\description{
+This is used by the \code{\link{run}} functions of rbi, if 'sample_obs=TRUE'
+  is specified.
+}
 \seealso{
 \code{\link{bi_model}}
 }

@@ -8,6 +8,8 @@ bi_model(filename, lines)
 }
 \arguments{
 \item{filename}{is the file name of the model file}
+
+\item{lines}{lines of the model (if no \code{filename} is given), a character vector}
 }
 \description{
 \code{bi_model} creates a model object for \code{Rbi} from a libbi file.
@@ -19,6 +21,6 @@ model_file_name <- system.file(package="rbi", "PZ.bi")
 PZ <- bi_model(filename = model_file_name)
 }
 \seealso{
-\code{\link{fix}}, \code{\link{propose_prior}}, \code{\link{get_lines}}, \code{\link{insert_lines}}, \code{\link{update_lines}}, \code{\link{remove_lines}}, \code{\link{rename}}, \code{\link{write}}, \code{\link{clone}}
+\code{\link{fix}}, \code{\link{insert}}, \code{\link{replace}}, \code{\link{remove}}, \code{\link{rename}}, \code{\link{write_file}}
 }
 

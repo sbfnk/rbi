@@ -7,6 +7,7 @@
 #' object.
 #'
 #' @param filename is the file name of the model file
+#' @param lines lines of the model (if no \code{filename} is given), a character vector
 #' @examples
 #' model_file_name <- system.file(package="rbi", "PZ.bi")
 #' PZ <- bi_model(filename = model_file_name)
@@ -36,7 +37,6 @@ bi_model <- function(filename, lines) {
   return(clean_model(new_obj))
 }
 
-fix <- function(x, ...) UseMethod("fix")
 #' @rdname fix
 #' @name fix
 #' @title Fix noise term, state or parameter of a libbi model
@@ -50,7 +50,6 @@ fix <- function(x, ...) UseMethod("fix")
 #' @examples
 #' model_file_name <- system.file(package="rbi", "PZ.bi")
 #' PZ <- bi_model(filename = model_file_name)
-#' fix(PZ, alpha = 0)
 #' @export
 fix.bi_model <- function(x, ...) {
 
@@ -133,10 +132,10 @@ propose_prior.bi_model <- function(x) {
   new_model <- bi_model(lines = x$model)
 
   ## remove parameter proposal
-  prior_parameter <- new_model$get_block("parameter")
+  prior_parameter <- get_block(new_model, "parameter")
   new_model <- add_block(new_model, "proposal_parameter", lines = prior_parameter)
 
-  prior_initial <- new_model$get_block("initial")
+  prior_initial <- get_block(new_model, "initial")
   new_model <- add_block(new_model, "proposal_initial", lines = prior_initial)
 
   return(new_model)
@@ -144,6 +143,9 @@ propose_prior.bi_model <- function(x) {
 
 #' @title Copy obs variables to state variables (with '__sample_' prepended)
 #'
+#' @description
+#' This is used by the \code{\link{run}} functions of rbi, if 'sample_obs=TRUE'
+#'   is specified.
 #' @return a \code{\link{bi_model}}
 #' @seealso \code{\link{bi_model}}
 #' @keywords internal
@@ -155,15 +157,18 @@ obs_to_noise <- function(x) {
 
   obs_var_pattern <- paste0("^(", paste(obs_variables, collapse = "|"), ")")
   state_block <- sub(obs_var_pattern, "__sample_\\1", obs_block)
-  new_model$insert_lines(state_block, at_end_of = "transition")
+  insert(new_model, state_block, at_end_of = "transition")
   state_variables <- paste0("__sample_", obs_variables)
-  insert_lines(new_model, paste("noise ", paste(state_variables, collapse = ", ")), after = 1)
+  insert(new_model, paste("noise ", paste(state_variables, collapse = ", ")), after = 1)
 
   return(new_model)
 }
 
 #' @title Strip model code to its bare bones
 #'
+#' @description
+#' Cleans the model by working out correct indents, removing long comments and
+#'   merging lines
 #' @return a \code{\link{bi_model}}
 #' @seealso \code{\link{bi_model}}
 #' @keywords internal
@@ -272,7 +277,7 @@ insert <- function(x, ...) UseMethod("insert")
 #' @examples
 #' model_file_name <- system.file(package="rbi", "PZ.bi")
 #' PZ <- bi_model(filename = model_file_name)
-#' PZ <- insert_lines(PZ, lines = "noise beta", after = 8)
+#' PZ <- insert(PZ, lines = "noise beta", after = 8)
 insert.bi_model <- function(x, lines, before, after, at_beginning_of, at_end_of) {
   args <- match.call()
   arg_name <- setdiff(names(args), c("", "lines"))
@@ -313,7 +318,7 @@ insert.bi_model <- function(x, lines, before, after, at_beginning_of, at_end_of)
   } else if (after == length(x$model)) {
     x$model <- c(x$model[1:after], lines)
   } else {
-    x$model <- c(x$model[1:after], lines, x$model[(after+1):length(model)])
+    x$model <- c(x$model[1:after], lines, x$model[(after+1):length(x$model)])
   }
   return(clean_model(x))
 }
@@ -400,6 +405,7 @@ rename.bi_model <- function(x, name) {
   return(clean_model(x))
 }
 
+#' @export
 write_file <- function(x, ...) UseMethod("write_file")
 #' @rdname write_file
 #' @name write_file
@@ -407,14 +413,17 @@ write_file <- function(x, ...) UseMethod("write_file")
 #' @description
 #' Writes a bi model to a file given by \code{filename}. The extension '.bi' will be added if necessary.
 #'
+#' @param x a \code{\link{bi_model}} object
 #' @param filename name of the file to be written
+#' @param ... ignored
 #' @return the return value of the \code{\link{writeLines}} call.
 #' @seealso \code{\link{bi_model}}
+#' @export
 #' @examples
 #' model_file_name <- system.file(package="rbi", "PZ.bi")
 #' PZ <- bi_model(filename = model_file_name)
 #' PZ$write("PZ")
-write_file.bi_model <- function(x, filename) {
+write_file.bi_model <- function(x, filename, ...) {
   "Write model to file"
   if (!grepl("\\.bi$", filename)) {
     filename <- paste(filename, "bi", sep = ".")
@@ -425,9 +434,11 @@ write_file.bi_model <- function(x, filename) {
 }
 
 find_block <- function(x, ...) UseMethod("find_block")
-#' @title Copy obs variables to state variables (with '__sample_' prepended)
+#' @title Find a block in a LibBi model
 #'
-#' @return a \code{\link{bi_model}}
+#' @description
+#' Finds a block and returns the range of line numbers encompassed by that block.
+#' @return range of line numbers
 #' @seealso \code{\link{bi_model}}
 #' @keywords internal
 #' @param x a \code{\link{bi_model}} object
@@ -450,8 +461,11 @@ find_block.bi_model <- function(x, name) {
   }
 }
 
-#' @title Get the contents of a block in a libbi model
+#' @title Get the contents of a block in a LibBi model
 #'
+#' @description
+#' Returns the contents of a block in a LibBi model as a character vector of
+#'   lines. 
 #' @return a character vector of the lines in the block
 #' @keywords internal
 #' @param x a \code{\link{bi_model}} object
@@ -473,8 +487,10 @@ get_block <- function(x, name) {
   }
 }
 
-#' @title Add a block to a libbi model
+#' @title Add a block to a LibBi model
 #'
+#' @description
+#' Add a block to a LibBi model. If that block exists, it will be removed first.
 #' @return a \code{\link{bi_model}} object containing the new block
 #' @keywords internal
 #' @param x a \code{\link{bi_model}} object
@@ -482,7 +498,7 @@ get_block <- function(x, name) {
 #' @param lines character vector, lines in the block
 #' @param options any options to the block
 add_block <- function(x, name, lines, options) {
-  x <- remove_block(x, name)
+  x <- remove(x, name=name)
   x$model <- c(x$model[seq_len(length(x$model) - 1)],
                ifelse(missing(options), paste("sub", name,"{"),
                       paste("sub", name, paste0("(", options, ")", "{"))), 
@@ -529,11 +545,14 @@ var_names <- function(x, type, dim = FALSE, opt = FALSE) {
   return(names_vec)
 }
 
-#' @title Print the lines of a bi model
+#' @title Print the lines of a LibBi model
 #'
+#' @description
+#' Prints all lines in a LibBi model
 #' @param x a \code{\link{bi_model}} object
+#' @param ... ignored
 #' @export
-print.bi_model <- function(x) {
+print.bi_model <- function(x, ...) {
     if (!is.null(x$name)) {
     cat("bi model:", x$name, "\n")
     cat("==========", paste(rep("=", nchar(x$name)), collapse = ""), "\n",

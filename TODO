@@ -8,21 +8,17 @@
 - DONE summary/str function, as in RStan -- focus on parameters
 - DONE put out warning if noutputs is inferred
 - CANCELLED maybe a "clock" option? Or 'ignore_clock' in 'bi_read'?
+- DONE change recreate_libbi to libbi?
+- DONE 'type' option for bi_read (and 'model'):
+  > res <- libbi(ebola_model) %>% sample(nsamples=10, end_time=100, obs=test) %>% bi_read(type="param") ## yes, this works now
+- CANCELLED need to think about bi_read anyway -- could it be an S3 method?
+- DONE thin option to run, field in libbi
 
-- thin option to run, field in libbi
-- change recreate_libbi to libbi?
-- write function? Would need to write all files
-
-- concatenate option or something of sorts in run? Of init, take last one?
-- check if given inits/inputs/obs correspond to file
-  - what does that mean? It's checking that already??
-- 'type' option for bi_read (and 'model'):
-  > res <- libbi(ebola_model) %>% sample(nsamples=10, end_time=100, obs=test) %>% bi_read(type="param")
-- need to think about bi_read anyway -- could it be an S3 method?
+- DONE write function? Would need to write all files
+- DONE concatenate option or something of sorts in run? Of init, take last one?
+- DONE output_all option (in run, as in verbose in my Zika etc model)
 
 - adapt_proposal: don't do anything if min=0 and max=1
-- output_all option
-  (in run, as in verbose in my Zika etc model)
 - plot_libbi: respect order of states (just refactor at the end)
 - adapt_proposal/adapt_particles need some initial output
-- make recreate_libbi work with timestamp check
+- DONE make recreate_libbi work with timestamp check

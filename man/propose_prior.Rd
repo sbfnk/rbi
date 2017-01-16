@@ -13,12 +13,8 @@ a bi model object of the new model
 \description{
 Generates a version of the model where the proposal blocks are replaced by the prior blocks. This is useful for exploration of the likelihood surface.
 }
-\examples{
-model_file_name <- system.file(package="rbi", "PZ.bi")
-PZ <- bi_model(filename = model_file_name)
-propose_prior(PZ)
-}
 \seealso{
 \code{\link{bi_model}}
 }
+\keyword{internal}
 

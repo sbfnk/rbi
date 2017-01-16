@@ -29,7 +29,7 @@ Inserts one or more lines into a libbi model. If one of \code{before} or \code{a
 \examples{
 model_file_name <- system.file(package="rbi", "PZ.bi")
 PZ <- bi_model(filename = model_file_name)
-PZ <- insert_lines(PZ, lines = "noise beta", after = 8)
+PZ <- insert(PZ, lines = "noise beta", after = 8)
 }
 \seealso{
 \code{\link{bi_model}}

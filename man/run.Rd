@@ -2,16 +2,19 @@
 % Please edit documentation in R/libbi.R
 \name{run}
 \alias{run}
+\alias{run.libbi}
 \title{Using the LibBi wrapper to launch LibBi}
 \usage{
-run(.Object, ...)
+\method{run}{libbi}(x, client, proposal = c("model", "prior"), options,
+  config, add_options, log_file_name, stdoutput_file_name, init, input, obs,
+  time_dim, working_folder, output_all, sample_obs, chain_init, thin, ...)
 }
 \arguments{
-\item{...}{any unrecognised options will be added to \code{options}}
-
 \item{x}{a \code{\link{libbi}} object}
 
 \item{client}{client to pass to LibBi}
+
+\item{proposal}{proposal distribution to use; either "model" (default: proposal distribution in the model) or "prior" (propose from the prior distribution)}
 
 \item{options}{list of additional arguments to pass to the call to \code{LibBi}}
 
@@ -33,7 +36,15 @@ run(.Object, ...)
 
 \item{working_folder}{path to a folder from which to run \code{LibBi}; default to a temporary folder.}
 
+\item{output_all}{logical; if set to TRUE, all parameters, states and observations will be saved; good for debugging}
+
 \item{sample_obs}{logical; if set to TRUE, will sample observations}
+
+\item{chain_init}{logical; if set to TRUE, will use only the last sample of the init file}
+
+\item{thin}{any thinning of MCMC chains (1 means all will be kept, 2 skips every other sample etc.); note that \code{LibBi} itself will write all data to the disk. Only when the results are read in with \code{\link{bi_read}} will thinning be applied.}
+
+\item{...}{any unrecognised options will be added to \code{options}}
 }
 \value{
 a \code{\link{libbi}} object, except if \code{client} is 'rewrite',  in which case a \code{\link{bi_model}} object will be returned
