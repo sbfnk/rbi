@@ -13,13 +13,15 @@
 #' using the \code{which} Unix command, after having loaded "~/.bashrc" if present;
 #' if unsuccessful it tries "~/PathToBiBin/libbi"; if unsuccessful again it fails.
 #' @param dims any named dimensions, as list of character vectors
+#' @param use_cache logical; whether to use the cache (default: true)
+#' @param ... options passed to \code{\link{run}}
 #' @return a \code{\link{libbi}} object
 #' @examples
 #' bi_object <- libbi(model = system.file(package="rbi", "PZ.bi"))
 #' @seealso \code{\link{sample}}, \code{\link{filter}}, \code{\link{optimise}}, \code{\link{rewrite}}
 #' @export
 libbi <- function(model, global_options,
-                  path_to_libbi, dims, ...){
+                  path_to_libbi, dims, use_cache=TRUE, ...){
   if (!missing(global_options))
   {
     stop("'global_options' is deprecated. Use 'options' instead, or pass them directly as arguments to libbi.")
@@ -60,7 +62,8 @@ libbi <- function(model, global_options,
                    log_file_name="",
                    timestamp=.POSIXct(NA),
                    run_flag=FALSE,
-                   .cache=list(data=list(), thin=integer(0))), class="libbi")
+                   use_cache=use_cache,
+                   .cache=new.env(parent = emptyenv())), class="libbi")
   return(do.call(run, c(list(x=new_obj, client=character(0), list(...)))))
 }
 
@@ -216,6 +219,10 @@ run.libbi <- function(x, client, options, config, add_options, log_file_name, st
                                x$options, new_options, file_options, list(...))
     ## adjust options
     if (client != "rewrite") {
+      ## clear cache
+      x$.cache$data <- list()
+      x$.cache$thin <- integer(0)
+
       if ("end-time" %in% names(all_options) && !("noutputs" %in% names(all_options))) {
         all_options[["noutputs"]] <- all_options[["end-time"]] - all_options[["start-time"]]
       }
@@ -326,15 +333,6 @@ print.libbi <- function(x){
     }
 }
 
-`cache<-` <- function(x, ...) UseMethod("cache<-")
-`cache<-.libbi` <- function(x, value) {
-    value$thin <- as.integer(value$thin)
-    for (name in names(value$data)) {
-        if (!(name %in% names(x$.cache$data) &&
-              value$thin == x$.cahe$thin)) {
-            x$.cache$data[[name]] <- value$data[[name]]
-            x$.cache$thin[[name]] <- value$thin
-        }
 #' @name assert_output
 #' @rdname assert_output
 #' @title Check that a LibBi wrapper has valid output
