@@ -380,6 +380,8 @@ sample.default <- function(x, ...){
   base::sample(x, ...)
 }
 
+#' @export
+filter <- function(x, ...) UseMethod("filter")
 #' @name filter
 #' @rdname filter
 #' @title Using the LibBi wrapper to filter
@@ -393,7 +395,13 @@ sample.default <- function(x, ...){
 filter.libbi <- function(x, ...){
   run.libbi(x, client="filter", ...)
 }
+#' @export
+filter.default <- function(x, ...){
+  stats::filter(x, ...)
+}
 
+#' @export
+optimise <- function(x, ...) UseMethod("optimise")
 #' @name optimise
 #' @rdname optimise
 #' @title Using the LibBi wrapper to optimise
@@ -406,6 +414,10 @@ filter.libbi <- function(x, ...){
 #' @export
 optimise.libbi <- function(x, ...){
   run.libbi(x, client="optimise", ...)
+}
+#' @export
+optimise.default <- function(x, ...){
+  stats::optimise(x, ...)
 }
 
 #' @export
