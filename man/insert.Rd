@@ -5,7 +5,8 @@
 \alias{insert.bi_model}
 \title{Insert lines in a LibBi model}
 \usage{
-\method{insert}{bi_model}(x, lines, before, after, at_beginning_of, at_end_of)
+\method{insert}{bi_model}(x, lines, before, after, at_beginning_of, at_end_of,
+  ...)
 }
 \arguments{
 \item{x}{a \code{\link{bi_model}} object}
@@ -19,6 +20,8 @@
 \item{at_beginning_of}{block at the beginning of which to insert lines(s)}
 
 \item{at_end_of}{block at the end of which to insert lines(s)}
+
+\item{...}{ignored}
 }
 \value{
 the updated bi model

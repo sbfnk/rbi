@@ -5,7 +5,7 @@
 \alias{optimise.libbi}
 \title{Using the LibBi wrapper to optimise}
 \usage{
-optimise.libbi(x, ...)
+\method{optimise}{libbi}(x, ...)
 }
 \arguments{
 \item{x}{a \code{\link{libbi}} object}

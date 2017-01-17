@@ -5,7 +5,7 @@
 \alias{filter.libbi}
 \title{Using the LibBi wrapper to filter}
 \usage{
-filter.libbi(x, ...)
+\method{filter}{libbi}(x, ...)
 }
 \arguments{
 \item{x}{a \code{\link{libbi}} object}
