@@ -5,7 +5,7 @@
 \alias{remove.bi_model}
 \title{Remove line(s) and/or block(s) in a libbi model}
 \usage{
-\method{remove}{bi_model}(x, num, name)
+\method{remove}{bi_model}(x, num, name, ...)
 }
 \arguments{
 \item{x}{a \code{\link{bi_model}} object}
@@ -13,6 +13,8 @@
 \item{num}{line number(s) to remove}
 
 \item{name}{a character vector of one or more blocks to remove (e.g., "parameter")}
+
+\item{...}{ignored}
 }
 \value{
 the updated bi model
@@ -23,7 +25,7 @@ Removes one or more lines in a libbi model.
 \examples{
 model_file_name <- system.file(package="rbi", "PZ.bi")
 PZ <- bi_model(filename = model_file_name)
-PZ <- remove_lines(PZ, 2)
+PZ <- remove(PZ, 2)
 }
 \seealso{
 \code{\link{bi_model}}

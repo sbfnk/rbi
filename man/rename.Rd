@@ -5,12 +5,14 @@
 \alias{rename.bi_model}
 \title{Set the name of a bi model}
 \usage{
-\method{rename}{bi_model}(x, name)
+\method{rename}{bi_model}(x, name, ...)
 }
 \arguments{
 \item{x}{a \code{\link{bi_model}} object}
 
 \item{name}{Name of the model}
+
+\item{...}{ignored}
 }
 \value{
 the updated bi model
@@ -21,7 +23,7 @@ Changes the name of a bi model (first line of the .bi file) to the specified nam
 \examples{
 model_file_name <- system.file(package="rbi", "PZ.bi")
 PZ <- bi_model(filename = model_file_name)
-PZ <- set_name(PZ, "new_PZ")
+PZ <- rename(PZ, "new_PZ")
 }
 \seealso{
 \code{\link{bi_model}}

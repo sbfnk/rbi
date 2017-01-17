@@ -345,6 +345,7 @@ replace_lines <- function(x, num, lines) {
   return(clean_model(x))
 }
 
+#' @export
 remove <- function(x, ...) UseMethod("remove")
 #' @rdname remove
 #' @name remove
@@ -355,14 +356,15 @@ remove <- function(x, ...) UseMethod("remove")
 #' @param x a \code{\link{bi_model}} object
 #' @param num line number(s) to remove
 #' @param name a character vector of one or more blocks to remove (e.g., "parameter")
+#' @param ... ignored
 #' @return the updated bi model
 #' @seealso \code{\link{bi_model}}
 #' @examples
 #' model_file_name <- system.file(package="rbi", "PZ.bi")
 #' PZ <- bi_model(filename = model_file_name)
-#' PZ <- remove_lines(PZ, 2)
+#' PZ <- remove(PZ, 2)
 #' @export
-remove.bi_model <- function(x, num, name) {
+remove.bi_model <- function(x, num, name, ...) {
   if (missing(num) && missing(name)) {
     stop("At least one of 'num' and 'name' must be given")
   }
@@ -372,14 +374,16 @@ remove.bi_model <- function(x, num, name) {
     }
     x$model <- x$model[-num]
   }
-  if (!missing(name))
-  block <- find_block(name)
-  if (length(block) > 0) {
-    x$model <- x$model[-block]
+  if (!missing(name)) {
+    block <- find_block(name)
+    if (length(block) > 0) {
+      x$model <- x$model[-block]
+    }
   }
   return(clean_model(x))
 }
 
+#' @export
 rename <- function(x, ...) UseMethod("rename")
 #' @rdname rename
 #' @name rename
@@ -389,14 +393,15 @@ rename <- function(x, ...) UseMethod("rename")
 #'
 #' @param x a \code{\link{bi_model}} object
 #' @param name Name of the model
+#' @param ... ignored
 #' @return the updated bi model
 #' @seealso \code{\link{bi_model}}
 #' @examples
 #' model_file_name <- system.file(package="rbi", "PZ.bi")
 #' PZ <- bi_model(filename = model_file_name)
-#' PZ <- set_name(PZ, "new_PZ")
+#' PZ <- rename(PZ, "new_PZ")
 #' @export
-rename.bi_model <- function(x, name) {
+rename.bi_model <- function(x, name, ...) {
   if (length(x$model) > 0) {
     if (grepl("model [[:graph:]]+ \\{", x$model[1])) {
       x$model[1] <-
@@ -428,7 +433,7 @@ write_file <- function(x, ...) UseMethod("write_file")
 #' @examples
 #' model_file_name <- system.file(package="rbi", "PZ.bi")
 #' PZ <- bi_model(filename = model_file_name)
-#' PZ$write("PZ")
+#' write_file(PZ, "PZ.bi")
 write_file.bi_model <- function(x, filename, ...) {
   "Write model to file"
   if (!grepl("\\.bi$", filename)) {
