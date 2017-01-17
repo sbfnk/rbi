@@ -37,6 +37,8 @@ bi_model <- function(filename, lines) {
   return(clean_model(new_obj))
 }
 
+#' @export
+fix <- function(x, ...) UseMethod("fix")
 #' @rdname fix
 #' @name fix
 #' @title Fix noise term, state or parameter of a libbi model
@@ -50,6 +52,7 @@ bi_model <- function(filename, lines) {
 #' @examples
 #' model_file_name <- system.file(package="rbi", "PZ.bi")
 #' PZ <- bi_model(filename = model_file_name)
+#' \dontrun{PZ <- fix(PZ, alpha = 0)}
 #' @export
 fix.bi_model <- function(x, ...) {
 
@@ -259,6 +262,7 @@ get_lines <- function(x, spaces = 2) {
   return(vec)
 }
 
+#' @export
 insert <- function(x, ...) UseMethod("insert")
 #' @rdname insert
 #' @name insert
@@ -272,17 +276,19 @@ insert <- function(x, ...) UseMethod("insert")
 #' @param after line number after which to insert line(s)
 #' @param at_beginning_of block at the beginning of which to insert lines(s)
 #' @param at_end_of block at the end of which to insert lines(s)
+#' @param ... ignored
 #' @return the updated bi model
+#' @export
 #' @seealso \code{\link{bi_model}}
 #' @examples
 #' model_file_name <- system.file(package="rbi", "PZ.bi")
 #' PZ <- bi_model(filename = model_file_name)
 #' PZ <- insert(PZ, lines = "noise beta", after = 8)
-insert.bi_model <- function(x, lines, before, after, at_beginning_of, at_end_of) {
+insert.bi_model <- function(x, lines, before, after, at_beginning_of, at_end_of, ...) {
   args <- match.call()
-  arg_name <- setdiff(names(args), c("", "lines"))
+  arg_name <- setdiff(names(args), c("", "x", "lines"))
   if (length(arg_name) != 1) {
-    stop("insert_lines needs exactly two arguments, 'lines' and one of 'before', 'after', 'at_beginning_of' or 'at_end_of'")
+    stop("insert needs exactly three arguments, 'x', 'lines' and one of 'before', 'after', 'at_beginning_of' or 'at_end_of'")
   }
   arg <- get(arg_name)
   if (is.numeric(arg)) arg <- as.integer(arg)
