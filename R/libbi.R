@@ -100,11 +100,6 @@ run <- function(x, ...) UseMethod("run")
 #' @return a \code{\link{libbi}} object, except if \code{client} is 'rewrite',  in which case a \code{\link{bi_model}} object will be returned
 #' @export
 run.libbi <- function(x, client, proposal=c("model", "prior"), options, config, add_options, log_file_name, stdoutput_file_name, init, input, obs, time_dim, working_folder, output_all, sample_obs, chain_init, thin, ...){
-  if (!missing(add_options))
-  {
-    stop("'add_options' is deprecated. Use 'options' instead, or pass them directly as arguments to libbi$run.")
-  }
-
   if (!missing(stdoutput_file_name))
   {
     stop("'stdoutput_file_name' is deprecated. Use 'log_file_name' instead.")
