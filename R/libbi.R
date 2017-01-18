@@ -68,6 +68,7 @@ libbi <- function(model, global_options,
   return(do.call(run, c(list(x=new_obj, client=character(0), list(...)))))
 }
 
+#' @export
 run <- function(x, ...) UseMethod("run")
 #' @rdname run
 #' @name run
