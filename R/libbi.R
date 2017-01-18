@@ -58,7 +58,7 @@ libbi <- function(model, path_to_libbi, dims, use_cache=TRUE, ...){
                    run_flag=FALSE,
                    use_cache=use_cache,
                    .cache=new.env(parent = emptyenv())), class="libbi")
-  return(do.call(run, c(list(x=new_obj, client=character(0), list(...)))))
+  return(do.call(run, c(list(x=new_obj, client=character(0)), list(...))))
 }
 
 #' @export
