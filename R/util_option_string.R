@@ -34,7 +34,7 @@ option_string <- function(...){
                              }
                            } else if (option == "dry") {
                              paste0("--dry-", list_options[[option]])
-                           } else if (option %in% ("with", "without")) {
+                           } else if (option %in% c("with", "without")) {
                              paste("--", option, list_options[[option]],
                                    sep="-", collapse=" ")
                            } else {
