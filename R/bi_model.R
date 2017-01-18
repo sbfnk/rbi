@@ -141,7 +141,7 @@ propose_prior.bi_model <- function(x) {
   prior_initial <- get_block(new_model, "initial")
   new_model <- add_block(new_model, "proposal_initial", lines = prior_initial)
 
-  return(new_model)
+  return(clean_model(new_model))
 }
 
 #' @title Copy obs variables to state variables (with '__sample_' prepended)
@@ -160,11 +160,11 @@ obs_to_noise <- function(x) {
 
   obs_var_pattern <- paste0("^(", paste(obs_variables, collapse = "|"), ")")
   state_block <- sub(obs_var_pattern, "__sample_\\1", obs_block)
-  insert(new_model, state_block, at_end_of = "transition")
+  new_model <- insert(new_model, state_block, at_end_of = "transition")
   state_variables <- paste0("__sample_", obs_variables)
-  insert(new_model, paste("noise ", paste(state_variables, collapse = ", ")), after = 1)
+  new_model <- insert(new_model, paste("noise ", paste(state_variables, collapse = ", ")), after = 1)
 
-  return(new_model)
+  return(clean_model(new_model))
 }
 
 #' @title Strip model code to its bare bones
@@ -472,17 +472,20 @@ find_block.bi_model <- function(x, name) {
   }
 }
 
+#' @export
+get_block <- function(x, ...) UseMethod("get_block")
 #' @title Get the contents of a block in a LibBi model
 #'
 #' @description
 #' Returns the contents of a block in a LibBi model as a character vector of
 #'   lines. 
 #' @return a character vector of the lines in the block
-#' @keywords internal
 #' @param x a \code{\link{bi_model}} object
 #' @param name 
-get_block <- function(x, name) {
-  block <- x$find_block(name)
+#' @param ... ignored
+#' @external
+get_block.bi_model <- function(x, name, ...) {
+  block <- find_block(x, name)
   if (length(block) > 0) {
     lines <- x$model[block]
     lines[1] <-
@@ -527,7 +530,7 @@ add_block <- function(x, name, lines, options) {
 ##' @param opt logical; if set to TRUE, names will contain options (e.g., has_output)
 ##' @return variable names
 ##' @author Sebastian Funk
-##' @keywords internal
+##' @external
 var_names <- function(x, type, dim = FALSE, opt = FALSE) {
   names_vec <- c()
   for (for_type in type) {
