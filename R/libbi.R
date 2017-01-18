@@ -218,15 +218,12 @@ run.libbi <- function(x, client, proposal=c("model", "prior"), options, config, 
     file_options[["init-np"]] <- np_dims-1
   }
 
-  ## overwrite global additional option, i.e. if this
-  ## is run again it should use the file given here
-  x$options <- merge_by_name(x$options, file_options)
+  all_options <- option_list(getOption("libbi_args"), config_file_options,
+                             x$options, new_options, file_options, list(...))
 
   if (length(client) > 0)
   {
     ## re-read options
-    all_options <- option_list(getOption("libbi_args"), config_file_options,
-                               x$options, new_options, file_options, list(...))
     ## adjust options
     if (client != "rewrite") {
       ## clear cache
@@ -347,6 +344,9 @@ run.libbi <- function(x, client, proposal=c("model", "prior"), options, config, 
       x$timestamp <- file.mtime(x$output_file_name)
       x$run_flag <- TRUE
     }
+  } else {
+    ## if run from the constructor, just add all the options
+    x$options <- all_options
   }
   return(x)
 }
