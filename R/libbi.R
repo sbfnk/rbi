@@ -550,18 +550,23 @@ print.libbi <- function(x, verbose=FALSE, ...){
   if (x$run_flag) {
     assert_output(x)
     niterations <- bi_dim_len(x$output_file_name, "np")
-    ntimesteps <- range(bi_read(x, "time")[["time"]][["value"]])
+    times <- bi_read(x, "time")[["time"]]
+    if (is.null(dim(times))) {
+      ntimesteps <- 0
+    } else {
+      ntimesteps <- diff(range(times[["value"]]))
+    }
     clock <- bi_read(x, "clock")[["clock"]]
     contents <- bi_contents(x$output_file_name)
     states <- intersect(contents, var_names(x$model, "state"))
     noises <- intersect(contents, var_names(x$model, "noise"))
     params <- intersect(contents, var_names(x$model, "param"))
     obs <- intersect(contents, var_names(x$model, "obs"))
-    cat("Run time: ", round(clock/1000), " seconds\n")
+    cat("Run time: ", microseconds_to_time(clock), "\n")
     cat("Number of samples: ", niterations, "\n")
-    if (length(states) > 0) cat("State trajectories recorded: ", paste(states), "\n")
-    if (length(noises) > 0) cat("Noise trajectories recorded: ", paste(noises), "\n")
-    if (length(obs) > 0) cat("Observation trajectories recorded: ", paste(obs), "\n")
+    if (length(states) > 0) cat("State trajectories recorded: ", paste(states, sep=", "), "\n")
+    if (length(noises) > 0) cat("Noise trajectories recorded: ", paste(noises, sep=", "), "\n")
+    if (length(obs) > 0) cat("Observation trajectories recorded: ", paste(obs, sep=", "), "\n")
     if (length(params) > 0) cat("Parameters recorded: ", paste(params), "\n")
   } else {
     cat("* LibBi has not been run yet\n")
