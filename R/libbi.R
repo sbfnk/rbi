@@ -8,7 +8,6 @@
 #' methods. Note that \code{\link{libbi}} objects can be plotted using \code{\link{plot}} if the \code{rbi.helpers} package is loaded.
 #'
 #' @param model either a character vector giving the path to a model file (typically ending in ".bi"), or a \code{bi_model} object
-#' @param global_options deprecated, replaced by \code{options}
 #' @param path_to_libbi path to \code{LibBi} binary; by default it tries to locate the \code{libbi} binary
 #' using the \code{which} Unix command, after having loaded "~/.bashrc" if present;
 #' if unsuccessful it tries "~/PathToBiBin/libbi"; if unsuccessful again it fails.
@@ -20,13 +19,7 @@
 #' bi_object <- libbi(model = system.file(package="rbi", "PZ.bi"))
 #' @seealso \code{\link{sample}}, \code{\link{filter}}, \code{\link{optimise}}, \code{\link{rewrite}}
 #' @export
-libbi <- function(model, global_options,
-                  path_to_libbi, dims, use_cache=TRUE, ...){
-  if (!missing(global_options))
-  {
-    stop("'global_options' is deprecated. Use 'options' instead, or pass them directly as arguments to libbi.")
-  }
-
+libbi <- function(model, path_to_libbi, dims, use_cache=TRUE, ...){
   libbi_dims <- list()
   if (!missing(dims)) {
     for (dim_name in names(dims))
