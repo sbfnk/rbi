@@ -30,16 +30,16 @@ get_traces <- function(run, model, burnin, all = FALSE, ...) {
     } else {
       warning("Given model will overwrite model contained in given 'run'.")
     }
-    read_options <- c(read_options, list(read = run$output_file_name))
+    read_options <- c(read_options, list(x = run$output_file_name))
   } else {
-    read_options <- c(read_options, list(read = run))
+    read_options <- c(read_options, list(x = run))
   }
 
   if (!all) {
     if (missing(model)) {
       stop("Either 'all' must be set to TRUE, or a model given (via the 'run' or 'model' options)")
     } else {
-      read_options <- c(read_options, list(vars = model$get_vars("param")))
+      read_options <- c(read_options, list(vars = var_names(model, "param")))
     }
   }
 
