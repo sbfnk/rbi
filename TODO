@@ -18,7 +18,7 @@
 - DONE concatenate option or something of sorts in run? Of init, take last one?
 - DONE output_all option (in run, as in verbose in my Zika etc model)
 
-- adapt_proposal: don't do anything if min=0 and max=1
-- plot_libbi: respect order of states (just refactor at the end)
-- adapt_proposal/adapt_particles need some initial output
+- DONE adapt_proposal: don't do anything if min=0 and max=1
+- DONE plot_libbi: respect order of states (just refactor at the end)
+- DONE adapt_proposal/adapt_particles need some initial output
 - DONE make recreate_libbi work with timestamp check
