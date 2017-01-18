@@ -7,7 +7,7 @@
 bi_generate_dataset(...)
 }
 \arguments{
-\item{...}{arguments to be passed to \code{\link{libbi}} (with run = TRUE), especially 'end_time'}
+\item{...}{arguments to be passed to \code{\link{libbi}} and \code{\link{sample}}, especially 'model' and 'end_time'}
 }
 \value{
 generated data set

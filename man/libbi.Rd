@@ -4,12 +4,10 @@
 \alias{libbi}
 \title{LibBi Wrapper}
 \usage{
-libbi(model, global_options, path_to_libbi, dims, use_cache = TRUE, ...)
+libbi(model, path_to_libbi, dims, use_cache = TRUE, ...)
 }
 \arguments{
 \item{model}{either a character vector giving the path to a model file (typically ending in ".bi"), or a \code{bi_model} object}
-
-\item{global_options}{deprecated, replaced by \code{options}}
 
 \item{path_to_libbi}{path to \code{LibBi} binary; by default it tries to locate the \code{libbi} binary
 using the \code{which} Unix command, after having loaded "~/.bashrc" if present;

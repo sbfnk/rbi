@@ -483,7 +483,7 @@ get_block <- function(x, ...) UseMethod("get_block")
 #' @param x a \code{\link{bi_model}} object
 #' @param name 
 #' @param ... ignored
-#' @external
+#' @export
 get_block.bi_model <- function(x, name, ...) {
   block <- find_block(x, name)
   if (length(block) > 0) {
@@ -530,7 +530,7 @@ add_block <- function(x, name, lines, options) {
 ##' @param opt logical; if set to TRUE, names will contain options (e.g., has_output)
 ##' @return variable names
 ##' @author Sebastian Funk
-##' @external
+##' @export
 var_names <- function(x, type, dim = FALSE, opt = FALSE) {
   names_vec <- c()
   for (for_type in type) {

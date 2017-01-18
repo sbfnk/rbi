@@ -27,5 +27,4 @@ This returns all variable names of a certain type ("param", "state", "obs", "noi
 \author{
 Sebastian Funk
 }
-\keyword{internal}
 
