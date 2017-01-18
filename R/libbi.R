@@ -106,6 +106,7 @@ run.libbi <- function(x, client, proposal=c("model", "prior"), options, config, 
   }
 
   if (missing(sample_obs)) sample_obs <- FALSE
+  if (missing(output_all)) output_all <- FALSE
   proposal <- match.arg(proposal)
 
   if (!missing(thin)) x$thin <- thin
