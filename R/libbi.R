@@ -175,7 +175,13 @@ run.libbi <- function(x, client, proposal=c("model", "prior"), options, config, 
     arg <- x$options[[file]]
     ## unset global option (we set the file option instead later)
     x$options[[file]] <- NULL
-    if (is.list(arg)) {
+    if (class(arg) == "libbi") {
+      if (!arg$run_flag) {
+        stop("The libbi object for '", arg, "' should be run first (using sample, filter or optimise).")
+      }
+      file_options[[paste(file, "file", sep = "-")]] <-
+        arg$output_file_name
+    } else if (is.list(arg)) {
       arg_file_name <-
         tempfile(pattern=paste(x$model$name, file, sep = "_"), 
                  fileext=".nc",
@@ -194,12 +200,6 @@ run.libbi <- function(x, client, proposal=c("model", "prior"), options, config, 
       file_options[[paste(file, "file", sep = "-")]] <- arg_file_name
     } else if (is.character(arg)) {
       file_options[[paste(file, "file", sep = "-")]] <- arg
-    } else if (class(arg) == "libbi") {
-      if (!arg$run_flag) {
-        stop("The libbi object for '", arg, "' should be run first (using sample, filter or optimise).")
-      }
-      file_options[[paste(file, "file", sep = "-")]] <-
-        arg$output_file_name
     } else {
       stop("'", file, "' must be a list, string or 'libbi' object.")
     }
