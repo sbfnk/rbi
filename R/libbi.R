@@ -562,7 +562,7 @@ print.libbi <- function(x, verbose=FALSE, ...){
     noises <- intersect(contents, var_names(x$model, "noise"))
     params <- intersect(contents, var_names(x$model, "param"))
     obs <- intersect(contents, var_names(x$model, "obs"))
-    cat("Run time: ", microseconds_to_time(clock), "\n")
+    cat("Run time: ", clock/1e6, " seconds\n")
     cat("Number of samples: ", niterations, "\n")
     if (length(states) > 0) cat("State trajectories recorded: ", paste(states, sep=", "), "\n")
     if (length(noises) > 0) cat("Noise trajectories recorded: ", paste(noises, sep=", "), "\n")
