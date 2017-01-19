@@ -551,7 +551,7 @@ print.libbi <- function(x, verbose=FALSE, ...){
     assert_output(x)
     niterations <- bi_dim_len(x$output_file_name, "np")
     times <- bi_read(x, "time")[["time"]]
-    if (is.null(dim(times))) {
+    if (is.null(dim(times)) || length(dim(times)) == 1) {
       ntimesteps <- 0
     } else {
       ntimesteps <- diff(range(times[["value"]]))
