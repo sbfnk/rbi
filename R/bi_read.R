@@ -157,7 +157,7 @@ bi_read <- function(x, vars, dims, model, type, missval.threshold, coord_name, v
         }
         if (!missing(verbose) && verbose) close(pb)
       } else {
-        dim_names <- dim_names[dim_lengths > 1]
+        dim_names <- dim_names
         all_values <- read_var_input(nc, var_name)
       }
 
@@ -171,7 +171,7 @@ bi_read <- function(x, vars, dims, model, type, missval.threshold, coord_name, v
 
       value_dims <- dim(all_values)
 
-      if (prod(value_dims) > 1) {
+      if (!is.null(value_dims)) {
         mav <- data.table(reshape2::melt(all_values, varnames = rev(dim_names)))
 
         ## find matching time and coord variables
@@ -200,10 +200,10 @@ bi_read <- function(x, vars, dims, model, type, missval.threshold, coord_name, v
 
         ## reorder duplicates
         cols <- setdiff(colnames(mav), "value")
-        setkeyv(mav, cols)
+        if (length(cols) > 0) setkeyv(mav, cols)
         rownames(mav) <- seq_len(nrow(mav))
       } else {
-        ## fixed value
+        ## dimensionless values
         mav <- all_values
       }
 
