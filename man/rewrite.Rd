@@ -2,20 +2,32 @@
 % Please edit documentation in R/libbi.R
 \name{rewrite}
 \alias{rewrite}
+\alias{rewrite.bi_model}
 \alias{rewrite.libbi}
 \title{Using the LibBi wrapper to rewrite}
 \usage{
 \method{rewrite}{libbi}(x, ...)
+
+\method{rewrite}{bi_model}(x, ...)
 }
 \arguments{
-\item{x}{a \code{\link{libbi}} object}
+\item{x}{a \code{\link{libbi} or \link{bi_model}} object}
+
+\item{...}{options to be passed to \code{\link{run}}}
+
+\item{x}{a \code{\link{libbi} or \link{bi_model}} object}
 
 \item{...}{options to be passed to \code{\link{run}}}
 }
 \value{
 a \code{\link{bi_model}} object
+
+a \code{\link{bi_model}} object
 }
 \description{
+The method \code{rewrite} of an instance of \code{\link{libbi}}
+allows to launch \code{LibBi} to rewrite a model to inspect its internal representation in \code{LibBi}
+
 The method \code{rewrite} of an instance of \code{\link{libbi}}
 allows to launch \code{LibBi} to rewrite a model to inspect its internal representation in \code{LibBi}
 }

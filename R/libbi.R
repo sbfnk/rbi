@@ -346,6 +346,7 @@ run.libbi <- function(x, client, proposal=c("model", "prior"), options, config, 
   return(x)
 }
 
+save_sample <- sample
 #' @export
 sample <- function(x, ...) UseMethod("sample")
 #' @name sample
@@ -354,18 +355,32 @@ sample <- function(x, ...) UseMethod("sample")
 #' @description
 #' The method \code{sample} of an instance of \code{\link{libbi}}
 #' allows to launch \code{libbi} to sample from a (prior, posterior or joint) distribution. See the options to \code{\link{run}} for how to specify the various components of sampling with LibBi, and the LibBi manual for all options that can be passed when the client is \code{sample}.
-#' @param x a \code{\link{libbi}} object
+#' @param x a \code{\link{libbi} or \link{bi_model}} object
 #' @param ... options to be passed to \code{\link{run}}
 #' @return a \code{\link{libbi}} object
 #' @export
 sample.libbi <- function(x, ...){
   run.libbi(x, client="sample", ...)
 }
+#' @name sample
+#' @rdname sample
+#' @title Using the LibBi wrapper to sample
+#' @description
+#' The method \code{sample} of an instance of \code{\link{libbi}}
+#' allows to launch \code{libbi} to sample from a (prior, posterior or joint) distribution. See the options to \code{\link{run}} for how to specify the various components of sampling with LibBi, and the LibBi manual for all options that can be passed when the client is \code{sample}.
+#' @param x a \code{\link{libbi} or \link{bi_model}} object
+#' @param ... options to be passed to \code{\link{run}}
+#' @return a \code{\link{libbi}} object
+#' @export
+sample.bi_model <- function(x, ...){
+  run.libbi(libbi(x), client="sample", ...)
+}
 #' @export
 sample.default <- function(x, ...){
-  base::sample(x, ...)
+  save_sample(x, ...)
 }
 
+save_filter <- filter
 #' @export
 filter <- function(x, ...) UseMethod("filter")
 #' @name filter
@@ -374,18 +389,32 @@ filter <- function(x, ...) UseMethod("filter")
 #' @description
 #' The method \code{filter} of an instance of \code{\link{libbi}}
 #' allows to launch \code{libbi} to filter state trajectories. See the options to \code{\link{run}} for how to specify the various components of sampling with LibBi, and the LibBi manual for all options that can be passed when the client is \code{filter}.
-#' @param x a \code{\link{libbi}} object
+#' @param x a \code{\link{libbi} or \link{bi_model}} object
 #' @param ... options to be passed to \code{\link{run}}
 #' @return a \code{\link{libbi}} object
 #' @export
 filter.libbi <- function(x, ...){
   run.libbi(x, client="filter", ...)
 }
+#' @name filter
+#' @rdname filter
+#' @title Using the LibBi wrapper to filter
+#' @description
+#' The method \code{filter} of an instance of \code{\link{libbi}}
+#' allows to launch \code{libbi} to filter state trajectories. See the options to \code{\link{run}} for how to specify the various components of sampling with LibBi, and the LibBi manual for all options that can be passed when the client is \code{filter}.
+#' @param x a \code{\link{libbi} or \link{bi_model}} object
+#' @param ... options to be passed to \code{\link{run}}
+#' @return a \code{\link{libbi}} object
+#' @export
+filter.bi_model <- function(x, ...){
+  run.libbi(libbi(x), client="filter", ...)
+}
 #' @export
 filter.default <- function(x, ...){
-  stats::filter(x, ...)
+  save_filter(x, ...)
 }
 
+save_optimise <- optimise
 #' @export
 optimise <- function(x, ...) UseMethod("optimise")
 #' @name optimise
@@ -394,16 +423,29 @@ optimise <- function(x, ...) UseMethod("optimise")
 #' @description
 #' The method \code{optimise} of an instance of \code{\link{libbi}}
 #' allows to launch \code{libbi} to optimise the parameters with respect to the likelihood or posterior distribution. See the options to \code{\link{run}} for how to specify the various components of sampling with LibBi, and the LibBi manual for all options that can be passed when the client is \code{optimise}. 
-#' @param x a \code{\link{libbi}} object
+#' @param x a \code{\link{libbi} or \link{bi_model}} object
 #' @param ... options to be passed to \code{\link{run}}
 #' @return a \code{\link{libbi}} object
 #' @export
 optimise.libbi <- function(x, ...){
   run.libbi(x, client="optimise", ...)
 }
+#' @name optimise
+#' @rdname optimise
+#' @title Using the LibBi wrapper to optimise
+#' @description
+#' The method \code{optimise} of an instance of \code{\link{libbi}}
+#' allows to launch \code{libbi} to optimise the parameters with respect to the likelihood or posterior distribution. See the options to \code{\link{run}} for how to specify the various components of sampling with LibBi, and the LibBi manual for all options that can be passed when the client is \code{optimise}. 
+#' @param x a \code{\link{libbi} or \link{bi_model}} object
+#' @param ... options to be passed to \code{\link{run}}
+#' @return a \code{\link{libbi}} object
+#' @export
+optimise.bi_model <- function(x, ...){
+  run.libbi(libbi(x), client="optimise", ...)
+}
 #' @export
 optimise.default <- function(x, ...){
-  stats::optimise(x, ...)
+  save_optimise(x, ...)
 }
 
 #' @export
@@ -414,12 +456,25 @@ rewrite <- function(x, ...) UseMethod("rewrite")
 #' @description
 #' The method \code{rewrite} of an instance of \code{\link{libbi}}
 #' allows to launch \code{LibBi} to rewrite a model to inspect its internal representation in \code{LibBi}
-#' @param x a \code{\link{libbi}} object
+#' @param x a \code{\link{libbi} or \link{bi_model}} object
 #' @param ... options to be passed to \code{\link{run}}
 #' @return a \code{\link{bi_model}} object
 #' @export
 rewrite.libbi <- function(x, ...){
   run.libbi(x, client="rewrite", ...)
+}
+#' @name rewrite
+#' @rdname rewrite
+#' @title Using the LibBi wrapper to rewrite
+#' @description
+#' The method \code{rewrite} of an instance of \code{\link{libbi}}
+#' allows to launch \code{LibBi} to rewrite a model to inspect its internal representation in \code{LibBi}
+#' @param x a \code{\link{libbi} or \link{bi_model}} object
+#' @param ... options to be passed to \code{\link{run}}
+#' @return a \code{\link{bi_model}} object
+#' @export
+rewrite.bi_model <- function(x, ...){
+  run.libbi(libbi(x), client="rewrite", ...)
 }
 
 #' @export

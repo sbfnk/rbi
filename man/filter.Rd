@@ -2,20 +2,32 @@
 % Please edit documentation in R/libbi.R
 \name{filter}
 \alias{filter}
+\alias{filter.bi_model}
 \alias{filter.libbi}
 \title{Using the LibBi wrapper to filter}
 \usage{
 \method{filter}{libbi}(x, ...)
+
+\method{filter}{bi_model}(x, ...)
 }
 \arguments{
-\item{x}{a \code{\link{libbi}} object}
+\item{x}{a \code{\link{libbi} or \link{bi_model}} object}
+
+\item{...}{options to be passed to \code{\link{run}}}
+
+\item{x}{a \code{\link{libbi} or \link{bi_model}} object}
 
 \item{...}{options to be passed to \code{\link{run}}}
 }
 \value{
 a \code{\link{libbi}} object
+
+a \code{\link{libbi}} object
 }
 \description{
+The method \code{filter} of an instance of \code{\link{libbi}}
+allows to launch \code{libbi} to filter state trajectories. See the options to \code{\link{run}} for how to specify the various components of sampling with LibBi, and the LibBi manual for all options that can be passed when the client is \code{filter}.
+
 The method \code{filter} of an instance of \code{\link{libbi}}
 allows to launch \code{libbi} to filter state trajectories. See the options to \code{\link{run}} for how to specify the various components of sampling with LibBi, and the LibBi manual for all options that can be passed when the client is \code{filter}.
 }

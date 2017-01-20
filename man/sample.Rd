@@ -2,20 +2,32 @@
 % Please edit documentation in R/libbi.R
 \name{sample}
 \alias{sample}
+\alias{sample.bi_model}
 \alias{sample.libbi}
 \title{Using the LibBi wrapper to sample}
 \usage{
 \method{sample}{libbi}(x, ...)
+
+\method{sample}{bi_model}(x, ...)
 }
 \arguments{
-\item{x}{a \code{\link{libbi}} object}
+\item{x}{a \code{\link{libbi} or \link{bi_model}} object}
+
+\item{...}{options to be passed to \code{\link{run}}}
+
+\item{x}{a \code{\link{libbi} or \link{bi_model}} object}
 
 \item{...}{options to be passed to \code{\link{run}}}
 }
 \value{
 a \code{\link{libbi}} object
+
+a \code{\link{libbi}} object
 }
 \description{
+The method \code{sample} of an instance of \code{\link{libbi}}
+allows to launch \code{libbi} to sample from a (prior, posterior or joint) distribution. See the options to \code{\link{run}} for how to specify the various components of sampling with LibBi, and the LibBi manual for all options that can be passed when the client is \code{sample}.
+
 The method \code{sample} of an instance of \code{\link{libbi}}
 allows to launch \code{libbi} to sample from a (prior, posterior or joint) distribution. See the options to \code{\link{run}} for how to specify the various components of sampling with LibBi, and the LibBi manual for all options that can be passed when the client is \code{sample}.
 }
