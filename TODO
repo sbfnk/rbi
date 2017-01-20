@@ -22,3 +22,5 @@
 - DONE plot_libbi: respect order of states (just refactor at the end)
 - DONE adapt_proposal/adapt_particles need some initial output
 - DONE make recreate_libbi work with timestamp check
+
+- exctract a single trajectory (np)
