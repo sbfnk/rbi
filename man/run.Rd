@@ -7,7 +7,8 @@
 \usage{
 \method{run}{libbi}(x, client, proposal = c("model", "prior"), options,
   config, add_options, log_file_name, stdoutput_file_name, init, input, obs,
-  time_dim, working_folder, output_all, sample_obs, chain_init, thin, ...)
+  time_dim, working_folder, output_all, sample_obs, chain_init, thin,
+  seed = TRUE, ...)
 }
 \arguments{
 \item{x}{a \code{\link{libbi}} object}
@@ -43,6 +44,8 @@
 \item{chain_init}{logical; if set to TRUE, will use only the last sample of the init file}
 
 \item{thin}{any thinning of MCMC chains (1 means all will be kept, 2 skips every other sample etc.); note that \code{LibBi} itself will write all data to the disk. Only when the results are read in with \code{\link{bi_read}} will thinning be applied.}
+
+\item{seed}{Either a number (the seed to supply to \code{LibBi}), or a logical variable: TRUE if a seed is to be generated for \code{LibBi}, FALSE if \code{LibBi} is to generate its own seed}
 
 \item{...}{any unrecognised options will be added to \code{options}}
 }

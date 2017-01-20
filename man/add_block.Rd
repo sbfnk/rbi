@@ -21,5 +21,4 @@ a \code{\link{bi_model}} object containing the new block
 \description{
 Add a block to a LibBi model. If that block exists, it will be removed first.
 }
-\keyword{internal}
 
