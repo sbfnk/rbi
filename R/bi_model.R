@@ -375,7 +375,7 @@ remove.bi_model <- function(x, num, name, ...) {
     x$model <- x$model[-num]
   }
   if (!missing(name)) {
-    block <- find_block(name)
+    block <- find_block(x, name)
     if (length(block) > 0) {
       x$model <- x$model[-block]
     }
@@ -506,11 +506,11 @@ get_block.bi_model <- function(x, name, ...) {
 #' @description
 #' Add a block to a LibBi model. If that block exists, it will be removed first.
 #' @return a \code{\link{bi_model}} object containing the new block
-#' @keywords internal
 #' @param x a \code{\link{bi_model}} object
 #' @param name name of the block
 #' @param lines character vector, lines in the block
 #' @param options any options to the block
+#' @export
 add_block <- function(x, name, lines, options) {
   x <- remove(x, name=name)
   x$model <- c(x$model[seq_len(length(x$model) - 1)],
