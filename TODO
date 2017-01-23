@@ -24,3 +24,4 @@
 - DONE make recreate_libbi work with timestamp check
 
 - exctract a single trajectory (np)
+- check if with-obs-to-state would do the same as sample_obs=TRUE
