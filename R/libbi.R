@@ -79,14 +79,14 @@ run <- function(x, ...) UseMethod("run")
 #' @param add_options deprecated, replaced by \code{options}
 #' @param log_file_name path to a file to text file to report the output of \code{LibBi}
 #' @param stdoutput_file_name deprecated; use log_file_name instead
-#' @param init initialisation of the model, either supplied as a list of values and/or data frames, or a (netcdf) file name, or a \code{\link{libbi}} object which has been run (in which case the output of that run is used as input)
+#' @param init initialisation of the model, either supplied as a list of values and/or data frames, or a (netcdf) file name, or a \code{\link{libbi}} object which has been run (in which case the output of that run is used as input). If the object given as \code{\link{x}} has been run before, it will be used here with \code{init-np} set to the last iteration of the previous run, unless \code{\link{init}} is given explicitly.
 #' @param input input of the model, either supplied as a list of values and/or data frames, or a (netcdf) file name, or a \code{\link{libbi}} object which has been run (in which case the output of that run is used as input)
 #' @param obs observations of the model, either supplied as a list of values and/or data frames, or a (netcdf) file name, or a \code{\link{libbi}} object which has been run (in which case the output of that run is used as observations)
 #' @param time_dim The time dimension in any R objects that have been passed (\code{init}, \code{input}) and \code{obs}); if not given, will be guessed
 #' @param working_folder path to a folder from which to run \code{LibBi}; default to a temporary folder.
 #' @param output_all logical; if set to TRUE, all parameters, states and observations will be saved; good for debugging
 #' @param sample_obs logical; if set to TRUE, will sample observations
-#' @param chain_init logical; if set to TRUE, will use only the last sample of the init file
+#' @param chain logical; if set to TRUE and \code{\link{x}} has been run before, the previous output file will be used as \code{init} file, and \code{init-np} will be set to the last iteration of the previous run. This amounts to running an inference chain.
 #' @param thin any thinning of MCMC chains (1 means all will be kept, 2 skips every other sample etc.); note that \code{LibBi} itself will write all data to the disk. Only when the results are read in with \code{\link{bi_read}} will thinning be applied.
 #' @param seed Either a number (the seed to supply to \code{LibBi}), or a logical variable: TRUE if a seed is to be generated for \code{LibBi}, FALSE if \code{LibBi} is to generate its own seed
 #' @param ... any unrecognised options will be added to \code{options}
@@ -182,6 +182,23 @@ run.libbi <- function(x, client, proposal=c("model", "prior"), options, config, 
 
   file_options <- list()
 
+  if (chain && x$run_flag) {
+    if ("init" %in% file_args) {
+      warning("'init' given and 'chain=TRUE'. Will ignore 'init' option. To use the 'init' option, set 'chain=FALSE'.")
+    }
+    if ("init-file" %in% names(new_options)) {
+      warning("'init-file' given as new option and 'chain=TRUE'. Will ignore 'init-file' option. To use the 'init-file' option, set 'chain=FALSE'")
+    }
+    if ("init-np" %in% names(new_options)) {
+      warning("'init-np' given as new option and 'chain=TRUE'. Will ignore 'init-np' option. To use the 'init-np' option, set 'chain=FALSE'")
+    }
+
+    file_options[["init-file"]] <- x$output_file_name
+
+    np_dims <- bi_dim_len(x$output_file_name, "np")
+    file_options[["init-np"]] <- np_dims-1
+  }
+
   ## loop over global options that are file args
   for (file in global_file_options) {
     arg <- x$options[[file]]
@@ -215,19 +232,6 @@ run.libbi <- function(x, client, proposal=c("model", "prior"), options, config, 
     } else {
       stop("'", file, "' must be a list, string or 'libbi' object.")
     }
-  }
-
-  if (!missing(chain_init) && chain_init) {
-    if ("init-np" %in% names(new_options)) {
-      stop("'init-np' should not be give if chain_init=TRUE.")
-    }
-    if (!("init-file" %in% names(file_options))) {
-      stop("chain_init=TRUE but no init file given.")
-    }
-
-    np_dims <- bi_dim_len(file_options[["init-file"]], "np")
-
-    file_options[["init-np"]] <- np_dims-1
   }
 
   all_options <- option_list(getOption("libbi_args"), config_file_options,
