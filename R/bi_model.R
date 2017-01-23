@@ -37,6 +37,7 @@ bi_model <- function(filename, lines) {
   return(clean_model(new_obj))
 }
 
+default_fix <- fix
 #' @export
 fix <- function(x, ...) UseMethod("fix")
 #' @rdname fix
@@ -119,6 +120,10 @@ fix.bi_model <- function(x, ...) {
 
   x$model <- fix_model
   return(clean_model(x))
+}
+#' @export
+fix.default <- function(x, ...){
+  default_fix(x, ...)
 }
 
 propose_prior <- function(x, ...) UseMethod("propose_prior")
@@ -345,6 +350,7 @@ replace_lines <- function(x, num, lines) {
   return(clean_model(x))
 }
 
+default_remove <- remove
 #' @export
 remove <- function(x, ...) UseMethod("remove")
 #' @rdname remove
@@ -382,7 +388,12 @@ remove.bi_model <- function(x, num, name, ...) {
   }
   return(clean_model(x))
 }
+#' @export
+remove.default <- function(x, ...){
+  default_remove(x, ...)
+}
 
+if (exists("rename")) default_rename <- rename
 #' @export
 rename <- function(x, ...) UseMethod("rename")
 #' @rdname rename
@@ -415,7 +426,16 @@ rename.bi_model <- function(x, name, ...) {
   }
   return(clean_model(x))
 }
+#' @export
+rename.default <- function(x, ...) {
+  if (exists("default_rename")) {
+    default_rename(x, ...)
+  } else {
+    stop("No default method defined for 'rename'.")
+  }
+}
 
+if (exists("write_file")) default_write_file <- write_file
 #' @export
 write_file <- function(x, ...) UseMethod("write_file")
 #' @rdname write_file
@@ -443,6 +463,15 @@ write_file.bi_model <- function(x, filename, ...) {
 
   writeLines(get_lines(x), con = filename, sep = "\n")
 }
+#' @export
+write_file.default <- function(x, ...) {
+  if (exists("default_write_file")) {
+    default_write_file(x, ...)
+  } else {
+    stop("No default method defined for 'write_file'.")
+  }
+}
+
 
 find_block <- function(x, ...) UseMethod("find_block")
 #' @title Find a block in a LibBi model

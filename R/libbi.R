@@ -101,7 +101,7 @@ run <- function(x, ...) UseMethod("run")
 #' @importFrom stats runif
 #' @return a \code{\link{libbi}} object, except if \code{client} is 'rewrite',  in which case a \code{\link{bi_model}} object will be returned
 #' @export
-run.libbi <- function(x, client, proposal=c("model", "prior"), options, config, add_options, log_file_name, stdoutput_file_name, init, input, obs, time_dim, working_folder, output_all, sample_obs, chain_init, thin, seed=TRUE, ...){
+run.libbi <- function(x, client, proposal=c("model", "prior"), options, config, add_options, log_file_name, stdoutput_file_name, init, input, obs, time_dim, working_folder, output_all, sample_obs, thin, chain=TRUE, seed=TRUE, ...){
   if (!missing(stdoutput_file_name))
   {
     stop("'stdoutput_file_name' is deprecated. Use 'log_file_name' instead.")
@@ -212,7 +212,7 @@ run.libbi <- function(x, client, proposal=c("model", "prior"), options, config, 
         arg$output_file_name
     } else if (is.list(arg)) {
       arg_file_name <-
-        tempfile(pattern=paste(x$model$name, file, sep = "_"), 
+        tempfile(pattern=paste(x$model$name, file, sep = "_"),
                  fileext=".nc",
                  tmpdir=absolute_path(x$working_folder))
       write_opts <- list(filename = arg_file_name,
@@ -338,6 +338,7 @@ run.libbi <- function(x, client, proposal=c("model", "prior"), options, config, 
       stop("LibBi terminated with an error.")
     }
     if (verbose) print("... LibBi has finished!")
+
     if (sample_obs) {
       nc <- nc_open(x$output_file_name, write=TRUE)
       for (obs_name in var_names(run_model, "obs")) {
@@ -345,6 +346,7 @@ run.libbi <- function(x, client, proposal=c("model", "prior"), options, config, 
       }
       nc_close(nc)
     }
+
     if (client == "rewrite") {
       model_lines <- readLines(x$log_file_name)
       first_model_line <-
@@ -362,7 +364,7 @@ run.libbi <- function(x, client, proposal=c("model", "prior"), options, config, 
   return(x)
 }
 
-save_sample <- sample
+default_sample <- sample
 #' @export
 sample <- function(x, ...) UseMethod("sample")
 #' @name sample
@@ -393,10 +395,10 @@ sample.bi_model <- function(x, ...){
 }
 #' @export
 sample.default <- function(x, ...){
-  save_sample(x, ...)
+  default_sample(x, ...)
 }
 
-save_filter <- filter
+default_filter <- filter
 #' @export
 filter <- function(x, ...) UseMethod("filter")
 #' @name filter
@@ -427,10 +429,10 @@ filter.bi_model <- function(x, ...){
 }
 #' @export
 filter.default <- function(x, ...){
-  save_filter(x, ...)
+  default_filter(x, ...)
 }
 
-save_optimise <- optimise
+default_optimise <- optimise
 #' @export
 optimise <- function(x, ...) UseMethod("optimise")
 #' @name optimise
@@ -461,8 +463,9 @@ optimise.bi_model <- function(x, ...){
 }
 #' @export
 optimise.default <- function(x, ...){
-  save_optimise(x, ...)
+  default_optimise(x, ...)
 }
+
 
 #' @export
 rewrite <- function(x, ...) UseMethod("rewrite")
@@ -546,7 +549,7 @@ save_results.libbi <- function(x, filename, ...) {
     file_option <- paste(file_type, "file", sep="-")
     if (file_option %in% names(x$options)) {
       save_obj[[file_type]] <- bi_read(x$options[[file_option]])
-      x$options[[file_option]] <- NULL
+      options[[file_option]] <- NULL
     }
   }
 
