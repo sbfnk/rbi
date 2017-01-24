@@ -361,8 +361,7 @@ remove <- function(x, ...) UseMethod("remove")
 #' Removes one or more lines in a libbi model.
 #'
 #' @param x a \code{\link{bi_model}} object
-#' @param num line number(s) to remove
-#' @param name a character vector of one or more blocks to remove (e.g., "parameter")
+#' @param what either a vector of line number(s) to remove, or a vector of blocks to remove (e.g., "parameter")
 #' @param ... ignored
 #' @return the updated bi model
 #' @seealso \code{\link{bi_model}}
@@ -371,21 +370,22 @@ remove <- function(x, ...) UseMethod("remove")
 #' PZ <- bi_model(filename = model_file_name)
 #' PZ <- remove(PZ, 2)
 #' @export
-remove.bi_model <- function(x, num, name, ...) {
-  if (missing(num) && missing(name)) {
-    stop("At least one of 'num' and 'name' must be given")
+remove.bi_model <- function(x, what, ...) {
+  if (missing(what)) {
+    stop("'what' must be given")
   }
-  if (!missing(num)) {
-    if (length(grep("[\\{\\}]", x$model[num])) %% 2 == 1) {
+  if (is.numeric(what)) {
+    if (length(grep("[\\{\\}]", x$model[what])) %% 2 == 1) {
       stop("Removing lines would create unbalanced braces.")
     }
     x$model <- x$model[-num]
-  }
-  if (!missing(name)) {
-    block <- find_block(x, name)
+  } else if (is.character(what)) {
+    block <- find_block(x, what)
     if (length(block) > 0) {
       x$model <- x$model[-block]
     }
+  } else {
+    stop("'what' must be a numeric or character vector.")
   }
   return(clean_model(x))
 }
@@ -542,7 +542,7 @@ get_block.bi_model <- function(x, name, ...) {
 #' @param options any options to the block
 #' @export
 add_block <- function(x, name, lines, options) {
-  x <- remove(x, name=name)
+  x <- remove(x, what=name)
   x$model <- c(x$model[seq_len(length(x$model) - 1)],
                ifelse(missing(options), paste("sub", name,"{"),
                       paste("sub", name, paste0("(", options, ")", "{"))), 
