@@ -5,7 +5,7 @@
 \alias{run.libbi}
 \title{Using the LibBi wrapper to launch LibBi}
 \usage{
-\method{run}{libbi}(x, client, proposal = c("model", "prior"), options,
+\method{run}{libbi}(x, client, proposal = c("model", "prior"), fix, options,
   config, add_options, log_file_name, stdoutput_file_name, init, input, obs,
   time_dim, working_folder, output_all, sample_obs, thin, chain = TRUE,
   seed = TRUE, ...)
@@ -16,6 +16,8 @@
 \item{client}{client to pass to LibBi}
 
 \item{proposal}{proposal distribution to use; either "model" (default: proposal distribution in the model) or "prior" (propose from the prior distribution)}
+
+\item{fix}{any variable to fix, as a named vector}
 
 \item{options}{list of additional arguments to pass to the call to \code{LibBi}. Any arguments starting with `enable`/`disable` can be specified as boolean (e.g., `assert=TRUE`). Any `dry-` options can be specified with a `"dry"` argument, e.g., `parse="dry"`. Any options that would be specified with `with`/`without` can be specified as character vector to an option named `with`/`without`, respectively, e.g. with="transform-obs-to-state".}
 
@@ -43,7 +45,7 @@
 
 \item{thin}{any thinning of MCMC chains (1 means all will be kept, 2 skips every other sample etc.); note that \code{LibBi} itself will write all data to the disk. Only when the results are read in with \code{\link{bi_read}} will thinning be applied.}
 
-\item{chain}{logical; if set to TRUE and \code{\link{x}} has been run before, the previous output file will be used as \code{init} file, and \code{init-np} will be set to the last iteration of the previous run. This amounts to running an inference chain.}
+\item{chain}{logical; if set to TRUE and \code{\link{x}} has been run before, the previous output file will be used as \code{init} file, and \code{init-np} will be set to the last iteration of the previous run. This is useful for running inference chains.}
 
 \item{seed}{Either a number (the seed to supply to \code{LibBi}), or a logical variable: TRUE if a seed is to be generated for \code{LibBi}, FALSE if \code{LibBi} is to generate its own seed}
 
