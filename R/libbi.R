@@ -530,7 +530,7 @@ add_output_file <- function(x, file){
   return(x)
 }
 
-#@'export
+#' @export
 save_results <- function(x, ...) UseMethod("save_results")
 #' @name save_results
 #' @rdname save_results
