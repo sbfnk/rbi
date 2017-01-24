@@ -74,6 +74,7 @@ run <- function(x, ...) UseMethod("run")
 #' @param x a \code{\link{libbi}} object
 #' @param client client to pass to LibBi
 #' @param proposal proposal distribution to use; either "model" (default: proposal distribution in the model) or "prior" (propose from the prior distribution)
+#' @param fix any variable to fix, as a named vector
 #' @param options list of additional arguments to pass to the call to \code{LibBi}. Any arguments starting with `enable`/`disable` can be specified as boolean (e.g., `assert=TRUE`). Any `dry-` options can be specified with a `"dry"` argument, e.g., `parse="dry"`. Any options that would be specified with `with`/`without` can be specified as character vector to an option named `with`/`without`, respectively, e.g. with="transform-obs-to-state".
 #' @param config path to a configuration file, containing multiple arguments
 #' @param add_options deprecated, replaced by \code{options}
@@ -101,7 +102,7 @@ run <- function(x, ...) UseMethod("run")
 #' @importFrom stats runif
 #' @return a \code{\link{libbi}} object, except if \code{client} is 'rewrite',  in which case a \code{\link{bi_model}} object will be returned
 #' @export
-run.libbi <- function(x, client, proposal=c("model", "prior"), options, config, add_options, log_file_name, stdoutput_file_name, init, input, obs, time_dim, working_folder, output_all, sample_obs, thin, chain=TRUE, seed=TRUE, ...){
+run.libbi <- function(x, client, proposal=c("model", "prior"), fix, options, config, add_options, log_file_name, stdoutput_file_name, init, input, obs, time_dim, working_folder, output_all, sample_obs, thin, chain=TRUE, seed=TRUE, ...){
   if (!missing(stdoutput_file_name))
   {
     stop("'stdoutput_file_name' is deprecated. Use 'log_file_name' instead.")
@@ -270,6 +271,11 @@ run.libbi <- function(x, client, proposal=c("model", "prior"), options, config, 
 
     if (proposal == "prior") {
       run_model <- propose_prior(run_model)
+      run_model_modified <- TRUE
+    }
+
+    if (!missing(fix)) {
+      run_model <- do.call(rbi::fix, c(list(x=run_model), as.list(fix)))
       run_model_modified <- TRUE
     }
 
