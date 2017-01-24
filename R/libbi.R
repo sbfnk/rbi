@@ -134,13 +134,13 @@ run.libbi <- function(x, client, proposal=c("model", "prior"), fix, options, con
     }
   }
 
-  if (missing(working_folder)){
-    x$working_folder <- tempdir()
-  } else {
+  if (!missing(working_folder)) {
     x$working_folder <- absolute_path(working_folder)
-    if (!dir.exists(working_folder)) {
+    if (!dir.exists(x$working_folder)) {
       dir.create(working_folder)
     }
+  } else if (length(x$working_folder) == 0) {
+    x$working_folder <- tempdir()
   }
 
   libbi_seed <- integer(0)
