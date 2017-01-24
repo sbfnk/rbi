@@ -87,8 +87,8 @@ run <- function(x, ...) UseMethod("run")
 #' @param working_folder path to a folder from which to run \code{LibBi}; default to a temporary folder.
 #' @param output_all logical; if set to TRUE, all parameters, states and observations will be saved; good for debugging
 #' @param sample_obs logical; if set to TRUE, will sample observations
-#' @param chain logical; if set to TRUE and \code{\link{x}} has been run before, the previous output file will be used as \code{init} file, and \code{init-np} will be set to the last iteration of the previous run. This amounts to running an inference chain.
 #' @param thin any thinning of MCMC chains (1 means all will be kept, 2 skips every other sample etc.); note that \code{LibBi} itself will write all data to the disk. Only when the results are read in with \code{\link{bi_read}} will thinning be applied.
+#' @param chain logical; if set to TRUE and \code{\link{x}} has been run before, the previous output file will be used as \code{init} file, and \code{init-np} will be set to the last iteration of the previous run. This is useful for running inference chains.
 #' @param seed Either a number (the seed to supply to \code{LibBi}), or a logical variable: TRUE if a seed is to be generated for \code{LibBi}, FALSE if \code{LibBi} is to generate its own seed
 #' @param ... any unrecognised options will be added to \code{options}
 #' @seealso \code{\link{libbi}}
@@ -184,20 +184,22 @@ run.libbi <- function(x, client, proposal=c("model", "prior"), fix, options, con
   file_options <- list()
 
   if (chain && x$run_flag) {
-    if ("init" %in% file_args) {
-      warning("'init' given and 'chain=TRUE'. Will ignore 'init' option. To use the 'init' option, set 'chain=FALSE'.")
+    init_file_given <-
+      "init" %in% file_args || "init-file" %in% names(new_options)
+    if ((init_file_given && !missing(chain)) || !init_file_given) {
+      if (init_file_given && !missing(chain)) {
+        warning("init file given and 'chain=TRUE'. Will ignore 'init' option. To use the 'init' option, set 'chain=FALSE'.")
+      }
+      file_options[["init-file"]] <- x$output_file_name
     }
-    if ("init-file" %in% names(new_options)) {
-      warning("'init-file' given as new option and 'chain=TRUE'. Will ignore 'init-file' option. To use the 'init-file' option, set 'chain=FALSE'")
+    init_np_given <- "init-np" %in% names(new_options)
+    if ((init_np_given && !missing(chain)) || !init_np_given) {
+      if (init_np_given && !missing(chain)) {
+        warning("'init-np' given as new option and 'chain=TRUE'. Will ignore 'init-np' option. To use the 'init-np' option, set 'chain=FALSE'")
+      }
+      np_dims <- bi_dim_len(x$output_file_name, "np")
+      file_options[["init-np"]] <- np_dims-1
     }
-    if ("init-np" %in% names(new_options)) {
-      warning("'init-np' given as new option and 'chain=TRUE'. Will ignore 'init-np' option. To use the 'init-np' option, set 'chain=FALSE'")
-    }
-
-    file_options[["init-file"]] <- x$output_file_name
-
-    np_dims <- bi_dim_len(x$output_file_name, "np")
-    file_options[["init-np"]] <- np_dims-1
   }
 
   ## loop over global options that are file args
