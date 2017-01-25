@@ -2,10 +2,9 @@
 % Please edit documentation in R/get_traces.R
 \name{get_traces}
 \alias{get_traces}
-\alias{get_traces.libbi}
 \title{Get the parameter traces}
 \usage{
-\method{get_traces}{libbi}(x, model, burnin, all = FALSE, ...)
+get_traces(x, model, burnin, all = FALSE, ...)
 }
 \arguments{
 \item{x}{a \code{\link{libbi}} object which has been run, or a
@@ -29,7 +28,7 @@ data frame with parameter traces; this can be fed to
     \code{coda} routines
 }
 \description{
-This function takes the provided \code{\link{libbi}}
+This function takes the provided \code{\link{libbi}} object
     which has been run and returns a data frame with the parameter
     traces.
 }

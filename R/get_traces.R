@@ -1,11 +1,7 @@
-#' @export
-get_traces <- function(x, ...) UseMethod("get_traces")
-#' @export
-get_traces <- function(x, ...) UseMethod("get_traces")
 #' @rdname get_traces
 #' @name get_traces
 #' @title Get the parameter traces
-#' @description This function takes the provided \code{\link{libbi}}
+#' @description This function takes the provided \code{\link{libbi}} object
 #'     which has been run and returns a data frame with the parameter
 #'     traces.
 #' @param x a \code{\link{libbi}} object which has been run, or a
@@ -24,39 +20,36 @@ get_traces <- function(x, ...) UseMethod("get_traces")
 #' @importFrom data.table data.table dcast
 #' @importFrom stats as.formula
 #' @export
-get_traces.libbi <- function(x, model, burnin, all = FALSE, ...) {
+get_traces <- function(x, model, burnin, all = FALSE, ...) {
 
-  read_options <- list(...)
+  read_options <- list(x = x, ...)
 
-  if ("libbi" %in% class(run)) {
+  if ("libbi" %in% class(x)) {
     if (missing(model)) {
-      model <- run$model
+      model <- x$model
     } else {
-      warning("Given model will overwrite model contained in given 'run'.")
+      warning("Given model will overwrite model contained in given libbi object.")
     }
-    read_options <- c(read_options, list(x = run$output_file_name))
-  } else {
-    read_options <- c(read_options, list(x = run))
   }
 
   if (!all) {
     if (missing(model)) {
-      stop("Either 'all' must be set to TRUE, or a model given (via the 'run' or 'model' options)")
+      stop("Either 'all' must be set to TRUE, or a model given (implicitly via the 'x' or explicitly via 'model' options)")
     } else {
-      read_options <- c(read_options, list(vars = var_names(model, "param")))
+      read_options <- c(read_options, list(type = "param"))
     }
   }
 
-  if (("libbi" %in% class(run)) | ("character" %in% class(run))) {
+  if (("libbi" %in% class(x)) || ("character" %in% class(x))) {
       res <- do.call(bi_read, read_options)
-  } else if ("list" %in% class(run)) {
+  } else if ("list" %in% class(x)) {
       if (all) {
-        res <- run
+        res <- x
       } else {
-        res <- run[intersect(names(run), model$get_vars("param"))]
+        res <- x[intersect(names(x), model$get_vars("param"))]
       }
   } else {
-      stop("'run' must be a 'libbi' object or a file name or a list of data frames.")
+      stop("'x' must be a 'libbi' object or a file name or a list of data frames.")
   }
 
   if (!missing(burnin) && !(burnin > 0 && burnin < 1)) {
