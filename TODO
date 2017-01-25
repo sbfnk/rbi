@@ -23,7 +23,7 @@
 - DONE adapt_proposal/adapt_particles need some initial output
 - DONE make recreate_libbi work with timestamp check
 
-- function to exctract a single trajectory (np)
+- DONE function to exctract a single trajectory (np)
 - check if with-obs-to-state would do the same as sample_obs=TRUE
 - change plot_libbi to only read in what's needed
 - DONE 'predict' alias for sample(target="prediction")
