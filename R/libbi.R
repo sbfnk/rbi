@@ -663,3 +663,15 @@ assert_output <- function(x)
       stop("Output file ", x$output_file_name, " has been modified since LibBi was run.")
     }
 }
+
+#' @name predict
+#' @rdname predict
+#' @title Using the LibBi wrapper to predict
+#' @description
+#' The method \code{predict} is an alias for \code{sample(target="prediction")}. Usually, an \code{init} object or file should be given containing posterior samples.
+#'
+#' For the help page of the base R \code{optimise} function, see \code{\link{stats::optimise}}.
+#' @export
+predict.libbi <- function(object, ...) {
+  sample(object, target="prediction", ...)
+}
