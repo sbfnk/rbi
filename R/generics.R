@@ -29,7 +29,7 @@ optimise.default <- function(x, ...){
 rewrite <- function(x, ...) UseMethod("rewrite")
 
 #' @export
-add_output_file <- function(x, ...) UseMethod("add_output_file")
+add_output <- function(x, ...) UseMethod("add_output")
 
 default_saveRDS <- saveRDS
 #' @export

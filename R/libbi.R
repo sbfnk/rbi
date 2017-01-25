@@ -482,27 +482,29 @@ rewrite.character <- function(x, ...){
   run.libbi(libbi(bi_model(x)), client="rewrite", ...)
 }
 
-#' @name add_output_file
-#' @rdname add_output_file
+#' @name add_output
+#' @rdname add_output
 #' @title Add output file to a \code{\link{libbi}} object
 #' @description
 #' Adds an output file to a \code{\link{libbi}} object. This is useful to recreate a \code{\link{libbi}} object from the model and output files of a previous run
 #' @param x a \code{\link{libbi}} object
-#' @param file name of the file to add as output file
+#' @param output name of the file to add as output file, or a list of data frames that contain the outputs
 #' @export
 #' @examples
 #' model_file_name <- system.file(package="rbi", "PZ.bi")
 #' PZ <- bi_model(filename = model_file_name)
 #' example_output_file <- system.file(package="rbi", "example_output.nc")
 #' bi <- libbi(PZ)
-#' bi <- add_output_file(bi, example_output_file)
-add_output_file <- function(x, file){
+#' bi <- add_output(bi, example_output_file)
+add_output <- function(x, output){
   if (length(x$output_file_name) > 0) {
-    stop("libbi object already has an output file")
+    stop("libbi object already contains output")
   }
-  x$output_file_name <- file
+  if (is.character(output)) {
+    x$output_file_name <- output
+  }
   x$run_flag <- TRUE
-  x$timestamp <- file.mtime(file)
+  x$timestamp <- file.mtime(x$output_file_name)
   return(x)
 }
 
@@ -580,7 +582,7 @@ readRDS.libbi <- function(x, file, use_cache, ...) {
   bi_write(output_file_name, read_obj$output)
 
   new_obj <- libbi(libbi_options)
-  new_obj <- add_output_file(output_file_name)
+  new_obj <- add_output(new_obj, output_file_name)
 
   return(new_obj)
 }
