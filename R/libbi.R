@@ -186,17 +186,19 @@ run.libbi <- function(x, client, proposal=c("model", "prior"), fix, options, con
   if (chain && x$run_flag) {
     init_file_given <-
       "init" %in% file_args || "init-file" %in% names(new_options)
-    if ((init_file_given && !missing(chain)) || !init_file_given) {
-      if (init_file_given && !missing(chain)) {
+    init_np_given <- "init-np" %in% names(new_options)
+    init_given <- init_file_given || init_np_given
+    if (missing(chain)) { ## if chain not specified, only chain if no init option is given
+      chain <- !init_given
+    }
+    if (chain) {
+      if (init_file_given) {
         warning("init file given and 'chain=TRUE'. Will ignore 'init' option. To use the 'init' option, set 'chain=FALSE'.")
       }
-      file_options[["init-file"]] <- x$output_file_name
-    }
-    init_np_given <- "init-np" %in% names(new_options)
-    if ((init_np_given && !missing(chain)) || !init_np_given) {
-      if (init_np_given && !missing(chain)) {
+      if (init_np_given) {
         warning("'init-np' given as new option and 'chain=TRUE'. Will ignore 'init-np' option. To use the 'init-np' option, set 'chain=FALSE'")
       }
+      file_options[["init-file"]] <- x$output_file_name
       np_dims <- bi_dim_len(x$output_file_name, "np")
       file_options[["init-np"]] <- np_dims-1
     }
