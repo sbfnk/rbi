@@ -13,14 +13,13 @@ bi_model(filename, lines)
 }
 \description{
 \code{bi_model} creates a model object for \code{Rbi} from a libbi file.
-Once the instance is created, the model can either be fed to a \code{\link{libbi}}
-object.
+Once the instance is created, the model can be fed to a \code{\link{libbi}} object.
 }
 \examples{
 model_file_name <- system.file(package="rbi", "PZ.bi")
 PZ <- bi_model(filename = model_file_name)
 }
 \seealso{
-\code{\link{fix}}, \code{\link{insert}}, \code{\link{replace}}, \code{\link{remove}}, \code{\link{rename}}, \code{\link{write_file}}
+\code{\link{fix}}, \code{\link{insert}}, \code{\link{replace}}, \code{\link{remove}}, \code{\link{write_file}}
 }
 

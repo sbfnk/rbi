@@ -55,9 +55,7 @@
 a \code{\link{libbi}} object, except if \code{client} is 'rewrite',  in which case a \code{\link{bi_model}} object will be returned
 }
 \description{
-The method \code{run} of an instance of \code{\link{libbi}}
-allows to launch \code{LibBi} with a particular set of command line
-arguments. Normally, this function would not be run by the user, but instead one of the client functions \code{\link{sample}}, \code{\link{filter}}, or \code{\link{optimise}}, or \code{\link{rewrite}}, which pass any options on to \code{run}. Note that any options specified here are stored in the \code{\link{libbi}} object and do not have to be specified again if another command is run on the object.
+The method \code{run} launches \code{LibBi} with a particular set of command line #' arguments. Normally, this function would not be run by the user, but instead one of the client functions \code{\link{sample}}, \code{\link{filter}}, or \code{\link{optimise}}, or \code{\link{rewrite}}, which pass any options on to \code{run}. Note that any options specified here are stored in the \code{\link{libbi}} object and do not have to be specified again if another command is run on the object.
 }
 \examples{
 bi_object <- libbi(model = system.file(package="rbi", "PZ.bi"))

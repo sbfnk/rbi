@@ -24,7 +24,4 @@ Get all variable names of one or more type(s)
 \details{
 This returns all variable names of a certain type ("param", "state", "obs", "noise", "const") contained in the model of a \code{\link{libbi}} object
 }
-\author{
-Sebastian Funk
-}
 

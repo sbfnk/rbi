@@ -3,15 +3,14 @@
 #' @title Bi Model
 #' @description
 #' \code{bi_model} creates a model object for \code{Rbi} from a libbi file.
-#' Once the instance is created, the model can either be fed to a \code{\link{libbi}}
-#' object.
+#' Once the instance is created, the model can be fed to a \code{\link{libbi}} object.
 #'
 #' @param filename is the file name of the model file
 #' @param lines lines of the model (if no \code{filename} is given), a character vector
 #' @examples
 #' model_file_name <- system.file(package="rbi", "PZ.bi")
 #' PZ <- bi_model(filename = model_file_name)
-#' @seealso \code{\link{fix}}, \code{\link{insert}}, \code{\link{replace}}, \code{\link{remove}}, \code{\link{rename}}, \code{\link{write_file}}
+#' @seealso \code{\link{fix}}, \code{\link{insert}}, \code{\link{replace}}, \code{\link{remove}}, \code{\link{write_file}}
 #' @export bi_model
 bi_model <- function(filename, lines) {
   if (!missing(filename) && !missing(lines)) {
@@ -37,9 +36,6 @@ bi_model <- function(filename, lines) {
   return(clean_model(new_obj))
 }
 
-default_fix <- fix
-#' @export
-fix <- function(x, ...) UseMethod("fix")
 #' @rdname fix
 #' @name fix
 #' @title Fix noise term, state or parameter of a libbi model
@@ -122,12 +118,7 @@ fix.bi_model <- function(x, ...) {
   x$model <- fix_model
   return(clean_model(x))
 }
-#' @export
-fix.default <- function(x, ...){
-  default_fix(x, ...)
-}
 
-propose_prior <- function(x, ...) UseMethod("propose_prior")
 #' @rdname propose_prior
 #' @name propose_prior
 #' @title Propose from the prior in a libbi model
@@ -137,7 +128,7 @@ propose_prior <- function(x, ...) UseMethod("propose_prior")
 #' @return a bi model object of the new model
 #' @seealso \code{\link{bi_model}}
 #' @keywords internal
-propose_prior.bi_model <- function(x) {
+propose_prior <- function(x) {
   new_model <- bi_model(lines = x$model)
 
   ## remove parameter proposal
@@ -268,8 +259,6 @@ get_lines <- function(x, spaces = 2) {
   return(vec)
 }
 
-#' @export
-insert <- function(x, ...) UseMethod("insert")
 #' @rdname insert
 #' @name insert
 #' @title Insert lines in a LibBi model
@@ -351,15 +340,13 @@ replace_lines <- function(x, num, lines) {
   return(clean_model(x))
 }
 
-default_remove <- remove
-#' @export
-remove <- function(x, ...) UseMethod("remove")
 #' @rdname remove
 #' @name remove
 #' @title Remove line(s) and/or block(s) in a libbi model
 #' @description
 #' Removes one or more lines in a libbi model.
 #'
+#' For the help page of the base R \code{remove} function, see \code{\link{base::remove}}.
 #' @param x a \code{\link{bi_model}} object
 #' @param what either a vector of line number(s) to remove, or a vector of blocks to remove (e.g., "parameter")
 #' @param ... ignored
@@ -389,56 +376,7 @@ remove.bi_model <- function(x, what, ...) {
   }
   return(clean_model(x))
 }
-#' @export
-remove.default <- function(x, ...){
-  default_remove(x, ...)
-}
 
-if (exists("rename")) default_rename <- rename
-#' @export
-rename <- function(x, ...) UseMethod("rename")
-#' @rdname rename
-#' @name rename
-#' @title Set the name of a bi model
-#' @description
-#' Changes the name of a bi model (first line of the .bi file) to the specified name.
-#'
-#' @param x a \code{\link{bi_model}} object
-#' @param name Name of the model
-#' @param ... ignored
-#' @return the updated bi model
-#' @seealso \code{\link{bi_model}}
-#' @examples
-#' model_file_name <- system.file(package="rbi", "PZ.bi")
-#' PZ <- bi_model(filename = model_file_name)
-#' PZ <- rename(PZ, "new_PZ")
-#' @export
-rename.bi_model <- function(x, name, ...) {
-  if (length(x$model) > 0) {
-    if (grepl("model [[:graph:]]+ \\{", x$model[1])) {
-      x$model[1] <-
-        sub("model [[:graph:]]+ \\{", paste0("model ", name, " {"),
-            x$model[1])
-    } else {
-      stop("could not identify model name in first line")
-    }
-  } else {
-    x$model <- c(paste0("model ", name, " {"), "}")
-  }
-  return(clean_model(x))
-}
-#' @export
-rename.default <- function(x, ...) {
-  if (exists("default_rename")) {
-    default_rename(x, ...)
-  } else {
-    stop("No default method defined for 'rename'.")
-  }
-}
-
-if (exists("write_file")) default_write_file <- write_file
-#' @export
-write_file <- function(x, ...) UseMethod("write_file")
 #' @rdname write_file
 #' @name write_file
 #' @title Writes a bi model to a file.
@@ -464,17 +402,7 @@ write_file.bi_model <- function(x, filename, ...) {
 
   writeLines(get_lines(x), con = filename, sep = "\n")
 }
-#' @export
-write_file.default <- function(x, ...) {
-  if (exists("default_write_file")) {
-    default_write_file(x, ...)
-  } else {
-    stop("No default method defined for 'write_file'.")
-  }
-}
 
-
-find_block <- function(x, ...) UseMethod("find_block")
 #' @title Find a block in a LibBi model
 #'
 #' @description
@@ -483,7 +411,7 @@ find_block <- function(x, ...) UseMethod("find_block")
 #' @seealso \code{\link{bi_model}}
 #' @keywords internal
 #' @param x a \code{\link{bi_model}} object
-find_block.bi_model <- function(x, name) {
+find_block <- function(x, name) {
   lines <- x$model
   sub_regexp <- paste0("^[[:space:]]*(sub[[:space:]]+)?[[:space:]]*", name, "[[:space:]]*(\\(.*\\))?[[:space:]]*\\{")
   sub_line <- grep(sub_regexp, lines)
@@ -502,8 +430,6 @@ find_block.bi_model <- function(x, name) {
   }
 }
 
-#' @export
-get_block <- function(x, ...) UseMethod("get_block")
 #' @title Get the contents of a block in a LibBi model
 #'
 #' @description
@@ -559,7 +485,6 @@ add_block <- function(x, name, lines, options) {
 ##' @param dim logical; if set to TRUE, names will contain dimensions in brackts
 ##' @param opt logical; if set to TRUE, names will contain options (e.g., has_output)
 ##' @return variable names
-##' @author Sebastian Funk
 ##' @export
 var_names <- function(x, type, dim = FALSE, opt = FALSE) {
   names_vec <- c()

@@ -3,32 +3,30 @@
 \name{optimise}
 \alias{optimise}
 \alias{optimise.bi_model}
+\alias{optimise.character}
 \alias{optimise.libbi}
 \title{Using the LibBi wrapper to optimise}
 \usage{
 \method{optimise}{libbi}(x, ...)
 
 \method{optimise}{bi_model}(x, ...)
+
+\method{optimise}{character}(x, ...)
 }
 \arguments{
-\item{x}{a \code{\link{libbi} or \link{bi_model}} object}
-
-\item{...}{options to be passed to \code{\link{run}}}
-
-\item{x}{a \code{\link{libbi} or \link{bi_model}} object}
+\item{x}{a \code{\link{libbi} or \link{bi_model}} object, or the name of a file containing the model}
 
 \item{...}{options to be passed to \code{\link{run}}}
 }
 \value{
 a \code{\link{libbi}} object
-
-a \code{\link{libbi}} object
 }
 \description{
-The method \code{optimise} of an instance of \code{\link{libbi}}
-allows to launch \code{libbi} to optimise the parameters with respect to the likelihood or posterior distribution. See the options to \code{\link{run}} for how to specify the various components of sampling with LibBi, and the LibBi manual for all options that can be passed when the client is \code{optimise}.
+The method \code{optimise} launches \code{libbi} to optimise the parameters with respect to the likelihood or posterior distribution. See the options to \code{\link{run}} for how to specify the various components of sampling with LibBi, and the LibBi manual for all options that can be passed when the client is \code{optimise}. 
 
-The method \code{optimise} of an instance of \code{\link{libbi}}
-allows to launch \code{libbi} to optimise the parameters with respect to the likelihood or posterior distribution. See the options to \code{\link{run}} for how to specify the various components of sampling with LibBi, and the LibBi manual for all options that can be passed when the client is \code{optimise}.
+If \code{x} is given as a 'bi_model', a \code{\link{libbi}} object will be created from the model
+If \code{x} is given as a character string, it will be interpreted as the filename of a model to sample from.
+
+For the help page of the base R \code{optimise} function, see \code{\link{stats::optimise}}.
 }
 

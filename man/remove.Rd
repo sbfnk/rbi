@@ -19,6 +19,8 @@ the updated bi model
 }
 \description{
 Removes one or more lines in a libbi model.
+
+For the help page of the base R \code{remove} function, see \code{\link{base::remove}}.
 }
 \examples{
 model_file_name <- system.file(package="rbi", "PZ.bi")

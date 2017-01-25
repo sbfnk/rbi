@@ -2,10 +2,9 @@
 % Please edit documentation in R/bi_model.R
 \name{propose_prior}
 \alias{propose_prior}
-\alias{propose_prior.bi_model}
 \title{Propose from the prior in a libbi model}
 \usage{
-\method{propose_prior}{bi_model}(x)
+propose_prior(x)
 }
 \value{
 a bi model object of the new model

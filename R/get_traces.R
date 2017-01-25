@@ -1,10 +1,14 @@
+#' @export
+get_traces <- function(x, ...) UseMethod("get_traces")
+#' @export
+get_traces <- function(x, ...) UseMethod("get_traces")
 #' @rdname get_traces
 #' @name get_traces
 #' @title Get the parameter traces
 #' @description This function takes the provided \code{\link{libbi}}
 #'     which has been run and returns a data frame with the parameter
 #'     traces.
-#' @param run a \code{\link{libbi}} object which has been run, or a
+#' @param x a \code{\link{libbi}} object which has been run, or a
 #'     list of data frames containing parameter traces (as returned by
 #'     from \code{bi_read}); if it is not a \code{\link{libbi}}
 #'     object, either 'all' must be TRUE or a model given
@@ -20,7 +24,7 @@
 #' @importFrom data.table data.table dcast
 #' @importFrom stats as.formula
 #' @export
-get_traces <- function(run, model, burnin, all = FALSE, ...) {
+get_traces.libbi <- function(x, model, burnin, all = FALSE, ...) {
 
   read_options <- list(...)
 
