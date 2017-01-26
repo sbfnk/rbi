@@ -643,8 +643,7 @@ print.libbi <- function(x, verbose=FALSE, ...){
 #' @param object a \code{\link{libbi}} object
 #' @param ... ignored
 summary.libbi <- function(object, ...){
-  params <- c(bi_read(object, type="param"), 
-              bi_read(object, vars=c("logprior", "loglikelihood")))
+  params <- c(bi_read(object, type="param"))
   summary_table <- t(sapply(params, function(object) summary(object$value)))
   return(summary_table)
 }
