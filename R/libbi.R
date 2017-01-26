@@ -175,7 +175,6 @@ run.libbi <- function(x, client, proposal=c("model", "prior"), fix, options, con
   file_args <- intersect(names(args), file_types)
   ## assign file args to global options
   for (arg in file_args) x$options[[arg]] <- get(arg)
-  global_file_options <- intersect(names(x$options), file_types)
 
   file_options <- list()
 
@@ -201,7 +200,7 @@ run.libbi <- function(x, client, proposal=c("model", "prior"), fix, options, con
   }
 
   ## loop over global options that are file args
-  for (file in global_file_options) {
+  for (file in file_args) {
     arg <- x$options[[file]]
     ## unset global option (we set the file option instead later)
     x$options[[file]] <- NULL
@@ -230,8 +229,10 @@ run.libbi <- function(x, client, proposal=c("model", "prior"), fix, options, con
       file_options[[paste(file, "file", sep = "-")]] <- arg_file_name
     } else if (is.character(arg)) {
       file_options[[paste(file, "file", sep = "-")]] <- arg
+    } else if (is.null(arg)) {
+      x$options[[paste(file, "file", sep = "-")]] <- arg
     } else {
-      stop("'", file, "' must be a list, string or 'libbi' object.")
+      stop("'", file, "' must be a list, string or 'libbi' object, or NULL.")
     }
   }
 
