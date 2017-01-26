@@ -14,11 +14,11 @@
 #' @export
 extract_sample <- function(x, np, ...) {
 
-  read_options <- list(...)
+  read_options <- list(x=x, ...)
 
   if (("libbi" %in% class(x)) || ("character" %in% class(x))) {
     samples <- do.call(bi_read, read_options)
-  } else if ("list" %in% class(run)) {
+  } else if ("list" %in% class(x)) {
     samples <- x
   } else {
     stop("'x' must be a 'libbi' object or a file name or a list of data frames.")
@@ -26,7 +26,7 @@ extract_sample <- function(x, np, ...) {
 
   find_np <- np
 
-  ret <- lapply(x, function(y) {
+  ret <- lapply(samples[setdiff(names(samples), "clock")], function(y) {
     if (is.data.frame(y)) {
       df <- y[y[, "np"] == find_np, ]
       df$np <- NULL
