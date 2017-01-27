@@ -539,6 +539,39 @@ print.bi_model <- function(x, ...) {
   }
 }
 
+#' @rdname bi_model_set_name
+#' @name bi_model_set_name
+#' @title Set the name of a bi model
+#' @description
+#' Changes the name of a bi model (first line of the .bi file) to the specified name.
+#'
+#' @param name Name of the model
+#' For the help page of the base R \code{remove} function, see \code{\link{base::remove}}.
+#' @param x a \code{\link{bi_model}} object
+#' @param what either a vector of line number(s) to remove, or a vector of blocks to remove (e.g., "parameter")
+#' @param ... ignored
+#' @return the updated bi model
+#' @seealso \code{\link{bi_model}}
+#' @examples
+#' @export
+#' model_file_name <- system.file(package="rbi", "PZ.bi")
+#' PZ <- bi_model(filename = model_file_name)
+#' PZ <- set_name(PZ,  "new_PZ")
+set_name.bi_model <- function(x, name, ...) {
+  if (length(x$model) > 0) {
+    if (grepl("model [[:graph:]]+ \\{", x$model[1])) {
+      x$model[1] <-
+        sub("model [[:graph:]]+ \\{", paste0("model ", name, " {"),
+            x$model[1])
+    } else {
+      stop("could not identify model name in first line")
+    }
+  } else {
+    x$model <- c(paste0("model ", name, " {"), "}")
+  }
+  clean_model(x)
+}
+
 #' @name `[`
 #' @title Subset of model lines
 #' @description
