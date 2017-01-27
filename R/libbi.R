@@ -99,6 +99,13 @@ libbi <- function(model, path_to_libbi, dims, use_cache=TRUE, ...){
 #' @return a \code{\link{libbi}} object, except if \code{client} is 'rewrite',  in which case a \code{\link{bi_model}} object will be returned
 #' @export
 run.libbi <- function(x, client, proposal=c("model", "prior"), fix, options, config, add_options, log_file_name, stdoutput_file_name, init, input, obs, time_dim, working_folder, output_all, sample_obs, thin, chain=TRUE, seed=TRUE, ...){
+
+  ## client options
+  args <- list(sample = c("target", "sampler", "nsamples", "nmoves", "tmoves", "sampler-resampler", "sample-ess-rel", "sample-stopper", "sample-stopper-threshold", "sample-stopper-max", "adapter", "adapter-scale", "adapter-ess-rel"),
+               optimise = c("target", "optimiser", "simplex-size-real", "stop-size", "stop-steps"), 
+               filter = c("start-time", "end-time", "noutputs", "with-output-at-obs", "filter", "nparticles", "ess-rel", "resampler", "nbridges", "stopper", "stopper-threshold", "stopper-max", "stopper-block"),
+               rewrite = c())
+
   if (!missing(stdoutput_file_name))
   {
     stop("'stdoutput_file_name' is deprecated. Use 'log_file_name' instead.")
@@ -257,6 +264,10 @@ run.libbi <- function(x, client, proposal=c("model", "prior"), fix, options, con
     }
     x$options <- all_options
     all_options[["output-file"]] <- x$output_file_name
+    ## if (client == "filter") {
+    ##   ## remove options unknown to filter
+    ##   for (opt in c)
+    ## }
 
     run_model <- x$model
     run_model_modified <- FALSE
@@ -653,7 +664,7 @@ summary.libbi <- function(object, ...){
     {
       summary(object)
     }
-  }))
+  }, rep(0, 6)))
   return(summary_table)
 }
 
