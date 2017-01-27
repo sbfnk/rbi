@@ -24,8 +24,10 @@ bi_object <- libbi(model=PZ)
 # look at the object
 bi_object
 
-# Once happy with the settings, launch bi.
-bi_object <- sample(bi_object, obs=synthetic_dataset, init=init_parameters, end_time=T, noutputs=T, nsamples=128, nparticles=128, nthreads=1, log_file_name=tempfile(pattern="pmmhoutput", fileext=".txt"))
+# launch libbi.
+bi_object <- sample(bi_object, obs=synthetic_dataset, init=init_parameters,
+                    end_time=T, noutputs=T, nsamples=128, nparticles=128,
+                    nthreads=1, log_file_name=tempfile(pattern="pmmhoutput", fileext=".txt"))
 # It can be a good idea to look at the result file
 bi_file_summary(bi_object)
 # look at the object again
