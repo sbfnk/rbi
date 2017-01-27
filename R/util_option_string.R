@@ -42,8 +42,8 @@ option_string <- function(...){
                                     format(list_options[[option]],
                                            scientific = FALSE))
                            }
-                         }
-                         ), collapse = " "), string)
+                         },
+                         ""), collapse = " "), string)
 
 
   return(string)

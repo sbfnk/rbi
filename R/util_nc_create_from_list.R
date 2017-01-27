@@ -125,7 +125,7 @@ netcdf_create_from_list <- function(filename, variables, time_dim, coord_dim, va
       }
       ## guess time dimension: numeric/integer column that isn't the value column
       if (guess_time) {
-        numeric_cols <- cols[which(sapply(cols, function(x) { class(element[[x]]) %in% c("integer", "numeric") }))]
+        numeric_cols <- cols[which(vapply(cols, function(x) { class(element[[x]]) %in% c("integer", "numeric") }, TRUE))]
         numeric_cols <- setdiff(numeric_cols, value_column)
         if (length(numeric_cols) == 1) {
           time_dim <- numeric_cols
