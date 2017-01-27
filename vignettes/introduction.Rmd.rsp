@@ -290,7 +290,7 @@ summary(bi)
 
 Any particular posterior sample can be viewed with `extract_sample` (with indices running from 0 to (`nsamples`-1)):
 
-```{R}
+```{R eval=FALSE}
 extract_sample(bi,314)
 ```
 
