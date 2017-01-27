@@ -365,7 +365,7 @@ remove.bi_model <- function(x, what, ...) {
     if (length(grep("[\\{\\}]", x$model[what])) %% 2 == 1) {
       stop("Removing lines would create unbalanced braces.")
     }
-    x$model <- x$model[-num]
+    x$model <- x$model[-what]
   } else if (is.character(what)) {
     block <- find_block(x, what)
     if (length(block) > 0) {
