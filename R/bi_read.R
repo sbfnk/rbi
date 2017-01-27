@@ -17,6 +17,7 @@
 #' @param vector if TRUE, will return results as vectors, not data.frames
 #' @param thin thinning (keep only 1/thin of samples)
 #' @param verbose if TRUE, will print variables as they are read
+#' @param clear_cache if TRUE, will clear the cache and re-read the file even if cached data exists
 #' @return list of results
 #' @importFrom ncdf4 nc_close
 #' @importFrom data.table data.table setkeyv setnames setDF is.data.table melt
@@ -25,7 +26,7 @@
 #' example_output_file <- system.file(package="rbi", "example_output.nc")
 #' d <- bi_read(example_output_file)
 #' @export
-bi_read <- function(x, vars, dims, model, type, missval.threshold, coord_name, vector, thin, verbose)
+bi_read <- function(x, vars, dims, model, type, missval.threshold, coord_name, vector, thin, verbose, use_cache, clear_cache)
 {
   nc <- bi_open(x)
   res <- list()
@@ -105,6 +106,10 @@ bi_read <- function(x, vars, dims, model, type, missval.threshold, coord_name, v
   ## associate time and coord variables
   ## read variables
   if ("libbi" %in% class(x) && x$use_cache) {
+    if (!missing(clear_cache) && clear_cache) {
+      x$.cache$data <- NULL
+      x$.cache$thin <- NULL
+    }
     cached_other <- sapply(nc_var_names[["other"]], function(y) {
       return(y %in% names(x$.cache$data) && thin == x$.cache$thin[y])
     })
@@ -240,6 +245,12 @@ bi_read <- function(x, vars, dims, model, type, missval.threshold, coord_name, v
   if (typeof(x) %in% c("character", "libbi")) nc_close(nc)
 
   if ("libbi" %in% class(x) && x$use_cache) {
+    if (!("data" %in% names(x$.cache))) {
+      x$.cache$data <- list()
+    }
+    if (!("thin" %in% names(x$.cache))) {
+      x$.cache$thin <- list()
+    }
     for (name in nc_var_names[["other"]][!cached_other]) {
       x$.cache$data[[name]] <- res[[name]]
       x$.cache$thin[[name]] <- thin
