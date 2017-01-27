@@ -4,10 +4,10 @@
 \alias{bi_open}
 \title{Bi open}
 \usage{
-bi_open(read)
+bi_open(x)
 }
 \arguments{
-\item{read}{either a path to a NetCDF file, or a NetCDF connection created using \code{nc_open}, or a \code{\link{libbi}} object from which to read the output}
+\item{x}{either a path to a NetCDF file, or a NetCDF connection created using \code{nc_open}, or a \code{\link{libbi}} object from which to read the output}
 }
 \value{
 open NetCDF connection
