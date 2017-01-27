@@ -215,6 +215,8 @@ clean_model <- function(x) {
   x$model <- gsub("[[:space:]]*$", "", x$model)
   ## remove initial spaces
   x$model <- gsub("^[[:space:]]*", "", x$model)
+  ## split along newlines
+  x$model <- unlist(strsplit(x$model, "\n"))
   ## remove empty lines
   x$model <- x$model[x$model!=""]
 
