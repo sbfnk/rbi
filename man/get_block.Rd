@@ -9,7 +9,7 @@
 \arguments{
 \item{x}{a \code{\link{bi_model}} object}
 
-\item{name}{}
+\item{name}{name of the block}
 
 \item{...}{ignored}
 }

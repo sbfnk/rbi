@@ -1,6 +1,5 @@
 Package: rbi
 Version: 0.6.0
-Date: 2016-12-23
 Title: R Interface to LibBi
 Authors@R: c(
         person("Pierre E.", "Jacob", email = "pierre.jacob.work@gmail.com", role = "aut"),

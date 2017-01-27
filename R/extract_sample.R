@@ -1,6 +1,6 @@
 #' @rdname extract_sample
 #' @name extract_sample
-#' @title Extract a sample from a \code{\link{LibBi}} run.
+#' @title Extract a sample from a \code{LibBi} run.
 #' @description This function takes the provided \code{\link{libbi}} 
 #'     object which has been run and extracts a data frame.
 #'     traces.

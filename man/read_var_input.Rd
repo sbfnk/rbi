@@ -11,7 +11,7 @@ read_var_input(nc, name, coord, ps, ts, ...)
 
 \item{name}{Name of the variable}
 
-\item{coord}{(optional) Demsions index.}
+\item{coord}{(optional) Dimension index.}
 
 \item{ps}{(optional) Path indices.}
 

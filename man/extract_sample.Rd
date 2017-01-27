@@ -2,7 +2,7 @@
 % Please edit documentation in R/extract_sample.R
 \name{extract_sample}
 \alias{extract_sample}
-\title{Extract a sample from a \code{\link{LibBi}} run.}
+\title{Extract a sample from a \code{LibBi} run.}
 \usage{
 extract_sample(x, np, ...)
 }

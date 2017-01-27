@@ -11,7 +11,7 @@ var_names(x, type, dim = FALSE, opt = FALSE)
 
 \item{type}{a character vector of one or more types}
 
-\item{dim}{logical; if set to TRUE, names will contain dimensions in brackts}
+\item{dim}{logical; if set to TRUE, names will contain dimensions in brackets}
 
 \item{opt}{logical; if set to TRUE, names will contain options (e.g., has_output)}
 }

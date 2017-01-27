@@ -430,6 +430,7 @@ find_block <- function(x, name) {
   }
 }
 
+#' @rdname get_block
 #' @title Get the contents of a block in a LibBi model
 #'
 #' @description
@@ -437,7 +438,7 @@ find_block <- function(x, name) {
 #'   lines. 
 #' @return a character vector of the lines in the block
 #' @param x a \code{\link{bi_model}} object
-#' @param name 
+#' @param name name of the block
 #' @param ... ignored
 #' @export
 get_block.bi_model <- function(x, name, ...) {
@@ -482,7 +483,7 @@ add_block <- function(x, name, lines, options) {
 ##' @title Get variables
 ##' @param x a \code{\link{bi_model}} object
 ##' @param type a character vector of one or more types
-##' @param dim logical; if set to TRUE, names will contain dimensions in brackts
+##' @param dim logical; if set to TRUE, names will contain dimensions in brackets
 ##' @param opt logical; if set to TRUE, names will contain options (e.g., has_output)
 ##' @return variable names
 ##' @export

@@ -245,7 +245,7 @@ run.libbi <- function(x, client, proposal=c("model", "prior"), fix, options, con
     ## adjust options
     if (client != "rewrite") {
       ## clear cache
-      x$.cache=new.env(parent = emptyenv())
+      x$.cache <- new.env(parent = emptyenv())
 
       if (!("output-file" %in% names(all_options))) {
         x$output_file_name <- tempfile(pattern=paste(x$model$name, "output", sep = "_"),
@@ -505,7 +505,7 @@ add_output <- function(x, output){
   }
   x$run_flag <- TRUE
   x$timestamp <- file.mtime(x$output_file_name)
-  x$.cache=new.env(parent = emptyenv())
+  x$.cache <- new.env(parent = emptyenv())
   return(x)
 }
 

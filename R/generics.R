@@ -67,9 +67,6 @@ remove.default <- function(x, ...){
 }
 
 #' @export
-rename <- function(x, ...) UseMethod("rename")
-
-#' @export
 write_file <- function(x, ...) UseMethod("write_file")
 
 #' @export
