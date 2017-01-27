@@ -11,7 +11,6 @@ Authors@R: c(
 Depends:
     data.table
 Imports:
-    reshape2,
     ncdf4
 Suggests:
     coda,
