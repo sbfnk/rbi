@@ -20,12 +20,15 @@ synthetic_dataset <- bi_generate_dataset(end_time=T, model=PZ,
                                          init=init_parameters)
 # Settings
 bi_object <- libbi(model=PZ)
-print(bi_object)
+bi_object
 # Once happy with the settings, launch bi.
 bi_object <- filter(bi_object, nparticles = 8192, nthreads = 1, end_time = T, noutputs = T, obs = synthetic_dataset, init = init_parameters)
 # It can be a good idea to look at the result file
-bi_file_summary(bi_object$output_file_name)
-bi_read(bi_object$output_file_name, vars = "mu")
+bi_file_summary(bi_object)
+bi_object
+summary(bi_object)
+## read mu variable
+bi_read(bi_object, vars = "mu")
 # Let's have a look at the filtering means
 # First, get the particles
 output <- bi_read(bi_object)

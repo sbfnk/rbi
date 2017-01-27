@@ -49,8 +49,8 @@ plot(seq_along(P_obs2), P_obs2, type = "l", col = "orange", xlab = "time",
 ## plot(dataset1)
 ## plot(dataset2)
 ##
-## p1 <- plot(dataset1, states = "P_obs", color = "orange")
-## p2 <- plot(dataset2, states = "P_obs", color = "orange")
+## p1 <- plot(dataset1, state = "P_obs", color = "orange")
+## p2 <- plot(dataset2, state = "P_obs", color = "orange")
 ## g1 <- p1$states + xlab("time") + ylab(paste("P_obs with sigma=", round(sigma1, 2)))
 ## g2 <- p2$states + xlab("time") + ylab(paste("P_obs with sigma=", round(sigma2, 2)))
 ## grid.arrange(g1,g2)

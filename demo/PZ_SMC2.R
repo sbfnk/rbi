@@ -21,12 +21,17 @@ synthetic_dataset <- bi_generate_dataset(end_time=T, noutputs=T,
 
 # Settings
 bi_object <- libbi(model=PZ, sampler = "smc2")
-print(bi_object)
+# have a look at the object
+bi_object
 
 # Once happy with the settings, launch bi.
 bi_object <- sample(bi_object, end_time = T, noutputs = T, nsamples = 128, nparticles = 128, nthreads = 1, obs = synthetic_dataset, init = init_parameters, log_file_name = tempfile(pattern="smc2output", fileext=".txt"))
 # It can be a good idea to look at the result file
-bi_file_summary(bi_object$output_file_name)
+bi_file_summary(bi_object)
+# look at the object again
+bi_object
+# print summary
+summary(bi_object)
 # Have a look at the posterior distribution
 output <- bi_read(bi_object, vars=c("logweight", "mu", "sigma"))
 logweight <- output$logweight$value
