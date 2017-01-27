@@ -20,7 +20,7 @@
 #' @param clear_cache if TRUE, will clear the cache and re-read the file even if cached data exists
 #' @return list of results
 #' @importFrom ncdf4 nc_close
-#' @importFrom data.table data.table setkeyv setnames setDF is.data.table melt
+#' @importFrom data.table setkeyv setnames setDF is.data.table melt
 #' @importFrom utils setTxtProgressBar txtProgressBar
 #' @examples
 #' example_output_file <- system.file(package="rbi", "example_output.nc")
@@ -161,9 +161,11 @@ bi_read <- function(x, vars, dims, model, type, missval.threshold, coord_name, v
         }
         if (!missing(verbose) && verbose) close(pb)
       } else {
-        dim_names <- dim_names[dim_lengths > 1]
         all_values <- read_var_input(nc, var_name)
       }
+
+      auxiliary_dims <- unname(unlist(var_dims[c("coord", "time")]))
+      dim_names <- dim_names[dim_lengths > 1 | dim_names %in% auxiliary_dims]
 
       if (any(duplicated(dim_names))) {
         duplicated_dim_names <- dim_names[duplicated(dim_names)]
@@ -173,10 +175,14 @@ bi_read <- function(x, vars, dims, model, type, missval.threshold, coord_name, v
         }
       }
 
-      value_dims <- dim(all_values)
+      n_one_dims <- dim_names[dim_lengths == 1]
+      if (length(n_one_dims) > 0) {
+        all_values <- array(all_values, dim=c(dim(all_values), rep(1, length(n_one_dims) - 1)))
+      }
 
-      if (prod(value_dims) > 1) {
-        mav <- data.table(data.table::melt(all_values, varnames = rev(dim_names)))
+      if (sum(dim(all_values)) > 1) {
+
+        mav <- data.table::data.table(data.table::melt(all_values, varnames = rev(dim_names)))
 
         ## find matching time and coord variables
         all_matching_dims <- c()
@@ -186,7 +192,7 @@ bi_read <- function(x, vars, dims, model, type, missval.threshold, coord_name, v
           all_matching_dims <- union(all_matching_dims, matching_dims)
           if (length(matching_vars) == 1)  {
             merge_values <- read_var_input(nc, matching_vars)
-            mav_merge <- data.table(data.table::melt(merge_values, varnames = rev(matching_dims), value.name = time_coord_names[var_type]))
+            mav_merge <- data.table::data.table(data.table::melt(merge_values, varnames = rev(matching_dims), value.name = time_coord_names[var_type]))
             mav <- merge(mav_merge, mav, by = unname(matching_dims))
           } else if (length(matching_vars) > 1) {
             stop("Found multiple matching time variables for ", var_name, ": ", matching_vars)
@@ -206,34 +212,38 @@ bi_read <- function(x, vars, dims, model, type, missval.threshold, coord_name, v
         cols <- setdiff(colnames(mav), "value")
         if (length(cols) > 0) setkeyv(mav, cols)
         rownames(mav) <- seq_len(nrow(mav))
+
+        if (!missing(dims) && length(dims) == 1 && "coord" %in% colnames(mav)) {
+          setnames(mav, "coord", names(dims))
+        }
+
+        for (col in colnames(mav)) {
+          if (!missing(dims) && col %in% names(dims)) {
+            mav[[col]] <- factor(mav[[col]], labels = dims[[col]])
+          } else if (!(col %in% c("value", time_coord_names[c("time", "coord")]))) {
+            mav[[col]] <- mav[[col]] - 1
+          }
+        }
       } else {
         ## dimensionless values
         mav <- all_values
       }
 
       if (!missing(missval.threshold)) {
-        missing.values <- which(mav$value > missval.threshold)
-        if (length(missing.values) > 0) {
-          mav[missing.values, ]$value <- NA
-        }
-      }
-
-      if (!missing(dims) && length(dims) == 1 && "coord" %in% colnames(mav)) {
-        setnames(mav, "coord", names(dims))
-      }
-
-      for (col in colnames(mav)) {
-        if (!missing(dims) && col %in% names(dims)) {
-          mav[[col]] <- factor(mav[[col]], labels = dims[[col]])
-        } else if (!(col %in% c("value", time_coord_names[c("time", "coord")]))) {
-          mav[[col]] <- mav[[col]] - 1
+        if (data.table::is.data.table(mav)) {
+          missing.values <- which(mav$value > missval.threshold)
+          if (length(missing.values) > 0) {
+            mav[missing.values, ]$value <- NA_real_
+          }
+        } else {
+          mav[mav > missval.threshold] <- NA_real_
         }
       }
 
       if (!missing(vector) && vector) {
         res[[var_name]] <- mav$value
       } else {
-        if (is.data.table(mav)) {
+        if (data.table::is.data.table(mav)){
           res[[var_name]] <- setDF(mav)
         } else {
           res[[var_name]] <- mav
