@@ -161,7 +161,7 @@ bi_read <- function(x, vars, dims, model, type, missval.threshold, coord_name, v
         }
         if (!missing(verbose) && verbose) close(pb)
       } else {
-        dim_names <- dim_names
+        dim_names <- dim_names[dim_lengths > 1]
         all_values <- read_var_input(nc, var_name)
       }
 
@@ -175,7 +175,7 @@ bi_read <- function(x, vars, dims, model, type, missval.threshold, coord_name, v
 
       value_dims <- dim(all_values)
 
-      if (!is.null(value_dims)) {
+      if (prod(value_dims) > 1) {
         mav <- data.table(data.table::melt(all_values, varnames = rev(dim_names)))
 
         ## find matching time and coord variables
