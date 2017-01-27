@@ -645,7 +645,15 @@ print.libbi <- function(x, verbose=FALSE, ...){
 #' @param ... ignored
 summary.libbi <- function(object, ...){
   params <- c(bi_read(object, type="param"))
-  summary_table <- t(sapply(params, function(object) summary(object$value)))
+  summary_table <- t(sapply(params, function(object) {
+    if (is.data.frame(object))
+    {
+      summary(object$value)
+    } else
+    {
+      summary(object)
+    }
+  }))
   return(summary_table)
 }
 
