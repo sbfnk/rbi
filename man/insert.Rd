@@ -2,12 +2,7 @@
 % Please edit documentation in R/bi_model.R
 \name{insert}
 \alias{insert}
-\alias{insert.bi_model}
 \title{Insert lines in a LibBi model}
-\usage{
-\method{insert}{bi_model}(x, lines, before, after, at_beginning_of, at_end_of,
-  ...)
-}
 \arguments{
 \item{x}{a \code{\link{bi_model}} object}
 

@@ -3,8 +3,10 @@
 \name{propose_prior}
 \alias{propose_prior}
 \title{Propose from the prior in a libbi model}
-\usage{
-propose_prior(x)
+\arguments{
+\item{x}{a \code{\link{bi_model}} object}
+
+\item{...}{ignored}
 }
 \value{
 a bi model object of the new model

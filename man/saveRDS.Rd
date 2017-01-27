@@ -2,17 +2,13 @@
 % Please edit documentation in R/libbi.R
 \name{saveRDS}
 \alias{saveRDS}
-\alias{saveRDS.libbi}
 \title{Write results of a \code{LibBi} run to an RDS file}
-\usage{
-\method{saveRDS}{libbi}(x, filename, ...)
-}
 \arguments{
 \item{x}{a \code{\link{libbi}} object}
 
 \item{filename}{name of the RDS file to save to}
 
-\item{...}{any options to \code{\link{saveRDS}}}
+\item{...}{any options to \code{\link{base::saveRDS}}}
 }
 \description{
 This saves all options, files and outputs of a \code{LibBi} run to an RDS file specified

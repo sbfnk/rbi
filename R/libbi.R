@@ -18,8 +18,7 @@
 #' @examples
 #' bi_object <- libbi(model = system.file(package="rbi", "PZ.bi"))
 #' @seealso \code{\link{sample}}, \code{\link{filter}}, \code{\link{optimise}}, \code{\link{rewrite}}
-#' @export
-libbi <- function(model, path_to_libbi, dims, use_cache=TRUE, ...){
+setConstructorS3("libbi", enforceRCC=FALSE, function(model, path_to_libbi, dims, use_cache=TRUE, ...){
   libbi_dims <- list()
   if (!missing(dims)) {
     for (dim_name in names(dims))
@@ -28,25 +27,12 @@ libbi <- function(model, path_to_libbi, dims, use_cache=TRUE, ...){
     }
   }
 
-  if (missing(model)) {
-    stop("A 'model' must be given to libbi")
-  } else {
-    if (is.character(model)) {
-      model_file_name <- model
-      model <- bi_model(model_file_name)
-    } else if ("bi_model" %in% class(model)) {
-      model_file_name <- ""
-    } else {
-      stop("'model' must be either a 'bi_model' object or a path to a valid model file in LibBi's syntax")
-    }
-  }
-
   if (missing(path_to_libbi)) path_to_libbi <- character(0)
 
   new_obj <-
     structure(list(options=list(),
                    path_to_libbi=path_to_libbi,
-                   model=model,
+                   model=bi_model(),
                    model_file_name=model_file_name,
                    working_folder=character(0),
                    dims=libbi_dims,
@@ -59,7 +45,7 @@ libbi <- function(model, path_to_libbi, dims, use_cache=TRUE, ...){
                    use_cache=use_cache,
                    .cache=new.env(parent = emptyenv())), class="libbi")
   return(do.call(run, c(list(x=new_obj, client=character(0)), list(...))))
-}
+})
 
 #' @rdname run
 #' @name run
@@ -97,14 +83,22 @@ libbi <- function(model, path_to_libbi, dims, use_cache=TRUE, ...){
 #' @importFrom ncdf4 nc_open nc_close ncvar_rename
 #' @importFrom stats runif
 #' @return a \code{\link{libbi}} object, except if \code{client} is 'rewrite',  in which case a \code{\link{bi_model}} object will be returned
-#' @export
-run.libbi <- function(x, client, proposal=c("model", "prior"), fix, options, config, add_options, log_file_name, stdoutput_file_name, init, input, obs, time_dim, working_folder, output_all, sample_obs, thin, chain=TRUE, seed=TRUE, ...){
+setMethodS3("run", "libbi", dontWarn="base", function(x, client, proposal=c("model", "prior"), model, fix, options, config, add_options, log_file_name, stdoutput_file_name, init, input, obs, time_dim, working_folder, output_all, sample_obs, thin, chain=TRUE, seed=TRUE, ...){
 
   ## client options
-  args <- list(sample = c("target", "sampler", "nsamples", "nmoves", "tmoves", "sampler-resampler", "sample-ess-rel", "sample-stopper", "sample-stopper-threshold", "sample-stopper-max", "adapter", "adapter-scale", "adapter-ess-rel"),
-               optimise = c("target", "optimiser", "simplex-size-real", "stop-size", "stop-steps"), 
-               filter = c("start-time", "end-time", "noutputs", "with-output-at-obs", "filter", "nparticles", "ess-rel", "resampler", "nbridges", "stopper", "stopper-threshold", "stopper-max", "stopper-block"),
-               rewrite = c())
+  args <-
+    list(sample = c("target", "sampler", "nsamples", "nmoves", "tmoves",
+                    "sampler-resampler", "sample-ess-rel", "sample-stopper",
+                    "sample-stopper-threshold", "sample-stopper-max",
+                    "adapter", "adapter-scale", "adapter-ess-rel"),
+         optimise = c("target", "optimiser", "simplex-size-real",
+                      "stop-size", "stop-steps"),
+         filter = c("start-time", "end-time", "noutputs",
+                    "with-output-at-obs", "filter", "nparticles", "ess-rel",
+                    "resampler", "nbridges", "stopper", "stopper-threshold",
+                    "stopper-max", "stopper-block"),
+         rewrite = c())
+  all_args <- unique(unname(unlist(args)))
 
   if (!missing(stdoutput_file_name))
   {
@@ -157,23 +151,23 @@ run.libbi <- function(x, client, proposal=c("model", "prior"), fix, options, con
   if (length(libbi_seed) > 0) new_options[["seed"]] <- libbi_seed
 
   ## get model
+  if (!missing(model)) x$model <- model
+
+  ## check if 'model-file' is contained in any options
   all_options <- option_list(getOption("libbi_args"), config_file_options, x$options, new_options, list(...))
   if ("model-file" %in% names(all_options)) {
-    if (is.null(x$model)) {
+    if (is.empty(x$model)) {
       x$model_file_name <- absolute_path(all_options[["model-file"]], getwd())
       x$model <- bi_model(x$model_file_name)
     } else {
       warning("'model-file' and 'model' options both provided. Will ignore 'model-file'.")
     }
-  } else {
-    if (is.null(x$model)) {
-      stop("A model must be provided via the 'model-file' or 'model' option.")
-    } else {
-      x$model_file_name <- tempfile(pattern=paste(x$model$name, "model", sep = "_"),
-                                    fileext=".bi",
-                                    tmpdir=absolute_path(x$working_folder))
-      write_file(x$model, x$model_file_name)
-    }
+  } else if (!is.empty(x$model)) {
+    x$model_file_name <-
+      tempfile(pattern=paste(x$model$name, "model", sep = "_"),
+               fileext=".bi",
+               tmpdir=absolute_path(x$working_folder))
+    write_file(x$model, x$model_file_name)
   }
 
   ## read file options: input, init, obs
@@ -253,6 +247,10 @@ run.libbi <- function(x, client, proposal=c("model", "prior"), fix, options, con
     if (client != "rewrite") {
       ## clear cache
       x$.cache <- new.env(parent = emptyenv())
+      ## check that model is not empty
+      if (is.empty(x$model)) {
+        stop("No model given.")
+      }
 
       if (!("output-file" %in% names(all_options))) {
         x$output_file_name <- tempfile(pattern=paste(x$model$name, "output", sep = "_"),
@@ -264,10 +262,9 @@ run.libbi <- function(x, client, proposal=c("model", "prior"), fix, options, con
     }
     x$options <- all_options
     all_options[["output-file"]] <- x$output_file_name
-    ## if (client == "filter") {
-    ##   ## remove options unknown to filter
-    ##   for (opt in c)
-    ## }
+
+    retain_options <- intersect(args[[client]], all_options)
+    all_options <- all_options[retain_options]
 
     run_model <- x$model
     run_model_modified <- FALSE
@@ -379,7 +376,7 @@ run.libbi <- function(x, client, proposal=c("model", "prior"), fix, options, con
     x$options <- all_options
   }
   return(x)
-}
+})
 
 #' @name sample
 #' @rdname sample
@@ -394,20 +391,19 @@ run.libbi <- function(x, client, proposal=c("model", "prior"), fix, options, con
 #' @param x a \code{\link{libbi} or \link{bi_model}} object, or the name of a file containing the model
 #' @param ... options to be passed to \code{\link{run}}
 #' @return a \code{\link{libbi}} object
-#' @export
-sample.libbi <- function(x, ...){
+setMethodS3("sample", "libbi", dontWarn="base", function(x, ...){
   run.libbi(x, client="sample", ...)
-}
+})
 #' @rdname sample
-#' @export
-sample.bi_model <- function(x, ...){
+#' @name sample
+setMethodS3("sample", "bi_model", function(x, ...){
   run.libbi(libbi(model=x), client="sample", ...)
-}
+})
 #' @rdname sample
-#' @export
-sample.character <- function(x, ...){
+#' @name sample
+setMethodS3("sample", "character", function(x, ...){
   run.libbi(libbi(model=bi_model(x)), client="sample", ...)
-}
+})
 
 #' @name filter
 #' @rdname filter
@@ -422,20 +418,19 @@ sample.character <- function(x, ...){
 #' @param x a \code{\link{libbi} or \link{bi_model}} object, or the name of a file containing the model
 #' @param ... options to be passed to \code{\link{run}}
 #' @return a \code{\link{libbi}} object
-#' @export
-filter.libbi <- function(x, ...){
+setMethodS3("filter", "libbi", dontWarn=c("stats", "dplyr"), function(x, ...){
   run.libbi(x, client="filter", ...)
-}
+})
 #' @rdname filter
-#' @export
-filter.bi_model <- function(x, ...){
+#' @name filter
+setMethodS3("filter", "bi_model", function(x, ...){
   run.libbi(libbi(x), client="filter", ...)
-}
+})
 #' @rdname filter
-#' @export
-filter.character <- function(x, ...){
+#' @name filter
+setMethodS3("filter", "character", function(x, ...){
   run.libbi(libbi(bi_model(x)), client="filter", ...)
-}
+})
 
 #' @name optimise
 #' @rdname optimise
@@ -450,20 +445,19 @@ filter.character <- function(x, ...){
 #' @param x a \code{\link{libbi} or \link{bi_model}} object, or the name of a file containing the model
 #' @param ... options to be passed to \code{\link{run}}
 #' @return a \code{\link{libbi}} object
-#' @export
-optimise.libbi <- function(x, ...){
+setMethodS3("optimise", "libbi", dontWarn="stats", function(x, ...){
   run.libbi(x, client="optimise", ...)
-}
+})
 #' @rdname optimise
-#' @export
-optimise.bi_model <- function(x, ...){
+#' @name optimise
+setMethodS3("optimise", "bi_model", function(x, ...){
   run.libbi(libbi(x), client="optimise", ...)
-}
+})
 #' @rdname optimise
-#' @export
-optimise.character <- function(x, ...){
+#' @name optimise
+setMethodS3("optimise", "character", function(x, ...){
   run.libbi(libbi(bi_model(x)), client="optimise", ...)
-}
+})
 
 
 #' @name rewrite
@@ -478,20 +472,19 @@ optimise.character <- function(x, ...){
 #' @param x a \code{\link{libbi} or \link{bi_model}} object, or the name of a file containing the model
 #' @param ... options to be passed to \code{\link{run}}
 #' @return a \code{\link{bi_model}} object
-#' @export
-rewrite.libbi <- function(x, ...){
+setMethodS3("rewrite", "libbi", function(x, ...){
   run.libbi(x, client="rewrite", ...)
-}
+})
 #' @rdname rewrite
-#' @export
-rewrite.bi_model <- function(x, ...){
+#' @name rewrite
+setMethodS3("rewrite", "bi_model", function(x, ...){
   run.libbi(libbi(x), client="rewrite", ...)
-}
+})
 #' @rdname rewrite
-#' @export
-rewrite.character <- function(x, ...){
+#' @name rewrite
+setMethodS3("rewrite", "character", function(x, ...){
   run.libbi(libbi(bi_model(x)), client="rewrite", ...)
-}
+})
 
 #' @name add_output
 #' @rdname add_output
@@ -500,14 +493,14 @@ rewrite.character <- function(x, ...){
 #' Adds an output file to a \code{\link{libbi}} object. This is useful to recreate a \code{\link{libbi}} object from the model and output files of a previous run
 #' @param x a \code{\link{libbi}} object
 #' @param output name of the file to add as output file, or a list of data frames that contain the outputs
-#' @export
+#' @param ... ignored
 #' @examples
 #' model_file_name <- system.file(package="rbi", "PZ.bi")
 #' PZ <- bi_model(filename = model_file_name)
 #' example_output_file <- system.file(package="rbi", "example_output.nc")
 #' bi <- libbi(PZ)
 #' bi <- add_output(bi, example_output_file)
-add_output <- function(x, output){
+setMethodS3("add_output", "libbi", function(x, output, ...){
   if (length(x$output_file_name) > 0) {
     stop("libbi object already contains output")
   }
@@ -518,7 +511,7 @@ add_output <- function(x, output){
   x$timestamp <- file.mtime(x$output_file_name)
   x$.cache <- new.env(parent = emptyenv())
   return(x)
-}
+})
 
 #' @name saveRDS
 #' @rdname saveRDS
@@ -529,9 +522,8 @@ add_output <- function(x, output){
 #' For the help page of the base R \code{saveRDS} function, see \code{\link{base::saveRDS}}.
 #' @param x a \code{\link{libbi}} object
 #' @param filename name of the RDS file to save to
-#' @param ... any options to \code{\link{saveRDS}}
-#' @export
-saveRDS.libbi <- function(x, filename, ...) {
+#' @param ... any options to \code{\link{base::saveRDS}}
+setMethodS3("saveRDS", "libbi", dontWarn="base", function(x, filename, ...) {
   if (missing(filename)) {
     stop("Need to specify a file name")
   }
@@ -554,8 +546,8 @@ saveRDS.libbi <- function(x, filename, ...) {
 
   save_obj[["options"]] <- options
 
-  saveRDS(save_obj, filename, ...)
-}
+  base::saveRDS(save_obj, filename, ...)
+})
 
 #' @name readRDS
 #' @rdname readRDS
@@ -567,10 +559,9 @@ saveRDS.libbi <- function(x, filename, ...) {
 #' @param x a \code{\link{libbi}} object
 #' @param file name of the RDS file to read
 #' @param use_cache logical; whether to use the cache (default: \code{\link{libbi}} default)
-#' @param ... any options to \code{\link{libbi}}
+#' @param ... any options to \code{\link{base::readRDS}}
 #' @return a \code{\link{libbi}} object
-#' @export
-readRDS.libbi <- function(x, file, use_cache, ...) {
+setMethodS3("readRDS", "libbi", dontWarn="base", function(x, file, use_cache, ...) {
   if (missing(file)) {
     stop("Need to specify a file to read")
   }
@@ -597,7 +588,7 @@ readRDS.libbi <- function(x, file, use_cache, ...) {
   new_obj <- add_output(new_obj, output_file_name)
 
   return(new_obj)
-}
+})
 
 #' @name print
 #' @rdname print
@@ -605,11 +596,10 @@ readRDS.libbi <- function(x, file, use_cache, ...) {
 #' @description
 #' This prints the model name, basic information such as number of iterations
 #'   and timesteps run, as well as a list of variables.
-#' @export
 #' @param x a \code{\link{libbi}} object
 #' @param verbose logical; if TRUE, locations of files and working folder should be printed
 #' @param ... ignored
-print.libbi <- function(x, verbose=FALSE, ...){
+setMethodS3("print", "libbi", function(x, verbose=FALSE, ...){
   cat("Wrapper around LibBi\n")
   if (verbose) {
     cat("* path to working folder:", x$working_folder, "\n")
@@ -644,17 +634,16 @@ print.libbi <- function(x, verbose=FALSE, ...){
   } else {
     cat("* LibBi has not been run yet\n")
   }
-}
+})
 
 #' @name summary
 #' @rdname summary
 #' @title Print summary information about a \code{\link{libbi}} object
 #' @description
 #' This reads in the output file of the \code{\link{libbi}} object (which has been run before) and prints summary information of parameters
-#' @export
 #' @param object a \code{\link{libbi}} object
 #' @param ... ignored
-summary.libbi <- function(object, ...){
+setMethodS3("summary", "libbi", function(object, ...){
   params <- c(bi_read(object, type="param"))
   summary_table <- t(vapply(params, function(object) {
     if (is.data.frame(object))
@@ -666,7 +655,7 @@ summary.libbi <- function(object, ...){
     }
   }, rep(0, 6)))
   return(summary_table)
-}
+})
 
 #' @name assert_output
 #' @rdname assert_output
@@ -674,8 +663,9 @@ summary.libbi <- function(object, ...){
 #' @description
 #' This checks that the \code{\link{libbi}} object given has been run (via \code{\link{sample}}, \code{\link{filter}} or \code{\link{optimize}})) and the output file has not been modified since.
 #' @param x a \code{\link{libbi}} object
+#' @param ... ignored
 #' @keywords internal
-assert_output <- function(x)
+setMethodS3("assert_output", "libbi", export=FALSE, function(x, ...)
 {
     if (!x$run_flag) {
       stop("The libbi object must be run first (using sample, filter or optimise).")
@@ -683,7 +673,7 @@ assert_output <- function(x)
     if (x$timestamp < file.mtime(x$output_file_name)) {
       stop("Output file ", x$output_file_name, " has been modified since LibBi was run.")
     }
-}
+})
 
 #' @name predict
 #' @rdname predict
@@ -692,7 +682,6 @@ assert_output <- function(x)
 #' The method \code{predict} is an alias for \code{sample(target="prediction")}. Usually, an \code{init} object or file should be given containing posterior samples.
 #'
 #' For the help page of the base R \code{optimise} function, see \code{\link{stats::optimise}}.
-#' @export
-predict.libbi <- function(object, ...) {
+setMethodS3("predict", "libbi", function(object, ...) {
   sample(object, target="prediction", ...)
-}
+})

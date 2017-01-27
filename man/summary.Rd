@@ -2,11 +2,7 @@
 % Please edit documentation in R/libbi.R
 \name{summary}
 \alias{summary}
-\alias{summary.libbi}
 \title{Print summary information about a \code{\link{libbi}} object}
-\usage{
-\method{summary}{libbi}(object, ...)
-}
 \arguments{
 \item{object}{a \code{\link{libbi}} object}
 

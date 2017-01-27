@@ -2,17 +2,7 @@
 % Please edit documentation in R/libbi.R
 \name{filter}
 \alias{filter}
-\alias{filter.bi_model}
-\alias{filter.character}
-\alias{filter.libbi}
 \title{Using the LibBi wrapper to filter}
-\usage{
-\method{filter}{libbi}(x, ...)
-
-\method{filter}{bi_model}(x, ...)
-
-\method{filter}{character}(x, ...)
-}
 \arguments{
 \item{x}{a \code{\link{libbi} or \link{bi_model}} object, or the name of a file containing the model}
 

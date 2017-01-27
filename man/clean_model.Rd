@@ -3,10 +3,11 @@
 \name{clean_model}
 \alias{clean_model}
 \title{Strip model code to its bare bones}
-\usage{
-clean_model(x)
-}
 \arguments{
+\item{x}{a \code{\link{bi_model}} object}
+
+\item{...}{ignored}
+
 \item{x}{a \code{\link{bi_model}} object}
 }
 \value{

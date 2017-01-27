@@ -2,17 +2,7 @@
 % Please edit documentation in R/libbi.R
 \name{sample}
 \alias{sample}
-\alias{sample.bi_model}
-\alias{sample.character}
-\alias{sample.libbi}
 \title{Using the LibBi wrapper to sample}
-\usage{
-\method{sample}{libbi}(x, ...)
-
-\method{sample}{bi_model}(x, ...)
-
-\method{sample}{character}(x, ...)
-}
 \arguments{
 \item{x}{a \code{\link{libbi} or \link{bi_model}} object, or the name of a file containing the model}
 

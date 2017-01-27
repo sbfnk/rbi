@@ -2,17 +2,7 @@
 % Please edit documentation in R/libbi.R
 \name{rewrite}
 \alias{rewrite}
-\alias{rewrite.bi_model}
-\alias{rewrite.character}
-\alias{rewrite.libbi}
 \title{Using the LibBi wrapper to rewrite}
-\usage{
-\method{rewrite}{libbi}(x, ...)
-
-\method{rewrite}{bi_model}(x, ...)
-
-\method{rewrite}{character}(x, ...)
-}
 \arguments{
 \item{x}{a \code{\link{libbi} or \link{bi_model}} object, or the name of a file containing the model}
 

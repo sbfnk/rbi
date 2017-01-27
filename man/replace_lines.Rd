@@ -3,13 +3,14 @@
 \name{replace_lines}
 \alias{replace_lines}
 \title{Update line(s) in a libbi model}
-\usage{
-replace_lines(x, num, lines)
-}
 \arguments{
+\item{x}{a \code{\link{bi_model}} object}
+
 \item{num}{line number(s) to update}
 
 \item{lines}{vector of line(s)}
+
+\item{...}{ignored}
 }
 \value{
 the updated bi model

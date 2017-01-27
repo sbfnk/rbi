@@ -2,17 +2,7 @@
 % Please edit documentation in R/libbi.R
 \name{optimise}
 \alias{optimise}
-\alias{optimise.bi_model}
-\alias{optimise.character}
-\alias{optimise.libbi}
 \title{Using the LibBi wrapper to optimise}
-\usage{
-\method{optimise}{libbi}(x, ...)
-
-\method{optimise}{bi_model}(x, ...)
-
-\method{optimise}{character}(x, ...)
-}
 \arguments{
 \item{x}{a \code{\link{libbi} or \link{bi_model}} object, or the name of a file containing the model}
 

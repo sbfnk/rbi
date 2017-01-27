@@ -3,13 +3,12 @@
 \name{get_lines}
 \alias{get_lines}
 \title{Get lines in a libbi model}
-\usage{
-get_lines(x, spaces = 2)
-}
 \arguments{
 \item{x}{a \code{\link{bi_model}} object}
 
 \item{spaces}{Number of spaces of indentation}
+
+\item{...}{ignored}
 }
 \value{
 the libbi model as character vector

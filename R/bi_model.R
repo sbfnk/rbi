@@ -7,12 +7,12 @@
 #'
 #' @param filename is the file name of the model file
 #' @param lines lines of the model (if no \code{filename} is given), a character vector
+#' @param ... ignored
 #' @examples
 #' model_file_name <- system.file(package="rbi", "PZ.bi")
 #' PZ <- bi_model(filename = model_file_name)
 #' @seealso \code{\link{fix}}, \code{\link{insert}}, \code{\link{replace}}, \code{\link{remove}}, \code{\link{write_file}}
-#' @export bi_model
-bi_model <- function(filename, lines) {
+setConstructorS3("bi_model", enforceRCC=FALSE, function(filename, lines, ...) {
   if (!missing(filename) && !missing(lines)) {
     stop("Only one of 'filename' or 'lines' can be given")
   }
@@ -34,7 +34,7 @@ bi_model <- function(filename, lines) {
                             name=""), class="bi_model")
 
   return(clean_model(new_obj))
-}
+})
 
 #' @rdname fix
 #' @name fix
@@ -50,8 +50,7 @@ bi_model <- function(filename, lines) {
 #' model_file_name <- system.file(package="rbi", "PZ.bi")
 #' PZ <- bi_model(filename = model_file_name)
 #' \dontrun{PZ <- fix(PZ, alpha = 0)}
-#' @export
-fix.bi_model <- function(x, ...) {
+setMethodS3("fix", "bi_model", dontWarn="utils", function(x, ...) {
 
   fix_model <- x$model
   fixed <- list(...)
@@ -117,7 +116,7 @@ fix.bi_model <- function(x, ...) {
 
   x$model <- fix_model
   return(clean_model(x))
-}
+})
 
 #' @rdname propose_prior
 #' @name propose_prior
@@ -125,10 +124,12 @@ fix.bi_model <- function(x, ...) {
 #' @description
 #' Generates a version of the model where the proposal blocks are replaced by the prior blocks. This is useful for exploration of the likelihood surface.
 #'
+#' @param x a \code{\link{bi_model}} object
+#' @param ... ignored
 #' @return a bi model object of the new model
 #' @seealso \code{\link{bi_model}}
 #' @keywords internal
-propose_prior <- function(x) {
+setMethodS3("propose_prior", "bi_model", export=FALSE, function(x, ...) {
   new_model <- bi_model(lines = x$model)
 
   ## remove parameter proposal
@@ -139,18 +140,22 @@ propose_prior <- function(x) {
   new_model <- add_block(new_model, "proposal_initial", lines = prior_initial)
 
   return(clean_model(new_model))
-}
+})
 
 #' @title Copy obs variables to state variables (with '__sample_' prepended)
 #'
 #' @description
 #' This is used by the \code{\link{run}} functions of rbi, if 'sample_obs=TRUE'
 #'   is specified.
+#' @param x a \code{\link{bi_model}} object
+#' @param ... ignored
 #' @return a \code{\link{bi_model}}
 #' @seealso \code{\link{bi_model}}
 #' @keywords internal
 #' @param x a \code{\link{bi_model}} object
-obs_to_noise <- function(x) {
+#' @rdname obs_to_noise
+#' @name obs_to_noise
+setMethodS3("obs_to_noise", "bi_model", export=FALSE, function(x, ...) {
   new_model <- bi_model(lines = x$model)
   obs_block <- get_block(x, "observation")
   obs_variables <- var_names(x, "obs")
@@ -162,18 +167,22 @@ obs_to_noise <- function(x) {
   new_model <- insert(new_model, paste("noise ", paste(state_variables, collapse = ", ")), after = 1)
 
   return(clean_model(new_model))
-}
+})
 
 #' @title Strip model code to its bare bones
 #'
 #' @description
 #' Cleans the model by working out correct indents, removing long comments and
 #'   merging lines
+#' @param x a \code{\link{bi_model}} object
+#' @param ... ignored
 #' @return a \code{\link{bi_model}}
 #' @seealso \code{\link{bi_model}}
 #' @keywords internal
 #' @param x a \code{\link{bi_model}} object
-clean_model <- function(x) {
+#' @rdname clean_model
+#' @name clean_model
+setMethodS3("clean_model", "bi_model", export=FALSE, function(x, ...) {
   ## strip comments
   x$model <- sub("//.*$", "", x$model)
 
@@ -224,11 +233,9 @@ clean_model <- function(x) {
     x$name <- gsub("model ", "", gsub("\\{", "", x$model[1]))
     x$name <- gsub("[[:space:]]*$", "", x$name)
     x$name <- gsub("^[[:space:]]*", "", x$name)
-  } else {
-    x$name <- character(0)
   }
   return(x)
-}
+})
 
 #' @rdname get_lines
 #' @name get_lines
@@ -238,10 +245,11 @@ clean_model <- function(x) {
 #'
 #' @param x a \code{\link{bi_model}} object
 #' @param spaces Number of spaces of indentation
+#' @param ... ignored
 #' @return the libbi model as character vector
 #' @seealso \code{\link{bi_model}}, \code{\link{`[`}}
 #' @keywords internal
-get_lines <- function(x, spaces = 2) {
+setMethodS3("get_lines", "bi_model", export=FALSE, function(x, spaces = 2, ...) {
   vec <- c()
   indent <- 0
   for (i in seq_along(x$model)) {
@@ -259,7 +267,7 @@ get_lines <- function(x, spaces = 2) {
     }
   }
   return(vec)
-}
+})
 
 #' @rdname insert
 #' @name insert
@@ -275,13 +283,12 @@ get_lines <- function(x, spaces = 2) {
 #' @param at_end_of block at the end of which to insert lines(s)
 #' @param ... ignored
 #' @return the updated bi model
-#' @export
 #' @seealso \code{\link{bi_model}}
 #' @examples
 #' model_file_name <- system.file(package="rbi", "PZ.bi")
 #' PZ <- bi_model(filename = model_file_name)
 #' PZ <- insert(PZ, lines = "noise beta", after = 8)
-insert.bi_model <- function(x, lines, before, after, at_beginning_of, at_end_of, ...) {
+setMethodS3("insert", "bi_model", function(x, lines, before, after, at_beginning_of, at_end_of, ...) {
   args <- match.call()
   arg_name <- setdiff(names(args), c("", "x", "lines"))
   if (length(arg_name) != 1) {
@@ -324,7 +331,7 @@ insert.bi_model <- function(x, lines, before, after, at_beginning_of, at_end_of,
     x$model <- c(x$model[1:after], lines, x$model[(after+1):length(x$model)])
   }
   return(clean_model(x))
-}
+})
 
 #' @rdname replace_lines
 #' @name replace_lines
@@ -332,15 +339,17 @@ insert.bi_model <- function(x, lines, before, after, at_beginning_of, at_end_of,
 #' @description
 #' Updates one or more lines in a libbi model.
 #'
+#' @param x a \code{\link{bi_model}} object
 #' @param num line number(s) to update
 #' @param lines vector of line(s)
+#' @param ... ignored
 #' @return the updated bi model
 #' @seealso \code{\link{bi_model}}, \code{\link{`[<-`}}
 #' @keywords internal
-replace_lines <- function(x, num, lines) {
+setMethodS3("replace_lines", "bi_model", export=FALSE, function(x, num, lines, ...) {
   x$model[num] <- lines
   return(clean_model(x))
-}
+})
 
 #' @rdname remove
 #' @name remove
@@ -358,8 +367,7 @@ replace_lines <- function(x, num, lines) {
 #' model_file_name <- system.file(package="rbi", "PZ.bi")
 #' PZ <- bi_model(filename = model_file_name)
 #' PZ <- remove(PZ, 2)
-#' @export
-remove.bi_model <- function(x, what, ...) {
+setMethodS3("remove", "bi_model", dontWarn="base", function(x, what, ...) {
   if (missing(what)) {
     stop("'what' must be given")
   }
@@ -377,7 +385,7 @@ remove.bi_model <- function(x, what, ...) {
     stop("'what' must be a numeric or character vector.")
   }
   return(clean_model(x))
-}
+})
 
 #' @rdname write_file
 #' @name write_file
@@ -390,12 +398,11 @@ remove.bi_model <- function(x, what, ...) {
 #' @param ... ignored
 #' @return the return value of the \code{\link{writeLines}} call.
 #' @seealso \code{\link{bi_model}}
-#' @export
 #' @examples
 #' model_file_name <- system.file(package="rbi", "PZ.bi")
 #' PZ <- bi_model(filename = model_file_name)
 #' write_file(PZ, "PZ.bi")
-write_file.bi_model <- function(x, filename, ...) {
+setMethodS3("write_file", "bi_model", function(x, filename, ...) {
   "Write model to file"
   if (!grepl("\\.bi$", filename)) {
     filename <- paste(filename, "bi", sep = ".")
@@ -403,7 +410,7 @@ write_file.bi_model <- function(x, filename, ...) {
   model_name <- sub("\\.bi$", "", basename(filename))
 
   writeLines(get_lines(x), con = filename, sep = "\n")
-}
+})
 
 #' @title Find a block in a LibBi model
 #'
@@ -413,7 +420,11 @@ write_file.bi_model <- function(x, filename, ...) {
 #' @seealso \code{\link{bi_model}}
 #' @keywords internal
 #' @param x a \code{\link{bi_model}} object
-find_block <- function(x, name) {
+#' @param name of the block to find
+#' @param ... ignored
+#' @rdname find_block
+#' @name find_block
+setMethodS3("find_block", "bi_model", export=FALSE, function(x, name, ...) {
   lines <- x$model
   sub_regexp <- paste0("^[[:space:]]*(sub[[:space:]]+)?[[:space:]]*", name, "[[:space:]]*(\\(.*\\))?[[:space:]]*\\{")
   sub_line <- grep(sub_regexp, lines)
@@ -430,20 +441,21 @@ find_block <- function(x, name) {
   } else {
     return(integer(0))
   }
-}
+})
 
 #' @rdname get_block
 #' @title Get the contents of a block in a LibBi model
 #'
 #' @description
 #' Returns the contents of a block in a LibBi model as a character vector of
-#'   lines. 
+#'   lines.
 #' @return a character vector of the lines in the block
 #' @param x a \code{\link{bi_model}} object
 #' @param name name of the block
 #' @param ... ignored
-#' @export
-get_block.bi_model <- function(x, name, ...) {
+#' @rdname get_block
+#' @name get_block
+setMethodS3("get_block", "bi_model", function(x, name, ...) {
   block <- find_block(x, name)
   if (length(block) > 0) {
     lines <- x$model[block]
@@ -458,7 +470,7 @@ get_block.bi_model <- function(x, name, ...) {
   } else {
     return(NA)
   }
-}
+})
 
 #' @title Add a block to a LibBi model
 #'
@@ -469,15 +481,17 @@ get_block.bi_model <- function(x, name, ...) {
 #' @param name name of the block
 #' @param lines character vector, lines in the block
 #' @param options any options to the block
-#' @export
-add_block <- function(x, name, lines, options) {
+#' @param ... ignored
+#' @rdname add_block
+#' @name add_block
+setMethodS3("add_block", "bi_model", function(x, name, lines, options, ...) {
   x <- remove(x, what=name)
   x$model <- c(x$model[seq_len(length(x$model) - 1)],
                ifelse(missing(options), paste("sub", name,"{"),
                       paste("sub", name, paste0("(", options, ")", "{"))), 
                paste(lines, sep = "\n"), "}", "}")
   x <- clean_model(x)
-}
+})
 
 ##' Get all variable names of one or more type(s)
 ##'
@@ -487,9 +501,11 @@ add_block <- function(x, name, lines, options) {
 ##' @param type a character vector of one or more types
 ##' @param dim logical; if set to TRUE, names will contain dimensions in brackets
 ##' @param opt logical; if set to TRUE, names will contain options (e.g., has_output)
-##' @return variable names
-##' @export
-var_names <- function(x, type, dim = FALSE, opt = FALSE) {
+#' @param ... ignored
+#' @return variable names
+#' @rdname var_names
+#' @name var_names
+setMethodS3("var_names", "bi_model", function(x, type, dim = FALSE, opt = FALSE, ...) {
   names_vec <- c()
   for (for_type in type) {
     line_nbs <- grep(paste0("^[[:space:]]*", for_type, "[[:space:]]"), x$model)
@@ -515,7 +531,7 @@ var_names <- function(x, type, dim = FALSE, opt = FALSE) {
     }
   }
   return(names_vec)
-}
+})
 
 #' @title Print the lines of a LibBi model
 #'
@@ -523,8 +539,9 @@ var_names <- function(x, type, dim = FALSE, opt = FALSE) {
 #' Prints all lines in a LibBi model
 #' @param x a \code{\link{bi_model}} object
 #' @param ... ignored
-#' @export
-print.bi_model <- function(x, ...) {
+#' @rdname print
+#' @name print
+setMethodS3("print", "bi_model", function(x, ...) {
     if (!is.null(x$name)) {
     cat("bi model:", x$name, "\n")
     cat("==========", paste(rep("=", nchar(x$name)), collapse = ""), "\n",
@@ -539,10 +556,28 @@ print.bi_model <- function(x, ...) {
   } else {
     print(lines)
   }
-}
+})
 
-#' @rdname bi_model_set_name
-#' @name bi_model_set_name
+#' @rdname is.empty
+#' @name is.empty
+#' @title Check if a model is empty
+#' @description
+#' Checks if a model is empty (i.e., has been initialised without any content)
+#'
+#' @param x a \code{\link{bi_model}} object
+#' @param ... ignored
+#' @return the updated bi model
+#' @seealso \code{\link{bi_model}}
+#' @examples
+#' model_file_name <- system.file(package="rbi", "PZ.bi")
+#' PZ <- bi_model(filename = model_file_name)
+#' is.empty(PZ)
+setMethodS3("is.empty", "bi_model", function(x, name, ...) {
+  is.null(x$model)
+})
+
+#' @rdname set_name
+#' @name set_name
 #' @title Set the name of a bi model
 #' @description
 #' Changes the name of a bi model (first line of the .bi file) to the specified name.
@@ -555,11 +590,10 @@ print.bi_model <- function(x, ...) {
 #' @return the updated bi model
 #' @seealso \code{\link{bi_model}}
 #' @examples
-#' @export
 #' model_file_name <- system.file(package="rbi", "PZ.bi")
 #' PZ <- bi_model(filename = model_file_name)
 #' PZ <- set_name(PZ,  "new_PZ")
-set_name.bi_model <- function(x, name, ...) {
+setMethodS3("set_name", "bi_model", function(x, name, ...) {
   if (length(x$model) > 0) {
     if (grepl("model [[:graph:]]+ \\{", x$model[1])) {
       x$model[1] <-
@@ -572,37 +606,35 @@ set_name.bi_model <- function(x, name, ...) {
     x$model <- c(paste0("model ", name, " {"), "}")
   }
   clean_model(x)
-}
+})
 
 #' @name `[`
 #' @title Subset of model lines
 #' @description
 #' Extracts a subset of lines from the model
+#' @param x A bi_model
+#' @param i A vector of line numbers
 #' @examples
 #' model_file_name <- system.file(package="rbi", "PZ.bi")
 #' PZ <- bi_model(filename = model_file_name)
 #' PZ[3:5]
-#' @export
-#' @param x A bi_model
-#' @param i A vector of line numbers
-`[.bi_model` <- function(x, i) {
+setMethodS3("`[`", "bi_model", function(x, i, ...) {
     return(get_lines(x)[i])
-}
+})
 
 #' @name `[<-`
 #' @title Subset assignment to mode lines
 #' @description
 #' Assigns new character strings a subset of lines from the model
-#' @examples
-#' model_file_name <- system.file(package="rbi", "PZ.bi")
-#' PZ <- bi_model(filename = model_file_name)
-#' PZ[3:4] <- c("const e = 0.4", "const m_l = 0.05")
-#' @export
 #' @param x A bi_model
 #' @param i A vector of line numbers
 #' @param value A vector of the same length as \code{i}, containing the
 #'   replacement strings 
-`[<-.bi_model` <- function(x, i, value) {
+#' @examples
+#' model_file_name <- system.file(package="rbi", "PZ.bi")
+#' PZ <- bi_model(filename = model_file_name)
+#' PZ[3:4] <- c("const e = 0.4", "const m_l = 0.05")
+setMethodS3("`[<-`", "bi_model", function(x, i, value, ...) {
     x <- replace_lines(x, i, value)
     return(clean_model(x))
-}
+})

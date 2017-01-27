@@ -3,9 +3,6 @@
 \name{var_names}
 \alias{var_names}
 \title{Get variables}
-\usage{
-var_names(x, type, dim = FALSE, opt = FALSE)
-}
 \arguments{
 \item{x}{a \code{\link{bi_model}} object}
 
@@ -14,6 +11,8 @@ var_names(x, type, dim = FALSE, opt = FALSE)
 \item{dim}{logical; if set to TRUE, names will contain dimensions in brackets}
 
 \item{opt}{logical; if set to TRUE, names will contain options (e.g., has_output)}
+
+\item{...}{ignored}
 }
 \value{
 variable names

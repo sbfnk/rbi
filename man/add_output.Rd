@@ -3,13 +3,12 @@
 \name{add_output}
 \alias{add_output}
 \title{Add output file to a \code{\link{libbi}} object}
-\usage{
-add_output(x, output)
-}
 \arguments{
 \item{x}{a \code{\link{libbi}} object}
 
 \item{output}{name of the file to add as output file, or a list of data frames that contain the outputs}
+
+\item{...}{ignored}
 }
 \description{
 Adds an output file to a \code{\link{libbi}} object. This is useful to recreate a \code{\link{libbi}} object from the model and output files of a previous run

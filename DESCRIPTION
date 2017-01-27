@@ -8,7 +8,8 @@ Authors@R: c(
         person("Sebastian", "Funk", email = "sebastian.funk@lshtm.ac.uk", role = c("aut", "cre"))
         )
 Depends:
-    data.table
+    data.table,
+    R.oo
 Imports:
     ncdf4
 Suggests:

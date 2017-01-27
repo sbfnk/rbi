@@ -3,11 +3,10 @@
 \name{assert_output}
 \alias{assert_output}
 \title{Check that a LibBi wrapper has valid output}
-\usage{
-assert_output(x)
-}
 \arguments{
 \item{x}{a \code{\link{libbi}} object}
+
+\item{...}{ignored}
 }
 \description{
 This checks that the \code{\link{libbi}} object given has been run (via \code{\link{sample}}, \code{\link{filter}} or \code{\link{optimize}})) and the output file has not been modified since.

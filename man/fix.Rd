@@ -2,11 +2,7 @@
 % Please edit documentation in R/bi_model.R
 \name{fix}
 \alias{fix}
-\alias{fix.bi_model}
 \title{Fix noise term, state or parameter of a libbi model}
-\usage{
-\method{fix}{bi_model}(x, ...)
-}
 \arguments{
 \item{x}{a \code{\link{bi_model}} object}
 

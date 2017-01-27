@@ -3,13 +3,12 @@
 \name{bi_model}
 \alias{bi_model}
 \title{Bi Model}
-\usage{
-bi_model(filename, lines)
-}
 \arguments{
 \item{filename}{is the file name of the model file}
 
 \item{lines}{lines of the model (if no \code{filename} is given), a character vector}
+
+\item{...}{ignored}
 }
 \description{
 \code{bi_model} creates a model object for \code{Rbi} from a libbi file.

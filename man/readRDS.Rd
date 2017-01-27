@@ -2,11 +2,7 @@
 % Please edit documentation in R/libbi.R
 \name{readRDS}
 \alias{readRDS}
-\alias{readRDS.libbi}
 \title{Read results of a \code{LibBi} run from an RDS file. This completely reconstructs the saved \code{LibBi} object}
-\usage{
-\method{readRDS}{libbi}(x, file, use_cache, ...)
-}
 \arguments{
 \item{x}{a \code{\link{libbi}} object}
 
@@ -14,7 +10,7 @@
 
 \item{use_cache}{logical; whether to use the cache (default: \code{\link{libbi}} default)}
 
-\item{...}{any options to \code{\link{libbi}}}
+\item{...}{any options to \code{\link{base::readRDS}}}
 }
 \value{
 a \code{\link{libbi}} object

@@ -3,9 +3,6 @@
 \name{add_block}
 \alias{add_block}
 \title{Add a block to a LibBi model}
-\usage{
-add_block(x, name, lines, options)
-}
 \arguments{
 \item{x}{a \code{\link{bi_model}} object}
 
@@ -14,6 +11,8 @@ add_block(x, name, lines, options)
 \item{lines}{character vector, lines in the block}
 
 \item{options}{any options to the block}
+
+\item{...}{ignored}
 }
 \value{
 a \code{\link{bi_model}} object containing the new block
