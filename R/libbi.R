@@ -505,6 +505,7 @@ add_output <- function(x, output){
   }
   x$run_flag <- TRUE
   x$timestamp <- file.mtime(x$output_file_name)
+  x$.cache=new.env(parent = emptyenv())
   return(x)
 }
 
