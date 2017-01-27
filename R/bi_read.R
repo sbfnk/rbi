@@ -48,7 +48,7 @@ bi_read <- function(x, vars, dims, model, type, missval.threshold, coord_name, v
     }
   }
 
-  all_nc_var_names <- unname(sapply(nc[["var"]], function(y) { y[["name"]] }))
+  all_nc_var_names <- unname(vapply(nc[["var"]], function(y) { y[["name"]] }, ""))
 
   time_coord_names <- c()
   nc_var_names <- list()
@@ -59,7 +59,7 @@ bi_read <- function(x, vars, dims, model, type, missval.threshold, coord_name, v
     nc_var_names[[var_type]] <- grep(paste0("^", var_type), all_nc_var_names, value = TRUE)
   }
   forbidden_names <-
-    intersect(sapply(nc[["dim"]], function(y) {y[["name"]]}),
+    intersect(vapply(nc[["dim"]], function(y) {y[["name"]]}, ""),
               time_coord_names)
   if (length(forbidden_names) > 0) {
     stop("Can't have a dimension called ", paste(forbidden_names, sep = ", "), ".")
@@ -95,7 +95,7 @@ bi_read <- function(x, vars, dims, model, type, missval.threshold, coord_name, v
     var_dims[[var_type]] <- list()
     for (var_name in nc_var_names[[var_type]]) {
       var <- nc[["var"]][[var_name]]
-      dim_names <- sapply(var$dim, function(y) { y$name })
+      dim_names <- vapply(var$dim, function(y) { y$name }, "")
       var_dims[[var_type]][[var_name]] <- dim_names[nchar(dim_names) > 0]
     }
   }
@@ -110,9 +110,9 @@ bi_read <- function(x, vars, dims, model, type, missval.threshold, coord_name, v
       x$.cache$data <- NULL
       x$.cache$thin <- NULL
     }
-    cached_other <- sapply(nc_var_names[["other"]], function(y) {
+    cached_other <- vapply(nc_var_names[["other"]], function(y) {
       return(y %in% names(x$.cache$data) && thin == x$.cache$thin[y])
-    })
+    }, TRUE)
   } else {
     cached_other <- rep(FALSE, length(nc_var_names[["other"]]))
   }
@@ -128,10 +128,10 @@ bi_read <- function(x, vars, dims, model, type, missval.threshold, coord_name, v
     }
     if (missing(vars) || var_name %in% vars) {
       dim_names <- var_dims[["other"]][[var_name]]
-      dim_lengths <- sapply(seq_along(dim_names), function(y)
+      dim_lengths <- vapply(seq_along(dim_names), function(y)
       {
         nc[["var"]][[var_name]][["dim"]][[y]][["len"]]
-      })
+      }, 0)
       names(dim_lengths) <- dim_names
       if ("np" %in% dim_names && thin > 1) {
         np_indices <- seq(1, dim_lengths["np"], by = thin)

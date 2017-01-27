@@ -14,7 +14,7 @@
 bi_contents <- function(read)
 {
   nc <- bi_open(read)
-  var_names <- unname(sapply(nc[["var"]], function(x) { x[["name"]] }))
+  var_names <- unname(vapply(nc[["var"]], function(x) { x[["name"]] }, ""))
   if (typeof(read) %in% c("character", "libbi")) nc_close(nc)
 
   return(var_names)

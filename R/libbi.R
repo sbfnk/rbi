@@ -254,9 +254,9 @@ run.libbi <- function(x, client, proposal=c("model", "prior"), fix, options, con
       } else {
         x$output_file_name <- absolute_path(all_options[["output-file"]], getwd())
       }
-      x$options <- all_options
-      all_options[["output-file"]] <- x$output_file_name
     }
+    x$options <- all_options
+    all_options[["output-file"]] <- x$output_file_name
 
     run_model <- x$model
     run_model_modified <- FALSE
@@ -645,7 +645,7 @@ print.libbi <- function(x, verbose=FALSE, ...){
 #' @param ... ignored
 summary.libbi <- function(object, ...){
   params <- c(bi_read(object, type="param"))
-  summary_table <- t(sapply(params, function(object) {
+  summary_table <- t(vapply(params, function(object) {
     if (is.data.frame(object))
     {
       summary(object$value)

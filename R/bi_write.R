@@ -29,7 +29,7 @@ bi_write <- function(filename, variables, timed, ...){
     stop("please provide a non-empty list to bi_write")
   }
   vector_variables <-
-    variables[sapply(variables, function(x) {is.numeric(x) && length(x) > 1})]
+    variables[vapply(variables, function(x) {is.numeric(x) && length(x) > 1}, TRUE)]
   variablelengths <- as.numeric(unlist(lapply(X=vector_variables, FUN=length)))
   if (!all(variablelengths == variablelengths[1])){
     stop("please provide to bi_write a list of vectors of equal length")

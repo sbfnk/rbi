@@ -24,13 +24,13 @@ extract_sample <- function(x, np, ...) {
     stop("'x' must be a 'libbi' object or a file name or a list of data frames.")
   }
 
-  max_np <- max(sapply(samples[setdiff(names(samples), "clock")], function (y) {
+  max_np <- max(vapply(samples[setdiff(names(samples), "clock")], function (y) {
     if (is.data.frame(y)) {
       max(y$np)
     } else {
       0
     }
-  }))
+  }), 0)
 
   find_np <- np
   if (find_np > max_np) {

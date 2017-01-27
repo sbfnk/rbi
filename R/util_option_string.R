@@ -21,7 +21,7 @@ option_string <- function(...){
     }
   }
 
-  string <- paste(paste(sapply(names(list_options),
+  string <- paste(paste(vapply(names(list_options),
                          function(option) {
                            if (is.logical(list_options[[option]])) {
                              if (option == "verbose") {
