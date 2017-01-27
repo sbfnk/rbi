@@ -18,9 +18,9 @@ bi_generate_dataset <- function(...){
     options <- list()
   }
 
-  if ("endtime" %in% names(dot_options)) {
-    warning("'endtime' is deprecated,  use 'end_time' instead")
-    names(dot_options)[which(names(dot_options) == "endtime")] <- "end_time"
+  if (grepl("^end[-_]time$", names(dot_options)) &&
+            !("noutputs" %in% names(dot_options))) {
+    dot_options[["noutputs"]] <- dot_options[["end_time"]]
   }
 
   options[["target"]] <- "joint"
