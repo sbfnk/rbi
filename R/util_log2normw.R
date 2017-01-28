@@ -9,7 +9,6 @@
 #' @param lw a vector of real values
 #' @return a vector of normalized values (summing to 1)
 #' @export
-#' 
 
 log2normw <- function(lw){
   w <- exp(lw - max(lw))

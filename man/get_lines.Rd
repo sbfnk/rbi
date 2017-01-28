@@ -18,7 +18,7 @@ the libbi model as character vector
 Gets a libbi model as character vector.
 }
 \seealso{
-\code{\link{bi_model}}, \code{\link{`[`.bi_model}}
+\code{\link{bi_model}}, \code{\link{`[.bi_model`}}
 }
 \keyword{internal}
 

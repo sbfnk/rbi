@@ -13,7 +13,7 @@
 #' model_file_name <- system.file(package="rbi", "PZ.bi")
 #' PZ <- bi_model(filename = model_file_name)
 #' @seealso \code{\link{fix_vars}}, \code{\link{insert}}, \code{\link{replace}}, \code{\link{remove}}, \code{\link{write_file}}
-#' @export bi_model
+#' @export
 setConstructorS3("bi_model", enforceRCC=FALSE, function(filename, lines, ...) {
   if (!missing(filename) && !missing(lines)) {
     stop("Only one of 'filename' or 'lines' can be given")
@@ -55,7 +55,7 @@ NULL
 #' @importFrom R.methodsS3 setMethodS3
 #' @rdname fix_vars
 #' @name fix_vars.bi_model
-#' @export fix_vars.bi_model
+#' @S3method fix_vars bi_model
 setMethodS3("fix_vars", "bi_model", dontWarn="utils", function(x, ...) {
 
   fix_model <- x$model
@@ -135,11 +135,10 @@ setMethodS3("fix_vars", "bi_model", dontWarn="utils", function(x, ...) {
 #' @seealso \code{\link{bi_model}}
 #' @keywords internal
 NULL
-#' @keywords internal
 #' @importFrom R.methodsS3 setMethodS3
 #' @rdname propose_prior
 #' @name propose_prior.bi_model
-setMethodS3("propose_prior", "bi_model", export=FALSE, function(x, ...) {
+setMethodS3("propose_prior", "bi_model", export=TRUE, function(x, ...) {
   new_model <- bi_model(lines = x$model)
 
   ## remove parameter proposal
@@ -262,7 +261,7 @@ setMethodS3("clean_model", "bi_model", export=FALSE, function(x, ...) {
 #' @param spaces Number of spaces of indentation
 #' @param ... ignored
 #' @return the libbi model as character vector
-#' @seealso \code{\link{bi_model}}, \code{\link{`[`.bi_model}}
+#' @seealso \code{\link{bi_model}}, \code{\link{`[.bi_model`}}
 #' @keywords internal
 NULL
 #' @rdname get_lines
@@ -310,7 +309,7 @@ setMethodS3("get_lines", "bi_model", export=FALSE, function(x, spaces = 2, ...) 
 NULL
 #' @rdname insert
 #' @name insert.bi_model
-#' @export insert.bi_model
+#' @S3method insert bi_model
 #' @importFrom R.methodsS3 setMethodS3
 setMethodS3("insert", "bi_model", function(x, lines, before, after, at_beginning_of, at_end_of, ...) {
   args <- match.call()
@@ -373,7 +372,6 @@ NULL
 #' @rdname replace_lines
 #' @name replace_lines.bi_model
 #' @importFrom R.methodsS3 setMethodS3
-#' @keywords internal
 setMethodS3("replace_lines", "bi_model", export=FALSE, function(x, num, lines, ...) {
   x$model[num] <- lines
   return(clean_model(x))
@@ -398,8 +396,8 @@ setMethodS3("replace_lines", "bi_model", export=FALSE, function(x, num, lines, .
 NULL
 #' @rdname remove
 #' @name remove.bi_model
+#' @S3method remove bi_model
 #' @importFrom R.methodsS3 setMethodS3
-#' @export remove.bi_model
 setMethodS3("remove", "bi_model", dontWarn="base", function(x, what, ...) {
   if (missing(what)) {
     stop("'what' must be given")
@@ -439,7 +437,7 @@ NULL
 #' @importFrom R.methodsS3 setMethodS3
 #' @rdname write_file
 #' @name write_file.bi_model
-#' @export write_file.bi_model
+#' @S3method write_file bi_model
 setMethodS3("write_file", "bi_model", function(x, filename, ...) {
   "Write model to file"
   if (!grepl("\\.bi$", filename)) {
@@ -499,7 +497,7 @@ NULL
 #' @rdname get_block
 #' @name get_block.bi_model
 #' @importFrom R.methodsS3 setMethodS3
-#' @export get_block.bi_model
+#' @S3method get_block bi_model
 setMethodS3("get_block", "bi_model", function(x, name, ...) {
   block <- find_block(x, name)
   if (length(block) > 0) {
@@ -533,7 +531,7 @@ NULL
 #' @rdname add_block
 #' @name add_block.bi_model
 #' @importFrom R.methodsS3 setMethodS3
-#' @export add_block.bi_model
+#' @S3method add_block bi_model
 setMethodS3("add_block", "bi_model", function(x, name, lines, options, ...) {
   x <- remove(x, what=name)
   x$model <- c(x$model[seq_len(length(x$model) - 1)],
@@ -560,7 +558,7 @@ NULL
 #' @rdname var_names
 #' @name var_names.bi_model
 #' @importFrom R.methodsS3 setMethodS3
-#' @export var_names.bi_model
+#' @S3method var_names bi_model
 setMethodS3("var_names", "bi_model", function(x, type, dim = FALSE, opt = FALSE, ...) {
   names_vec <- c()
   for (for_type in type) {
@@ -598,7 +596,8 @@ setMethodS3("var_names", "bi_model", function(x, type, dim = FALSE, opt = FALSE,
 #' @rdname print
 #' @name print.bi_model
 #' @importFrom R.methodsS3 setMethodS3
-#' @export print.bi_model
+#' @keywords internal
+#' @S3method print bi_model
 setMethodS3("print", "bi_model", function(x, ...) {
     if (!is.null(x$name)) {
     cat("bi model:", x$name, "\n")
@@ -625,11 +624,11 @@ setMethodS3("print", "bi_model", function(x, ...) {
 #' @param ... ignored
 #' @return the updated bi model
 #' @seealso \code{\link{bi_model}}
+#' @keywords internal
 NULL
 #' @rdname is_empty
 #' @name is_empty.bi_model
 #' @importFrom R.methodsS3 setMethodS3
-#' @keywords internal
 setMethodS3("is_empty", "bi_model", export=FALSE, function(x, name, ...) {
   is.null(x$model)
 })
@@ -655,7 +654,7 @@ NULL
 #' @rdname set_name
 #' @name set_name.bi_model
 #' @importFrom R.methodsS3 setMethodS3
-#' @export set_name.bi_model
+#' @S3method set_name bi_model
 setMethodS3("set_name", "bi_model", function(x, name, ...) {
   if (length(x$model) > 0) {
     if (grepl("model [[:graph:]]+ \\{", x$model[1])) {
@@ -673,7 +672,7 @@ setMethodS3("set_name", "bi_model", function(x, name, ...) {
 
 #' @name Extract.bi_model
 #' @rdname Extract.bi_model
-#' @aliases `[`.bi_model `[<-`.bi_model
+#' @aliases `[.bi_model` `[<-.bi_model`
 #' @title Subset and replace model lines
 #' @description
 #' Extracts a subset of lines from the model and, if used with the assignment
@@ -681,21 +680,22 @@ setMethodS3("set_name", "bi_model", function(x, name, ...) {
 #' @param x A bi_model
 #' @param i A vector of line numbers
 #' @param value A vector of the same length as \code{i}, containing the
-#'   replacement strings 
+#'   replacement strings
+#' @param ... ignored
 #' @examples
 #' model_file_name <- system.file(package="rbi", "PZ.bi")
 #' PZ <- bi_model(filename = model_file_name)
 #' PZ[3:4]
 #' PZ[3:4] <- c("const e = 0.4", "const m_l = 0.05")
+NULL
 #' @importFrom R.methodsS3 setMethodS3
-#' @export `[`.bi_model
-setMethodS3("`[`", "bi_model", function(x, i, ...) {
+#' @export
+`[.bi_model` <- function(x, i, ...) {
     return(get_lines(x)[i])
-})
-
+}
 #' @importFrom R.methodsS3 setMethodS3
-#' @export `[<-`.bi_model
-setMethodS3("`[<-`", "bi_model", function(x, i, ..., value) {
+#' @export
+`[<-.bi_model` <-  function(x, i, ..., value) {
     x <- replace_lines(x, i, value)
     return(clean_model(x))
-})
+}

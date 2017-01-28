@@ -21,4 +21,5 @@ Prints all lines in a LibBi model
 This prints the model name, basic information such as number of iterations
   and timesteps run, as well as a list of variables.
 }
+\keyword{internal}
 

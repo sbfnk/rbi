@@ -2,8 +2,8 @@
 % Please edit documentation in R/bi_model.R
 \name{Extract.bi_model}
 \alias{Extract.bi_model}
-\alias{`[<-`.bi_model}
-\alias{`[`.bi_model}
+\alias{`[.bi_model`}
+\alias{`[<-.bi_model`}
 \title{Subset and replace model lines}
 \arguments{
 \item{x}{A bi_model}
@@ -12,6 +12,8 @@
 
 \item{value}{A vector of the same length as \code{i}, containing the
 replacement strings}
+
+\item{...}{ignored}
 }
 \description{
 Extracts a subset of lines from the model and, if used with the assignment

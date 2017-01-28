@@ -164,6 +164,7 @@ bi_read <- function(x, vars, dims, model, type, missval.threshold, coord_name, v
         all_values <- read_var_input(nc, var_name)
       }
 
+      ## check for any auxiliary dimensions (linking with time or coord variables)
       auxiliary_dims <- unname(unlist(var_dims[c("coord", "time")]))
       dim_names <- dim_names[dim_lengths > 1 | dim_names %in% auxiliary_dims]
 
@@ -175,7 +176,8 @@ bi_read <- function(x, vars, dims, model, type, missval.threshold, coord_name, v
         }
       }
 
-      n_one_dims <- dim_names[dim_lengths == 1]
+      ## preserve auxiliary dimensions of length 1
+      n_one_dims <- dim_names[dim_lengths[dim_names] == 1]
       if (length(n_one_dims) > 0) {
         all_values <- array(all_values, dim=c(dim(all_values), rep(1, length(n_one_dims) - 1)))
       }

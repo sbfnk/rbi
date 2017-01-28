@@ -19,7 +19,7 @@
 #' @examples
 #' bi_object <- libbi(model = system.file(package="rbi", "PZ.bi"))
 #' @seealso \code{\link{sample}}, \code{\link{filter}}, \code{\link{optimise}}, \code{\link{rewrite}}
-#' @export libbi
+#' @export
 setConstructorS3("libbi", enforceRCC=FALSE, function(model, path_to_libbi, dims, use_cache=TRUE, ...){
   libbi_dims <- list()
   if (!missing(dims)) {
@@ -31,10 +31,12 @@ setConstructorS3("libbi", enforceRCC=FALSE, function(model, path_to_libbi, dims,
 
   if (missing(path_to_libbi)) path_to_libbi <- character(0)
 
+  if (missing(model)) model <- bi_model()
+
   new_obj <-
     structure(list(options=list(),
                    path_to_libbi=path_to_libbi,
-                   model=bi_model(),
+                   model=model,
                    model_file_name=character(0),
                    working_folder=character(0),
                    dims=libbi_dims,
@@ -89,11 +91,11 @@ NULL
 #' @importFrom ncdf4 nc_open nc_close ncvar_rename
 #' @importFrom stats runif
 #' @importFrom R.methodsS3 setMethodS3
-#' @export run.libbi
+#' @S3method run libbi
 setMethodS3("run", "libbi", dontWarn="base", function(x, client, proposal=c("model", "prior"), model, fix, options, config, add_options, log_file_name, stdoutput_file_name, init, input, obs, time_dim, working_folder, output_all, sample_obs, thin, chain=TRUE, seed=TRUE, ...){
 
   ## client options
-  args <-
+  libbi_client_args <-
     list(sample = c("target", "sampler", "nsamples", "nmoves", "tmoves",
                     "sampler-resampler", "sample-ess-rel", "sample-stopper",
                     "sample-stopper-threshold", "sample-stopper-max",
@@ -105,7 +107,13 @@ setMethodS3("run", "libbi", dontWarn="base", function(x, client, proposal=c("mod
                     "resampler", "nbridges", "stopper", "stopper-threshold",
                     "stopper-max", "stopper-block"),
          rewrite = c())
-  all_args <- unique(unname(unlist(args)))
+
+  ## both sample and optimise inherit from filter
+  libbi_client_args[["sample"]] <-
+    unique(c(libbi_client_args[["sample"]], libbi_client_args[["filter"]]))
+  libbi_client_args[["sample"]] <-
+    unique(c(libbi_client_args[["optimise"]], libbi_client_args[["filter"]]))
+  all_client_args <- unique(unname(unlist(libbi_client_args)))
 
   if (!missing(stdoutput_file_name))
   {
@@ -159,6 +167,10 @@ setMethodS3("run", "libbi", dontWarn="base", function(x, client, proposal=c("mod
 
   ## get model
   if (!missing(model)) x$model <- model
+
+  if (is.character(x$model)) {
+      x$model <- bi_model(filename=x$model)
+  }
 
   ## check if 'model-file' is contained in any options
   all_options <- option_list(getOption("libbi_args"), config_file_options, x$options, new_options, list(...))
@@ -270,7 +282,10 @@ setMethodS3("run", "libbi", dontWarn="base", function(x, client, proposal=c("mod
     x$options <- all_options
     all_options[["output-file"]] <- x$output_file_name
 
-    retain_options <- intersect(args[[client]], all_options)
+    ## remove arguments of other clients
+    retain_options <-
+      setdiff(names(all_options),
+                    setdiff(all_client_args, libbi_client_args[[client]]))
     all_options <- all_options[retain_options]
 
     run_model <- x$model
@@ -402,21 +417,21 @@ NULL
 #' @importFrom R.methodsS3 setMethodS3
 #' @name sample.libbi
 #' @rdname sample
-#' @export sample.libbi
+#' @S3method sample libbi
 setMethodS3("sample", "libbi", dontWarn="base", function(x, ...){
   run.libbi(x, client="sample", ...)
 })
 #' @rdname sample
 #' @name sample.bi_model
 #' @importFrom R.methodsS3 setMethodS3
-#' @export sample.bi_model
+#' @S3method sample bi_model
 setMethodS3("sample", "bi_model", function(x, ...){
   run.libbi(libbi(model=x), client="sample", ...)
 })
 #' @rdname sample
 #' @name sample.character
 #' @importFrom R.methodsS3 setMethodS3
-#' @export sample.character
+#' @S3method sample character
 setMethodS3("sample", "character", function(x, ...){
   run.libbi(libbi(model=bi_model(x)), client="sample", ...)
 })
@@ -438,21 +453,21 @@ NULL
 #' @name filter.libbi
 #' @rdname filter
 #' @importFrom R.methodsS3 setMethodS3
-#' @export filter.libbi
+#' @S3method filter libbi
 setMethodS3("filter", "libbi", dontWarn=c("stats", "dplyr"), function(x, ...){
   run.libbi(x, client="filter", ...)
 })
 #' @rdname filter
 #' @name filter.bi_model
 #' @importFrom R.methodsS3 setMethodS3
-#' @export filter.bi_model
+#' @S3method filter bi_model
 setMethodS3("filter", "bi_model", function(x, ...){
   run.libbi(libbi(x), client="filter", ...)
 })
 #' @rdname filter
 #' @name filter.character
 #' @importFrom R.methodsS3 setMethodS3
-#' @export filter.character
+#' @S3method filter character
 setMethodS3("filter", "character", function(x, ...){
   run.libbi(libbi(bi_model(x)), client="filter", ...)
 })
@@ -474,21 +489,21 @@ NULL
 #' @name optimise.libbi
 #' @rdname optimise
 #' @importFrom R.methodsS3 setMethodS3
-#' @export optimise.libbi
+#' @S3method optimise libbi
 setMethodS3("optimise", "libbi", dontWarn="stats", function(x, ...){
   run.libbi(x, client="optimise", ...)
 })
 #' @rdname optimise
 #' @name optimise.bi_model
 #' @importFrom R.methodsS3 setMethodS3
-#' @export optimise.bi_model
+#' @S3method optimise bi_model
 setMethodS3("optimise", "bi_model", function(x, ...){
   run.libbi(libbi(x), client="optimise", ...)
 })
 #' @rdname optimise
 #' @name optimise.character
 #' @importFrom R.methodsS3 setMethodS3
-#' @export optimise.character
+#' @S3method optimise character
 setMethodS3("optimise", "character", function(x, ...){
   run.libbi(libbi(bi_model(x)), client="optimise", ...)
 })
@@ -515,14 +530,14 @@ setMethodS3("rewrite", "libbi", function(x, ...){
 #' @rdname rewrite
 #' @name rewrite.bi_model
 #' @importFrom R.methodsS3 setMethodS3
-#' @export rewrite.bi_model
+#' @S3method rewrite bi_model
 setMethodS3("rewrite", "bi_model", function(x, ...){
   run.libbi(libbi(x), client="rewrite", ...)
 })
 #' @rdname rewrite
 #' @name rewrite.character
 #' @importFrom R.methodsS3 setMethodS3
-#' @export rewrite.character
+#' @S3method rewrite character
 setMethodS3("rewrite", "character", function(x, ...){
   run.libbi(libbi(bi_model(x)), client="rewrite", ...)
 })
@@ -543,7 +558,7 @@ NULL
 #' @name add_output.libbi
 #' @rdname add_output
 #' @importFrom R.methodsS3 setMethodS3
-#' @export add_output.libbi
+#' @S3method add_output libbi
 setMethodS3("add_output", "libbi", function(x, output, ...){
   if (length(x$output_file_name) > 0) {
     stop("libbi object already contains output")
@@ -557,8 +572,8 @@ setMethodS3("add_output", "libbi", function(x, output, ...){
   return(x)
 })
 
-#' @name saveRDS.libbi
-#' @rdname saveRDS
+#' @export saveRDS
+#' @name saveRDS
 #' @title Write results of a \code{LibBi} run to an RDS file
 #' @description
 #' This saves all options, files and outputs of a \code{LibBi} run to an RDS file specified
@@ -567,8 +582,11 @@ setMethodS3("add_output", "libbi", function(x, output, ...){
 #' @param x a \code{\link{libbi}} object
 #' @param filename name of the RDS file to save to
 #' @param ... any options to \code{\link[base]{saveRDS}}
+NULL
+#' @name saveRDS.libbi
+#' @rdname saveRDS
 #' @importFrom R.methodsS3 setMethodS3
-#' @export saveRDS.libbi
+#' @S3method saveRDS libbi
 setMethodS3("saveRDS", "libbi", dontWarn="base", function(x, filename, ...) {
   if (missing(filename)) {
     stop("Need to specify a file name")
@@ -595,8 +613,8 @@ setMethodS3("saveRDS", "libbi", dontWarn="base", function(x, filename, ...) {
   base::saveRDS(save_obj, filename, ...)
 })
 
-#' @name readRDS.libbi
-#' @rdname readRDS
+#' @export readRDS
+#' @name readRDS
 #' @title Read results of a \code{LibBi} run from an RDS file. This completely reconstructs the saved \code{LibBi} object
 #' @description
 #' This reads all options, files and outputs of a \code{LibBi} run to an RDS file specified
@@ -607,8 +625,11 @@ setMethodS3("saveRDS", "libbi", dontWarn="base", function(x, filename, ...) {
 #' @param use_cache logical; whether to use the cache (default: \code{\link{libbi}} default)
 #' @param ... any options to \code{\link[base]{readRDS}}
 #' @return a \code{\link{libbi}} object
+NULL
+#' @name readRDS.libbi
+#' @rdname readRDS
 #' @importFrom R.methodsS3 setMethodS3
-#' @export readRDS.libbi
+#' @S3method readRDS libbi
 setMethodS3("readRDS", "libbi", dontWarn="base", function(x, file, use_cache, ...) {
   if (missing(file)) {
     stop("Need to specify a file to read")
@@ -638,8 +659,8 @@ setMethodS3("readRDS", "libbi", dontWarn="base", function(x, file, use_cache, ..
   return(new_obj)
 })
 
+#' @S3method print libbi
 #' @name print.libbi
-#' @rdname print
 #' @title Print information about a \code{\link{libbi}} object
 #' @description
 #' This prints the model name, basic information such as number of iterations
@@ -647,8 +668,9 @@ setMethodS3("readRDS", "libbi", dontWarn="base", function(x, file, use_cache, ..
 #' @param x a \code{\link{libbi}} object
 #' @param verbose logical; if TRUE, locations of files and working folder should be printed
 #' @param ... ignored
+#' @rdname print
 #' @importFrom R.methodsS3 setMethodS3
-#' @export print.libbi
+#' @keywords internal
 setMethodS3("print", "libbi", function(x, verbose=FALSE, ...){
   cat("Wrapper around LibBi\n")
   if (verbose) {
@@ -694,7 +716,7 @@ setMethodS3("print", "libbi", function(x, verbose=FALSE, ...){
 #' @param object a \code{\link{libbi}} object
 #' @param ... ignored
 #' @importFrom R.methodsS3 setMethodS3
-#' @export summary.libbi
+#' @S3method summary libbi
 setMethodS3("summary", "libbi", function(object, ...){
   params <- c(bi_read(object, type="param"))
   summary_table <- t(vapply(params, function(object) {
@@ -739,7 +761,7 @@ setMethodS3("assert_output", "libbi", export=FALSE, function(x, ...)
 #'
 #' For the help page of the base R \code{optimise} function, see \code{\link[stats]{optimise}}.
 #' @importFrom R.methodsS3 setMethodS3
-#' @export predict.libbi
+#' @S3method predict libbi
 setMethodS3("predict", "libbi", function(object, ...) {
   sample(object, target="prediction", ...)
 })

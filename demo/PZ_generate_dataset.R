@@ -1,10 +1,5 @@
 ### This demo shows how to generate data from a model using bi_generate_dataset
 
-rm(list = ls(all.names=TRUE))
-unlink(".RData")
-try(detach(package:rbi, unload = TRUE), silent = TRUE)
-library(rbi, quietly = TRUE)
-
 # the PZ model file is included in rbi and can be found there:
 model_file_name <- system.file(package="rbi", "PZ.bi")
 
