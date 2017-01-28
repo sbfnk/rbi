@@ -2,6 +2,7 @@
 % Please edit documentation in R/libbi.R
 \name{add_output}
 \alias{add_output}
+\alias{add_output.libbi}
 \title{Add output file to a \code{\link{libbi}} object}
 \arguments{
 \item{x}{a \code{\link{libbi}} object}
@@ -14,10 +15,8 @@
 Adds an output file to a \code{\link{libbi}} object. This is useful to recreate a \code{\link{libbi}} object from the model and output files of a previous run
 }
 \examples{
-model_file_name <- system.file(package="rbi", "PZ.bi")
-PZ <- bi_model(filename = model_file_name)
+bi <- libbi(model = system.file(package="rbi", "PZ.bi"))
 example_output_file <- system.file(package="rbi", "example_output.nc")
-bi <- libbi(PZ)
 bi <- add_output(bi, example_output_file)
 }
 

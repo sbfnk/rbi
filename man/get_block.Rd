@@ -2,6 +2,7 @@
 % Please edit documentation in R/bi_model.R
 \name{get_block}
 \alias{get_block}
+\alias{get_block.bi_model}
 \title{Get the contents of a block in a LibBi model}
 \arguments{
 \item{x}{a \code{\link{bi_model}} object}

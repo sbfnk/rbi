@@ -2,6 +2,7 @@
 % Please edit documentation in R/bi_model.R
 \name{write_file}
 \alias{write_file}
+\alias{write_file.bi_model}
 \title{Writes a bi model to a file.}
 \arguments{
 \item{x}{a \code{\link{bi_model}} object}

@@ -2,6 +2,7 @@
 % Please edit documentation in R/bi_model.R
 \name{get_lines}
 \alias{get_lines}
+\alias{get_lines.bi_model}
 \title{Get lines in a libbi model}
 \arguments{
 \item{x}{a \code{\link{bi_model}} object}
@@ -17,7 +18,7 @@ the libbi model as character vector
 Gets a libbi model as character vector.
 }
 \seealso{
-\code{\link{bi_model}}, \code{\link{`[`}}
+\code{\link{bi_model}}, \code{\link{`[`.bi_model}}
 }
 \keyword{internal}
 

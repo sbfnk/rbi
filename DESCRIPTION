@@ -7,11 +7,11 @@ Authors@R: c(
         person("Lawrence M.", "Murray", email = "lawrence.murray@csiro.au", role = "ctb"),
         person("Sebastian", "Funk", email = "sebastian.funk@lshtm.ac.uk", role = c("aut", "cre"))
         )
-Depends:
-    data.table,
-    R.oo
 Imports:
-    ncdf4
+    ncdf4,
+    data.table,
+    R.oo,
+    R.methodsS3
 Suggests:
     coda,
     R.rsp

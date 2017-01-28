@@ -26,7 +26,7 @@
 #' example_output_file <- system.file(package="rbi", "example_output.nc")
 #' d <- bi_read(example_output_file)
 #' @export
-bi_read <- function(x, vars, dims, model, type, missval.threshold, coord_name, vector, thin, verbose, use_cache, clear_cache)
+bi_read <- function(x, vars, dims, model, type, missval.threshold, coord_name, vector, thin, verbose, clear_cache)
 {
   nc <- bi_open(x)
   res <- list()

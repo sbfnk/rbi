@@ -2,6 +2,7 @@
 % Please edit documentation in R/bi_model.R
 \name{replace_lines}
 \alias{replace_lines}
+\alias{replace_lines.bi_model}
 \title{Update line(s) in a libbi model}
 \arguments{
 \item{x}{a \code{\link{bi_model}} object}
@@ -19,7 +20,7 @@ the updated bi model
 Updates one or more lines in a libbi model.
 }
 \seealso{
-\code{\link{bi_model}}, \code{\link{`[<-`}}
+\code{\link{bi_model}}
 }
 \keyword{internal}
 

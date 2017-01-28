@@ -2,6 +2,7 @@
 % Please edit documentation in R/bi_model.R
 \name{insert}
 \alias{insert}
+\alias{insert.bi_model}
 \title{Insert lines in a LibBi model}
 \arguments{
 \item{x}{a \code{\link{bi_model}} object}

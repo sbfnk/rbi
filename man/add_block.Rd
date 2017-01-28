@@ -2,6 +2,7 @@
 % Please edit documentation in R/bi_model.R
 \name{add_block}
 \alias{add_block}
+\alias{add_block.bi_model}
 \title{Add a block to a LibBi model}
 \arguments{
 \item{x}{a \code{\link{bi_model}} object}

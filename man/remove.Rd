@@ -2,6 +2,7 @@
 % Please edit documentation in R/bi_model.R
 \name{remove}
 \alias{remove}
+\alias{remove.bi_model}
 \title{Remove line(s) and/or block(s) in a libbi model}
 \arguments{
 \item{x}{a \code{\link{bi_model}} object}
@@ -16,7 +17,7 @@ the updated bi model
 \description{
 Removes one or more lines in a libbi model.
 
-For the help page of the base R \code{remove} function, see \code{\link{base::remove}}.
+For the help page of the base R \code{remove} function, see \code{\link[base]{remove}}.
 }
 \examples{
 model_file_name <- system.file(package="rbi", "PZ.bi")

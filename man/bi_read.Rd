@@ -5,7 +5,7 @@
 \title{Bi Read}
 \usage{
 bi_read(x, vars, dims, model, type, missval.threshold, coord_name, vector, thin,
-  verbose, use_cache, clear_cache)
+  verbose, clear_cache)
 }
 \arguments{
 \item{x}{either a path to a NetCDF file, or a NetCDF connection created using \code{nc_open}, or a \code{\link{libbi}} object from which to read the output}

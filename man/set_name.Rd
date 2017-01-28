@@ -2,10 +2,11 @@
 % Please edit documentation in R/bi_model.R
 \name{set_name}
 \alias{set_name}
+\alias{set_name.bi_model}
 \title{Set the name of a bi model}
 \arguments{
 \item{name}{Name of the model
-For the help page of the base R \code{remove} function, see \code{\link{base::remove}}.}
+For the help page of the base R \code{remove} function, see \code{\link[base]{remove}}.}
 
 \item{x}{a \code{\link{bi_model}} object}
 

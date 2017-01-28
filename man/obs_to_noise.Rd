@@ -2,6 +2,7 @@
 % Please edit documentation in R/bi_model.R
 \name{obs_to_noise}
 \alias{obs_to_noise}
+\alias{obs_to_noise.bi_model}
 \title{Copy obs variables to state variables (with '__sample_' prepended)}
 \arguments{
 \item{x}{a \code{\link{bi_model}} object}

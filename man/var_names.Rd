@@ -2,6 +2,7 @@
 % Please edit documentation in R/bi_model.R
 \name{var_names}
 \alias{var_names}
+\alias{var_names.bi_model}
 \title{Get variables}
 \arguments{
 \item{x}{a \code{\link{bi_model}} object}
@@ -19,8 +20,7 @@ variable names
 }
 \description{
 Get all variable names of one or more type(s)
-}
-\details{
+
 This returns all variable names of a certain type ("param", "state", "obs", "noise", "const") contained in the model of a \code{\link{libbi}} object
 }
 

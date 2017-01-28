@@ -2,6 +2,7 @@
 % Please edit documentation in R/bi_model.R
 \name{find_block}
 \alias{find_block}
+\alias{find_block.bi_model}
 \title{Find a block in a LibBi model}
 \arguments{
 \item{x}{a \code{\link{bi_model}} object}

@@ -14,7 +14,7 @@ if unsuccessful it tries "~/PathToBiBin/libbi"; if unsuccessful again it fails.}
 
 \item{use_cache}{logical; whether to use the cache (default: true)}
 
-\item{...}{options passed to \code{\link{run}}}
+\item{...}{options passed to \code{\link{run.libbi}}}
 }
 \value{
 a \code{\link{libbi}} object

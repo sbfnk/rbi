@@ -2,11 +2,14 @@
 % Please edit documentation in R/libbi.R
 \name{rewrite}
 \alias{rewrite}
+\alias{rewrite.bi_model}
+\alias{rewrite.character}
+\alias{rewrite.libbi}
 \title{Using the LibBi wrapper to rewrite}
 \arguments{
 \item{x}{a \code{\link{libbi} or \link{bi_model}} object, or the name of a file containing the model}
 
-\item{...}{options to be passed to \code{\link{run}}}
+\item{...}{options to be passed to \code{\link{run.libbi}}}
 }
 \value{
 a \code{\link{bi_model}} object
