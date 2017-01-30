@@ -5,12 +5,9 @@
 \alias{set_name.bi_model}
 \title{Set the name of a bi model}
 \arguments{
-\item{name}{Name of the model
-For the help page of the base R \code{remove} function, see \code{\link[base]{remove}}.}
+\item{name}{Name of the model}
 
 \item{x}{a \code{\link{bi_model}} object}
-
-\item{what}{either a vector of line number(s) to remove, or a vector of blocks to remove (e.g., "parameter")}
 
 \item{...}{ignored}
 }
@@ -23,7 +20,7 @@ Changes the name of a bi model (first line of the .bi file) to the specified nam
 \examples{
 model_file_name <- system.file(package="rbi", "PZ.bi")
 PZ <- bi_model(filename = model_file_name)
-PZ <- set_name(PZ,  "new_PZ")
+PZ <- set_name(PZ, "new_PZ")
 }
 \seealso{
 \code{\link{bi_model}}

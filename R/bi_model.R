@@ -12,7 +12,7 @@
 #' @examples
 #' model_file_name <- system.file(package="rbi", "PZ.bi")
 #' PZ <- bi_model(filename = model_file_name)
-#' @seealso \code{\link{fix_vars}}, \code{\link{insert}}, \code{\link{replace}}, \code{\link{remove}}, \code{\link{write_file}}
+#' @seealso \code{\link{fix_vars}}, \code{\link{insert_lines}}, \code{\link{replace_lines}}, \code{\link{remove_lines}}, \code{\link{write_file}}
 #' @export
 setConstructorS3("bi_model", enforceRCC=FALSE, function(filename, lines, ...) {
   if (!missing(filename) && !missing(lines)) {
@@ -38,6 +38,7 @@ setConstructorS3("bi_model", enforceRCC=FALSE, function(filename, lines, ...) {
   return(clean_model(new_obj))
 })
 
+#' @export fix_vars
 #' @name fix_vars
 #' @title Fix noise term, state or parameter of a libbi model
 #' @description
@@ -50,7 +51,7 @@ setConstructorS3("bi_model", enforceRCC=FALSE, function(filename, lines, ...) {
 #' @examples
 #' model_file_name <- system.file(package="rbi", "PZ.bi")
 #' PZ <- bi_model(filename = model_file_name)
-#' \dontrun{PZ <- fix(PZ, alpha = 0)}
+#' PZ <- fix_vars(PZ, alpha = 0)
 NULL
 #' @importFrom R.methodsS3 setMethodS3
 #' @rdname fix_vars
@@ -174,9 +175,9 @@ setMethodS3("obs_to_noise", "bi_model", export=FALSE, function(x, ...) {
 
   obs_var_pattern <- paste0("^(", paste(obs_variables, collapse = "|"), ")")
   state_block <- sub(obs_var_pattern, "__sample_\\1", obs_block)
-  new_model <- insert(new_model, state_block, at_end_of = "transition")
+  new_model <- insert_lines(new_model, state_block, at_end_of = "transition")
   state_variables <- paste0("__sample_", obs_variables)
-  new_model <- insert(new_model, paste("noise ", paste(state_variables, collapse = ", ")), after = 1)
+  new_model <- insert_lines(new_model, paste("noise ", paste(state_variables, collapse = ", ")), after = 1)
 
   return(clean_model(new_model))
 })
@@ -287,11 +288,11 @@ setMethodS3("get_lines", "bi_model", export=FALSE, function(x, spaces = 2, ...) 
   return(vec)
 })
 
-#' @name insert
-#' @export insert
+#' @name insert_lines
+#' @export insert_lines
 #' @title Insert lines in a LibBi model
 #' @description
-#' Inserts one or more lines into a libbi model. If one of \code{before} or \code{after} is given, the line(s) will be inserted before or after a given line number or block name, respectively. If one of \code{at_beginning of} or \code{at_end_of} is given, the lines will be inserted at the beginning/end of the block, respectively
+#' Inserts one or more lines into a libbi model. If one of \code{before} or \code{after} is given, the line(s) will be inserted before or after a given line number or block name, respectively. If one of \code{at_beginning of} or \code{at_end_of} is given, the lines will be inserted at the beginning/end of the block, respectively.
 #'
 #' @param x a \code{\link{bi_model}} object
 #' @param lines vector or line(s)
@@ -305,17 +306,17 @@ setMethodS3("get_lines", "bi_model", export=FALSE, function(x, spaces = 2, ...) 
 #' @examples
 #' model_file_name <- system.file(package="rbi", "PZ.bi")
 #' PZ <- bi_model(filename = model_file_name)
-#' PZ <- insert(PZ, lines = "noise beta", after = 8)
+#' PZ <- insert_lines(PZ, lines = "noise beta", after = 8)
 NULL
-#' @rdname insert
-#' @name insert.bi_model
-#' @S3method insert bi_model
+#' @rdname insert_lines
+#' @name insert_lines.bi_model
+#' @S3method insert_lines bi_model
 #' @importFrom R.methodsS3 setMethodS3
-setMethodS3("insert", "bi_model", function(x, lines, before, after, at_beginning_of, at_end_of, ...) {
+setMethodS3("insert_lines", "bi_model", function(x, lines, before, after, at_beginning_of, at_end_of, ...) {
   args <- match.call()
   arg_name <- setdiff(names(args), c("", "x", "lines"))
   if (length(arg_name) != 1) {
-    stop("insert needs exactly three arguments, 'x', 'lines' and one of 'before', 'after', 'at_beginning_of' or 'at_end_of'")
+    stop("insert_lines needs exactly three arguments, 'x', 'lines' and one of 'before', 'after', 'at_beginning_of' or 'at_end_of'")
   }
   arg <- get(arg_name)
   if (is.numeric(arg)) arg <- as.integer(arg)
@@ -377,13 +378,12 @@ setMethodS3("replace_lines", "bi_model", export=FALSE, function(x, num, lines, .
   return(clean_model(x))
 })
 
-#' @export remove
-#' @name remove
+#' @export remove_lines
+#' @name remove_lines
 #' @title Remove line(s) and/or block(s) in a libbi model
 #' @description
 #' Removes one or more lines in a libbi model.
 #'
-#' For the help page of the base R \code{remove} function, see \code{\link[base]{remove}}.
 #' @param x a \code{\link{bi_model}} object
 #' @param what either a vector of line number(s) to remove, or a vector of blocks to remove (e.g., "parameter")
 #' @param ... ignored
@@ -392,13 +392,13 @@ setMethodS3("replace_lines", "bi_model", export=FALSE, function(x, num, lines, .
 #' @examples
 #' model_file_name <- system.file(package="rbi", "PZ.bi")
 #' PZ <- bi_model(filename = model_file_name)
-#' PZ <- remove(PZ, 2)
+#' PZ <- remove_lines(PZ, 2)
 NULL
-#' @rdname remove
-#' @name remove.bi_model
-#' @S3method remove bi_model
+#' @rdname remove_lines
+#' @name remove.bi_model_lines
+#' @S3method remove_lines bi_model
 #' @importFrom R.methodsS3 setMethodS3
-setMethodS3("remove", "bi_model", dontWarn="base", function(x, what, ...) {
+setMethodS3("remove_lines", "bi_model", dontWarn="base", function(x, what, ...) {
   if (missing(what)) {
     stop("'what' must be given")
   }
@@ -533,7 +533,7 @@ NULL
 #' @importFrom R.methodsS3 setMethodS3
 #' @S3method add_block bi_model
 setMethodS3("add_block", "bi_model", function(x, name, lines, options, ...) {
-  x <- remove(x, what=name)
+  x <- remove_lines(x, what=name)
   x$model <- c(x$model[seq_len(length(x$model) - 1)],
                ifelse(missing(options), paste("sub", name,"{"),
                       paste("sub", name, paste0("(", options, ")", "{"))), 
@@ -640,16 +640,14 @@ setMethodS3("is_empty", "bi_model", export=FALSE, function(x, name, ...) {
 #' Changes the name of a bi model (first line of the .bi file) to the specified name.
 #'
 #' @param name Name of the model
-#' For the help page of the base R \code{remove} function, see \code{\link[base]{remove}}.
 #' @param x a \code{\link{bi_model}} object
-#' @param what either a vector of line number(s) to remove, or a vector of blocks to remove (e.g., "parameter")
 #' @param ... ignored
 #' @return the updated bi model
 #' @seealso \code{\link{bi_model}}
 #' @examples
 #' model_file_name <- system.file(package="rbi", "PZ.bi")
 #' PZ <- bi_model(filename = model_file_name)
-#' PZ <- set_name(PZ,  "new_PZ")
+#' PZ <- set_name(PZ, "new_PZ")
 NULL
 #' @rdname set_name
 #' @name set_name.bi_model

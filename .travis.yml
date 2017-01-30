@@ -2,11 +2,16 @@ language: r
 cache: packages
 warnings_are_errors: false
 
-r_github_packages:
-  - jimhester/covr
+os:
+  - linux
+  - osx
 
-after_success:
-  - Rscript -e 'library(covr); covr::codecov()'
+matrix:
+  allow_failures:
+    - os: linux
+
+env:
+  - NOT_CRAN=true
 
 before_install:
   - if [ -f ".git/shallow" ]; then travis_retry git fetch --unshallow; fi
@@ -20,19 +25,21 @@ before_install:
       brew update;
     fi
   - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
-      git clone https://github.com/Linuxbrew/brew.git ~/.linuxbrew;
-      echo "$LD_LIBRARY_PATH";
-      export PATH="$HOME/.linuxbrew/bin:$PATH";
-      echo "$LD_LIBRARY_PATH";
+      sudo mkdir -p /home/linuxbrew;
+      sudo chown "$USER" /home/linuxbrew;
+      LINUXBREW=/home/linuxbrew/.linuxbrew;
+      git clone https://github.com/Linuxbrew/brew.git "$LINUXBREW";
+      export PATH="$LINUXBREW/bin:$PATH";
+      export LD_LIBRARY_PATH=$(echo $LD_LIBRARY_PATH | sed 's/:$//');
       brew tap homebrew/science;
-      echo "$LD_LIBRARY_PATH";
-      brew install homebrew/science/libbi;
-      echo "$LD_LIBRARY_PATH";
+      brew tap sbfnk/libbi;
+      brew install gcc;
+      brew install curl --with-libidn;
+      brew install cmake --with-libidn;
+      brew install --without-test sbfnk/libbi/libbi;
+      env;
     fi
 
 brew_packages:
   - homebrew/science/libbi
 
-apt_packages:
-  - libnetcdf-dev
-  - netcdf-bin

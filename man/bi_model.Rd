@@ -19,6 +19,6 @@ model_file_name <- system.file(package="rbi", "PZ.bi")
 PZ <- bi_model(filename = model_file_name)
 }
 \seealso{
-\code{\link{fix_vars}}, \code{\link{insert}}, \code{\link{replace}}, \code{\link{remove}}, \code{\link{write_file}}
+\code{\link{fix_vars}}, \code{\link{insert_lines}}, \code{\link{replace_lines}}, \code{\link{remove_lines}}, \code{\link{write_file}}
 }
 

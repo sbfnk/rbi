@@ -1,0 +1,365 @@
+<%@meta language="R-vignette" content="--------------------------------
+  DIRECTIVES FOR R:
+
+  %\VignetteIndexEntry{Introduction to RBi}
+  %\VignetteAuthor{Sebastian Funk}
+  %\VignetteKeyword{rbi}
+  %\VignetteKeyword{package}
+  %\VignetteKeyword{vignette}
+  %\VignetteTangle{FALSE}
+  %\VignetteEngine{R.rsp::rsp}
+--------------------------------------------------------------------"%>
+
+<style>
+pre {
+  overflow-x: auto;
+}
+pre code {
+  word-wrap: normal;
+  white-space: pre;
+}
+</style>
+
+# <%@meta name="title"%>
+
+<%@meta name="author"%> on <%=format(as.Date(Sys.Date()), format="%B %d, %Y")%>
+
+[RBi](https://github.com/libbi/RBi) is an `R` interface to [LibBi](http://libbi.org), a library for Bayesian inference with state-space models using high-performance computer hardware.
+
+### Latest Version: _0.6.0_
+
+The package has been tested on macOS/OSX and Linux. It requires a working installation of **LibBi**, which is easiest done using the [homebrew-science](http://brew.sh/homebrew-science/) tap: Install [Homebrew](http://brew.sh) (on OS X) or [Linuxbrew](http://linuxbrew.sh) (on linux), then issue the following commands (using a command shell, i.e. Terminal or similar):
+
+```{sh eval=FALSE}
+brew tap homebrew/science
+brew install libbi
+```
+
+If you have any trouble installing **LibBi** you can get help on the [LibBi Users](https://groups.google.com/forum/#!forum/libbi-users) mailing list.
+
+The path to the `libbi` script can be passed as an argument to **RBi**, otherwise the package tries to find it automatically using the `which` linux/unix command.
+
+If you just want to process the output from **LibBi**, then you do not need to have **LibBi** installed.
+
+# Installation
+
+The **RBi** package requires `R` (>= 3.2.0) as well as the packages:
+
+- `reshape2`
+- `ncdf4`
+- `data.table`
+
+The easiest way to install the latest stable version of **RBi** is via CRAN. The package name is `rbi` (all lowercase):
+
+```{r eval=FALSE}
+install.packages('rbi')
+```
+
+Alternatively, the current development version can be installed using the `devtools` package
+
+```{r eval=FALSE}
+# install.packages("devtools")
+library('devtools')
+install_github("libbi/rbi")
+```
+
+# Loading the package
+
+Use
+
+```{R eval=FALSE}
+library('rbi')
+```
+
+```{R echo=FALSE}
+suppressPackageStartupMessages(library('rbi'))
+```
+to load the package.
+
+# Getting started
+
+The main computational engine and model grammar behind **RBi** is provided by **LibBi**. The [LibBi manual](http://libbi.org/docs/LibBi-Manual.pdf) is a good place to start for finding out everything there is to know about **LibBi** models and inference methods.
+
+The **RBi** package mainly provides two classes: `bi_model` and `libbi`. The `bi_model` class is used to load, view and manipulate **LibBi** model files. The `libbi` class is used to run LibBi and perform inference.
+
+The package also provides two methods for interacting with the [NetCDF](http://www.unidata.ucar.edu/software/netcdf/) files used by **LibBi**, `bi_read` and `bi_write`. Lastly, it provides a `get_traces` function to analyse Markov-chain Monte Carlo (MCMC) traces using the [coda](https://cran.r-project.org/package=coda) package.
+
+# The `bi_model` class
+
+As an example, we consider a simplified version of the SIR model discussed in [Del Moral et al. (2014)](https://arxiv.org/abs/1405.4081). This is included with the **RBi** package and can be loaded with
+
+```{R}
+model_file <- system.file(package="rbi", "SIR.bi") # get full file name from package
+SIRmodel <- bi_model(model_file) # load model
+```
+
+The `SIRmodel` object now contains the model, which can be displayed with
+
+```{R}
+SIRmodel
+```
+
+A part of the model can be shown with, for example,
+
+```{R}
+SIRmodel[35:38]
+```
+
+or, for example,
+
+```{R}
+get_block(SIRmodel, "parameter")
+```
+
+To get a list of certain variables, you can use the `var_names` function. For example, to get a list of states, you can use
+
+```{R}
+var_names(SIRmodel, "state")
+```
+
+There are also various methods for manipulating a model, such as `remove`, `insert`, `replace`.
+
+The `fix` method fixes a variable to one value. This can be useful, for example, to run the deterministic equivalent of a stochastic model for testing purposes.
+
+To get documentation for any of these methods, use the links in the documentation for `bi_model`.
+
+# Generating a dataset
+
+First, let's create a data set from the SIR model.
+
+```{R}
+SIRdata <- bi_generate_dataset(SIRmodel, end_time=16*7, noutputs=16, seed=12345678)
+```
+
+This simulates the model a single time from time 0 until time 16\*7 (say, 16 weeks with a daily time step), producing 16 outputs (one a week). Note that we have specified a seed to make this document reproducible. Remove the `seed` argument or specify a different seed to simulate your own data set. Also note that *LibBi* compiles the model code only the first time it is run. If you run the command above a second time, it should run much faster.
+
+The `bi_generate_dataset` function returns a `libbi` object:
+
+```{R}
+SIRdata
+```
+
+The generated dataset can be viewed and/or stored in a variable using `bi_read`:
+
+```{R}
+dataset <- bi_read(SIRdata)
+```
+
+The `bi_read` function takes the name of a NetCDF file or a `libbi` object (in which case it locates the output file) and stores the contents in a list of data frames or vectors, depending on the dimensionality of the contents. Note that, if no `working_folder` is specified, the model and output files will be stored in a temporary folder.
+
+
+```{R}
+names(dataset)
+dataset$p_R0
+dataset$Incidence
+```
+
+We can visualise the generated incidence data with
+
+```{R}
+plot(dataset$Incidence$time, dataset$Incidence$value)
+lines(dataset$Incidence$time, dataset$Incidence$value)
+```
+
+# The `libbi` class
+
+The `libbi` class manages the interaction with **LibBi** such as sampling from the prior or posterior distribution. For example, the `SIRdata` object above is of tyep `libbi`:
+
+```{R}
+class(SIRdata)
+```
+
+Th `bi_generate_dataset` is one particular way of generating a `libbi` object, used only to generate test data from a model. The standard way of creating a `libbi` object for Bayesian inference is using the `libbi` command
+
+```{R}
+bi <- libbi(SIRmodel)
+```
+
+This initialises a `libbi` object with the model created earlier and assigns it to the variable `bi`.
+
+```{R}
+class(bi)
+```
+
+Let's sample from the prior of the SIR model:
+
+```{R}
+bi <- sample(bi, target="prior", nsamples=1000, end_time=16*7, noutputs=16)
+```
+
+This step calls **LibBi** to sample from the prior distribution of the previously specified model, generating 1,000 samples and each time running the model for 16 * 7 = 112 time steps and writing 16 outputs (i.e., every 7 time steps). **LibBi** parses the model, creates C++ code, compiles it and run the model. If the model is run again, it should do so much quicker because it will use the already compiled C++ code to run the model:
+
+```{R eval=FALSE}
+bi <- sample(bi)
+```
+
+The `sample` command returns an updated `libbi` object which, in this case, we just assign again to the `bi` object. Any call of `sample` preserves options passed to the previous call of `sample` and `libbi`, unless they are overwritten by arguments passed to `sample` (e.g., passing a new `nsamples` argument). Let's have a closer look at the `bi` object:
+
+```{R}
+bi
+```
+
+To see even more detail, try
+
+```{R}
+str(bi)
+```
+
+We can see the object contains 14 fields, including the model, the path to the `libbi` script, and the command used to run libbi (`bi$command`); the `options` field contains all the options that **LibBi** was called with. This includes the ones we passed to `bi$run`
+
+```{R}
+bi$options
+```
+
+The other fields contain various bits of information about the object, including the model used, the command used to run **LibBi** (`bi$command`) and the output file name:
+
+```{R}
+bi$output_file_name
+```
+
+We can get the results of the sampling run using `bi_read`
+
+```{R}
+prior <- bi_read(bi$output_file_name)
+```
+
+or with the shorthand
+
+```{R}
+prior <- bi_read(bi)
+```
+
+which looks at the `output_file_name` field to read in the data. Let's look at the returned object
+
+```{R}
+str(prior)
+```
+
+This is a list of 9 objects, 8 representing each of the (noise/state) variables and parameters in the file, and one number `clock`, representing the time spent running the model in milliseconds.
+
+We can see that the time-varying variables are represented as data frames with three columns: `np` (enumerating individual simulations), `time` and `value`. Parameters don't vary in time and just have `np` and `value` columns.
+
+# Fitting a model to data using PMCMC
+
+Let's perform inference using Particle Markov-chain Metropolis Hastings (PMMH). The following command will generate 16 * 10,000 = 160,000 simulations and therefore may take a little while to run (if you want to see the samples progress, use `verbose=TRUE` in the `bi$run` call).
+
+```{R}
+bi <- sample(bi,target="posterior", nparticles=16, obs=SIRdata, sample_obs=TRUE, nsamples=10)
+```
+
+This samples from the posterior distribution. Remember that options are preserved from previous runs, so we don't need to specify `nsamples`, `end_time` and `noutputs` again, unless we want to change them. The `nparticles` option specifies the number of particles, and the `sample_obs` option tells the `sample` command that we also want observation samples from the posterior distribution of trajectories. 
+
+The random seed used for the libbi run is saved as an option to the `libbi` object:
+
+```{R}
+bi$options$seed
+```
+
+If you run the command above with an argument `seed` set to this value, you will get exactly the same results in the rest of this vignette.
+
+Input, init and observation files (see the [LibBi manual](http://libbi.org/docs/LibBi-Manual.pdf) for details) can be specified using the `init`, `input`, `obs` options, respectively. They can each be specified either as the name of a NetCDF file containing the data, or a `libbi` object (in which case the output file will be taken) or directly via an appropriate `R` object containing the data (e.g., a character vector of length one, or a list of data frames or numeric vectors). In the case of the command above, `init` is specified as a list, and `obs` as a `libbi` object. The `Incidence` variable of the `SIRdata` object will be taken as observations. 
+
+The time dimension (or column, if a data frame) in the passed `init`, `input` and/or `obs` files can be specified using the `time_dim` option. If this is not given, it will be assumed to be `time`, if such a dimension exists or, if not, any numeric column not called `value` (or the contents of the `value_column` option). If this does not produce a unique column name, an error will be thrown. All other dimensions/columns in the passed options will be interpreted as additional dimensions in the data, and stored in the `dims` field of the `libbi` object.
+
+Any other options (apart from `log_file_name`, see the [Debugging](#debugging) section) will be passed on to the command `libbi` -- for a complete list, see the [LibBi manual](http://libbi.org/docs/LibBi-Manual.pdf). Hyphens can be replaced by underscores so as not to confuse R (see `end_time`). Any arguments starting with `enable`/`disable` can be specified as boolean (e.g., `assert=TRUE`). Any `dry-` options can be specified with a `"dry"` argument, e.g., `parse="dry"`.
+
+# Analysing an MCMC run
+
+Let's get the results of the preceding `sample` command:
+
+```{R}
+bi_contents(bi)
+posterior <- bi_read(bi)
+str(posterior)
+```
+
+We can see that this has three more objects than previously when we specified `target="prior"`: `loglikelihood` (the estimated log-likelihood of the parameters at each MCMC step), `logprior` (the estimated log-prior density of the parameters at each MCMC step), and `Incidence` (sampled observations, as we specified `sample_obs=TRUE`).
+
+To get a summary of the parameters sampled, use
+
+```{R}
+summary(bi)
+```
+
+Any particular posterior sample can be viewed with `extract_sample` (with indices running from 0 to (`nsamples`-1)):
+
+```{R eval=FALSE}
+extract_sample(bi,314)
+```
+
+To analyse MCMC outputs, we can use the **coda** package and the `get_traces` function of **RBi**. Note that, to get exactly the same traces, you would have to use the seed randomly generated above.
+
+```{R}
+library(coda)
+traces <- mcmc(get_traces(bi))
+```
+
+We can study, for example, the acceptance rate
+
+```{R}
+accRate <- 1 - rejectionRate(traces)
+accRate
+```
+
+and visualise parameter traces and densities with
+
+```{R fig.width=8, fig.height=8}
+plot(traces)
+```
+
+Compare this to the marginal posterior distributions to the "correct" parameters used to generate the data set:
+
+```{R}
+dataset[var_names(bi$model, "param")]
+```
+
+For more details on using **coda** to further analyse the chains, see the website of the [coda package](https://cran.r-project.org/package=coda). For more plotting functionality, see the `plot_libbi` function in [RBi.helpers](https://github.com/sbfnk/rbi.helpers).
+
+# Filtering
+
+The other so-called clients of **LibBi** (besides `sample`) are supported through commands of the same name: `filter`, `optimise` and `rewrite`. For example, to run a particle filter on the last posterior sample generated above, you can use:
+
+```{R}
+bi_filtered <- filter(bi)
+```
+
+# Saving and loading `libbi` objects
+
+**RBi** provides its own versions of the `saveRDS` and `readRDS` functions called `save_libbi` and `read_libbi`. These make sure that all information (including any options, input, init and observation files) is stored in the object.
+
+```{R eval=FALSE}
+saveRDS(bi, "bi.rds")
+bi <- readRDS(bi, "bi.rds")
+bi
+```
+```{R}
+rbi::saveRDS(bi, "bi.rds")
+bi <- rbi::readRDS("bi.rds")
+bi
+```
+
+
+# Creating `libbi` objects from previous runs
+
+To recreate a `libbi` object from a previous R session, use `add_output`.
+For example, one could use the following code to get the acceptance rate and plots for a *LibBi* run with a given output and model file:
+
+```{R}
+PZ_run_file <- system.file(package="rbi", "example_output.nc")
+PZ_model_file <- system.file(package="rbi", "PZ.bi")
+PZ_posterior <- add_output(libbi(PZ_model_file), PZ_run_file)
+traces <- mcmc(get_traces(PZ_posterior))
+a <- 1 - rejectionRate(PZ_posterior) 
+a
+```
+
+# Debugging
+
+If `libbi` throws an error, it is best to investigate with `verbose = TRUE`, and setting `working_folder` to a folder that one can then use for debugging. Output of the `libbi` call can be saved in a file using the `log_file_name` option (by default a temporary file).
+
+# Related packages
+
+[RBi.helpers](https://github.com/sbfnk/rbi.helpers) contains higher-level methods to interact with **LibBi**, including methods for plotting the results of libbi runs and for adapting the proposal distribution and number of particles.
+
+# References
+ * Murray, L.M. (2013). [Bayesian state-space modelling on high-performance hardware using LibBi](https://arxiv.org/abs/1306.3277).

@@ -80,7 +80,7 @@ setConstructorS3("libbi", enforceRCC=FALSE, function(model, path_to_libbi, dims,
 #' @seealso \code{\link{libbi}}
 #' @examples
 #' bi_object <- libbi(model = system.file(package="rbi", "PZ.bi"))
-#' \dontrun{run(bi_object, options=list(sample="smc2", nthreads = 1), verbose = TRUE)}
+#' \dontrun{run(bi_object, options=list(client="sample", sample="smc2"))}
 #' if (bi_object$run_flag) {
 #'   bi_file_summary(bi_object$output_file_name)
 #' }
@@ -414,24 +414,26 @@ setMethodS3("run", "libbi", dontWarn="base", function(x, client, proposal=c("mod
 #' @param ... options to be passed to \code{\link{run.libbi}}
 #' @return a \code{\link{libbi}} object
 NULL
+#' @S3method sample default
+NULL
 #' @importFrom R.methodsS3 setMethodS3
 #' @name sample.libbi
-#' @rdname sample
 #' @S3method sample libbi
+#' @rdname sample
 setMethodS3("sample", "libbi", dontWarn="base", function(x, ...){
   run.libbi(x, client="sample", ...)
 })
 #' @rdname sample
 #' @name sample.bi_model
-#' @importFrom R.methodsS3 setMethodS3
 #' @S3method sample bi_model
+#' @importFrom R.methodsS3 setMethodS3
 setMethodS3("sample", "bi_model", function(x, ...){
   run.libbi(libbi(model=x), client="sample", ...)
 })
 #' @rdname sample
 #' @name sample.character
-#' @importFrom R.methodsS3 setMethodS3
 #' @S3method sample character
+#' @importFrom R.methodsS3 setMethodS3
 setMethodS3("sample", "character", function(x, ...){
   run.libbi(libbi(model=bi_model(x)), client="sample", ...)
 })
@@ -449,6 +451,8 @@ setMethodS3("sample", "character", function(x, ...){
 #' @param x a \code{\link{libbi} or \link{bi_model}} object, or the name of a file containing the model
 #' @param ... options to be passed to \code{\link{run.libbi}}
 #' @return a \code{\link{libbi}} object
+NULL
+#' @S3method filter default
 NULL
 #' @name filter.libbi
 #' @rdname filter
@@ -485,6 +489,8 @@ setMethodS3("filter", "character", function(x, ...){
 #' @param x a \code{\link{libbi} or \link{bi_model}} object, or the name of a file containing the model
 #' @param ... options to be passed to \code{\link{run.libbi}}
 #' @return a \code{\link{libbi}} object
+NULL
+#' @S3method optimise default
 NULL
 #' @name optimise.libbi
 #' @rdname optimise
@@ -572,22 +578,21 @@ setMethodS3("add_output", "libbi", function(x, output, ...){
   return(x)
 })
 
-#' @export saveRDS
-#' @name saveRDS
+#' @export save_libbi
+#' @name save_libbi
 #' @title Write results of a \code{LibBi} run to an RDS file
 #' @description
 #' This saves all options, files and outputs of a \code{LibBi} run to an RDS file specified
 #'
-#' For the help page of the base R \code{saveRDS} function, see \code{\link[base]{saveRDS}}.
 #' @param x a \code{\link{libbi}} object
 #' @param filename name of the RDS file to save to
-#' @param ... any options to \code{\link[base]{saveRDS}}
+#' @param ... any options to \code{\link{saveRDS}}
 NULL
-#' @name saveRDS.libbi
-#' @rdname saveRDS
+#' @name save_libbi.libbi
+#' @rdname save_libbi
 #' @importFrom R.methodsS3 setMethodS3
-#' @S3method saveRDS libbi
-setMethodS3("saveRDS", "libbi", dontWarn="base", function(x, filename, ...) {
+#' @S3method save_libbi libbi
+setMethodS3("save_libbi", "libbi", dontWarn="base", function(x, filename, ...) {
   if (missing(filename)) {
     stop("Need to specify a file name")
   }
@@ -610,27 +615,19 @@ setMethodS3("saveRDS", "libbi", dontWarn="base", function(x, filename, ...) {
 
   save_obj[["options"]] <- options
 
-  base::saveRDS(save_obj, filename, ...)
+  saveRDS(save_obj, filename, ...)
 })
 
-#' @export readRDS
-#' @name readRDS
+#' @export read_libbi
+#' @name read_libbi
 #' @title Read results of a \code{LibBi} run from an RDS file. This completely reconstructs the saved \code{LibBi} object
 #' @description
 #' This reads all options, files and outputs of a \code{LibBi} run to an RDS file specified
 #'
-#' For the help page of the base R \code{readRDS} function, see \code{\link[base]{readRDS}}.
-#' @param x a \code{\link{libbi}} object
 #' @param file name of the RDS file to read
-#' @param use_cache logical; whether to use the cache (default: \code{\link{libbi}} default)
-#' @param ... any options to \code{\link[base]{readRDS}}
+#' @param ... any extra options to pass to \code{\link{read_libbi}} when creating the new object
 #' @return a \code{\link{libbi}} object
-NULL
-#' @name readRDS.libbi
-#' @rdname readRDS
-#' @importFrom R.methodsS3 setMethodS3
-#' @S3method readRDS libbi
-setMethodS3("readRDS", "libbi", dontWarn="base", function(x, file, use_cache, ...) {
+read_libbi <- function(file, ...) {
   if (missing(file)) {
     stop("Need to specify a file to read")
   }
@@ -638,7 +635,8 @@ setMethodS3("readRDS", "libbi", dontWarn="base", function(x, file, use_cache, ..
   read_obj <- readRDS(file)
 
   libbi_options <- list(model=read_obj$model, dims=read_obj$dims,
-                        options=read_obj$options, thin=read_obj$thin)
+                        options=read_obj$options, thin=read_obj$thin,
+                        ...)
 
   for (file_type in c("init", "input", "obs")) {
     if (file_type %in% names(read_obj)) {
@@ -646,18 +644,16 @@ setMethodS3("readRDS", "libbi", dontWarn="base", function(x, file, use_cache, ..
     }
   }
 
-  if (!missing(use_cache)) libbi_options[["use_cache"]] <- use_cache
-
   output_file_name <-
     tempfile(pattern=paste(read_obj$model$name, "output", sep = "_"),
              fileext=".nc")
   bi_write(output_file_name, read_obj$output)
 
-  new_obj <- libbi(libbi_options)
+  new_obj <- do.call(libbi, libbi_options)
   new_obj <- add_output(new_obj, output_file_name)
 
   return(new_obj)
-})
+}
 
 #' @S3method print libbi
 #' @name print.libbi

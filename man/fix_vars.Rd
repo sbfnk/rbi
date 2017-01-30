@@ -18,7 +18,7 @@ Replaces all variables with fixed values as given ; note that this will not repl
 \examples{
 model_file_name <- system.file(package="rbi", "PZ.bi")
 PZ <- bi_model(filename = model_file_name)
-\dontrun{PZ <- fix(PZ, alpha = 0)}
+PZ <- fix_vars(PZ, alpha = 0)
 }
 \seealso{
 \code{\link{bi_model}}

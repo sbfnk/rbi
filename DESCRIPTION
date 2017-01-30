@@ -24,3 +24,4 @@ SystemRequirements: LibBi (>= 1.2.0)
 LazyLoad: no
 RoxygenNote: 5.0.1
 VignetteBuilder: R.rsp
+Suggests: R.rsp, testthat

@@ -53,7 +53,7 @@ The method \code{run} launches \code{LibBi} with a particular set of command lin
 }
 \examples{
 bi_object <- libbi(model = system.file(package="rbi", "PZ.bi"))
-\dontrun{run(bi_object, options=list(sample="smc2", nthreads = 1), verbose = TRUE)}
+\dontrun{run(bi_object, options=list(client="sample", sample="smc2"))}
 if (bi_object$run_flag) {
   bi_file_summary(bi_object$output_file_name)
 }
