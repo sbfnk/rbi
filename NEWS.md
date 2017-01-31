@@ -1,4 +1,12 @@
-# rbi 0.6.0.9999
+# rbi 0.7.0
+
+* The class is now based on S3 classes. Because of this, it plays much nicer with the magrittr and related packages. There are now `str` and `summary` methods defined for `libbi` objects, and `sample`, `filter` and `optimise` commands for running LibBi
+* Caching is now supported: multiple calls to `bi_read` are much faster
+* Fixed bug in `bi_read` when reading variables with one dimension
+* `bi_generate_dataset` now has a seed option
+* `extract_sample` function for extracting a single sample from a NetCDF file
+* new `add_output` option for reconstructing `libbi` objects
+* Many smaller bug fixes
 
 # rbi 0.6.0
 
