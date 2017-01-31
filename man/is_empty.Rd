@@ -2,15 +2,12 @@
 % Please edit documentation in R/bi_model.R
 \name{is_empty}
 \alias{is_empty}
-\alias{is_empty.bi_model}
 \title{Check if a model is empty}
 \usage{
-is_empty.bi_model(x, name, ...)
+is_empty(x, name)
 }
 \arguments{
 \item{x}{a \code{\link{bi_model}} object}
-
-\item{...}{ignored}
 }
 \value{
 the updated bi model

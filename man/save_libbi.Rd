@@ -2,10 +2,10 @@
 % Please edit documentation in R/libbi.R
 \name{save_libbi}
 \alias{save_libbi}
-\alias{save_results.libbi}
+\alias{save_libbi.libbi}
 \title{Write results of a \code{LibBi} run to an RDS file}
 \usage{
-\method{save_results}{libbi}(x, filename, ...)
+\method{save_libbi}{libbi}(x, filename, ...)
 }
 \arguments{
 \item{x}{a \code{\link{libbi}} object}

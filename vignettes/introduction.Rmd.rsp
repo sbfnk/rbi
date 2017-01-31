@@ -328,16 +328,10 @@ bi_filtered <- filter(bi)
 **RBi** provides its own versions of the `saveRDS` and `readRDS` functions called `save_libbi` and `read_libbi`. These make sure that all information (including any options, input, init and observation files) is stored in the object.
 
 ```{R eval=FALSE}
-saveRDS(bi, "bi.rds")
-bi <- readRDS(bi, "bi.rds")
+save_libbi(bi, "bi.rds")
+bi <- read_libbi(bi, "bi.rds")
 bi
 ```
-```{R}
-rbi::saveRDS(bi, "bi.rds")
-bi <- rbi::readRDS("bi.rds")
-bi
-```
-
 
 # Creating `libbi` objects from previous runs
 

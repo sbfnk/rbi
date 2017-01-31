@@ -10,8 +10,12 @@
 #' @importFrom ncdf4 nc_open nc_close
 #' 
 bi_dim_len <- function(filename, dim){
-  ncfile <-  nc_open(tools::file_path_as_absolute(filename), verbose = FALSE)  
-  len <- ncfile$dim[[which(names(ncfile$dim) == dim)]]$len
+  ncfile <-  nc_open(tools::file_path_as_absolute(filename), verbose = FALSE)
+  if (dim %in% names(ncfile$dim)) {
+    len <- ncfile$dim[[which(names(ncfile$dim) == dim)]]$len
+  } else {
+    len <- 1
+  }
   nc_close(ncfile)
   return(len)
 }

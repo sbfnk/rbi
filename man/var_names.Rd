@@ -5,7 +5,7 @@
 \alias{var_names.bi_model}
 \title{Get variables}
 \usage{
-var_names.bi_model(x, type, dim = FALSE, opt = FALSE, ...)
+\method{var_names}{bi_model}(x, type, dim = FALSE, opt = FALSE, ...)
 }
 \arguments{
 \item{x}{a \code{\link{bi_model}} object}

@@ -7,6 +7,11 @@
 \usage{
 \method{predict}{libbi}(object, ...)
 }
+\arguments{
+\item{object}{a \code{\link{libbi}} object}
+
+\item{...}{ignored}
+}
 \description{
 The method \code{predict} is an alias for \code{sample(target="prediction")}. Usually, an \code{init} object or file should be given containing posterior samples.
 

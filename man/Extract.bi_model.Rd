@@ -3,11 +3,14 @@
 \name{Extract.bi_model}
 \alias{Extract.bi_model}
 \alias{[.bi_model}
+\alias{[<-.bi_model}
 \alias{`[.bi_model`}
 \alias{`[<-.bi_model`}
 \title{Subset and replace model lines}
 \usage{
 \method{[}{bi_model}(x, i, ...)
+
+\method{[}{bi_model}(x, i, ...) <- value
 }
 \arguments{
 \item{x}{A bi_model}

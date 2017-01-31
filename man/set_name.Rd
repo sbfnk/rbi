@@ -5,7 +5,7 @@
 \alias{set_name.bi_model}
 \title{Set the name of a bi model}
 \usage{
-set_name.bi_model(x, name, ...)
+\method{set_name}{bi_model}(x, name, ...)
 }
 \arguments{
 \item{x}{a \code{\link{bi_model}} object}

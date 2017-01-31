@@ -5,7 +5,7 @@
 \alias{remove_lines.bi_model}
 \title{Remove line(s) and/or block(s) in a libbi model}
 \usage{
-remove_lines.bi_model(x, what, ...)
+\method{remove_lines}{bi_model}(x, what, ...)
 }
 \arguments{
 \item{x}{a \code{\link{bi_model}} object}

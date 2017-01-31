@@ -2,16 +2,11 @@
 % Please edit documentation in R/bi_model.R
 \name{clean_model}
 \alias{clean_model}
-\alias{clean_model.bi_model}
 \title{Strip model code to its bare bones}
 \usage{
-clean_model.bi_model(x, ...)
+clean_model(x)
 }
 \arguments{
-\item{x}{a \code{\link{bi_model}} object}
-
-\item{...}{ignored}
-
 \item{x}{a \code{\link{bi_model}} object}
 }
 \value{

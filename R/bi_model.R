@@ -11,7 +11,7 @@
 #' @examples
 #' model_file_name <- system.file(package="rbi", "PZ.bi")
 #' PZ <- bi_model(filename = model_file_name)
-#' @seealso \code{\link{fix}}, \code{\link{insert_lines}}, \code{\link{replace_lines}}, \code{\link{remove_lines}}, \code{\link{set)name}}, \code{\link{write_file}}
+#' @seealso \code{\link{fix}}, \code{\link{insert_lines}}, \code{\link{remove_lines}}, \code{\link{replace_all}}, \code{\link{set_name}}, \code{\link{write_file}}
 #' @export
 bi_model <- function(filename, lines, ...) {
   if (!missing(filename) && !missing(lines)) {
@@ -37,6 +37,8 @@ bi_model <- function(filename, lines, ...) {
   return(clean_model(new_obj))
 }
 
+#' @export
+fix <- function(x, ...) UseMethod("fix")
 #' @rdname fix
 #' @name fix
 #' @title Fix noise term, state or parameter of a libbi model
@@ -120,6 +122,10 @@ fix.bi_model <- function(x, ...) {
   x$model <- fix_model
   return(clean_model(x))
 }
+#' @export
+fix.default <- function(x, ...) {
+  utils::fix(x, ...)
+}
 
 #' @name propose_prior
 #' @title Propose from the prior in a libbi model
@@ -127,12 +133,11 @@ fix.bi_model <- function(x, ...) {
 #' Generates a version of the model where the proposal blocks are replaced by the prior blocks. This is useful for exploration of the likelihood surface.
 #'
 #' @param x a \code{\link{bi_model}} object
-#' @param ... ignored
 #' @return a bi model object of the new model
 #' @seealso \code{\link{bi_model}}
 #' @keywords internal
 #' @rdname propose_prior
-propose_prior.bi_model <- function(x, ...) {
+propose_prior <- function(x) {
   new_model <- bi_model(lines = x$model)
 
   ## remove parameter proposal
@@ -152,13 +157,11 @@ propose_prior.bi_model <- function(x, ...) {
 #' This is used by the \code{\link{run}} functions of rbi, if 'sample_obs=TRUE'
 #'   is specified.
 #' @param x a \code{\link{bi_model}} object
-#' @param ... ignored
 #' @return a \code{\link{bi_model}}
 #' @seealso \code{\link{bi_model}}
 #' @keywords internal
-#' @param x a \code{\link{bi_model}} object
 #' @rdname obs_to_noise
-obs_to_noise.bi_model <- function(x, ...) {
+obs_to_noise <- function(x) {
   new_model <- bi_model(lines = x$model)
   obs_block <- get_block(x, "observation")
   obs_variables <- var_names(x, "obs")
@@ -179,13 +182,10 @@ obs_to_noise.bi_model <- function(x, ...) {
 #' Cleans the model by working out correct indents, removing long comments and
 #'   merging lines
 #' @param x a \code{\link{bi_model}} object
-#' @param ... ignored
 #' @return a \code{\link{bi_model}}
 #' @seealso \code{\link{bi_model}}
 #' @keywords internal
-#' @param x a \code{\link{bi_model}} object
-#' @rdname clean_model
-clean_model.bi_model <- function(x, ...) {
+clean_model <- function(x) {
   ## strip comments
   x$model <- sub("//.*$", "", x$model)
 
@@ -240,6 +240,8 @@ clean_model.bi_model <- function(x, ...) {
   return(x)
 }
 
+#' @export
+get_lines <- function(x, ...) UseMethod("get_lines")
 #' @name get_lines
 #' @title Get lines in a libbi model
 #' @description
@@ -247,12 +249,11 @@ clean_model.bi_model <- function(x, ...) {
 #'
 #' @param x a \code{\link{bi_model}} object
 #' @param spaces Number of spaces of indentation
-#' @param ... ignored
 #' @return the libbi model as character vector
 #' @seealso \code{\link{bi_model}}, \code{\link{`[.bi_model`}}
 #' @keywords internal
 #' @rdname get_lines
-get_lines.bi_model <- function(x, spaces = 2, ...) {
+get_lines <- function(x, spaces = 2) {
   vec <- c()
   indent <- 0
   for (i in seq_along(x$model)) {
@@ -272,6 +273,8 @@ get_lines.bi_model <- function(x, spaces = 2, ...) {
   return(vec)
 }
 
+#' @export
+insert_lines <- function(x, ...) UseMethod("insert_lines")
 #' @name insert_lines
 #' @title Insert lines in a LibBi model
 #' @description
@@ -345,16 +348,37 @@ insert_lines.bi_model <- function(x, lines, before, after, at_beginning_of, at_e
 #' @param x a \code{\link{bi_model}} object
 #' @param num line number(s) to update
 #' @param lines vector of line(s)
-#' @param ... ignored
 #' @return the updated bi model
 #' @seealso \code{\link{bi_model}}
 #' @keywords internal
 #' @rdname replace_lines
-replace_lines.bi_model <- function(x, num, lines, ...) {
+replace_lines <- function(x, num, lines) {
   x$model[num] <- lines
   return(clean_model(x))
 }
 
+#' @export
+replace_all <- function(x, ...) UseMethod("replace_all")
+#' @name replace_all
+#' @title Replace all instances of a string with another in a model
+#' @description
+#' Takes every occurrence of one string and replaces it with another
+#'
+#' @param x a \code{\link{bi_model}} object
+#' @param from string to be replaced (a regular expression)
+#' @param to new string (which can refer to the regular expression given as \code{from})
+#' @param ... ignored
+#' @return the updated bi model
+#' @seealso \code{\link{bi_model}}
+#' @rdname replace_all
+#' @export
+replace_all.bi_model <- function(x, from, to, ...) {
+  x$model <- gsub(from, to, x$model)
+  return(clean_model(x))
+}
+
+#' @export
+remove_lines <- function(x, ...) UseMethod("remove_lines")
 #' @name remove_lines
 #' @title Remove line(s) and/or block(s) in a libbi model
 #' @description
@@ -391,6 +415,8 @@ remove_lines.bi_model <- function(x, what, ...) {
   return(clean_model(x))
 }
 
+#' @export
+write_file <- function(x, ...) UseMethod("write_file")
 #' @name write_file
 #' @title Writes a bi model to a file.
 #' @description
@@ -427,9 +453,8 @@ write_file.bi_model <- function(x, filename, ...) {
 #' @keywords internal
 #' @param x a \code{\link{bi_model}} object
 #' @param name of the block to find
-#' @param ... ignored
 #' @rdname find_block
-find_block.bi_model <- function(x, name, ...) {
+find_block <- function(x, name) {
   lines <- x$model
   sub_regexp <- paste0("^[[:space:]]*(sub[[:space:]]+)?[[:space:]]*", name, "[[:space:]]*(\\(.*\\))?[[:space:]]*\\{")
   sub_line <- grep(sub_regexp, lines)
@@ -448,6 +473,8 @@ find_block.bi_model <- function(x, name, ...) {
   }
 }
 
+#' @export
+get_block <- function(x, ...) UseMethod("get_block")
 #' @name get_block
 #' @title Get the contents of a block in a LibBi model
 #'
@@ -477,6 +504,8 @@ get_block.bi_model <- function(x, name, ...) {
   }
 }
 
+#' @export
+add_block <- function(x, ...) UseMethod("add_block")
 #' @name add_block
 #' @title Add a block to a LibBi model
 #'
@@ -499,6 +528,8 @@ add_block.bi_model <- function(x, name, lines, options, ...) {
   x <- clean_model(x)
 }
 
+#' @export
+var_names <- function(x, ...) UseMethod("var_names")
 #' @name var_names
 #' @title Get variables
 #' @description
@@ -574,15 +605,16 @@ print.bi_model <- function(x, ...) {
 #' Checks if a model is empty (i.e., has been initialised without any content)
 #'
 #' @param x a \code{\link{bi_model}} object
-#' @param ... ignored
 #' @return the updated bi model
 #' @seealso \code{\link{bi_model}}
 #' @keywords internal
 #' @rdname is_empty
-is_empty.bi_model <- function(x, name, ...) {
+is_empty <- function(x, name) {
   is.null(x$model)
 }
 
+#' @export
+set_name <- function(x, ...) UseMethod("set_name")
 #' @name set_name
 #' @title Set the name of a bi model
 #' @description
@@ -597,7 +629,6 @@ is_empty.bi_model <- function(x, name, ...) {
 #' model_file_name <- system.file(package="rbi", "PZ.bi")
 #' PZ <- bi_model(filename = model_file_name)
 #' PZ <- set_name(PZ, "new_PZ")
-NULL
 #' @rdname set_name
 #' @export
 set_name.bi_model <- function(x, name, ...) {
@@ -624,8 +655,6 @@ set_name.bi_model <- function(x, name, ...) {
 #'   operator, assigns new character strings.
 #' @param x A bi_model
 #' @param i A vector of line numbers
-#' @param value A vector of the same length as \code{i}, containing the
-#'   replacement strings
 #' @param ... ignored
 #' @examples
 #' model_file_name <- system.file(package="rbi", "PZ.bi")
@@ -636,7 +665,10 @@ set_name.bi_model <- function(x, name, ...) {
 `[.bi_model` <- function(x, i, ...) {
     return(get_lines(x)[i])
 }
+#' @rdname Extract.bi_model
 #' @export
+#' @param value A vector of the same length as \code{i}, containing the
+#'   replacement strings
 `[<-.bi_model` <-  function(x, i, ..., value) {
     x <- replace_lines(x, i, value)
     return(clean_model(x))

@@ -15,7 +15,6 @@
 #' @param use_cache logical; whether to use the cache (default: true)
 #' @param ... options passed to \code{\link{run.libbi}}
 #' @return a \code{\link{libbi}} object
-#' @importFrom R.oo setConstructorS3
 #' @examples
 #' bi_object <- libbi(model = system.file(package="rbi", "PZ.bi"))
 #' @seealso \code{\link{sample}}, \code{\link{filter}}, \code{\link{optimise}}, \code{\link{rewrite}}
@@ -62,6 +61,7 @@ run <- function(x, ...) UseMethod("run")
 #' @param x a \code{\link{libbi}} object
 #' @param client client to pass to LibBi
 #' @param proposal proposal distribution to use; either "model" (default: proposal distribution in the model) or "prior" (propose from the prior distribution)
+#' @param model either a character vector giving the path to a model file (typically ending in ".bi"), or a \code{bi_model} object; by default, will use any model given in \code{x}
 #' @param fix any variable to fix, as a named vector
 #' @param options list of additional arguments to pass to the call to \code{LibBi}. Any arguments starting with `enable`/`disable` can be specified as boolean (e.g., `assert=TRUE`). Any `dry-` options can be specified with a `"dry"` argument, e.g., `parse="dry"`. Any options that would be specified with `with`/`without` can be specified as character vector to an option named `with`/`without`, respectively, e.g. with="transform-obs-to-state".
 #' @param config path to a configuration file, containing multiple arguments
@@ -303,7 +303,7 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
     }
 
     if (!missing(fix)) {
-      run_model <- do.call(fix_vars, c(list(x=run_model), as.list(fix)))
+      run_model <- do.call(fix, c(list(x=run_model), as.list(fix)))
       run_model_modified <- TRUE
     }
 
@@ -566,7 +566,7 @@ add_output.libbi <- function(x, output, ...){
 }
 
 #' @export
-save_results <- function(x, ...) UseMethod("save_results")
+save_libbi <- function(x, ...) UseMethod("save_libbi")
 #' @name save_libbi
 #' @rdname save_libbi
 #' @title Write results of a \code{LibBi} run to an RDS file
@@ -577,7 +577,7 @@ save_results <- function(x, ...) UseMethod("save_results")
 #' @param filename name of the RDS file to save to
 #' @param ... any options to \code{\link{saveRDS}}
 #' @export
-save_results.libbi <- function(x, filename, ...) {
+save_libbi.libbi <- function(x, filename, ...) {
   if (missing(filename)) {
     stop("Need to specify a file name")
   }
@@ -604,7 +604,7 @@ save_results.libbi <- function(x, filename, ...) {
 }
 
 #' @export
-read_results <- function(x, ...) UseMethod("read_results")
+read_libbi <- function(x, ...) UseMethod("read_libbi")
 #' @rdname read_libbi
 #' @name read_libbi
 #' @title Read results of a \code{LibBi} run from an RDS file. This completely reconstructs the saved \code{LibBi} object
@@ -614,7 +614,7 @@ read_results <- function(x, ...) UseMethod("read_results")
 #' @param file name of the RDS file to read
 #' @param ... any extra options to pass to \code{\link{read_libbi}} when creating the new object
 #' @return a \code{\link{libbi}} object
-read_results <- function(file, ...) {
+read_libbi <- function(file, ...) {
   if (missing(file)) {
     stop("Need to specify a file to read")
   }
@@ -666,12 +666,7 @@ print.libbi <- function(x, verbose=FALSE, ...){
   if (x$run_flag) {
     assert_output(x)
     niterations <- bi_dim_len(x$output_file_name, "np")
-    times <- bi_read(x, "time")[["time"]]
-    if (is.null(dim(times)) || length(dim(times)) == 1) {
-      ntimesteps <- 0
-    } else {
-      ntimesteps <- diff(range(times[["value"]]))
-    }
+
     clock <- bi_read(x, "clock")[["clock"]]
     contents <- bi_contents(x$output_file_name)
     states <- intersect(contents, var_names(x$model, "state"))
@@ -737,6 +732,8 @@ assert_output <- function(x, ...)
 #'
 #' For the help page of the base R \code{optimise} function, see \code{\link[stats]{optimise}}.
 #' @export
+#' @param object a \code{\link{libbi}} object
+#' @param ... ignored
 predict.libbi <- function(object, ...) {
   sample(object, target="prediction", ...)
 }

@@ -2,10 +2,9 @@
 % Please edit documentation in R/bi_model.R
 \name{replace_lines}
 \alias{replace_lines}
-\alias{replace_lines.bi_model}
 \title{Update line(s) in a libbi model}
 \usage{
-replace_lines.bi_model(x, num, lines, ...)
+replace_lines(x, num, lines)
 }
 \arguments{
 \item{x}{a \code{\link{bi_model}} object}
@@ -13,8 +12,6 @@ replace_lines.bi_model(x, num, lines, ...)
 \item{num}{line number(s) to update}
 
 \item{lines}{vector of line(s)}
-
-\item{...}{ignored}
 }
 \value{
 the updated bi model

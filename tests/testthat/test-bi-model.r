@@ -10,7 +10,7 @@ test_that("Models can be created",
 
 test_that("Parameters can be fixed",
 {
-  expect_true(length(fix_vars(PZ, alpha=0)) > 0)
+  expect_true(length(fix(PZ, alpha=0)) > 0)
 })
 
 test_that("Lines can be inserted",

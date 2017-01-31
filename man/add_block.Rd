@@ -5,7 +5,7 @@
 \alias{add_block.bi_model}
 \title{Add a block to a LibBi model}
 \usage{
-add_block.bi_model(x, name, lines, options, ...)
+\method{add_block}{bi_model}(x, name, lines, options, ...)
 }
 \arguments{
 \item{x}{a \code{\link{bi_model}} object}

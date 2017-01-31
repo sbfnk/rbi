@@ -5,7 +5,7 @@
 \alias{write_file.bi_model}
 \title{Writes a bi model to a file.}
 \usage{
-write_file.bi_model(x, filename, ...)
+\method{write_file}{bi_model}(x, filename, ...)
 }
 \arguments{
 \item{x}{a \code{\link{bi_model}} object}
