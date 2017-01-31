@@ -50,10 +50,11 @@ before_install:
       git clone https://github.com/Linuxbrew/brew.git "$LINUXBREW";
       export PATH="$LINUXBREW/bin:$PATH";
       export LD_LIBRARY_PATH=$(echo $LD_LIBRARY_PATH | sed 's/:$//');
+      brew install --build-from-source gcc;
       brew tap homebrew/science;
       brew install --with-libidn curl;
       brew install --with-libidn cmake;
-      brew install --build-from-source cmake;
       brew install --without-test --without-openmp sbfnk/libbi/libbi;
+      echo "TERGTEFHUz0iLUwvaG9tZS9saW51eGJyZXcvLmxpbnV4YnJldy9saWIgJExERkxBR1MiCg==" | base64 -d > ~.R/Makevars
     fi
 
