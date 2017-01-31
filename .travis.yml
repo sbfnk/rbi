@@ -39,12 +39,9 @@ before_install:
   - if [ -f ".git/shallow" ]; then travis_retry git fetch --unshallow; fi
   - if [ "${TRAVIS_OS_NAME}" = "osx" ]; then
       sudo chown -R $USER $(brew --repo);
-      brew update
-      mkdir -p $(brew --repo)/Library/Taps
-      ln -s $PWD $(brew --repo)/Library/Taps/travis-testtap
-      brew tap --repair;
+      sudo chown -R $USER $(brew --prefix);
       brew tap homebrew/science;
-      brew update;
+      brew install --without-openmp homebrew/science/libbi;
     fi
   - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
       sudo mkdir -p /home/linuxbrew;
@@ -54,17 +51,9 @@ before_install:
       export PATH="$LINUXBREW/bin:$PATH";
       export LD_LIBRARY_PATH=$(echo $LD_LIBRARY_PATH | sed 's/:$//');
       brew tap homebrew/science;
-      brew install gcc;
-      brew install curl --with-libidn;
-      brew install cmake --with-libidn;
-      brew install --without-test sbfnk/libbi/libbi;
-      env;
-      gcc --version;
-      gcc-5 --version;
-      mkdir -p ~/.R;
-      echo "TERGTEFHUz0tTC9ob21lL2xpbnV4YnJldy8ubGludXhicmV3L2xpYgpDQz1nY2MtNQpDWFg9ZysrLTUK" | base64 -d > ~/.R/Makevars;
+      brew install --with-libidn curl;
+      brew install --with-libidn cmake;
+      brew install --build-from-source cmake;
+      brew install --without-test --without-openmp sbfnk/libbi/libbi;
     fi
-
-brew_packages:
-  - homebrew/science/libbi
 
