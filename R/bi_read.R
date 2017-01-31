@@ -183,7 +183,7 @@ bi_read <- function(x, vars, dims, model, type, missval.threshold, coord_name, v
         all_values <- array(all_values, dim=c(dim(all_values), rep(1, length(n_one_dims) - 1)))
       }
 
-      if (sum(dim(all_values)) > 1) {
+      if (prod(dim(all_values)) + length(n_one_dims) > 1) {
 
         mav <- data.table::data.table(reshape2::melt(all_values, varnames = rev(dim_names)))
 
