@@ -11,9 +11,6 @@ matrix:
   allow_failures:
     - os: linux
 
-env:
-  - NOT_CRAN=true
-
 r_binary_packages:
   - magrittr
   - lazyeval
