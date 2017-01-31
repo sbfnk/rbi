@@ -4,6 +4,9 @@
 \alias{replace_lines}
 \alias{replace_lines.bi_model}
 \title{Update line(s) in a libbi model}
+\usage{
+replace_lines.bi_model(x, num, lines, ...)
+}
 \arguments{
 \item{x}{a \code{\link{bi_model}} object}
 

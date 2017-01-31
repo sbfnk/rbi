@@ -2,9 +2,10 @@
 % Please edit documentation in R/libbi.R
 \name{read_libbi}
 \alias{read_libbi}
+\alias{read_results}
 \title{Read results of a \code{LibBi} run from an RDS file. This completely reconstructs the saved \code{LibBi} object}
 \usage{
-read_libbi(file, ...)
+read_results(file, ...)
 }
 \arguments{
 \item{file}{name of the RDS file to read}

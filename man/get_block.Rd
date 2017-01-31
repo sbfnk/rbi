@@ -4,6 +4,9 @@
 \alias{get_block}
 \alias{get_block.bi_model}
 \title{Get the contents of a block in a LibBi model}
+\usage{
+get_block.bi_model(x, name, ...)
+}
 \arguments{
 \item{x}{a \code{\link{bi_model}} object}
 

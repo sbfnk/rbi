@@ -4,10 +4,13 @@
 \alias{set_name}
 \alias{set_name.bi_model}
 \title{Set the name of a bi model}
+\usage{
+set_name.bi_model(x, name, ...)
+}
 \arguments{
-\item{name}{Name of the model}
-
 \item{x}{a \code{\link{bi_model}} object}
+
+\item{name}{Name of the model}
 
 \item{...}{ignored}
 }

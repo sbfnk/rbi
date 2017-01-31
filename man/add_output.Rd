@@ -4,6 +4,9 @@
 \alias{add_output}
 \alias{add_output.libbi}
 \title{Add output file to a \code{\link{libbi}} object}
+\usage{
+\method{add_output}{libbi}(x, output, ...)
+}
 \arguments{
 \item{x}{a \code{\link{libbi}} object}
 

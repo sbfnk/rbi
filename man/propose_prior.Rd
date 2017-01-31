@@ -4,6 +4,9 @@
 \alias{propose_prior}
 \alias{propose_prior.bi_model}
 \title{Propose from the prior in a libbi model}
+\usage{
+propose_prior.bi_model(x, ...)
+}
 \arguments{
 \item{x}{a \code{\link{bi_model}} object}
 

@@ -4,6 +4,12 @@
 \alias{run}
 \alias{run.libbi}
 \title{Using the LibBi wrapper to launch LibBi}
+\usage{
+\method{run}{libbi}(x, client, proposal = c("model", "prior"), model, fix,
+  options, config, add_options, log_file_name, stdoutput_file_name, init, input,
+  obs, time_dim, working_folder, output_all, sample_obs, thin, chain = TRUE,
+  seed = TRUE, ...)
+}
 \arguments{
 \item{x}{a \code{\link{libbi}} object}
 

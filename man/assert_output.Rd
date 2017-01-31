@@ -2,8 +2,10 @@
 % Please edit documentation in R/libbi.R
 \name{assert_output}
 \alias{assert_output}
-\alias{assert_output.libbi}
 \title{Check that a LibBi wrapper has valid output}
+\usage{
+assert_output(x, ...)
+}
 \arguments{
 \item{x}{a \code{\link{libbi}} object}
 

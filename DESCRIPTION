@@ -9,10 +9,7 @@ Authors@R: c(
         )
 Imports:
     ncdf4,
-    data.table,
-    reshape2,
-    R.oo,
-    R.methodsS3
+    data.table
 Suggests:
     coda,
     R.rsp

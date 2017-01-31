@@ -4,6 +4,9 @@
 \alias{get_lines}
 \alias{get_lines.bi_model}
 \title{Get lines in a libbi model}
+\usage{
+get_lines.bi_model(x, spaces = 2, ...)
+}
 \arguments{
 \item{x}{a \code{\link{bi_model}} object}
 

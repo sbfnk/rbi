@@ -4,6 +4,9 @@
 \alias{obs_to_noise}
 \alias{obs_to_noise.bi_model}
 \title{Copy obs variables to state variables (with '__sample_' prepended)}
+\usage{
+obs_to_noise.bi_model(x, ...)
+}
 \arguments{
 \item{x}{a \code{\link{bi_model}} object}
 

@@ -3,6 +3,9 @@
 \name{libbi}
 \alias{libbi}
 \title{LibBi Wrapper}
+\usage{
+libbi(model, path_to_libbi, dims, use_cache = TRUE, ...)
+}
 \arguments{
 \item{model}{either a character vector giving the path to a model file (typically ending in ".bi"), or a \code{bi_model} object}
 

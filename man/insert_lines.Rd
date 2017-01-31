@@ -4,6 +4,9 @@
 \alias{insert_lines}
 \alias{insert_lines.bi_model}
 \title{Insert lines in a LibBi model}
+\usage{
+insert_lines.bi_model(x, lines, before, after, at_beginning_of, at_end_of, ...)
+}
 \arguments{
 \item{x}{a \code{\link{bi_model}} object}
 

@@ -20,7 +20,7 @@
 #' bi_object <- libbi(model = system.file(package="rbi", "PZ.bi"))
 #' @seealso \code{\link{sample}}, \code{\link{filter}}, \code{\link{optimise}}, \code{\link{rewrite}}
 #' @export
-setConstructorS3("libbi", enforceRCC=FALSE, function(model, path_to_libbi, dims, use_cache=TRUE, ...){
+libbi <- function(model, path_to_libbi, dims, use_cache=TRUE, ...){
   libbi_dims <- list()
   if (!missing(dims)) {
     for (dim_name in names(dims))
@@ -49,9 +49,11 @@ setConstructorS3("libbi", enforceRCC=FALSE, function(model, path_to_libbi, dims,
                    use_cache=use_cache,
                    .cache=new.env(parent = emptyenv())), class="libbi")
   return(do.call(run, c(list(x=new_obj, client=character(0)), list(...))))
-})
+}
 
-#' @export run
+#' @export
+run <- function(x, ...) UseMethod("run")
+#' @rdname run
 #' @name run
 #' @title Using the LibBi wrapper to launch LibBi
 #' @description
@@ -85,14 +87,10 @@ setConstructorS3("libbi", enforceRCC=FALSE, function(model, path_to_libbi, dims,
 #'   bi_file_summary(bi_object$output_file_name)
 #' }
 #' @return a \code{\link{libbi}} object, except if \code{client} is 'rewrite',  in which case a \code{\link{bi_model}} object will be returned
-NULL
-#' @rdname run
-#' @name run.libbi
 #' @importFrom ncdf4 nc_open nc_close ncvar_rename
 #' @importFrom stats runif
-#' @importFrom R.methodsS3 setMethodS3
-#' @S3method run libbi
-setMethodS3("run", "libbi", dontWarn="base", function(x, client, proposal=c("model", "prior"), model, fix, options, config, add_options, log_file_name, stdoutput_file_name, init, input, obs, time_dim, working_folder, output_all, sample_obs, thin, chain=TRUE, seed=TRUE, ...){
+#' @export
+run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, options, config, add_options, log_file_name, stdoutput_file_name, init, input, obs, time_dim, working_folder, output_all, sample_obs, thin, chain=TRUE, seed=TRUE, ...){
 
   ## client options
   libbi_client_args <-
@@ -398,10 +396,12 @@ setMethodS3("run", "libbi", dontWarn="base", function(x, client, proposal=c("mod
     x$options <- all_options
   }
   return(x)
-})
+}
 
-#' @export sample
+#' @export
+sample <- function(x, ...) UseMethod("sample")
 #' @name sample
+#' @rdname sample
 #' @title Using the LibBi wrapper to sample
 #' @description
 #' The method \code{sample} launches \code{libbi} to sample from a (prior, posterior or joint) distribution. See the options to \code{\link{run.libbi}} for how to specify the various components of sampling with LibBi, and the LibBi manual for all options that can be passed when the client is \code{sample}.
@@ -413,32 +413,30 @@ setMethodS3("run", "libbi", dontWarn="base", function(x, client, proposal=c("mod
 #' @param x a \code{\link{libbi} or \link{bi_model}} object, or the name of a file containing the model
 #' @param ... options to be passed to \code{\link{run.libbi}}
 #' @return a \code{\link{libbi}} object
-NULL
-#' @S3method sample default
-NULL
-#' @importFrom R.methodsS3 setMethodS3
-#' @name sample.libbi
-#' @S3method sample libbi
-#' @rdname sample
-setMethodS3("sample", "libbi", dontWarn="base", function(x, ...){
+#' @export
+sample.libbi <- function(x, ...){
   run.libbi(x, client="sample", ...)
-})
+}
 #' @rdname sample
-#' @name sample.bi_model
-#' @S3method sample bi_model
-#' @importFrom R.methodsS3 setMethodS3
-setMethodS3("sample", "bi_model", function(x, ...){
+#' @name sample
+#' @export
+sample.bi_model <- function(x, ...){
   run.libbi(libbi(model=x), client="sample", ...)
-})
+}
 #' @rdname sample
-#' @name sample.character
-#' @S3method sample character
-#' @importFrom R.methodsS3 setMethodS3
-setMethodS3("sample", "character", function(x, ...){
+#' @name sample
+#' @export
+sample.character <- function(x, ...){
   run.libbi(libbi(model=bi_model(x)), client="sample", ...)
-})
+}
+#' @export
+sample.default <- function(x, ...){
+  base::sample(x, ...)
+}
 
-#' @export filter
+#' @export
+filter <- function(x, ...) UseMethod("filter")
+#' @rdname filter
 #' @name filter
 #' @title Using the LibBi wrapper to filter
 #' @description
@@ -451,36 +449,34 @@ setMethodS3("sample", "character", function(x, ...){
 #' @param x a \code{\link{libbi} or \link{bi_model}} object, or the name of a file containing the model
 #' @param ... options to be passed to \code{\link{run.libbi}}
 #' @return a \code{\link{libbi}} object
-NULL
-#' @S3method filter default
-NULL
-#' @name filter.libbi
-#' @rdname filter
-#' @importFrom R.methodsS3 setMethodS3
-#' @S3method filter libbi
-setMethodS3("filter", "libbi", dontWarn=c("stats", "dplyr"), function(x, ...){
+#' @export
+filter.libbi <- function(x, ...){
   run.libbi(x, client="filter", ...)
-})
+}
 #' @rdname filter
-#' @name filter.bi_model
-#' @importFrom R.methodsS3 setMethodS3
-#' @S3method filter bi_model
-setMethodS3("filter", "bi_model", function(x, ...){
+#' @name filter
+#' @export
+filter.bi_model <- function(x, ...){
   run.libbi(libbi(x), client="filter", ...)
-})
+}
 #' @rdname filter
-#' @name filter.character
-#' @importFrom R.methodsS3 setMethodS3
-#' @S3method filter character
-setMethodS3("filter", "character", function(x, ...){
+#' @name filter
+#' @export
+filter.character <- function(x, ...){
   run.libbi(libbi(bi_model(x)), client="filter", ...)
-})
+}
+#' @export
+filter.default <- function(x, ...){
+  stats::filter(x, ...)
+}
 
-#' @export optimise
+#' @export
+optimise <- function(x, ...) UseMethod("optimise")
+#' @rdname optimise
 #' @name optimise
 #' @title Using the LibBi wrapper to optimise
 #' @description
-#' The method \code{optimise} launches \code{libbi} to optimise the parameters with respect to the likelihood or posterior distribution. See the options to \code{\link{run.libbi}} for how to specify the various components of sampling with LibBi, and the LibBi manual for all options that can be passed when the client is \code{optimise}. 
+#' The method \code{optimise} launches \code{libbi} to optimise the parameters with respect to the likelihood or posterior distribution. See the options to \code{\link{run.libbi}} for how to specify the various components of sampling with LibBi, and the LibBi manual for all options that can be passed when the client is \code{optimise}.
 #'
 #' If \code{x} is given as a 'bi_model', a \code{\link{libbi}} object will be created from the model
 #' If \code{x} is given as a character string, it will be interpreted as the filename of a model to sample from.
@@ -489,32 +485,30 @@ setMethodS3("filter", "character", function(x, ...){
 #' @param x a \code{\link{libbi} or \link{bi_model}} object, or the name of a file containing the model
 #' @param ... options to be passed to \code{\link{run.libbi}}
 #' @return a \code{\link{libbi}} object
-NULL
-#' @S3method optimise default
-NULL
-#' @name optimise.libbi
-#' @rdname optimise
-#' @importFrom R.methodsS3 setMethodS3
-#' @S3method optimise libbi
-setMethodS3("optimise", "libbi", dontWarn="stats", function(x, ...){
+#' @export
+optimise.libbi <- function(x, ...){
   run.libbi(x, client="optimise", ...)
-})
+}
 #' @rdname optimise
-#' @name optimise.bi_model
-#' @importFrom R.methodsS3 setMethodS3
-#' @S3method optimise bi_model
-setMethodS3("optimise", "bi_model", function(x, ...){
+#' @name optimise
+#' @export
+optimise.bi_model <- function(x, ...){
   run.libbi(libbi(x), client="optimise", ...)
-})
+}
 #' @rdname optimise
-#' @name optimise.character
-#' @importFrom R.methodsS3 setMethodS3
-#' @S3method optimise character
-setMethodS3("optimise", "character", function(x, ...){
+#' @name optimise
+#' @export
+optimise.character <- function(x, ...){
   run.libbi(libbi(bi_model(x)), client="optimise", ...)
-})
+}
+#' @export
+optimise.default <- function(x, ...){
+  stats::optimise(x, ...)
+}
 
-
+#' @export
+rewrite <- function(x, ...) UseMethod("rewrite")
+#' @rdname rewrite
 #' @name rewrite
 #' @title Using the LibBi wrapper to rewrite
 #' @description
@@ -526,30 +520,27 @@ setMethodS3("optimise", "character", function(x, ...){
 #' @param x a \code{\link{libbi} or \link{bi_model}} object, or the name of a file containing the model
 #' @param ... options to be passed to \code{\link{run.libbi}}
 #' @return a \code{\link{bi_model}} object
-NULL
-#' @name rewrite.libbi
-#' @rdname rewrite
-#' @importFrom R.methodsS3 setMethodS3
-setMethodS3("rewrite", "libbi", function(x, ...){
+#' @export
+rewrite.libbi <- function(x, ...){
   run.libbi(x, client="rewrite", ...)
-})
+}
 #' @rdname rewrite
-#' @name rewrite.bi_model
-#' @importFrom R.methodsS3 setMethodS3
-#' @S3method rewrite bi_model
-setMethodS3("rewrite", "bi_model", function(x, ...){
+#' @name rewrite
+#' @export
+rewrite.bi_model <- function(x, ...){
   run.libbi(libbi(x), client="rewrite", ...)
-})
+}
 #' @rdname rewrite
-#' @name rewrite.character
-#' @importFrom R.methodsS3 setMethodS3
-#' @S3method rewrite character
-setMethodS3("rewrite", "character", function(x, ...){
+#' @name rewrite
+#' @export
+rewrite.character <- function(x, ...){
   run.libbi(libbi(bi_model(x)), client="rewrite", ...)
-})
+}
 
+#' @export
+add_output <- function(x, ...) UseMethod("add_output")
 #' @name add_output
-#' @export add_output
+#' @rdname add_output
 #' @title Add output file to a \code{\link{libbi}} object
 #' @description
 #' Adds an output file to a \code{\link{libbi}} object. This is useful to recreate a \code{\link{libbi}} object from the model and output files of a previous run
@@ -560,12 +551,8 @@ setMethodS3("rewrite", "character", function(x, ...){
 #' bi <- libbi(model = system.file(package="rbi", "PZ.bi"))
 #' example_output_file <- system.file(package="rbi", "example_output.nc")
 #' bi <- add_output(bi, example_output_file)
-NULL
-#' @name add_output.libbi
-#' @rdname add_output
-#' @importFrom R.methodsS3 setMethodS3
-#' @S3method add_output libbi
-setMethodS3("add_output", "libbi", function(x, output, ...){
+#' @export
+add_output.libbi <- function(x, output, ...){
   if (length(x$output_file_name) > 0) {
     stop("libbi object already contains output")
   }
@@ -576,10 +563,12 @@ setMethodS3("add_output", "libbi", function(x, output, ...){
   x$timestamp <- file.mtime(x$output_file_name)
   x$.cache <- new.env(parent = emptyenv())
   return(x)
-})
+}
 
-#' @export save_libbi
+#' @export
+save_results <- function(x, ...) UseMethod("save_results")
 #' @name save_libbi
+#' @rdname save_libbi
 #' @title Write results of a \code{LibBi} run to an RDS file
 #' @description
 #' This saves all options, files and outputs of a \code{LibBi} run to an RDS file specified
@@ -587,12 +576,8 @@ setMethodS3("add_output", "libbi", function(x, output, ...){
 #' @param x a \code{\link{libbi}} object
 #' @param filename name of the RDS file to save to
 #' @param ... any options to \code{\link{saveRDS}}
-NULL
-#' @name save_libbi.libbi
-#' @rdname save_libbi
-#' @importFrom R.methodsS3 setMethodS3
-#' @S3method save_libbi libbi
-setMethodS3("save_libbi", "libbi", dontWarn="base", function(x, filename, ...) {
+#' @export
+save_results.libbi <- function(x, filename, ...) {
   if (missing(filename)) {
     stop("Need to specify a file name")
   }
@@ -616,9 +601,11 @@ setMethodS3("save_libbi", "libbi", dontWarn="base", function(x, filename, ...) {
   save_obj[["options"]] <- options
 
   saveRDS(save_obj, filename, ...)
-})
+}
 
-#' @export read_libbi
+#' @export
+read_results <- function(x, ...) UseMethod("read_results")
+#' @rdname read_libbi
 #' @name read_libbi
 #' @title Read results of a \code{LibBi} run from an RDS file. This completely reconstructs the saved \code{LibBi} object
 #' @description
@@ -627,7 +614,7 @@ setMethodS3("save_libbi", "libbi", dontWarn="base", function(x, filename, ...) {
 #' @param file name of the RDS file to read
 #' @param ... any extra options to pass to \code{\link{read_libbi}} when creating the new object
 #' @return a \code{\link{libbi}} object
-read_libbi <- function(file, ...) {
+read_results <- function(file, ...) {
   if (missing(file)) {
     stop("Need to specify a file to read")
   }
@@ -655,8 +642,8 @@ read_libbi <- function(file, ...) {
   return(new_obj)
 }
 
-#' @S3method print libbi
-#' @name print.libbi
+#' @export
+#' @name print
 #' @title Print information about a \code{\link{libbi}} object
 #' @description
 #' This prints the model name, basic information such as number of iterations
@@ -665,9 +652,7 @@ read_libbi <- function(file, ...) {
 #' @param verbose logical; if TRUE, locations of files and working folder should be printed
 #' @param ... ignored
 #' @rdname print
-#' @importFrom R.methodsS3 setMethodS3
-#' @keywords internal
-setMethodS3("print", "libbi", function(x, verbose=FALSE, ...){
+print.libbi <- function(x, verbose=FALSE, ...){
   cat("Wrapper around LibBi\n")
   if (verbose) {
     cat("* path to working folder:", x$working_folder, "\n")
@@ -702,18 +687,17 @@ setMethodS3("print", "libbi", function(x, verbose=FALSE, ...){
   } else {
     cat("* LibBi has not been run yet\n")
   }
-})
+}
 
-#' @name summary.libbi
+#' @name summary
 #' @rdname summary
 #' @title Print summary information about a \code{\link{libbi}} object
 #' @description
 #' This reads in the output file of the \code{\link{libbi}} object (which has been run before) and prints summary information of parameters
 #' @param object a \code{\link{libbi}} object
 #' @param ... ignored
-#' @importFrom R.methodsS3 setMethodS3
-#' @S3method summary libbi
-setMethodS3("summary", "libbi", function(object, ...){
+#' @export
+summary.libbi <- function(object, ...){
   params <- c(bi_read(object, type="param"))
   summary_table <- t(vapply(params, function(object) {
     if (is.data.frame(object))
@@ -725,7 +709,7 @@ setMethodS3("summary", "libbi", function(object, ...){
     }
   }, rep(0, 6)))
   return(summary_table)
-})
+}
 
 #' @name assert_output
 #' @rdname assert_output
@@ -735,11 +719,7 @@ setMethodS3("summary", "libbi", function(object, ...){
 #' @param x a \code{\link{libbi}} object
 #' @param ... ignored
 #' @keywords internal
-NULL
-#' @rdname assert_output
-#' @importFrom R.methodsS3 setMethodS3
-#' @name assert_output.libbi
-setMethodS3("assert_output", "libbi", export=FALSE, function(x, ...)
+assert_output <- function(x, ...)
 {
     if (!x$run_flag) {
       stop("The libbi object must be run first (using sample, filter or optimise).")
@@ -747,17 +727,16 @@ setMethodS3("assert_output", "libbi", export=FALSE, function(x, ...)
     if (x$timestamp < file.mtime(x$output_file_name)) {
       stop("Output file ", x$output_file_name, " has been modified since LibBi was run.")
     }
-})
+}
 
-#' @name predict.libbi
+#' @name predict
 #' @rdname predict
 #' @title Using the LibBi wrapper to predict
 #' @description
 #' The method \code{predict} is an alias for \code{sample(target="prediction")}. Usually, an \code{init} object or file should be given containing posterior samples.
 #'
 #' For the help page of the base R \code{optimise} function, see \code{\link[stats]{optimise}}.
-#' @importFrom R.methodsS3 setMethodS3
-#' @S3method predict libbi
-setMethodS3("predict", "libbi", function(object, ...) {
+#' @export
+predict.libbi <- function(object, ...) {
   sample(object, target="prediction", ...)
-})
+}
