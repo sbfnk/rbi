@@ -60,7 +60,7 @@ before_install:
       brew install gcc;
       brew install curl --with-libidn;
       brew install cmake --with-libidn;
-      brew install --without-test homebrew/science/libbi;
+      brew install --without-test sbfnk/libbi/libbi;
       env;
       gcc --version;
       gcc-5 --version;
