@@ -183,14 +183,21 @@ class(bi)
 
 Let's sample from the prior of the SIR model:
 
-```{R}
+```{R eval=FALSE}
 bi <- sample(bi, target="prior", nsamples=1000, end_time=16*7, noutputs=16)
 ```
+```{R echo=FALSE}
+bi <- rbi::sample(bi, target="prior", nsamples=1000, end_time=16*7, noutputs=16)
+```
+
 
 This step calls **LibBi** to sample from the prior distribution of the previously specified model, generating 1,000 samples and each time running the model for 16 * 7 = 112 time steps and writing 16 outputs (i.e., every 7 time steps). **LibBi** parses the model, creates C++ code, compiles it and run the model. If the model is run again, it should do so much quicker because it will use the already compiled C++ code to run the model:
 
 ```{R eval=FALSE}
 bi <- sample(bi)
+```
+```{R echo=FALSE}
+bi <- rbi::sample(bi, target="prior", nsamples=1000, end_time=16*7, noutputs=16)
 ```
 
 The `sample` command returns an updated `libbi` object which, in this case, we just assign again to the `bi` object. Any call of `sample` preserves options passed to the previous call of `sample` and `libbi`, unless they are overwritten by arguments passed to `sample` (e.g., passing a new `nsamples` argument). Let's have a closer look at the `bi` object:
@@ -243,8 +250,11 @@ We can see that the time-varying variables are represented as data frames with t
 
 Let's perform inference using Particle Markov-chain Metropolis Hastings (PMMH). The following command will generate 16 * 10,000 = 160,000 simulations and therefore may take a little while to run (if you want to see the samples progress, use `verbose=TRUE` in the `bi$run` call).
 
-```{R}
-bi <- sample(bi,target="posterior", nparticles=16, obs=SIRdata, sample_obs=TRUE, nsamples=10)
+```{R eval=FALSE}
+bi <- sample(bi,target="posterior", nparticles=16, obs=SIRdata, sample_obs=TRUE, nsamples=10000)
+```
+```{R echo=FALSE}
+bi <- rbi::sample(bi,target="posterior", nparticles=16, obs=SIRdata, sample_obs=TRUE, nsamples=10000)
 ```
 
 This samples from the posterior distribution. Remember that options are preserved from previous runs, so we don't need to specify `nsamples`, `end_time` and `noutputs` again, unless we want to change them. The `nparticles` option specifies the number of particles, and the `sample_obs` option tells the `sample` command that we also want observation samples from the posterior distribution of trajectories. 
@@ -319,15 +329,18 @@ For more details on using **coda** to further analyse the chains, see the websit
 
 The other so-called clients of **LibBi** (besides `sample`) are supported through commands of the same name: `filter`, `optimise` and `rewrite`. For example, to run a particle filter on the last posterior sample generated above, you can use:
 
-```{R}
+```{R eval=FALSE}
 bi_filtered <- filter(bi)
+```
+```{R echo=FALSE}
+bi_filtered <- rbi::filter(bi)
 ```
 
 # Saving and loading `libbi` objects
 
 **RBi** provides its own versions of the `saveRDS` and `readRDS` functions called `save_libbi` and `read_libbi`. These make sure that all information (including any options, input, init and observation files) is stored in the object.
 
-```{R eval=FALSE}
+```{R}
 save_libbi(bi, "bi.rds")
 bi <- read_libbi(bi, "bi.rds")
 bi
@@ -343,7 +356,7 @@ PZ_run_file <- system.file(package="rbi", "example_output.nc")
 PZ_model_file <- system.file(package="rbi", "PZ.bi")
 PZ_posterior <- add_output(libbi(PZ_model_file), PZ_run_file)
 traces <- mcmc(get_traces(PZ_posterior))
-a <- 1 - rejectionRate(PZ_posterior) 
+a <- 1 - rejectionRate(traces) 
 a
 ```
 
