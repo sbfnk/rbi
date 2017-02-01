@@ -49,12 +49,9 @@ before_install:
       LINUXBREW=/home/linuxbrew/.linuxbrew;
       git clone https://github.com/Linuxbrew/brew.git "$LINUXBREW";
       export PATH="$LINUXBREW/bin:$PATH";
-      export LD_LIBRARY_PATH=$(echo $LD_LIBRARY_PATH | sed 's/:$//');
-      brew tap homebrew/science;
-      brew install --build-from-source curl;
-      brew install --build-from-source cmake;
+      ln -s $(which gcc) `brew --prefix`/bin/gcc-$(gcc -dumpversion |cut -d. -f1,2)
+      ln -s $(which g++) `brew --prefix`/bin/g++-$(g++ -dumpversion |cut -d. -f1,2)
+      ln -s $(which gfortran) `brew --prefix`/bin/gfortran-$(gfortran -dumpversion |cut -d. -f1,2)      brew tap homebrew/science;
       brew install sbfnk/libbi/libbi;
-      mkdir -p ~/.R;
-      echo "Q0M9L3Vzci9iaW4vZ2NjCkNYWD0vdXNyL2Jpbi9nKysKQ0ZMQUdTPS1zdGQ9Z251OTkKQ1hYRkxBR1M9LXN0ZD1jKys5OQo=" | base64 -d > ~/.R/Makevars;
     fi
 
