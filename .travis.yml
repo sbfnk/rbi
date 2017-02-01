@@ -55,6 +55,6 @@ before_install:
       brew install --build-from-source cmake;
       brew install sbfnk/libbi/libbi;
       mkdir -p ~/.R;
-      echo "Q0M9L3Vzci9iaW4vZ2NjCkNYWD0vdXNyL2Jpbi9nKysK" | base64 -d > ~/.R/Makevars;
+      echo "Q0M9L3Vzci9iaW4vZ2NjCkNYWD0vdXNyL2Jpbi9nKysKQ0ZMQUdTPS1zdGQ9Z251OTkKQ1hYRkxBR1M9LXN0ZD1jKys5OQo=" | base64 -d > ~/.R/Makevars;
     fi
 
