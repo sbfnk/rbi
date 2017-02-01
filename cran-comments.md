@@ -3,7 +3,9 @@
 * local linux install (Scientific Linux 7.1), R 3.3.2
 
 ## R CMD check results
-There were no ERRORs, WARNINGs or NOTEs. 
+There were no ERRORs or WARNINGs.
+
+There was one NOTE about LibBi spelling. This is spelled correctly.
 
 ## Downstream dependencies
 0 packages with problems.
