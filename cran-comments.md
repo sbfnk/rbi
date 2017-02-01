@@ -1,5 +1,5 @@
 ## Test environments
-* local macOS install (10.11), R 3.3.2
+* local macOS install (10.12.3), R 3.3.2
 * local linux install (Scientific Linux 7.1), R 3.3.2
 
 ## R CMD check results
