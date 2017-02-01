@@ -54,6 +54,6 @@ before_install:
       brew install --with-libidn curl;
       brew install --with-libidn cmake;
       brew install sbfnk/libbi/libbi;
-      echo "Q0M9L3Vzci9iaW4vZ2NjCkNYWD0vdXNyL2Jpbi9nKysK" | base64 -d > ~.R/Makevars;
+      echo "Q0M9L3Vzci9iaW4vZ2NjCkNYWD0vdXNyL2Jpbi9nKysK" | base64 -d > ~/.R/Makevars;
     fi
 
