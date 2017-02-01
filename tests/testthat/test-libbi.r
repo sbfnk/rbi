@@ -3,6 +3,7 @@ context("Testing running libbi")
 test_that("Sampling from a libbi object",
 {
   skip_on_cran()
+  system("env")
   bi <- libbi(model = system.file(package="rbi", "PZ.bi"))
   bi <- sample(bi, verbose=TRUE)
   res <- bi_read(bi)

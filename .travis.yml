@@ -41,7 +41,9 @@ before_install:
       sudo chown -R $USER $(brew --repo);
       sudo chown -R $USER $(brew --prefix);
       brew tap homebrew/science;
-      brew install --without-openmp homebrew/science/libbi;
+      brew install gcc;
+      brew link --overwrite gcc;
+      brew install libbi;
     fi
   - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
       sudo mkdir -p /home/linuxbrew;
@@ -49,9 +51,15 @@ before_install:
       LINUXBREW=/home/linuxbrew/.linuxbrew;
       git clone https://github.com/Linuxbrew/brew.git "$LINUXBREW";
       export PATH="$LINUXBREW/bin:$PATH";
-      ln -s $(which gcc) `brew --prefix`/bin/gcc-$(gcc -dumpversion |cut -d. -f1,2)
-      ln -s $(which g++) `brew --prefix`/bin/g++-$(g++ -dumpversion |cut -d. -f1,2)
-      ln -s $(which gfortran) `brew --prefix`/bin/gfortran-$(gfortran -dumpversion |cut -d. -f1,2)      brew tap homebrew/science;
-      brew install sbfnk/libbi/libbi;
+      export LD_LIBRARY_PATH=$(echo $LD_LIBRARY_PATH | sed 's/:$//');
+      brew tap homebrew/science;
+      brew install --build-from-source curl;
+      brew install --build-from-source cmake;
+      brew install sbfnk/libbi/libbi --verbose;
+      cat `which libbi`;
+      export CPPFLAGS="-isystem/home/linuxbrew/.linuxbrew/include -I/home/linuxbrew/.linuxbrew/Cellar/libbi/1.3.0_2/include";
+      libbi sample @`brew --cellar`/libbi/1.3.0_2/libexec/share/test/test.conf --model-file `brew --cellar`/libbi/1.3.0_2/libexec/share/test/Test.bi --verbose;
+      brew test sbfnk/libbi/libbi;
+      env;
     fi
 
