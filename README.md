@@ -55,6 +55,8 @@ A good starting point is to look at the included demos:
  demo(PZ_filtering)        ## filtering
 ```
 
+For further information, have a look at the introductory [vignette](https://cran.r-project.org/web/packages/rbi/vignettes/introduction.html).
+
 Using coda
 ==========
 
