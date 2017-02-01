@@ -106,12 +106,12 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
                     "stopper-max", "stopper-block"),
          rewrite = c())
 
+  all_client_args <- unique(unname(unlist(libbi_client_args)))
   ## both sample and optimise inherit from filter
   libbi_client_args[["sample"]] <-
     unique(c(libbi_client_args[["sample"]], libbi_client_args[["filter"]]))
-  libbi_client_args[["sample"]] <-
+  libbi_client_args[["optimise"]] <-
     unique(c(libbi_client_args[["optimise"]], libbi_client_args[["filter"]]))
-  all_client_args <- unique(unname(unlist(libbi_client_args)))
 
   if (!missing(stdoutput_file_name))
   {
