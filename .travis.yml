@@ -51,7 +51,8 @@ before_install:
       export PATH="$LINUXBREW/bin:$PATH";
       export LD_LIBRARY_PATH=$(echo $LD_LIBRARY_PATH | sed 's/:$//');
       brew tap homebrew/science;
-      brew install libidn;
+      brew install --build-from-source curl;
+      brew install --build-from-source cmake;
       brew install sbfnk/libbi/libbi;
       mkdir -p ~/.R;
       echo "Q0M9L3Vzci9iaW4vZ2NjCkNYWD0vdXNyL2Jpbi9nKysK" | base64 -d > ~/.R/Makevars;
