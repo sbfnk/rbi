@@ -205,7 +205,7 @@ bi_read <- function(x, vars, dims, model, type, missval.threshold, coord_name, v
         for (var in all_matching_dims) {
           mav[[var]] <- NULL
         }
-        table_order <- c(setdiff(colnames(mav), c(time_coord_names, "value")),
+        table_order <- c(rev(setdiff(colnames(mav), c(time_coord_names, "value"))),
                          intersect(colnames(mav), time_coord_names),
                          "value")
 
