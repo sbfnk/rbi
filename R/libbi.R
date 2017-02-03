@@ -166,7 +166,7 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
   ## get model
   if (!missing(model)) x$model <- model
 
-  if (is.character(x$model)) {
+  if (!("bi_model" %in% class(x$model))) {
       x$model <- bi_model(filename=x$model)
   }
 
@@ -181,7 +181,7 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
     }
   } else if (!is_empty(x$model)) {
     x$model_file_name <-
-      tempfile(pattern=paste(x$model$name, "model", sep = "_"),
+      tempfile(pattern=paste(get_name(x$model), "model", sep = "_"),
                fileext=".bi",
                tmpdir=absolute_path(x$working_folder))
     write_file(x$model, x$model_file_name)
@@ -230,7 +230,7 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
         arg$output_file_name
     } else if (is.list(arg)) {
       arg_file_name <-
-        tempfile(pattern=paste(x$model$name, file, sep = "_"),
+        tempfile(pattern=paste(get_name(x$model), file, sep = "_"),
                  fileext=".nc",
                  tmpdir=absolute_path(x$working_folder))
       write_opts <- list(filename = arg_file_name,
@@ -270,7 +270,7 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
       }
 
       if (!("output-file" %in% names(all_options))) {
-        x$output_file_name <- tempfile(pattern=paste(x$model$name, "output", sep = "_"),
+        x$output_file_name <- tempfile(pattern=paste(get_name(x$model), "output", sep = "_"),
                                        fileext=".nc",
                                        tmpdir=absolute_path(x$working_folder))
       } else {
@@ -291,7 +291,7 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
 
     if (output_all) {
       no_output_pattern <- "has_output[[:space:]]*=[[:space:]]*0"
-      no_output <- grep(no_output_pattern, get_lines(run_model))
+      no_output <- grep(no_output_pattern, run_model)
       updated_lines <- sub(no_output_pattern, "", run_model[no_output])
       run_model <- replace(run_model, no_output, updated_lines)
       run_model_modified <- TRUE
@@ -314,7 +314,7 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
 
     if (run_model_modified) {
       run_model_file_name <-
-        tempfile(pattern=paste(run_model$name, "model", sep = "_"),
+        tempfile(pattern=paste(get_name(run_model), "model", sep = "_"),
                  fileext=".bi",
                  tmpdir=absolute_path(x$working_folder))
       write_file(run_model, run_model_file_name)
@@ -373,7 +373,7 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
     }
     if (verbose) print("... LibBi has finished!")
 
-    if (sample_obs) {
+    if (sample_obs && file.exists(x$output_file_name)) {
       nc <- nc_open(x$output_file_name, write=TRUE)
       for (obs_name in var_names(run_model, "obs")) {
         ncvar_rename(nc, paste0("__sample_", obs_name), obs_name)
@@ -632,7 +632,7 @@ read_libbi <- function(file, ...) {
   }
 
   output_file_name <-
-    tempfile(pattern=paste(read_obj$model$name, "output", sep = "_"),
+    tempfile(pattern=paste(get_name(read_obj$model), "output", sep = "_"),
              fileext=".nc")
   bi_write(output_file_name, read_obj$output)
 
@@ -662,7 +662,7 @@ print.libbi <- function(x, verbose=FALSE, ...){
     }
   }
   cat("======================\n")
-  cat("Model: ", x$model$name, "\n")
+  cat("Model: ", get_name(x$model), "\n")
   if (x$run_flag) {
     assert_output(x)
     niterations <- bi_dim_len(x$output_file_name, "np")
