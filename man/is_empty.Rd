@@ -4,7 +4,7 @@
 \alias{is_empty}
 \title{Check if a model is empty}
 \usage{
-is_empty(x, name)
+is_empty(x)
 }
 \arguments{
 \item{x}{a \code{\link{bi_model}} object}

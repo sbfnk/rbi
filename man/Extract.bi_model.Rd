@@ -2,14 +2,10 @@
 % Please edit documentation in R/bi_model.R
 \name{Extract.bi_model}
 \alias{Extract.bi_model}
-\alias{[.bi_model}
 \alias{[<-.bi_model}
-\alias{`[.bi_model`}
 \alias{`[<-.bi_model`}
 \title{Subset and replace model lines}
 \usage{
-\method{[}{bi_model}(x, i, ...)
-
 \method{[}{bi_model}(x, i, ...) <- value
 }
 \arguments{

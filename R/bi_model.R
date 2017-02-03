@@ -6,8 +6,10 @@
 #' Once the instance is created, the model can be fed to a \code{\link{libbi}} object.
 #'
 #' @param filename is the file name of the model file
+#' @param url the URL of the model
 #' @param lines lines of the model (if no \code{filename} is given), a character vector
 #' @param ... ignored
+#' @importFrom curl curl
 #' @examples
 #' model_file_name <- system.file(package="rbi", "PZ.bi")
 #' PZ <- bi_model(filename = model_file_name)
@@ -23,18 +25,25 @@ bi_model <- function(filename, lines, ...) {
     }
   }
 
+  if (!missing(url)) {
+    if (length(as.character(url)) == 0) {
+      stop ("Filename must be a non-empty character string")
+    }
+  }
+
   if (!missing(filename)) {
     model <- readLines(filename)
+  } else if (!missing(url)) {
+    con <- curl(url)
+    model <- readLines(con)
+    close(con)
   } else if (!missing(lines)) {
     model <- lines
   } else {
     model <- character(0)
   }
 
-  new_obj <- structure(list(model=model,
-                            name=""), class="bi_model")
-
-  return(clean_model(new_obj))
+  return(clean_model(model))
 }
 
 #' @export

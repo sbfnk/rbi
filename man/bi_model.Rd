@@ -4,17 +4,19 @@
 \alias{bi_model}
 \title{Bi Model}
 \usage{
-bi_model(filename, lines, ...)
+bi_model(filename, url, lines, ...)
 }
 \arguments{
-\item{filename}{is the file name of the model file}
+\item{filename}{the file name of the model file}
+
+\item{url}{the URL of the model}
 
 \item{lines}{lines of the model (if no \code{filename} is given), a character vector}
 
 \item{...}{ignored}
 }
 \description{
-\code{bi_model} creates a model object for \code{Rbi} from a libbi file.
+\code{bi_model} creates a model object for \code{Rbi} from a libbi file, URL or character vector.
 Once the instance is created, the model can be fed to a \code{\link{libbi}} object.
 }
 \examples{
@@ -22,6 +24,6 @@ model_file_name <- system.file(package="rbi", "PZ.bi")
 PZ <- bi_model(filename = model_file_name)
 }
 \seealso{
-\code{\link{fix}}, \code{\link{insert_lines}}, \code{\link{remove_lines}}, \code{\link{replace_all}}, \code{\link{set_name}}, \code{\link{write_file}}
+\code{\link{fix}}, \code{\link{insert_lines}}, \code{\link{remove_lines}}, \code{\link{replace_all}}, \code{\link{get_name}}, \code{\link{set_name}}, \code{\link{write_file}}
 }
 
