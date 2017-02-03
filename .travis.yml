@@ -3,8 +3,6 @@ cache: packages
 warnings_are_errors: false
 
 matrix:
-
-matrix:
   include:
     - os: linux
       dist: trusty
@@ -55,13 +53,8 @@ before_install:
       export PATH="$LINUXBREW/bin:$PATH";
       export LD_LIBRARY_PATH=$(echo $LD_LIBRARY_PATH | sed 's/:$//');
       brew tap homebrew/science;
-      brew install --build-from-source curl;
-      brew install --build-from-source cmake;
-      brew install sbfnk/libbi/libbi --verbose;
-      cat `which libbi`;
-      export CPPFLAGS="-isystem/home/linuxbrew/.linuxbrew/include -I/home/linuxbrew/.linuxbrew/Cellar/libbi/1.3.0_2/include";
-      libbi sample @`brew --cellar`/libbi/1.3.0_2/libexec/share/test/test.conf --model-file `brew --cellar`/libbi/1.3.0_2/libexec/share/test/Test.bi --verbose;
-      brew test sbfnk/libbi/libbi;
-      env;
+      brew install sbfnk/libbi/libbi;
+      mkdir -p ~/.R;
+      printf "CC=/usr/bin/gcc\nCXX/usr/bin/g++"  > ~/.R/Makevars;
     fi
 
