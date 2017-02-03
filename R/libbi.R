@@ -236,7 +236,7 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
       write_opts <- list(filename = arg_file_name,
                          variables = arg,
                          timed = TRUE)
-      if (file == "obs") ## guess coord
+      if (file == "obs") ## guess coord for observation files
       {
         write_opts[["guess_coord"]] <- TRUE
         write_opts[["guess_time"]] <- TRUE
@@ -388,8 +388,8 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
       model_lines <- model_lines[first_model_line:length(model_lines)]
       x <- bi_model(lines=model_lines)
     } else {
-      x$timestamp <- file.mtime(x$output_file_name)
-      x$run_flag <- TRUE
+      x$run_flag <- file.exists(x$output_file_name)
+      if (x$run_flag) x$timestamp <- file.mtime(x$output_file_name)
     }
   } else {
     ## if run from the constructor, just add all the options
