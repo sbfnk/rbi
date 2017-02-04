@@ -537,7 +537,7 @@ var_names.bi_model <- function(x, type, dim = FALSE, opt = FALSE, ...) {
 #' @param x a \code{\link{bi_model}} object
 #' @param spaces number of spaces for indentation
 #' @param ... ignored
-#' @rdname print.bi_model
+#' @rdname print
 #' @name print.bi_model
 #' @keywords internal
 #' @export
