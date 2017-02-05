@@ -482,7 +482,7 @@ add_block.bi_model <- function(x, name, lines, options, ...) {
          ifelse(missing(options), paste("sub", name,"{"),
                 paste("sub", name, paste0("(", options, ")", "{"))), 
          paste(lines, sep = "\n"), "}", "}")
-  x <- clean_model(x)
+  clean_model(x)
 }
 
 #' @export
