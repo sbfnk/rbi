@@ -193,29 +193,39 @@ obs_to_noise <- function(x) {
 #' @seealso \code{\link{bi_model}}
 #' @keywords internal
 clean_model <- function(x) {
-  ## strip comments
   x <- as.character(x)
 
+  ## strip comments starting with //
   x <- sub("//.*$", "", x)
 
   ## remove long comments and merge lines
   i <- 1
-  comment <- FALSE
+  comment <- FALSE # flag to denote whether a line starts inside a comment
   while (i <= length(x)) {
+    ## remove sections delimited by /* ... */ within lines
     x[i] <- gsub("/\\*[^(\\*)]*\\*/", "", x[i])
-    if (grepl("/\\*", x[i])) {
-      x[i] <- sub("/\\*.*$", "", x[i])
-      comment <- TRUE
-    }
-    if (grepl("\\*/", x[i])) {
-      x[i] <- sub("^.*\\*/", "", x[i])
-      comment <- FALSE
+    if (comment) {## we're inside a comment
+      if (grepl("\\*/", x[i])) { ## comment ends but does not start on this line
+        ## Remove everything before */ and unset the 'comment' flag so that in
+        ## the next line we know that we're not in a comment any longer 
+        x[i] <- sub("^.*\\*/", "", x[i])
+        comment <- FALSE
+      } else { ## comment does not end on this line -- we remove the line
+        x <- x[-i]
+      }
     }
 
-    if (comment) {
-      x <- x[-i]
-    } else {
-      if (!comment && grepl("[*-+=/][[:space:]]*$", x[i])) {
+    ## if 'comment' is still true, we're inside the comment -- move on
+    if (!comment) { ## we're not inside a comment
+      if (grepl("/\\*", x[i])) {
+        ## comment starts but does not end on this line.
+        ## Remove everything after /* and set the 'comment' flag so that in the
+        ## next line we know we're still inside the comment
+        x[i] <- sub("/\\*.*$", "", x[i])
+        comment <- TRUE
+      }
+      if (grepl("[*-+=/%][[:space:]]*$", x[i])) {
+        ## line ends on an operator -- merge lines
         x[i] <- paste(x[i], x[i + 1])
         x <- x[-(i + 1)]
       } else {
@@ -227,17 +237,17 @@ clean_model <- function(x) {
   ## remove multiple spaces
   x <- gsub("[[:space:]]+", " ", x)
   ## make sure there is a line break after opening braces 
-  x <- gsub("\\{(.+)$", "{\n\\1", x)
+  x <- gsub("\\{", "{\n", x)
   ## make sure there is a line break before closing braces
-  x <- gsub("^(.+)\\}", "\\1\n}", x)
+  x <- gsub("\\}", "\n}", x)
   ## replace semicolons with newlines
   x <- gsub(";", "\n", x)
+  ## split along newlines
+  x <- unlist(strsplit(x, "\n"))
   ## remove trailing spaces
   x <- gsub("[[:space:]]*$", "", x)
   ## remove initial spaces
   x <- gsub("^[[:space:]]*", "", x)
-  ## split along newlines
-  x <- unlist(strsplit(x, "\n"))
   ## remove empty lines
   x <- x[x!=""]
 
@@ -542,15 +552,8 @@ var_names.bi_model <- function(x, type, dim = FALSE, opt = FALSE, ...) {
 #' @keywords internal
 #' @export
 print.bi_model <- function(x, spaces=2, ...) {
-  name <- get_name(x)
-  if (!is.na(name)) {
-    cat("bi model:", name, "\n")
-    cat("==========", paste(rep("=", nchar(name)), collapse = ""), "\n",
-        sep = "")
-  } else {
-    cat("unnamed bi model\n")
-    cat("================\n")
-  }
+  cat("bi_model:\n")
+  cat("=========\n")
   if (length(x) == 0) {
     cat("// empty", "\n")
   } else {
@@ -570,7 +573,7 @@ print.bi_model <- function(x, spaces=2, ...) {
         indent <- indent + 1
       }
     }
-    print(vec)
+    cat(paste(paste(1:length(vec), vec, sep=": "), collapse="\n"), sep="\n")
   }
 }
 
