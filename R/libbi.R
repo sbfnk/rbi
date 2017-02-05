@@ -323,6 +323,8 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
       all_options[["model-file"]] <- x$model_file_name
     }
 
+    if (client == "rewrite") all_options <- all_options["model-file"]
+
     opt_string <- option_string(all_options)
     verbose <- ("verbose" %in% names(all_options) && all_options[["verbose"]] == TRUE)
 
