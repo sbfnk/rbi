@@ -3,43 +3,64 @@ context("Testing bi_model manipulation")
 model_file_name <- system.file(package="rbi", "PZ.bi")
 PZ <- bi_model(filename = model_file_name)
 
-test_that("Models can be created",
+test_that("models can be created",
 {
   expect_true(length(PZ[]) > 0)
 })
 
-test_that("Parameters can be fixed",
+test_that("empty models can be created",
 {
-  expect_true(length(fix(PZ, alpha=0)) > 0)
+  expect_true(is_empty(bi_model()))
 })
 
-test_that("Lines can be inserted",
+test_that("parameters can be fixed",
 {
-  expect_true(length(insert_lines(PZ, lines = "noise beta", after = 8)[]) > 0)
+  expect_true(length(fix(PZ, alpha=0, dummy=1)) > 0)
 })
 
-test_that("Lines can be removed",
+test_that("lines can be inserted",
+{
+  expect_true(!is_empty(insert_lines(PZ, lines = "noise beta", after = 8)))
+  expect_true(!is_empty(insert_lines(PZ, lines = "beta ~ normal()", at_beginning_of = "transition")))
+})
+
+test_that("lines can be removed",
 {
   expect_true(length(remove_lines(PZ, 2)[]) > 0)
 })
 
-test_that("Models can be written to file", 
+test_that("models can be written to file", 
 {
-  filename <- tempfile(fileext=".bi")
+  filename <- tempfile()
   write_file(PZ, filename)
-  PZ <- bi_model(filename)
-  expect_true(length(PZ[]) > 0)
+  PZ <- bi_model(paste0(filename, ".bi"))
+  expect_true(!is_empty(PZ))
 })
 
-test_that("Model names can be set",
+test_that("model names can be set",
 {
   expect_true(length(set_name(PZ, "new_PZ")[]) > 0)
 })
 
-test_that("Parts of a model can be extracted",
+test_that("models can be printed",
+{
+  expect_output(print(PZ), "model PZ")
+})
+
+test_that("parts of a model can be extracted",
 {
   expect_true(length(PZ[3:4]) == 2)
   PZ[3:4] <- c("const e = 0.4", "const m_l = 0.05")
   expect_true(length(PZ[]) > 0)
+})
+
+test_that("blocks operations work",
+{
+  param_block <- find_block(PZ, "parameter")
+  expect_equal(PZ[param_block[-c(1, length(param_block))]],
+               get_block(PZ, "parameter"))
+  expect_equal(get_block(add_block(PZ, "observation", "dummy"),
+                         "observation"),
+               "dummy")
 })
 
