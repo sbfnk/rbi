@@ -13,7 +13,7 @@
 #' @param model a model to get the parameter names from; not needed if
 #'     'run' is given as a \code{\link{libbi}} object or 'all' is set
 #'     to TRUE
-#' @param burnin proportion of iterations to discard as burn-in
+#' @param burnin proportion of iterations to discard as burn-in (if between 0 and 1), or number of samples to discard (if >1)
 #' @param ... parameters to \code{bi_read} (e.g., dimensions)
 #' @return data frame with parameter traces; this can be fed to
 #'     \code{coda} routines
@@ -57,8 +57,8 @@ get_traces <- function(x, model, burnin, all = FALSE, ...) {
       stop("'x' must be a 'libbi' object or a file name or a list of data frames.")
   }
 
-  if (!missing(burnin) && !(burnin > 0 && burnin < 1)) {
-    stop("'burnin' must be between 0 and 1.")
+  if (!missing(burnin) && !(burnin > 0)) {
+    stop("'burnin' must be greater than 0.")
   }
 
   wide_list <- lapply(names(res), function(param) {
@@ -84,7 +84,10 @@ get_traces <- function(x, model, burnin, all = FALSE, ...) {
   ret <- do.call(cbind, wide_list)
 
   if (!missing(burnin)) {
-    ret <- ret[-seq_len(floor(burnin * nrow(ret))), ]
+    if (burnin <= 1) {
+      burnin <- floor(burnin * nrow(ret))
+    }
+    ret <- ret[-seq_len(burnin), ]
   }
 
   return(ret)
