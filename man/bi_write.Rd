@@ -7,10 +7,11 @@
 bi_write(filename, variables, timed, ...)
 }
 \arguments{
-\item{filename}{a path to a NetCDF file to write the variables into, which will be overwritten
-if it already exists.}
+\item{filename}{a path to a NetCDF file to write the variables into, which
+will be overwritten if it already exists. If necessary, ".nc" will be added
+to the file name}
 
-\item{variables}{a \code{list} object, which names should be the variable names and values should be either single values, vectors of equal length, or data frames; or a single element of the type}
+\item{variables}{a \code{list} object, the names of which should be the variable names and values should be either single values or data frames}
 
 \item{timed}{if TRUE, any elements of \code{variables} that are vectors will be assumed to have a time dimension}
 
@@ -20,18 +21,17 @@ if it already exists.}
 None, but creates a NetCDF file at the specified path.
 }
 \description{
-This function creates an init file to specify
-parameter values and initial conditions. This file
-can then be passed to \code{libbi} using the \code{--init-file} option.
+This function creates a NetCDF file for LibBi from the given list of vectors
+  and/or data frames. Since any files can be passed to \code{\link{libbi}}
+  directly via the \code{init}, \code{input} and \code{obs} options, this is
+  mostly used internally, this is mostly used internally.
 }
 \examples{
 filename <- tempfile(pattern="dummy", fileext=".nc")
-a <- list(values = 1:3, dimension = "dim_a")
-b <- list(values = 1:5, dimension = "dim_b")
-c <- list(values = 5:9, dimension = "dim_b")
-d <- 3
-e <- data.frame(dim_a = rep(1:3, time = 2), dim_c = rep(1:2, each = 3), value = 1:6)
-variables <- list(a=a, b=b, c=c, d=d, e=e)
+a <- 3
+b <- c(1, 3, 6)
+c <- data.frame(dim_a = rep(1:3, time = 2), dim_c = rep(1:2, each = 3), value = 1:6)
+variables <- list(a=a, b=b, c=c)
 bi_write(filename, variables)
 bi_file_summary(filename)
 }
