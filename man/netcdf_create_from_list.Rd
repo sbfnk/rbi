@@ -36,14 +36,10 @@ Internal function that creates a NetCDF file given a list.
 The list of variables must follow the following rules. Each element
 of the list must itself be one of:
 
-1) a list with two keys; the first key must be named "values" and
-contains a numeric vector; the second key must be named "dimension"
-and contains a string giving the dimension name.
-
-2) a data frame with a \code{value_column} column (see option 'value_column') and any number of other
+1) a data frame with a \code{value_column} column (see option 'value_column') and any number of other
 columns indicating one or more dimensions
 
-3) a numeric vector of length one, with no dimensions
+2) a numeric vector of length one, with no dimensions
 
 The name of the list elements itself is used to create the
 corresponding variable in the NetCDF file.
