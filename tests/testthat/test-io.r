@@ -22,3 +22,12 @@ test_that("saved and re-read libbi object functional",
   expect_true(is.list(res))
 })
 
+test_that("saved and re-read data frames are equal",
+{
+  df <- data.frame(a=c(0, 0, 1, 1), time=c(0, 1, 0, 1), value=c(7, 5, 8, 0))
+  tf <- tempfile()
+  bi_write(tf, list(test=df))
+  df_read <- bi_read(tf)$test
+  expect_true(all(df_read == df))
+})
+
