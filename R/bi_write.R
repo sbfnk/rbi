@@ -44,13 +44,3 @@ bi_write <- function(filename, variables, timed, ...){
   netcdf_create_from_list(filename, variables_with_dim, ...)
 }
 
-##' Create init files for LibBi, retained for backwards compatibility
-##'
-##' Users should use \code{bi_write} instead
-##' @param ... parameters passed to \code{bi_write}
-##' @return whatever \code{bi_write} returns
-##' @seealso \code{\link{bi_write}}
-bi_init_file <- function(...) {
-  warning("'bi_init_file' is deprecated, use 'bi_write' instead.")
-  bi_write(...)
-}

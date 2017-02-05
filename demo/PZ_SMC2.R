@@ -30,6 +30,12 @@ summary(bi_object)
 # Have a look at the posterior distribution
 output <- bi_read(bi_object, vars=c("logweight", "mu", "sigma"))
 logweight <- output$logweight$value
+
+log2normw <- function(lw){
+  w <- exp(lw - max(lw))
+  return(w / sum(w))
+}
+
 weight <- log2normw(logweight)
 mu <- output$mu$value
 sigma <- output$sigma$value
