@@ -30,14 +30,18 @@ get_traces <- function(x, model, burnin, all = FALSE, ...) {
     } else {
       warning("Given model will overwrite model contained in given libbi object.")
     }
+  } else {
+    if (!missing(model)) {
+      if (!("bi_model" %in% class(model))) model <- bi_model(model)
+      read_options <- c(read_options, list(model = model))
+    }
   }
 
   if (!all) {
     if (missing(model)) {
       stop("Either 'all' must be set to TRUE, or a model given (implicitly via the 'x' or explicitly via 'model' options)")
     } else {
-      if (is.character(model)) model <- bi_model(model)
-      read_options <- c(read_options, list(type = "param", model = model))
+      read_options <- c(read_options, list(type = "param"))
     }
   }
 
