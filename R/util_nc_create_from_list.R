@@ -17,14 +17,10 @@
 #' The list of variables must follow the following rules. Each element
 #' of the list must itself be one of:
 #'
-#' 1) a list with two keys; the first key must be named "values" and
-#' contains a numeric vector; the second key must be named "dimension"
-#' and contains a string giving the dimension name.
-#'
-#' 2) a data frame with a \code{value_column} column (see option 'value_column') and any number of other
+#' 1) a data frame with a \code{value_column} column (see option 'value_column') and any number of other
 #' columns indicating one or more dimensions
 #'
-#' 3) a numeric vector of length one, with no dimensions
+#' 2) a numeric vector of length one, with no dimensions
 #'
 #' The name of the list elements itself is used to create the
 #' corresponding variable in the NetCDF file.
@@ -73,51 +69,7 @@ netcdf_create_from_list <- function(filename, variables, time_dim, coord_dim, va
     if (guess_coord) coord_dim <- NULL
     ## reset time index dimension name
     time_index <- NULL
-    if ("list" %in% class(element)) { ## element is a list of values and dimensions
-      element_names <- names(element)
-      ## checks
-      if ("dimension" %in% element_names){
-        if (class(element[["dimension"]]) != "character"){
-          stop("the key 'dimension' of each element of 'variables' should be of type 'character'")
-        }
-      } else {
-        stop("if an element of 'variables' is a list, it should have an element called 'dimension'")
-      }
-      if ("values" %in% element_names){
-        if (!(class(element[["values"]]) %in% c("numeric", "integer"))){
-          stop("the key 'values' of each element of 'variables' should be of type 'numeric' or 'integer'")
-        }
-      } else {
-        stop("each element of 'variables' should have an element called 'values'")
-      }
-      if (element[["dimension"]] %in% names(dims)){
-        if (length(element[["values"]]) != dims[[element[["dimension"]]]]$len){
-          stop("two elements of 'variables' with same dimension name should have equal size")
-        }
-      } else {
-        ## define dimension if given
-        dim_name <- element[["dimension"]]
-        dim_values <- element[["values"]]
-        if (dim_name %in% names(dims)) {
-          if (length(dim_values) != dims[[dim_name]]$len) {
-            stop("Two dimensions of name '", dim_name, "' have different lengths")
-          }
-        } else {
-          new_dim <- ncdim_def(dim_name, "", seq_along(unique(dim_values)) - 1)
-          dims[[dim_name]] <- new_dim
-          if (!(class(dim_values) %in% c("numeric", "integer") &&
-                length(setdiff(as.integer(dim_values), dim_values)) == 0 &&
-                length(setdiff(seq_len(max(dim_values)), unique(dim_values))) == 0))
-          {
-            dim_factors[[dim_name]] <- dim_values
-          }
-        }
-
-      }
-      ## get variable values
-      vars[[name]] <- ncvar_def(name, "", dims[[element[["dimension"]]]])
-      values[[name]] <- element[["values"]]
-    } else if (length(intersect(class(element), c("data.frame"))) > 0) { # element is a data frame
+    if (length(intersect(class(element), c("data.frame"))) > 0) { # element is a data frame
       cols <- colnames(element)
       ## check
       if (!(value_column %in% colnames(element))) {
