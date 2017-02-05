@@ -573,7 +573,11 @@ print.bi_model <- function(x, spaces=2, ...) {
         indent <- indent + 1
       }
     }
-    cat(paste(paste(1:length(vec), vec, sep=": "), collapse="\n"), sep="\n")
+    line_num_indent <- nchar(as.character(length(vec)))
+    line_nums <- vapply(1:length(vec), function(x) {
+      paste0(rep(" ", line_num_indent - nchar(as.character(x))), x)
+    }, " ")
+    cat(paste(paste(line_nums, vec, sep=": "), collapse="\n"), sep="\n")
   }
 }
 
