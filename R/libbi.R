@@ -293,7 +293,7 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
       no_output_pattern <- "has_output[[:space:]]*=[[:space:]]*0"
       no_output <- grep(no_output_pattern, run_model)
       updated_lines <- sub(no_output_pattern, "", run_model[no_output])
-      run_model <- replace(run_model, no_output, updated_lines)
+      run_model[no_output] <- updated_lines
       run_model_modified <- TRUE
     }
 
@@ -303,7 +303,7 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
     }
 
     if (!missing(fix)) {
-      run_model <- do.call(fix, c(list(x=run_model), as.list(fix)))
+      run_model <- do.call(fix.bi_model, c(list(x=run_model), as.list(fix)))
       run_model_modified <- TRUE
     }
 
