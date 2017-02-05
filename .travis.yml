@@ -53,6 +53,8 @@ before_install:
       export PATH="$LINUXBREW/bin:$PATH";
       export LD_LIBRARY_PATH=$(echo $LD_LIBRARY_PATH | sed 's/:$//');
       brew tap homebrew/science;
+      brew install --with-libidn curl;
+      brew install --with-libidn gmp;
       brew install sbfnk/libbi/libbi;
       mkdir -p ~/.R;
       printf "CC=/usr/bin/gcc\nCXX=/usr/bin/g++\nCFLAGS=-std=c99 $CFLAGS\nCXXFLAGS=-std=c++99 $CXXFLAGS"  > ~/.R/Makevars;
