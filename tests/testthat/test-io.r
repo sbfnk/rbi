@@ -13,8 +13,9 @@ test_that("libbi object with added output is functional",
 
 test_that("saved and re-read libbi object functional",
 {
-  save_libbi(bi, "test.rds")
-  bi <- read_libbi("test.rds")
+  filename <- tempfile(fileext=".rds")
+  save_libbi(bi, filename)
+  bi <- read_libbi(filename)
   res <- bi_read(bi)
   expect_true(class(bi) == "libbi")
   expect_true(bi$run_flag)
@@ -31,3 +32,9 @@ test_that("saved and re-read data frames are equal",
   expect_true(all(df_read == df))
 })
 
+test_that("basic I/O functions work", 
+{
+  expect_true(length(bi_contents(example_output_file)) > 0)
+  expect_true(length(bi_dim_len(example_output_file, "np")) > 0)
+  expect_true(length(capture.output(bi_file_summary(example_output_file))) > 0)
+})

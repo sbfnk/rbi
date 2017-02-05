@@ -36,7 +36,8 @@ get_traces <- function(x, model, burnin, all = FALSE, ...) {
     if (missing(model)) {
       stop("Either 'all' must be set to TRUE, or a model given (implicitly via the 'x' or explicitly via 'model' options)")
     } else {
-      read_options <- c(read_options, list(type = "param"))
+      if (is.character(model)) model <- bi_model(model)
+      read_options <- c(read_options, list(type = "param", model = model))
     }
   }
 
@@ -46,7 +47,7 @@ get_traces <- function(x, model, burnin, all = FALSE, ...) {
       if (all) {
         res <- x
       } else {
-        res <- x[intersect(names(x), model$get_vars("param"))]
+        res <- x[intersect(names(x), var_names(model, "param"))]
       }
   } else {
       stop("'x' must be a 'libbi' object or a file name or a list of data frames.")

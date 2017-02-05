@@ -89,8 +89,8 @@ The package also provides two methods for interacting with the [NetCDF](http://w
 As an example, we consider a simplified version of the SIR model discussed in [Del Moral et al. (2014)](https://arxiv.org/abs/1405.4081). This is included with the **RBi** package and can be loaded with
 
 ```{R}
-model_file <- system.file(package="rbi", "SIR.bi") # get full file name from package
-SIRmodel <- bi_model(model_file) # load model
+model_url <- "https://raw.githubusercontent.com/libbi/RBi/master/inst/SIR.bi"
+SIRmodel <- bi_model(url=model_url) # load model
 ```
 
 The `SIRmodel` object now contains the model, which can be displayed with

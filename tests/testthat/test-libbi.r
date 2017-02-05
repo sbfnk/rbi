@@ -1,11 +1,19 @@
 context("Testing running libbi")
 
-test_that("Sampling from a libbi object",
+model <- system.file(package="rbi", "PZ.bi")
+
+test_that("we can generate a simple dataset",
 {
   skip_on_cran()
-  system("env")
-  bi <- libbi(model = system.file(package="rbi", "PZ.bi"))
-  bi <- sample(bi, verbose=TRUE)
+  dataset <- bi_generate_dataset(model=model, end_time=50)
+  expect_true(nrow(bi_read(dataset)[["P_obs"]]) > 0)
+})
+
+test_that("we can sample from a libbi object",
+{
+  skip_on_cran()
+  bi <- libbi(model)
+  bi <- sample(bi)
   res <- bi_read(bi)
   expect_true(class(bi) == "libbi")
   expect_true(bi$run_flag)

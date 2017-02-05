@@ -25,8 +25,9 @@ test_that("Lines can be removed",
 
 test_that("Models can be written to file", 
 {
-  write_file(PZ, "PZ.bi")
-  PZ <- bi_model("PZ.bi")
+  filename <- tempfile(fileext=".bi")
+  write_file(PZ, filename)
+  PZ <- bi_model(filename)
   expect_true(length(PZ[]) > 0)
 })
 

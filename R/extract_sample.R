@@ -30,7 +30,7 @@ extract_sample <- function(x, np, ...) {
     } else {
       0
     }
-  }), 0)
+  }, 0))
 
   find_np <- np
   if (find_np > max_np) {

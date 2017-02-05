@@ -6,12 +6,12 @@
 #' synthetic dataset from a model. Parameters can be passed via the 'init' option
 #' (see \code{\link{run.libbi}}, otherwise they are generated from the prior specified
 #' in the model. The end time should be specified using the "end_time" option. If this is not given,
-#' only a parameter set is sampled. 
-#' @param seed random seed; see the seed option of \code{\link{sample}} for details
-#' @param ... arguments to be passed to \code{\link{libbi}} and \code{\link{sample}}, especially 'model' and 'end_time'
+#' only a parameter set is sampled.
+#' @param ... arguments to be passed to \code{\link{libbi}} and \code{\link{sample}}, especially 'model' and 'end_time'.
+#' @param seed random seed; see the seed option of \code{\link{sample}} for details.
 #' @return generated data set
 #' @export
-bi_generate_dataset <- function(seed, ...){
+bi_generate_dataset <- function(..., seed){
   dot_options <- list(...)
   if ("options" %in% dot_options) {
     options <- dot_options[["options"]]
@@ -19,7 +19,7 @@ bi_generate_dataset <- function(seed, ...){
     options <- list()
   }
 
-  if (grepl("^end[-_]time$", names(dot_options)) &&
+  if (any(grepl("^end[-_]time$", names(dot_options))) &&
             !("noutputs" %in% names(dot_options))) {
     dot_options[["noutputs"]] <- dot_options[["end_time"]]
   }
