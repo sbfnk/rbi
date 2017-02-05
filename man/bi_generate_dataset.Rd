@@ -7,9 +7,9 @@
 bi_generate_dataset(..., seed)
 }
 \arguments{
-\item{...}{arguments to be passed to \code{\link{libbi}} and \code{\link{sample}}, especially 'model', 'end_time' and 'seed'}
+\item{...}{arguments to be passed to \code{\link{libbi}} and \code{\link{sample}}, especially 'model' and 'end_time'.}
 
-\item{seed}{random seed; see the seed option of \code{\link{sample}} for details}
+\item{seed}{random seed; see the seed option of \code{\link{sample}} for details.}
 }
 \value{
 generated data set
