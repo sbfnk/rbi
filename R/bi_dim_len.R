@@ -14,7 +14,7 @@ bi_dim_len <- function(filename, dim){
   if (dim %in% names(ncfile$dim)) {
     len <- ncfile$dim[[which(names(ncfile$dim) == dim)]]$len
   } else {
-    len <- 1
+    len <- 0
   }
   nc_close(ncfile)
   return(len)
