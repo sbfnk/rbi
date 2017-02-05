@@ -10,8 +10,7 @@ Authors@R: c(
 Imports:
     ncdf4,
     data.table,
-    reshape2,
-    curl
+    reshape2
 Suggests:
     coda,
     R.rsp

@@ -4,12 +4,10 @@
 \alias{bi_model}
 \title{Bi Model}
 \usage{
-bi_model(filename, url, lines, ...)
+bi_model(filename, lines, ...)
 }
 \arguments{
 \item{filename}{the file name of the model file}
-
-\item{url}{the URL of the model}
 
 \item{lines}{lines of the model (if no \code{filename} is given), a character vector}
 
