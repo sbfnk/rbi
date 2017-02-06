@@ -290,9 +290,13 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
     run_model_modified <- FALSE
 
     if (output_all) {
-      no_output_pattern <- "has_output[[:space:]]*=[[:space:]]*0"
+      no_output_pattern <- "[[:space:]]*has_output[[:space:]]*=[[:space:]]*0[[:space:]]*"
       no_output <- grep(no_output_pattern, run_model)
       updated_lines <- sub(no_output_pattern, "", run_model[no_output])
+      updated_lines <- gsub(",,", ",", updated_lines)
+      updated_lines <- gsub("\\(,", "(", updated_lines)
+      updated_lines <- gsub(",\\)", ")", updated_lines)
+      updated_lines <- sub("()", "", updated_lines)
       run_model[no_output] <- updated_lines
       run_model_modified <- TRUE
     }
