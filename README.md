@@ -57,7 +57,7 @@ A good starting point is to look at the included demos:
  demo(PZ_filtering)        ## filtering
 ```
 
-For further information, have a look at the introductory vignette from the link on the [rbi CRAN package](https://CRAN.R-project.org/package=rbi).
+For further information, have a look at the introductory vignette from the link from the [rbi CRAN package](https://CRAN.R-project.org/package=rbi).
 
 Using coda
 ==========
