@@ -1,3 +1,5 @@
+# rbi 0.7.9999
+
 # rbi 0.7.0
 
 * The class is now based on S3 classes. Because of this, it plays much nicer with the magrittr and related packages. There are now `str` and `summary` methods defined for `libbi` objects, and `sample`, `filter` and `optimise` commands for running LibBi
