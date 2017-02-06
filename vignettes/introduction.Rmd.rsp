@@ -251,10 +251,10 @@ We can see that the time-varying variables are represented as data frames with t
 Let's perform inference using Particle Markov-chain Metropolis Hastings (PMMH). The following command will generate 16 * 10,000 = 160,000 simulations and therefore may take a little while to run (if you want to see the samples progress, use `verbose=TRUE` in the `bi$run` call).
 
 ```{R eval=FALSE}
-bi <- sample(bi,target="posterior", nparticles=16, obs=SIRdata, sample_obs=TRUE, nsamples=100)
+bi <- sample(bi,target="posterior", nparticles=16, obs=SIRdata, sample_obs=TRUE, nsamples=10000)
 ```
 ```{R echo=FALSE}
-bi <- rbi::sample(bi,target="posterior", nparticles=16, obs=SIRdata, sample_obs=TRUE, nsamples=100, seed=743747902)
+bi <- rbi::sample(bi,target="posterior", nparticles=16, obs=SIRdata, sample_obs=TRUE, nsamples=10000, seed=743747902)
 ```
 
 This samples from the posterior distribution. Remember that options are preserved from previous runs, so we don't need to specify `nsamples`, `end_time` and `noutputs` again, unless we want to change them. The `nparticles` option specifies the number of particles, and the `sample_obs` option tells the `sample` command that we also want observation samples from the posterior distribution of trajectories. 
