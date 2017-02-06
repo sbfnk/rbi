@@ -13,3 +13,6 @@ There was one NOTE about LibBi spelling. This is spelled correctly.
 
 ## Static vignette
 A vignette is included, built locally using R.rsp as it depends on external software (LibBi) listed in the SystemRequirements.
+
+## Links in README.md
+Apologies for the wrong/broken links. These should all be fixed now.
