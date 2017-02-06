@@ -1,6 +1,7 @@
 ## Test environments
 * local macOS install (10.12.3), R 3.3.2
 * local linux install (Scientific Linux 7.1), R 3.3.2
+* OSX and Linux (Trusty) on travis-ci
 
 ## R CMD check results
 There were no ERRORs or WARNINGs.
