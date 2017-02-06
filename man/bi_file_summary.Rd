@@ -7,7 +7,7 @@
 bi_file_summary(filename)
 }
 \arguments{
-\item{x}{A path to a NetCDF file}
+\item{filename}{A path to a NetCDF file}
 }
 \value{
 None

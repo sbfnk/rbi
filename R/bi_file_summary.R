@@ -5,7 +5,7 @@
 #' This function prints a little summary of the content
 #' of a NetCDF file, as well as its creation time. You can
 #' then retrieve variables of interest using \code{\link{bi_read}}.
-#' @param x A path to a NetCDF file
+#' @param filename A path to a NetCDF file
 #' @return None
 #' @export
 #' @importFrom ncdf4 nc_open nc_close
