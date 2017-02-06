@@ -42,5 +42,4 @@ test_that("basic I/O functions work",
   expect_true(bi_dim_len(example_output_file, "np") > 0)
   expect_equal(bi_dim_len(example_output_file, "dummy"), 0)
   expect_true(length(capture.output(bi_file_summary(example_output_file))) > 0)
-  expect_true(length(capture.output(bi_file_summary(bi))) > 0)
 })

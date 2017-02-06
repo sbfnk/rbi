@@ -4,10 +4,10 @@
 \alias{bi_file_summary}
 \title{NetCDF File Summary}
 \usage{
-bi_file_summary(x)
+bi_file_summary(filename)
 }
 \arguments{
-\item{x}{A \code{\link{libbi}} object (in which case the output file will be taken) or a path to a NetCDF file}
+\item{x}{A path to a NetCDF file}
 }
 \value{
 None
