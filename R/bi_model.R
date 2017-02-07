@@ -562,8 +562,9 @@ print.bi_model <- function(x, spaces=2, ...) {
       }
     }
     line_num_indent <- nchar(as.character(length(vec)))
-    line_nums <- vapply(1:length(vec), function(x) {
-      paste0(rep(" ", line_num_indent - nchar(as.character(x))), x)
+    line_nums <- vapply(1:length(vec), function(y) {
+      paste0(rep(" ", line_num_indent - nchar(as.character(y))), y,
+             collapse="")
     }, " ")
     cat(paste(paste(line_nums, vec, sep=": "), collapse="\n"), sep="\n")
   }
@@ -664,6 +665,7 @@ set_name.bi_model <- function(x, name, ...) {
 #'   replacement strings
 `[<-.bi_model` <-  function(x, i, ..., value) {
     model_char <- as.character(x)
-    model_char[i] <- value
+    if (is.null(value)) model_char <- model_char[-i]
+    else model_char[i] <- value
     return(clean_model(model_char))
 }
