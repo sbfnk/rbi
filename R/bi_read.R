@@ -155,14 +155,14 @@ bi_read <- function(x, vars, dims, model, type, missval.threshold, coord_name, v
             do.call('[<-',
                     c(list(all_values),
                       unname(dim_list),
-                      list(read_var_input(nc, var_name,
-                                          start = start_vec,
-                                          count = count_vec))))
+                      list(ncvar_get(nc, var_name,
+                                     start = start_vec,
+                                     count = count_vec))))
           if (!missing(verbose) && verbose) setTxtProgressBar(pb, i)
         }
         if (!missing(verbose) && verbose) close(pb)
       } else {
-        all_values <- read_var_input(nc, var_name)
+        all_values <- ncvar_get(nc, var_name)
       }
 
       ## check for any auxiliary dimensions (linking with time or coord variables)
@@ -180,12 +180,14 @@ bi_read <- function(x, vars, dims, model, type, missval.threshold, coord_name, v
       ## preserve auxiliary dimensions of length 1
       n_one_dims <- dim_names[dim_lengths[dim_names] == 1]
       if (length(n_one_dims) > 0) {
-        all_values <- array(all_values, dim=c(dim(all_values), rep(1, length(n_one_dims) - 1)))
+        all_values <- array(all_values, dim=c(dim(all_values), rep(1, length(n_one_dims))))
       }
 
       if (prod(dim(all_values)) + length(n_one_dims) > 1) {
 
-        mav <- data.table::data.table(reshape2::melt(all_values, varnames = rev(dim_names)))
+        mav <- data.table::data.table(reshape2::melt(all_values, varnames = dim_names))
+        ## remove any extraneous dimensions from melting
+        mav <- mav[, c(dim_names, "value"), with=F]
 
         ## find matching time and coord variables
         all_matching_dims <- c()
@@ -194,7 +196,7 @@ bi_read <- function(x, vars, dims, model, type, missval.threshold, coord_name, v
           matching_vars <- names(matching_dims)
           all_matching_dims <- union(all_matching_dims, matching_dims)
           if (length(matching_vars) == 1)  {
-            merge_values <- read_var_input(nc, matching_vars)
+            merge_values <- ncvar_get(nc, matching_vars)
             mav_merge <- data.table::data.table(reshape2::melt(merge_values, varnames = rev(matching_dims), value.name = time_coord_names[var_type]))
             mav <- merge(mav_merge, mav, by = unname(matching_dims))
           } else if (length(matching_vars) > 1) {
@@ -205,7 +207,7 @@ bi_read <- function(x, vars, dims, model, type, missval.threshold, coord_name, v
         for (var in all_matching_dims) {
           mav[[var]] <- NULL
         }
-        table_order <- c(rev(setdiff(colnames(mav), c(time_coord_names, "value"))),
+        table_order <- c(setdiff(colnames(mav), c(time_coord_names, "value")),
                          intersect(colnames(mav), time_coord_names),
                          "value")
 
