@@ -19,7 +19,7 @@
 #' @param verbose if TRUE, will print variables as they are read
 #' @param clear_cache if TRUE, will clear the cache and re-read the file even if cached data exists
 #' @return list of results
-#' @importFrom ncdf4 nc_close
+#' @importFrom ncdf4 nc_close ncvar_get
 #' @importFrom data.table setkeyv setnames setDF is.data.table
 #' @importFrom reshape2 melt
 #' @importFrom utils setTxtProgressBar txtProgressBar
