@@ -159,7 +159,7 @@ propose_prior <- function(x) {
 obs_to_noise <- function(x) {
   new_model <- bi_model(lines = x)
   obs_block <- get_block(x, "observation")
-  obs_variables <- var_names(x, "obs")
+  obs_variables <- var_names(x, "obs", dim=TRUE)
 
   obs_var_pattern <- paste0("^(", paste(obs_variables, collapse = "|"), ")")
   state_block <- sub(obs_var_pattern, "__sample_\\1", obs_block)
