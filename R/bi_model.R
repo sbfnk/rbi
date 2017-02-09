@@ -299,20 +299,20 @@ insert_lines.bi_model <- function(x, lines, before, after, at_beginning_of, at_e
     }
   } else {
     block_lines <- find_block(x, arg)
-    if (length(block_lines) > 0) {
-      if (arg_name == "before") {
-        after <- block_lines[1] - 1
-      } else if (arg_name == "after") {
-        after <- block_lines[length(block_lines)]
-      } else if (arg_name == "at_beginning_of") {
-        after <- block_lines[1]
-      } else if (arg_name == "at_end_of") {
-        after <- block_lines[length(block_lines)] - 1
-      } else {
-        stop("Unknown argument: ", arg_name)
-      }
+    if (length(block_lines) == 0) {
+      x <- add_block(x, arg)
+      block_lines <- find_block(x, arg)
+    }
+    if (arg_name == "before") {
+      after <- block_lines[1] - 1
+    } else if (arg_name == "after") {
+      after <- block_lines[length(block_lines)]
+    } else if (arg_name == "at_beginning_of") {
+      after <- block_lines[1]
+    } else if (arg_name == "at_end_of") {
+      after <- block_lines[length(block_lines)] - 1
     } else {
-      stop("Could not find block ", arg)
+      stop("Unknown argument: ", arg_name)
     }
   }
 
@@ -487,6 +487,9 @@ add_block <- function(x, ...) UseMethod("add_block")
 #' @export
 add_block.bi_model <- function(x, name, lines, options, ...) {
   x <- remove_lines(x, what=name)
+  if (missing(lines)) {
+    lines <- c()
+  }
   x <- c(x[seq_len(length(x) - 1)],
          ifelse(missing(options), paste("sub", name,"{"),
                 paste("sub", name, paste0("(", options, ")", "{"))), 
