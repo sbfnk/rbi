@@ -43,7 +43,7 @@ model stratified {
   obs M[age]
 
   state N[age] (has_input = 0)
-  state e
+  noise e
 
   sub parameter {
   }
