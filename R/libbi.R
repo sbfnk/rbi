@@ -45,6 +45,7 @@ libbi <- function(model, path_to_libbi, dims, use_cache=TRUE, ...){
                    log_file_name=character(0),
                    timestamp=.POSIXct(NA),
                    run_flag=FALSE,
+                   error_flag=FALSE,
                    use_cache=use_cache,
                    .cache=new.env(parent = emptyenv())), class="libbi")
   return(do.call(run, c(list(x=new_obj, client=character(0)), list(...))))
@@ -375,8 +376,11 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
       if (!verbose) {
         writeLines(readLines(x$log_file_name))
       }
-      stop("LibBi terminated with an error.")
+      warning("LibBi terminated with an error.")
+      x$error_flag <- TRUE
+      return(x)
     }
+    x$error_flag <- FALSE
     if (verbose) print("... LibBi has finished!")
 
     if (sample_obs && file.exists(x$output_file_name)) {
@@ -688,7 +692,11 @@ print.libbi <- function(x, verbose=FALSE, ...){
     if (length(obs) > 0) cat("Observation trajectories recorded: ", paste(obs, sep=", "), "\n")
     if (length(params) > 0) cat("Parameters recorded: ", paste(params), "\n")
   } else {
-    cat("* LibBi has not been run yet\n")
+    if (x$error_flag) {
+      cat("* LibBi terminated with an error\n")
+    } else {
+      cat("* LibBi has not been run yet\n")
+    }
   }
 }
 
