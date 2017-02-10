@@ -160,8 +160,10 @@ obs_to_noise <- function(x) {
   new_model <- bi_model(lines = x)
   obs_block <- get_block(x, "observation")
   obs_variables <- var_names(x, "obs", dim=TRUE)
+  obs_variable_names <- var_names(x, "obs", dim=FALSE)
 
-  state_block <- paste0("__sample_", obs_block)
+  obs_var_pattern <- paste0("^(", paste(obs_variable_names, collapse = "|"), ")")
+  state_block <- sub(obs_var_pattern, "__sample_\\1", obs_block)
   state_variables <- paste0("__sample_", obs_variables)
   new_model <- insert_lines(new_model, state_block, at_end_of = "transition")
   dims <- var_names(x, "dim")
