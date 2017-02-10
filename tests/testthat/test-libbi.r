@@ -25,6 +25,7 @@ model test {
   }
 
   sub observation {
+    inline x = m
     M[a] ~ gaussian(mean = N[a])
   }
 }
