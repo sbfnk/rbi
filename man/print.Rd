@@ -6,7 +6,7 @@
 \alias{print.libbi}
 \title{Print the lines of a LibBi model}
 \usage{
-\method{print}{bi_model}(x, spaces = 2, ...)
+\method{print}{bi_model}(x, spaces = 2, screen = TRUE, ...)
 
 \method{print}{libbi}(x, verbose = FALSE, ...)
 }
@@ -15,6 +15,8 @@
 
 \item{spaces}{number of spaces for indentation}
 
+\item{screen}{whether to print to screen (default: TRUE). In that case, line numbers will be added; otherwise, a character vector will be returned.}
+
 \item{...}{ignored}
 
 \item{verbose}{logical; if TRUE, locations of files and working folder should be printed}
@@ -22,6 +24,9 @@
 \item{x}{a \code{\link{libbi}} object}
 
 \item{...}{ignored}
+}
+\value{
+if \code{screen} is \code{FALSE}, a character vector of model lines
 }
 \description{
 Prints all lines in a LibBi model

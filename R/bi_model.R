@@ -408,7 +408,7 @@ write_file.bi_model <- function(x, filename, ...) {
   }
   model_name <- sub("\\.bi$", "", basename(filename))
 
-  writeLines(as.character(x), con = filename, sep = "\n")
+  writeLines(print(x, screen=FALSE), con = filename, sep = "\n")
 }
 
 #' @name find_block
@@ -548,16 +548,20 @@ var_names.bi_model <- function(x, type, dim = FALSE, opt = FALSE, ...) {
 #' Prints all lines in a LibBi model
 #' @param x a \code{\link{bi_model}} object
 #' @param spaces number of spaces for indentation
+#' @param screen whether to print to screen (default: TRUE). In that case, line numbers will be added; otherwise, a character vector will be returned.
 #' @param ... ignored
 #' @rdname print
 #' @name print.bi_model
+#' @return if \code{screen} is \code{FALSE}, a character vector of model lines
 #' @keywords internal
 #' @export
-print.bi_model <- function(x, spaces=2, ...) {
-  cat("bi_model:\n")
-  cat("=========\n")
-  if (length(x) == 0) {
-    cat("// empty", "\n")
+print.bi_model <- function(x, spaces=2, screen=TRUE, ...) {
+  if (screen) {
+    cat("bi_model:\n")
+    cat("=========\n")
+  }
+  if (length(x) == 0 ) {
+    if (screen) cat("// empty", "\n")
   } else {
     vec <- c()
     indent <- 0
@@ -575,12 +579,16 @@ print.bi_model <- function(x, spaces=2, ...) {
         indent <- indent + 1
       }
     }
-    line_num_indent <- nchar(as.character(length(vec)))
-    line_nums <- vapply(1:length(vec), function(y) {
-      paste0(rep(" ", line_num_indent - nchar(as.character(y))), y,
-             collapse="")
-    }, " ")
-    cat(paste(paste(line_nums, vec, sep=": "), collapse="\n"), sep="\n")
+    if (screen) {
+      line_num_indent <- nchar(as.character(length(vec)))
+      line_nums <- vapply(1:length(vec), function(y) {
+        paste0(rep(" ", line_num_indent - nchar(as.character(y))), y,
+               collapse="")
+      }, " ")
+      cat(paste(paste(line_nums, vec, sep=": "), collapse="\n"), sep="\n")
+    } else {
+      return(vec)
+    }
   }
 }
 
