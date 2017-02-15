@@ -138,13 +138,13 @@ bi_read <- function(x, vars, dims, model, type, missval.threshold, coord_name, v
         np_indices <- seq(1, dim_lengths["np"], by = thin)
         dim_lengths["np"] <- length(np_indices)
 
-        all_values <- array(dim = rev(dim_lengths))
+        all_values <- array(dim = dim_lengths)
 
         if (!missing(verbose) && verbose) pb <- txtProgressBar(min = 0, max = length(np_indices), char = ".", style = 1)
 
         for (i in seq_along(np_indices))
         {
-          dim_list <- lapply(rev(dim_lengths), seq_len)
+          dim_list <- lapply(dim_lengths, seq_len)
           dim_list[["np"]] <- i
           start_vec <- dim_lengths
           start_vec[] <- 1
