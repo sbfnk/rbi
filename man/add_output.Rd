@@ -5,12 +5,14 @@
 \alias{add_output.libbi}
 \title{Add output file to a \code{\link{libbi}} object}
 \usage{
-\method{add_output}{libbi}(x, output, ...)
+\method{add_output}{libbi}(x, output, force = FALSE, ...)
 }
 \arguments{
 \item{x}{a \code{\link{libbi}} object}
 
 \item{output}{name of the file to add as output file, or a list of data frames that contain the outputs}
+
+\item{force}{add an output file even if one already exists in the libbi object}
 
 \item{...}{ignored}
 }
