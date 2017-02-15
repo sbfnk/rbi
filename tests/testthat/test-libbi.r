@@ -32,10 +32,10 @@ model test {
 "
 
 model <- bi_model(lines = stringi::stri_split_lines(model_str)[[1]])
+bi <- libbi(model)
 
 test_that("we can print an empty libbi object",
 {
-  bi <- libbi(model)
   expect_output(print(bi), "LibBi has not been run")
 })
 
