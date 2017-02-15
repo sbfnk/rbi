@@ -4,6 +4,12 @@ bi <- libbi(model = system.file(package="rbi", "PZ.bi"))
 example_output_file <- system.file(package="rbi", "example_output.nc")
 bi <- add_output(bi, example_output_file)
 
+test_that("we can't add output twice'",
+{
+  expect_error(add_output(bi, example_output_file))
+  expect_equal(class(add_output(bi, example_output_file, force=TRUE)), "libbi")
+})
+
 test_that("libbi object with added output is functional",
 {
   expect_true(class(bi) == "libbi")

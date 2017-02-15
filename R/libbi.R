@@ -556,15 +556,18 @@ add_output <- function(x, ...) UseMethod("add_output")
 #' Adds an output file to a \code{\link{libbi}} object. This is useful to recreate a \code{\link{libbi}} object from the model and output files of a previous run
 #' @param x a \code{\link{libbi}} object
 #' @param output name of the file to add as output file, or a list of data frames that contain the outputs
+#' @param force add an output file even if one already exists in the libbi object
 #' @param ... ignored
 #' @examples
 #' bi <- libbi(model = system.file(package="rbi", "PZ.bi"))
 #' example_output_file <- system.file(package="rbi", "example_output.nc")
 #' bi <- add_output(bi, example_output_file)
 #' @export
-add_output.libbi <- function(x, output, ...){
-  if (length(x$output_file_name) > 0) {
-    stop("libbi object already contains output")
+add_output.libbi <- function(x, output, force=FALSE, ...){
+  if (length(x$output_file_name) > 0 &&
+      nchar(x$output_file_name) > 0 &&
+      !force) {
+    stop("libbi object already contains output; if you want to overwrite this,  use `force=TRUE`'")
   }
   if (is.character(output)) {
     x$output_file_name <- output
