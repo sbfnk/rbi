@@ -8,11 +8,11 @@ model test {
   obs M[a]
 
   state N[a] (has_input = 0)
-  noise e
-  param m
+  noise e[a]
+  param m[a]
 
   sub parameter {
-    m ~ gaussian()
+    m[a] ~ gaussian()
   }
 
   sub initial {
@@ -20,8 +20,8 @@ model test {
   }
 
   sub transition {
-    e ~ gaussian(mean = m)
-    N[a] <- N[a] + e
+    e[a] ~ gaussian(mean = m[a])
+    N[a] <- N[a] + e[a]
   }
 
   sub observation {
@@ -32,10 +32,10 @@ model test {
 "
 
 model <- bi_model(lines = stringi::stri_split_lines(model_str)[[1]])
-bi <- libbi(model)
 
 test_that("we can print an empty libbi object",
 {
+  bi <- libbi(model)
   expect_output(print(bi), "LibBi has not been run")
 })
 
@@ -44,18 +44,21 @@ test_that("we can run libbi",
   skip_on_cran()
   dataset <- bi_generate_dataset(model=model, end_time=50)
   expect_true(nrow(bi_read(dataset)[["N"]]) > 0)
-  dataset <- bi_generate_dataset(model=model, options=list(end_time=50))
+  dataset <- bi_generate_dataset(model=model, options=list(end_time=50),
+                                 dims=list(a=c("first", "second")))
+  dataset_r <- bi_read(dataset)
   expect_true(nrow(bi_read(dataset)[["N"]]) > 0)
-  bi <- sample(bi, proposal="prior", options="--start-time 0")
-  bi <- sample(model, sample_obs=TRUE, obs=dataset, output_all=TRUE, fix=c(e=0.5))
+  bi <- sample(bi, proposal="prior", options="--start-time 0", nsamples=10)
+  bi <- sample(model, sample_obs=TRUE, obs=dataset_r, output_all=TRUE, fix=c(e=0.5), nsamples=10)
   res <- bi_read(bi)
+  res <- bi_read(bi, thin=2)
   expect_equal(class(bi), "libbi")
   expect_true(bi$run_flag)
   expect_true(length(bi$model[]) > 0)
   expect_true(is.list(res))
   expect_output(print(bi), "Number of sample")
   expect_equal(nrow(summary(bi)), 1)
-  expect_equal(ncol(bi_read(bi)$M), 3)
+  expect_equal(ncol(bi_read(bi, thin=2)$M), 4)
 })
 
 test_that("we can rewrite a model",
