@@ -69,7 +69,7 @@ netcdf_create_from_list <- function(filename, variables, time_dim, coord_dim, va
     if (guess_coord) coord_dim <- NULL
     ## reset time index dimension name
     time_index <- NULL
-    if (length(intersect(class(element), c("data.frame"))) > 0) { # element is a data frame
+    if (is.data.frame(element)) {
       cols <- colnames(element)
       ## check
       if (!(value_column %in% colnames(element))) {
