@@ -137,7 +137,12 @@ netcdf_create_from_list <- function(filename, variables, time_dim, coord_dim, va
             {
               dim_factors[[coord_dim]] <- union(dim_factors[[coord_dim]], unique(index_table[[coord_dim]]))
             }
+            values[[coord_var]] <-
+              as.integer(factor(values[[coord_var]],
+                                levels = dim_factors[[coord_dim]])) - 1
           }
+          coord_var_dims <- dims[sub("^coord", "nr", coord_var)]
+          vars[[coord_var]] <- ncvar_def(coord_var, "", var_dims)
         }
       }
       data_cols <- setdiff(cols, c(index_cols, value_column))
@@ -199,17 +204,6 @@ netcdf_create_from_list <- function(filename, variables, time_dim, coord_dim, va
     }
   }
 
-  ## factorise coord variable
-  if (!is.null(coord_dim)) {
-    for (coord_var in grep("^coord_", names(values), value = TRUE)) {
-      if (coord_dim %in% names(dim_factors)) {
-        values[[coord_var]] <- as.integer(factor(values[[coord_var]], levels = dim_factors[[coord_dim]])) - 1
-      }
-
-      var_dims <- dims[sub("^coord", "nr", coord_var)]
-      vars[[coord_var]] <- ncvar_def(coord_var, "", var_dims)
-    }
-  }
   nc <- nc_create(filename, vars)
 
   for (name in names(vars)) {
