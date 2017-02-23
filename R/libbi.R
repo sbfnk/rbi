@@ -77,7 +77,7 @@ run <- function(x, ...) UseMethod("run")
 #' @param output_all logical; if set to TRUE, all parameters, states and observations will be saved; good for debugging
 #' @param sample_obs logical; if set to TRUE, will sample observations
 #' @param thin any thinning of MCMC chains (1 means all will be kept, 2 skips every other sample etc.); note that \code{LibBi} itself will write all data to the disk. Only when the results are read in with \code{\link{bi_read}} will thinning be applied.
-#' @param chain logical; if set to TRUE and \code{x} has been run before, the previous output file will be used as \code{init} file, and \code{init-np} will be set to the last iteration of the previous run. This is useful for running inference chains.
+#' @param chain logical; if set to TRUE and \code{x} has been run before, the previous output file will be used as \code{init} file, and \code{init-np} will be set to the last iteration of the previous run (unless target=="prediction"). This is useful for running inference chains.
 #' @param seed Either a number (the seed to supply to \code{LibBi}), or a logical variable: TRUE if a seed is to be generated for \code{LibBi}, FALSE if \code{LibBi} is to generate its own seed
 #' @param ... any unrecognised options will be added to \code{options}
 #' @seealso \code{\link{libbi}}
@@ -197,12 +197,13 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
 
   file_options <- list()
 
-  if (chain && x$run_flag) {
+  if (x$run_flag && chain) {
     init_file_given <-
       "init" %in% file_args || "init-file" %in% names(new_options)
     init_np_given <- "init-np" %in% names(new_options)
     init_given <- init_file_given || init_np_given
-    if (missing(chain)) { ## if chain not specified, only chain if no init option is given
+    if (missing(chain)) { ## if chain not specified, only chain if no init
+      ## option is given
       chain <- !init_given
     }
     if (chain) {
@@ -212,9 +213,22 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
       if (init_np_given) {
         warning("'init-np' given as new option and 'chain=TRUE'. Will ignore 'init-np' option. To use the 'init-np' option, set 'chain=FALSE'")
       }
-      file_options[["init-file"]] <- x$output_file_name
+      init_file <- x$output_file_name
       np_dims <- bi_dim_len(x$output_file_name, "np")
-      file_options[["init-np"]] <- np_dims-1
+      if ("target" %in% names(all_options) &&
+          all_options[["target"]] == "prediction") {
+        file_options[["nsamples"]] <- floor(np_dims / x$thin)
+        if (x$thin > 1) {
+          x$options[["init"]] <- bi_read(x$output_file_name)
+          file_args <- union(file_args, "init")
+        } else {
+        file_options[["init-file"]] <- init_file
+        }
+        file_options[["init-np"]] <- -1
+      } else {
+        file_options[["init-file"]] <- init_file
+        file_options[["init-np"]] <- np_dims-1
+      }
     }
   }
 
@@ -575,6 +589,7 @@ add_output.libbi <- function(x, output, force=FALSE, ...){
   x$run_flag <- TRUE
   x$timestamp <- file.mtime(x$output_file_name)
   x$.cache <- new.env(parent = emptyenv())
+  x$thin <- 1 ## output file will already be thinned
   return(x)
 }
 
