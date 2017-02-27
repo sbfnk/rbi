@@ -221,6 +221,7 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
         if (x$thin > 1) {
           x$options[["init"]] <- bi_read(x$output_file_name)
           file_args <- union(file_args, "init")
+          x$thin <- 1
         } else {
         file_options[["init-file"]] <- init_file
         }
