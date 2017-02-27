@@ -614,7 +614,7 @@ save_libbi.libbi <- function(x, filename, ...) {
 
   save_obj <- list(model=x$model,
                    dims=x$dims,
-                   thin=x$thin,
+                   thin=1,
                    output=bi_read(x))
 
   options <- x$options
