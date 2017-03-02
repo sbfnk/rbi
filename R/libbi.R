@@ -219,7 +219,7 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
           all_options[["target"]] == "prediction") {
         file_options[["nsamples"]] <- floor(np_dims / x$thin)
         if (x$thin > 1) {
-          x$options[["init"]] <- bi_read(x$output_file_name)
+          x$options[["init"]] <- bi_read(x)
           file_args <- union(file_args, "init")
           x$thin <- 1
         } else {
