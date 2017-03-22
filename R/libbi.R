@@ -47,6 +47,7 @@ libbi <- function(model, path_to_libbi, dims, use_cache=TRUE, ...){
                    run_flag=FALSE,
                    error_flag=FALSE,
                    use_cache=use_cache,
+                   .gc_env=emptyenv(),
                    .cache=new.env(parent = emptyenv())), class="libbi")
   return(do.call(run, c(list(x=new_obj, client=character(0)), list(...))))
 }
@@ -145,13 +146,27 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
     }
   }
 
+  ## get model
+  if (!missing(model)) x$model <- model
+
+  if (!("bi_model" %in% class(x$model))) {
+      x$model <- bi_model(filename=x$model)
+  }
+
   if (!missing(working_folder)) {
     x$working_folder <- absolute_path(working_folder)
     if (!dir.exists(x$working_folder)) {
       dir.create(working_folder)
     }
   } else if (length(x$working_folder) == 0) {
-    x$working_folder <- tempdir()
+    x$working_folder <- tempfile(pattern=paste(get_name(x$model)))
+    dir.create(x$working_folder)
+    ## make sure temporary folder gets deleted upon garbage collection
+    x$.gc_env <- new.env() ## dummy environment
+    x$.gc_env$folder <- x$working_folder
+    reg.finalizer(x$.gc_env, function(env) {
+      unlink(env$folder, recursive=TRUE)
+    }, onexit=TRUE)
   }
 
   libbi_seed <- integer(0)
@@ -163,13 +178,6 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
     libbi_seed <- seed
   }
   if (length(libbi_seed) > 0) new_options[["seed"]] <- libbi_seed
-
-  ## get model
-  if (!missing(model)) x$model <- model
-
-  if (!("bi_model" %in% class(x$model))) {
-      x$model <- bi_model(filename=x$model)
-  }
 
   ## check if 'model-file' is contained in any options
   all_options <- option_list(getOption("libbi_args"), config_file_options, x$options, new_options, list(...))
