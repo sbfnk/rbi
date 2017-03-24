@@ -59,7 +59,7 @@ fix.bi_model <- function(x, ...) {
   ## variables that are to be fixed
   var_str <-
     paste0("^[[:space:]]*(noise|param|state|input|const|obs)[[:space:]]+(",
-           paste(names(fixed), collapse = "|"), ")([[:space:][]|$)")
+           paste(names(fixed), collapse = "|"), ")([[:space:][\\=~]|$)")
   var_line_nbs <- grep(var_str, x)
 
   var_vec <- c(var_names(x, "noise"),
