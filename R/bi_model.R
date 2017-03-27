@@ -96,7 +96,7 @@ fix.bi_model <- function(x, ...) {
   for (var in intersect(names(fixed), var_vec)) {
     ## remove assignments
     assignments <-
-      grep(paste0(var,
+      grep(paste0("^[[:space:]]*", var,
                   "(/dt)?[[:space:]]*(\\[[^]]*\\])?[[:space:]]*(~|=|<-)"),
            x)
     if (length(assignments) > 0) {
