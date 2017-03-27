@@ -62,12 +62,7 @@ fix.bi_model <- function(x, ...) {
            paste(names(fixed), collapse = "|"), ")([[:space:][\\=~]|$)")
   var_line_nbs <- grep(var_str, x)
 
-  var_vec <- c(var_names(x, "noise"),
-               var_names(x, "param"),
-               var_names(x, "state"),
-               var_names(x, "input"),
-               var_names(x, "const"),
-               var_names(x, "obs"))
+  var_vec <- var_names(x)
 
   unmatched_names <- setdiff(names(fixed), var_vec)
 
@@ -517,6 +512,10 @@ var_names <- function(x, ...) UseMethod("var_names")
 #' @export
 var_names.bi_model <- function(x, type, dim = FALSE, opt = FALSE, ...) {
   names_vec <- c()
+  if (missing(type)) {
+    type <- c("param", "state", "input", "const", "obs", "noise")
+  }
+
   for (for_type in type) {
     line_nbs <- grep(paste0("^[[:space:]]*", for_type, "[[:space:]]"), x)
     if (length(line_nbs) > 0) {
