@@ -541,6 +541,7 @@ var_names.bi_model <- function(x, type, dim = FALSE, opt = FALSE, ...) {
           unlist(strsplit(names, '\\([^)]+,(*SKIP)(*FAIL)|,\\s*', perl=TRUE)))
     }
   }
+  names_vec <- grep("^__.*_$", names_vec, invert=TRUE, value=TRUE)
   return(names_vec)
 }
 
