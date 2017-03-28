@@ -5,7 +5,8 @@
 \alias{var_names.bi_model}
 \title{Get variables}
 \usage{
-\method{var_names}{bi_model}(x, type, dim = FALSE, opt = FALSE, ...)
+\method{var_names}{bi_model}(x, type, dim = FALSE, opt = FALSE,
+  aux = FALSE, ...)
 }
 \arguments{
 \item{x}{a \code{\link{bi_model}} object}
@@ -15,6 +16,8 @@
 \item{dim}{logical; if set to TRUE, names will contain dimensions in brackets}
 
 \item{opt}{logical; if set to TRUE, names will contain options (e.g., has_output)}
+
+\item{aux}{logical; if set to TRUE, auxiliary names will be returned}
 
 \item{...}{ignored}
 }
