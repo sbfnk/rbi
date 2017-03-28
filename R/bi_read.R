@@ -18,6 +18,7 @@
 #' @param thin thinning (keep only 1/thin of samples)
 #' @param verbose if TRUE, will print variables as they are read
 #' @param clear_cache if TRUE, will clear the cache and re-read the file even if cached data exists
+#' @param init.to.param convert states to initial values
 #' @return list of results
 #' @importFrom ncdf4 nc_close ncvar_get
 #' @importFrom data.table setkeyv setnames setDF is.data.table
@@ -27,7 +28,7 @@
 #' example_output_file <- system.file(package="rbi", "example_output.nc")
 #' d <- bi_read(example_output_file)
 #' @export
-bi_read <- function(x, vars, dims, model, type, missval.threshold, coord_name, vector, thin, verbose, clear_cache)
+bi_read <- function(x, vars, dims, model, type, missval.threshold, coord_name, vector, thin, verbose, clear_cache, init.to.param=FALSE)
 {
   nc <- bi_open(x)
   res <- list()
@@ -72,7 +73,7 @@ bi_read <- function(x, vars, dims, model, type, missval.threshold, coord_name, v
   }
 
   if (!missing(type)) {
-    vars <- var_names(model, type, opt=TRUE)
+    vars <- var_names(model, type, opt=TRUE, init=TRUE)
     vars <- grep("has_output[^=]*=[^[0-1]*0", vars, value=TRUE, invert=TRUE)
   }
 
@@ -271,6 +272,17 @@ bi_read <- function(x, vars, dims, model, type, missval.threshold, coord_name, v
       x$.cache$data[[name]] <- res[[name]]
       x$.cache$thin[[name]] <- thin
     }
+  }
+
+  if (init.to.param) {
+    res <- lapply(res, function(x) {
+      if (is.data.frame(x) && "time" %in% colnames(x)) {
+        min_time <- min(x$time)
+        x <- x[x$time == min_time, ]
+        x$time <- NULL
+      }
+      x
+    })
   }
 
   return(res)
