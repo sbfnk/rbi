@@ -506,11 +506,13 @@ var_names <- function(x, ...) UseMethod("var_names")
 #' @param type a character vector of one or more types
 #' @param dim logical; if set to TRUE, names will contain dimensions in brackets
 #' @param opt logical; if set to TRUE, names will contain options (e.g., has_output)
+#' @param aux logical; if set to TRUE, auxiliary names will be returned
 #' @param ... ignored
 #' @return variable names
 #' @rdname var_names
 #' @export
-var_names.bi_model <- function(x, type, dim = FALSE, opt = FALSE, ...) {
+var_names.bi_model <- function(x, type, dim = FALSE, opt = FALSE,
+                               aux = FALSE, ...) {
   names_vec <- c()
   if (missing(type)) {
     type <- c("param", "state", "input", "const", "obs", "noise")
@@ -541,7 +543,7 @@ var_names.bi_model <- function(x, type, dim = FALSE, opt = FALSE, ...) {
           unlist(strsplit(names, '\\([^)]+,(*SKIP)(*FAIL)|,\\s*', perl=TRUE)))
     }
   }
-  names_vec <- grep("^__.*_$", names_vec, invert=TRUE, value=TRUE)
+  if (!aux) names_vec <- grep("^__.*_$", names_vec, invert=TRUE, value=TRUE)
   return(names_vec)
 }
 
