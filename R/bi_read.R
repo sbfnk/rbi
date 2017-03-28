@@ -72,7 +72,8 @@ bi_read <- function(x, vars, dims, model, type, missval.threshold, coord_name, v
   }
 
   if (!missing(type)) {
-    vars <- var_names(model, type)
+    vars <- var_names(model, type, opt=TRUE)
+    vars <- grep("has_output[^=]*=[^[0-1]*0", vars, value=TRUE, invert=TRUE)
   }
 
   if (!missing(vars)) {

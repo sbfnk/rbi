@@ -535,7 +535,10 @@ var_names.bi_model <- function(x, type, dim = FALSE, opt = FALSE, ...) {
       }
       ## remove spaces
       names <- gsub("[[:space:]]", "", names)
-      names_vec <- c(names_vec, unlist(strsplit(names, ",")))
+      ## put commas in parentheses back
+      names_vec <-
+        c(names_vec,
+          unlist(strsplit(names, '\\([^)]+,(*SKIP)(*FAIL)|,\\s*', perl=TRUE)))
     }
   }
   return(names_vec)
