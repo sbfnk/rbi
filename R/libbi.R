@@ -221,7 +221,10 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
       if (init_np_given) {
         warning("'init-np' given as new option and 'chain=TRUE'. Will ignore 'init-np' option. To use the 'init-np' option, set 'chain=FALSE'")
       }
-      read_init <- bi_read(x, type=c("param", "state"), init.to.param=TRUE)
+      types <- "param"
+      chain_init <- ("with-transform-initial-to-param" %in% names(all_options))
+      if (chain_init) types <- c(types, "state")
+      read_init <- bi_read(x, type=types, init.to.param=chain_init)
       x$options[["init"]] <- extract_sample(read_init, "last")
       file_args <- union(file_args, "init")
       if ("target" %in% names(all_options) &&
