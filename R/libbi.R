@@ -221,22 +221,15 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
       if (init_np_given) {
         warning("'init-np' given as new option and 'chain=TRUE'. Will ignore 'init-np' option. To use the 'init-np' option, set 'chain=FALSE'")
       }
-      init_file <- x$output_file_name
-      np_dims <- bi_dim_len(x$output_file_name, "np")
+      read_init <- bi_read(x, type=c("param", "state"), init.to.param=TRUE)
+      x$options[["init"]] <- extract_sample(read_init, "last")
+      file_args <- union(file_args, "init")
       if ("target" %in% names(all_options) &&
           all_options[["target"]] == "prediction") {
         file_options[["nsamples"]] <- floor(np_dims / x$thin)
         if (x$thin > 1) {
-          x$options[["init"]] <- bi_read(x)
-          file_args <- union(file_args, "init")
           x$thin <- 1
-        } else {
-        file_options[["init-file"]] <- init_file
         }
-        file_options[["init-np"]] <- -1
-      } else {
-        file_options[["init-file"]] <- init_file
-        file_options[["init-np"]] <- np_dims-1
       }
     }
   }
