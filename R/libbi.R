@@ -627,7 +627,7 @@ save_libbi.libbi <- function(x, filename, ...) {
   for (file_type in c("init", "input", "obs")) {
     file_option <- paste(file_type, "file", sep="-")
     if (file_option %in% names(x$options)) {
-      save_obj[[file_type]] <- bi_read(x$options[[file_option]])
+      save_obj[[file_type]] <- bi_read(x$options[[file_option]], dims=x$dims)
       options[[file_option]] <- NULL
     }
   }

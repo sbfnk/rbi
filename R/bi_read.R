@@ -43,7 +43,7 @@ bi_read <- function(x, vars, dims, model, type, missval.threshold, coord_name, v
     } else {
       stop("'model' should not be given if 'data' is a 'libbi' object'.")
     }
-    if (missing(dims)) {
+    if (missing(dims) || is.null(dims)) {
       dims <- x$dims
     } else {
       warning("Given 'dims' will overwrite dimensions in passed libbi object")
@@ -220,12 +220,12 @@ bi_read <- function(x, vars, dims, model, type, missval.threshold, coord_name, v
         if (length(cols) > 0) setkeyv(mav, cols)
         rownames(mav) <- seq_len(nrow(mav))
 
-        if (!missing(dims) && length(dims) == 1 && "coord" %in% colnames(mav)) {
+        if (!missing(dims) && !is.null(dims) && length(dims) == 1 && "coord" %in% colnames(mav)) {
           setnames(mav, "coord", names(dims))
         }
 
         for (col in colnames(mav)) {
-          if (!missing(dims) && col %in% names(dims)) {
+          if (!missing(dims) && !is.null(dims) && col %in% names(dims)) {
             mav[[col]] <- factor(mav[[col]], labels = dims[[col]])
           } else if (!(col %in% c("value", time_coord_names[c("time", "coord")]))) {
             mav[[col]] <- mav[[col]] - 1
