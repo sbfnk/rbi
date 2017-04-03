@@ -279,6 +279,7 @@ bi_read <- function(x, vars, dims, model, type, missval.threshold, coord_name, v
       if (is.data.frame(x) && "time" %in% colnames(x)) {
         min_time <- min(x$time)
         x <- x[x$time == min_time, ]
+        x$time <- NULL
       }
       x
     })
