@@ -12,7 +12,7 @@ list of data frames containing parameter traces (as returned by
 from \code{bi_read}); if it is not a \code{\link{libbi}}
 object, either 'all' must be TRUE or a model given}
 
-\item{np}{iteration to extract; if not given a random sample will be extracted}
+\item{np}{iteration to extract; if set to "last", the last sample will be extracted. If not given a random sample will be extracted}
 
 \item{...}{parameters to \code{bi_read} (e.g., dimensions)}
 }
@@ -20,7 +20,7 @@ object, either 'all' must be TRUE or a model given}
 list of parameters and trajectories
 }
 \description{
-This function takes the provided \code{\link{libbi}} 
+This function takes the provided \code{\link{libbi}}
     object which has been run and extracts a data frame.
     traces.
 }
