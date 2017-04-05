@@ -39,6 +39,8 @@ libbi <- function(model, path_to_libbi, dims, use_cache=TRUE, ...){
                    model_file_name=character(0),
                    working_folder=character(0),
                    dims=libbi_dims,
+                   time_dim=character(0),
+                   coord_dim=character(0),
                    thin=1,
                    command=character(0),
                    output_file_name=character(0),
@@ -74,6 +76,7 @@ run <- function(x, ...) UseMethod("run")
 #' @param input input of the model, either supplied as a list of values and/or data frames, or a (netcdf) file name, or a \code{\link{libbi}} object which has been run (in which case the output of that run is used as input)
 #' @param obs observations of the model, either supplied as a list of values and/or data frames, or a (netcdf) file name, or a \code{\link{libbi}} object which has been run (in which case the output of that run is used as observations)
 #' @param time_dim The time dimension in any R objects that have been passed (\code{init}, \code{input}) and \code{obs}); if not given, will be guessed
+#' @param coord_dim The coord dimension in any \code{obs} R objects that have been passed; if not given, will be guessed
 #' @param working_folder path to a folder from which to run \code{LibBi}; default to a temporary folder.
 #' @param output_all logical; if set to TRUE, all parameters, states and observations will be saved; good for debugging
 #' @param sample_obs logical; if set to TRUE, will sample observations
@@ -92,7 +95,7 @@ run <- function(x, ...) UseMethod("run")
 #' @importFrom ncdf4 nc_open nc_close ncvar_rename
 #' @importFrom stats runif
 #' @export
-run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, options, config, add_options, log_file_name, stdoutput_file_name, init, input, obs, time_dim, working_folder, output_all, sample_obs, thin, chain=TRUE, seed=TRUE, ...){
+run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, options, config, add_options, log_file_name, stdoutput_file_name, init, input, obs, time_dim, coord_dim, working_folder, output_all, sample_obs, thin, chain=TRUE, seed=TRUE, ...){
 
   ## client options
   libbi_client_args <-
@@ -261,14 +264,30 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
       write_opts <- list(filename = arg_file_name,
                          variables = arg,
                          timed = TRUE)
+      if (!missing(time_dim)) {
+        x$time_dim <- time_dim
+      }
+      if (!missing(coord_dim)) {
+        x$coord_dim <- coord_dim
+      }
       if (file == "obs") ## guess coord for observation files
       {
-        write_opts[["guess_coord"]] <- TRUE
-        write_opts[["guess_time"]] <- TRUE
+        if (length(x$time_dim) == 0) {
+          write_opts[["guess_time"]] <- TRUE
+        }
+        if (length(x$coord_dim) == 0) {
+          write_opts[["guess_coord"]] <- TRUE
+        } else {
+          write_opts[["coord_dim"]] <- x$coord_dim
+        }
       }
-      if (!missing(time_dim)) write_opts[["time_dim"]] <- time_dim
+      if (length(x$time_dim) > 0) {
+        write_opts[["time_dim"]] <- x$time_dim
+      }
       file_dims <- do.call(bi_write, write_opts)
-      x$dims[names(file_dims)] <- file_dims
+      x$dims[names(file_dims$dims)] <- file_dims$dims
+      if (!is.null(file_dims$time_dim)) x$time_dim <- file_dims$time_dim
+      if (!is.null(file_dims$coord_dim)) x$coord_dim <- file_dims$coord_dim
       file_options[[paste(file, "file", sep = "-")]] <- arg_file_name
     } else if (is.character(arg)) {
       file_options[[paste(file, "file", sep = "-")]] <- arg
@@ -623,6 +642,8 @@ save_libbi.libbi <- function(x, filename, ...) {
 
   save_obj <- list(model=x$model,
                    dims=x$dims,
+                   time_dim=x$time_dim,
+                   coord_dim=x$coord_dim,
                    thin=1,
                    output=bi_read(x))
 
@@ -659,20 +680,23 @@ read_libbi <- function(file, ...) {
 
   read_obj <- readRDS(file)
 
-  libbi_options <- list(model=read_obj$model, dims=read_obj$dims,
-                        options=read_obj$options, thin=read_obj$thin,
-                        ...)
+  libbi_options <- list(...)
 
-  for (file_type in c("init", "input", "obs")) {
-    if (file_type %in% names(read_obj)) {
-      libbi_options[[file_type]] <- read_obj[[file_type]]
+  pass_options <- c("model", "dims", "time_dim", "coord_dim", "options",
+                    "thin", "init", "input", "obs")
+
+  for (option in pass_options) {
+    if (!(option %in% names(libbi_options)) &&
+        option %in% names(read_obj)) {
+      libbi_options[[option]] <- read_obj[[option]]
     }
   }
 
   output_file_name <-
     tempfile(pattern=paste(get_name(read_obj$model), "output", sep = "_"),
              fileext=".nc")
-  bi_write(output_file_name, read_obj$output)
+  bi_write(output_file_name, read_obj$output,
+           time_dim=libbi_options$time_dim)
 
   new_obj <- do.call(libbi, libbi_options)
   new_obj <- add_output(new_obj, output_file_name)
