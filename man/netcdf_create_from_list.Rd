@@ -27,7 +27,7 @@ if it already exists.}
 \item{verbose}{if TRUE, will print variables as they are read}
 }
 \value{
-A list of factors in extra dimensions, if any
+A list of the time and coord dims, and factors in extra dimensions, if any
 }
 \description{
 Internal function that creates a NetCDF file given a list.

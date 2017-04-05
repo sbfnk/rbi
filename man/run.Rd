@@ -7,8 +7,8 @@
 \usage{
 \method{run}{libbi}(x, client, proposal = c("model", "prior"), model, fix,
   options, config, add_options, log_file_name, stdoutput_file_name, init, input,
-  obs, time_dim, working_folder, output_all, sample_obs, thin, chain = TRUE,
-  seed = TRUE, ...)
+  obs, time_dim, coord_dim, working_folder, output_all, sample_obs, thin,
+  chain = TRUE, seed = TRUE, ...)
 }
 \arguments{
 \item{x}{a \code{\link{libbi}} object}
@@ -38,6 +38,8 @@
 \item{obs}{observations of the model, either supplied as a list of values and/or data frames, or a (netcdf) file name, or a \code{\link{libbi}} object which has been run (in which case the output of that run is used as observations)}
 
 \item{time_dim}{The time dimension in any R objects that have been passed (\code{init}, \code{input}) and \code{obs}); if not given, will be guessed}
+
+\item{coord_dim}{The coord dimension in any \code{obs} R objects that have been passed; if not given, will be guessed}
 
 \item{working_folder}{path to a folder from which to run \code{LibBi}; default to a temporary folder.}
 
