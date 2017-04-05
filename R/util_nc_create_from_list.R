@@ -24,10 +24,10 @@
 #'
 #' The name of the list elements itself is used to create the
 #' corresponding variable in the NetCDF file.
-#' 
+#'
 #' @note Two elements of the given list can possibly have the same
 #'   dimension name.
-#' @return A list of factors in extra dimensions, if any
+#' @return A list of the time and coord dims, and factors in extra dimensions, if any
 #' @importFrom ncdf4 nc_open nc_close ncdim_def ncvar_def nc_create ncvar_put
 netcdf_create_from_list <- function(filename, variables, time_dim, coord_dim, value_column = "value", guess_time = FALSE, guess_coord = FALSE, verbose){
   ## get file name
@@ -39,13 +39,13 @@ netcdf_create_from_list <- function(filename, variables, time_dim, coord_dim, va
   if (is.null(names(variables)) || any(names(variables) == "")) {
     stop("'variables' must be named")
   }
-  if (missing(coord_dim)) {
+  if (missing(coord_dim) || length(coord_dim) == 0) {
     coord_dim <- NULL
   } else if (guess_coord) {
     stop("'coord_dim' must not be given is guess_cord is TRUE")
   }
 
-  if (missing(time_dim)) {
+  if (missing(time_dim) || length(time_dim) == 0) {
     time_dim <- NULL
   } else if (guess_time) {
     guess_time <- FALSE
@@ -216,5 +216,5 @@ netcdf_create_from_list <- function(filename, variables, time_dim, coord_dim, va
 
   nc_close(nc)
 
-  if (length(dim_factors) > 0) return(dim_factors)
+  return(list(time_dim=time_dim, coord_dim=coord_dim, dims=dim_factors))
 }
