@@ -18,7 +18,7 @@
 #' @param thin thinning (keep only 1/thin of samples)
 #' @param verbose if TRUE, will print variables as they are read
 #' @param clear_cache if TRUE, will clear the cache and re-read the file even if cached data exists
-#' @param init.to.param convert states to initial values
+#' @param init.to.param logical; if TRUE, convert states to initial values
 #' @return list of results
 #' @importFrom ncdf4 nc_close ncvar_get
 #' @importFrom data.table setkeyv setnames setDF is.data.table

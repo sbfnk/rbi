@@ -30,7 +30,7 @@ bi_read(x, vars, dims, model, type, missval.threshold, coord_name, vector, thin,
 
 \item{clear_cache}{if TRUE, will clear the cache and re-read the file even if cached data exists}
 
-\item{init.to.param}{convert states to initial values}
+\item{init.to.param}{logical; if TRUE, convert states to initial values}
 }
 \value{
 list of results
