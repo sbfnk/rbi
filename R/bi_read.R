@@ -167,9 +167,6 @@ bi_read <- function(x, vars, dims, model, type, missval.threshold, coord_name, v
         all_values <- ncvar_get(nc, var_name)
       }
 
-      if ("np" %in% names(dim_lengths) && dim_lengths[["np"]] == 1) {
-        dim_names <- dim_names[dim_names != "np"]
-      }
       if (any(duplicated(dim_names))) {
         duplicated_dim_names <- dim_names[duplicated(dim_names)]
         for (dup_dim in duplicated_dim_names) {
@@ -179,12 +176,11 @@ bi_read <- function(x, vars, dims, model, type, missval.threshold, coord_name, v
       }
 
       ## preserve dimensions of length 1
-      n_one_dims <- dim_names[dim_lengths[dim_names] == 1]
-      if (length(n_one_dims) > 0) {
-        all_values <- array(all_values, dim=c(dim(all_values), rep(1, length(n_one_dims))))
+      if (length(dim_lengths) > 0) {
+        all_values <- array(all_values, dim=dim_lengths)
       }
 
-      if (prod(dim(all_values)) + length(n_one_dims) > 1) {
+      if (!is.null(dim(all_values))) {
 
         mav <- data.table::data.table(reshape2::melt(all_values, varnames = dim_names))
         ## remove any extraneous dimensions from melting
