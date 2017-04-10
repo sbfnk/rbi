@@ -82,7 +82,7 @@ netcdf_create_from_list <- function(filename, variables, time_dim, coord_dim, va
         if (length(numeric_cols) == 1) {
           time_dim <- numeric_cols
         } else if (length(numeric_cols) > 1){
-          stop("Could not decide on time dimension between ", paste(numeric_cols))
+          stop("Could not decide on time dimension between ", paste(numeric_cols, collapse=", "))
         }
       }
       ## guess coord dimension: a column that is not the time or value column
@@ -95,7 +95,7 @@ netcdf_create_from_list <- function(filename, variables, time_dim, coord_dim, va
         if (length(guessed_coord) == 1) { ## found a unique coord dimension
           coord_dim <- guessed_coord
         } else if (length(guessed_coord) > 1){
-          stop("Could not decide on coord dimension between ", paste(guessed_coord))
+          stop("Could not decide on coord dimension between ", paste(guessed_coord, collapse=", "))
         }
       }
 

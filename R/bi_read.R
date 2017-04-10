@@ -167,6 +167,11 @@ bi_read <- function(x, vars, dims, model, type, missval.threshold, coord_name, v
         all_values <- ncvar_get(nc, var_name)
       }
 
+      if ("np" %in% names(dim_lengths) && dim_lengths[["np"]] == 1) {
+        dim_lengths <- dim_lengths[names(dim_lengths) != "np"]
+        dim_names <- names(dim_lengths)
+      }
+
       if (any(duplicated(dim_names))) {
         duplicated_dim_names <- dim_names[duplicated(dim_names)]
         for (dup_dim in duplicated_dim_names) {
@@ -175,7 +180,7 @@ bi_read <- function(x, vars, dims, model, type, missval.threshold, coord_name, v
         }
       }
 
-      ## preserve dimensions of length 1
+      ## preserve dimensions of length 1, except "np"
       if (length(dim_lengths) > 0) {
         all_values <- array(all_values, dim=dim_lengths)
       }
