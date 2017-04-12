@@ -638,9 +638,10 @@ save_libbi <- function(x, ...) UseMethod("save_libbi")
 #'
 #' @param x a \code{\link{libbi}} object
 #' @param filename name of the RDS file to save to
+#' @param supplement any supplementary data to save
 #' @param ... any options to \code{\link{saveRDS}}
 #' @export
-save_libbi.libbi <- function(x, filename, ...) {
+save_libbi.libbi <- function(x, filename, supplement, ...) {
   if (missing(filename)) {
     stop("Need to specify a file name")
   }
@@ -664,6 +665,8 @@ save_libbi.libbi <- function(x, filename, ...) {
   }
 
   save_obj[["options"]] <- options
+
+  if (!missing(supplement)) save_obj[["supplement"]] <- supplement
 
   saveRDS(save_obj, filename, ...)
 }

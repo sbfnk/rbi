@@ -5,12 +5,14 @@
 \alias{save_libbi.libbi}
 \title{Write results of a \code{LibBi} run to an RDS file}
 \usage{
-\method{save_libbi}{libbi}(x, filename, ...)
+\method{save_libbi}{libbi}(x, filename, supplement, ...)
 }
 \arguments{
 \item{x}{a \code{\link{libbi}} object}
 
 \item{filename}{name of the RDS file to save to}
+
+\item{supplement}{any supplementary data to save}
 
 \item{...}{any options to \code{\link{saveRDS}}}
 }
