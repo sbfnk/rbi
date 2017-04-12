@@ -21,7 +21,6 @@ list of parameters and trajectories
 }
 \description{
 This function takes the provided \code{\link{libbi}}
-    object which has been run and extracts a data frame.
-    traces.
+    results and extracts a data frame.
 }
 
