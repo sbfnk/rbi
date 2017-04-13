@@ -709,6 +709,7 @@ read_libbi <- function(file, ...) {
 
   new_obj <- do.call(libbi, libbi_options)
   new_obj <- add_output(new_obj, output_file_name)
+  new_obj$supplement <- read_obj$supplement
 
   return(new_obj)
 }
