@@ -19,4 +19,3 @@
 \description{
 This saves all options, files and outputs of a \code{LibBi} run to an RDS file specified
 }
-

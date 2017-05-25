@@ -35,4 +35,3 @@ variables <- list(a=a, b=b, c=c)
 bi_write(filename, variables)
 bi_file_summary(filename)
 }
-

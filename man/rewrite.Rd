@@ -2,9 +2,11 @@
 % Please edit documentation in R/libbi.R
 \name{rewrite}
 \alias{rewrite}
-\alias{rewrite.bi_model}
-\alias{rewrite.character}
 \alias{rewrite.libbi}
+\alias{rewrite}
+\alias{rewrite.bi_model}
+\alias{rewrite}
+\alias{rewrite.character}
 \title{Using the LibBi wrapper to rewrite}
 \usage{
 \method{rewrite}{libbi}(x, ...)
@@ -27,4 +29,3 @@ The method \code{rewrite} launches \code{LibBi} to rewrite a model to inspect it
 If \code{x} is given as a 'bi_model', a \code{\link{libbi}} object will be created from the model
 If \code{x} is given as a character string, it will be interpreted as the filename of a model to sample from.
 }
-

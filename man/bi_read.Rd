@@ -45,4 +45,3 @@ case a NetCDF connection is opened, or directly as a NetCDF connection.
 example_output_file <- system.file(package="rbi", "example_output.nc")
 d <- bi_read(example_output_file)
 }
-
