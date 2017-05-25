@@ -451,13 +451,13 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
     } else {
       x$run_flag <- file.exists(x$output_file_name)
       if (x$run_flag) x$timestamp <- file.mtime(x$output_file_name)
+      ## set model name back to original name
+      set_name(x$model, model_name)
     }
   } else {
     ## if run from the constructor, just add all the options
     x$options <- all_options
   }
-  ## set model name back to original name
-  set_name(x$model, model_name)
   return(x)
 }
 
