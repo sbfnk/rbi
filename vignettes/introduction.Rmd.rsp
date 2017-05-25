@@ -187,7 +187,7 @@ Let's sample from the prior of the SIR model:
 bi <- sample(bi, target="prior", nsamples=1000, end_time=16*7, noutputs=16)
 ```
 ```{R echo=FALSE}
-bi <- rbi::sample(bi, target="prior", nsamples=1000, end_time=16*7, noutputs=16)
+bi <- rbi::sample(bi, target="prior", nsamples=1000, end_time=16*7, noutputs=16, seed=4775)
 ```
 
 
@@ -195,9 +195,6 @@ This step calls **LibBi** to sample from the prior distribution of the previousl
 
 ```{R eval=FALSE}
 bi <- sample(bi)
-```
-```{R echo=FALSE}
-bi <- rbi::sample(bi, target="prior", nsamples=1000, end_time=16*7, noutputs=16)
 ```
 
 The `sample` command returns an updated `libbi` object which, in this case, we just assign again to the `bi` object. Any call of `sample` preserves options passed to the previous call of `sample` and `libbi`, unless they are overwritten by arguments passed to `sample` (e.g., passing a new `nsamples` argument). Let's have a closer look at the `bi` object:
