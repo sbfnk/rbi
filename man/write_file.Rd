@@ -5,12 +5,14 @@
 \alias{write_file.bi_model}
 \title{Writes a bi model to a file.}
 \usage{
-\method{write_file}{bi_model}(x, filename, ...)
+\method{write_file}{bi_model}(x, filename, update.name = TRUE, ...)
 }
 \arguments{
 \item{x}{a \code{\link{bi_model}} object}
 
 \item{filename}{name of the file to be written}
+
+\item{update.name}{whether to update the model name with the file name}
 
 \item{...}{ignored}
 }
@@ -28,4 +30,3 @@ write_file(PZ, "PZ.bi")
 \seealso{
 \code{\link{bi_model}}
 }
-

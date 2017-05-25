@@ -387,6 +387,7 @@ write_file <- function(x, ...) UseMethod("write_file")
 #'
 #' @param x a \code{\link{bi_model}} object
 #' @param filename name of the file to be written
+#' @param update.name whether to update the model name with the file name
 #' @param ... ignored
 #' @return the return value of the \code{\link{writeLines}} call.
 #' @seealso \code{\link{bi_model}}
@@ -396,12 +397,15 @@ write_file <- function(x, ...) UseMethod("write_file")
 #' write_file(PZ, "PZ.bi")
 #' @rdname write_file
 #' @export
-write_file.bi_model <- function(x, filename, ...) {
+write_file.bi_model <- function(x, filename, update.name=TRUE, ...) {
   "Write model to file"
   if (!grepl("\\.bi$", filename)) {
     filename <- paste(filename, "bi", sep = ".")
   }
   model_name <- sub("\\.bi$", "", basename(filename))
+  if (update.name) {
+    x <- set_name(x, model_name)
+  }
 
   writeLines(print(x, screen=FALSE), con = filename, sep = "\n")
 }

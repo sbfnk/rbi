@@ -155,6 +155,8 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
   if (!("bi_model" %in% class(x$model))) {
       x$model <- bi_model(filename=x$model)
   }
+  ## save model name, set again after all is done
+  model_name <- get_name(x$model)
 
   if (!missing(working_folder)) {
     x$working_folder <- absolute_path(working_folder)
@@ -454,6 +456,8 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
     ## if run from the constructor, just add all the options
     x$options <- all_options
   }
+  ## set model name back to original name
+  set_name(x$model, model_name)
   return(x)
 }
 
