@@ -22,7 +22,6 @@
 #' @return list of results
 #' @importFrom ncdf4 nc_close ncvar_get
 #' @importFrom data.table setkeyv setnames setDF is.data.table
-#' @importFrom reshape2 melt
 #' @importFrom utils setTxtProgressBar txtProgressBar
 #' @examples
 #' example_output_file <- system.file(package="rbi", "example_output.nc")
@@ -187,7 +186,7 @@ bi_read <- function(x, vars, dims, model, type, missval.threshold, coord_name, v
 
       if (!is.null(dim(all_values))) {
 
-        mav <- data.table::data.table(reshape2::melt(all_values, varnames = dim_names))
+        mav <- data.table::data.table(data.table::melt(all_values, varnames = dim_names))
         ## remove any extraneous dimensions from melting
         mav <- mav[, c(dim_names, "value"), with=F]
 
@@ -199,7 +198,7 @@ bi_read <- function(x, vars, dims, model, type, missval.threshold, coord_name, v
           all_matching_dims <- union(all_matching_dims, matching_dims)
           if (length(matching_vars) == 1)  {
             merge_values <- ncvar_get(nc, matching_vars)
-            mav_merge <- data.table::data.table(reshape2::melt(merge_values, varnames = rev(matching_dims), value.name = time_coord_names[var_type]))
+            mav_merge <- data.table::data.table(data.table::melt(merge_values, varnames = rev(matching_dims), value.name = time_coord_names[var_type]))
             mav <- merge(mav_merge, mav, by = unname(matching_dims))
           } else if (length(matching_vars) > 1) {
             stop("Found multiple matching time variables for ", var_name, ": ", matching_vars)
