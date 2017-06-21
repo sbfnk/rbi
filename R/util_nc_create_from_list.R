@@ -39,7 +39,7 @@ netcdf_create_from_list <- function(filename, variables, time_dim, coord_dims, v
   if (is.null(names(variables)) || any(names(variables) == "")) {
     stop("'variables' must be named")
   }
-  if (missing(coord_dims) || length(coord_dim) == 0) {
+  if (missing(coord_dims) || length(coord_dims) == 0) {
     coord_dims <- NULL
   } else if (guess_coord) {
     stop("'coord_dims' must not be given if guess_cord is TRUE")
@@ -207,7 +207,7 @@ netcdf_create_from_list <- function(filename, variables, time_dim, coord_dims, v
         stop("Can't have a time dimension called 'time'; try setting 'time_dim = \"time\"'.")
       }
       if ("coord" %in% data_cols) {
-        stop("Can't have a coord dimension called 'coord'; try setting 'coord_dim = \"coord\"'.")
+        stop("Can't have a coord dimension called 'coord'; try setting 'coord_dims = \"coord\"'.")
       }
 
       for (col in rev(data_cols)) {
