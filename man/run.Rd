@@ -7,7 +7,7 @@
 \usage{
 \method{run}{libbi}(x, client, proposal = c("model", "prior"), model, fix,
   options, config, add_options, log_file_name, stdoutput_file_name, init, input,
-  obs, time_dim, coord_dim, working_folder, output_all, sample_obs, thin,
+  obs, time_dim, coord_dims, working_folder, output_all, sample_obs, thin,
   chain = TRUE, seed = TRUE, ...)
 }
 \arguments{
@@ -39,7 +39,7 @@
 
 \item{time_dim}{The time dimension in any R objects that have been passed (\code{init}, \code{input}) and \code{obs}); if not given, will be guessed}
 
-\item{coord_dim}{The coord dimension in any \code{obs} R objects that have been passed; if not given, will be guessed}
+\item{coord_dims}{The coord dimension(s) in any \code{obs} R objects that have been passed; if not given, will be guessed}
 
 \item{working_folder}{path to a folder from which to run \code{LibBi}; default to a temporary folder.}
 
