@@ -624,6 +624,18 @@ add_output.libbi <- function(x, output, force=FALSE, ...){
   }
   if (is.character(output)) {
     x$output_file_name <- output
+  } else {
+    x$output_file_name <-
+      tempfile(pattern=paste(get_name(x$model), "output", sep = "_"),
+               fileext=".nc", tmpdir=absolute_path(x$working_folder))
+    write_opts <- list(x$output_file_name, output)
+    if ("coord_dims" %in% names(x)) {
+      write_opts[["coord_dims"]] <- x$coord_dims
+    }
+    if ("time_dim" %in% names(x)) {
+      write_opts[["time_dim"]] <- x$time_dim
+    }
+    do.call(bi_write, write_opts)
   }
   x$run_flag <- TRUE
   x$timestamp <- file.mtime(x$output_file_name)
