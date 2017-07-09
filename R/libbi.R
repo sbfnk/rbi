@@ -399,7 +399,7 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
 
     if (length(x$path_to_libbi) == 0) {
       if (is.null(getOption("path_to_libbi"))) {
-                                        # Maybe the system knows where libbi is
+        # Maybe the system knows where libbi is
         x$path_to_libbi <- Sys.which("libbi")
       } else {
         x$path_to_libbi <- getOption("path_to_libbi")
@@ -628,7 +628,7 @@ add_output.libbi <- function(x, output, force=FALSE, ...){
     x$output_file_name <-
       tempfile(pattern=paste(get_name(x$model), "output", sep = "_"),
                fileext=".nc", tmpdir=absolute_path(x$working_folder))
-    write_opts <- list(x$output_file_name, output)
+    write_opts <- list(filename = x$output_file_name, variables = output)
     if ("coord_dims" %in% names(x)) {
       write_opts[["coord_dims"]] <- x$coord_dims
     }
