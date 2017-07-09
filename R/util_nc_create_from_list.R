@@ -242,6 +242,7 @@ netcdf_create_from_list <- function(filename, variables, time_dim, coord_dims, v
 
       table_order <- rev(names(var_dims))
       if (!is.null(time_index)) table_order <- c(time_dim, table_order)
+      if (!is.null(coord_dims)) table_order <- c(coord_dims, table_order)
 
       new_order <- lapply(intersect(table_order, colnames(element)), function(x) {element[[x]]})
       if (length(new_order) > 0) {
