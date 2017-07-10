@@ -67,8 +67,8 @@ netcdf_create_from_list <- function(filename, variables, time_dim, coord_dims, v
     ## reset time and coord dim if we're guessing
     if (guess_time) time_dim <- NULL
     if (guess_coord) coord_dims <- NULL
-    ## reset time index dimension name
-    time_index <- NULL
+    ## reset nr index dimension name
+    nr_index <- NULL
     if (is.data.frame(element)) {
       element <- data.table(element)
       cols <- colnames(element)
@@ -95,6 +95,7 @@ netcdf_create_from_list <- function(filename, variables, time_dim, coord_dims, v
           }
         }
       }
+      if (is.null(time_dim) && "time" %in% colnames(element)) time_dim <- "time"
       ## guess coord dimension(s): a column that is not the time or value column,
       ## and not np or ns
       if (guess_coord) {
@@ -106,7 +107,6 @@ netcdf_create_from_list <- function(filename, variables, time_dim, coord_dims, v
         coord_dims <- guessed_coord
       }
 
-      if (is.null(time_dim) && "time" %in% colnames(element)) time_dim <- "time"
       ## add time and coord dimensions to vector of index columns
       if ("ns" %in% colnames(element)) {
         index_cols <- c(index_cols, list(ns = "ns"))
@@ -123,21 +123,22 @@ netcdf_create_from_list <- function(filename, variables, time_dim, coord_dims, v
       ## first, check for time and coord columns
       present_index_cols <- intersect(colnames(element), unlist(index_cols))
       index_table <- unique(element[, present_index_cols, with = FALSE])
+      nr_table <- index_table
       if (nrow(index_table) > 0) {
-        nr_table <- index_table
         if ("ns" %in% cols) {
           nr_table <- unique(nr_table[, setdiff(colnames(nr_table), "ns"), with = FALSE])
           var_dims <- c(list(ns_dim), var_dims)
           names(var_dims)[1] <- "ns"
         }
         if (nrow(nr_table) > 0) {
-          nr_table[["nr"]] <- seq_len(nrow(nr_table)) - 1
+          nr_index <- paste("nr", name, sep = "_")
+          nr_table[[nr_index]] <- seq_len(nrow(nr_table)) - 1
           index_table <- merge(index_table, nr_table)
-          time_index <- paste("nr", name, sep = "_")
-          nr_dim <- ncdim_def(time_index, "", nr_table[["nr"]])
-          dims[[time_index]] <- nr_dim
+          setkeyv(index_table, nr_index)
+          nr_dim <- ncdim_def(nr_index, "", nr_table[[nr_index]])
+          dims[[nr_index]] <- nr_dim
           var_dims <- c(var_dims, list(nr_dim))
-          names(var_dims)[length(var_dims)] <- time_index
+          names(var_dims)[length(var_dims)] <- nr_index
         }
         if (!is.null(time_dim) && time_dim %in% cols)
         {
@@ -235,14 +236,15 @@ netcdf_create_from_list <- function(filename, variables, time_dim, coord_dims, v
       }
       ## order variables
       order_cols <- data_cols
-      if (!is.null(time_index)) order_cols <- c(order_cols, time_index)
+      if (!is.null(nr_index)) order_cols <- c(order_cols, nr_index)
       if ("ns" %in% cols) order_cols <- c(order_cols, "ns")
       var_dims <-
         var_dims[names(var_dims)[order(match(names(var_dims), order_cols))]]
 
       table_order <- rev(names(var_dims))
-      if (!is.null(time_index)) table_order <- c(time_dim, table_order)
-      if (!is.null(coord_dims)) table_order <- c(coord_dims, table_order)
+      if (nrow(nr_table) > 0) {
+        element <- merge(element, nr_table)
+      }
 
       new_order <- lapply(intersect(table_order, colnames(element)), function(x) {element[[x]]})
       if (length(new_order) > 0) {

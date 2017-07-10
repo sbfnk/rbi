@@ -193,19 +193,19 @@ bi_read <- function(x, vars, dims, model, type, missval.threshold, coord_name, v
         ## find matching time and coord variables
         all_matching_dims <- c()
         for (var_type in names(time_coord_names)) {
-          matching_dims <- unlist(var_dims[[var_type]][unlist(var_dims[[var_type]]) %in% dim_names])
-          matching_vars <- names(matching_dims)
+          matching_dims <- unname(unlist(var_dims[[var_type]])[unlist(var_dims[[var_type]]) %in% dim_names])
+          matching_vars <- names(var_dims[[var_type]])[vapply(var_dims[[var_type]], function(x) {any(x %in% dim_names)}, TRUE)]
           all_matching_dims <- union(all_matching_dims, matching_dims)
           if (length(matching_vars) == 1)  {
             merge_values <- ncvar_get(nc, matching_vars)
-            mav_merge <- data.table::data.table(data.table::melt(merge_values, varnames = rev(matching_dims), value.name = time_coord_names[var_type]))
+            mav_merge <- data.table::data.table(data.table::melt(merge_values, varnames = matching_dims, value.name = time_coord_names[var_type]))
             mav <- merge(mav_merge, mav, by = unname(matching_dims))
           } else if (length(matching_vars) > 1) {
-            stop("Found multiple matching time variables for ", var_name, ": ", matching_vars)
+            stop(paste0("Found multiple matching", var_type, " variables for ", var_name, ": ", matching_vars))
           }
         }
 
-        for (var in all_matching_dims) {
+        for (var in setdiff(all_matching_dims, "ns")) {
           mav[[var]] <- NULL
         }
         table_order <- c(setdiff(colnames(mav), c(time_coord_names, "value")),
