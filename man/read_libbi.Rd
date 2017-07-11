@@ -17,3 +17,4 @@ a \code{\link{libbi}} object
 \description{
 This reads all options, files and outputs of a \code{LibBi} run to an RDS file specified
 }
+

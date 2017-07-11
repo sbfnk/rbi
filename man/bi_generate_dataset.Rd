@@ -21,3 +21,4 @@ synthetic dataset from a model. Parameters can be passed via the 'init' option
 in the model. The end time should be specified using the "end_time" option. If this is not given,
 only a parameter set is sampled.
 }
+

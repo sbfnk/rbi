@@ -19,3 +19,4 @@ Generates a version of the model where the proposal blocks are replaced by the p
 \code{\link{bi_model}}
 }
 \keyword{internal}
+

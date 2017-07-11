@@ -28,3 +28,4 @@ PZ <- set_name(PZ, "new_PZ")
 \seealso{
 \code{\link{bi_model}}
 }
+

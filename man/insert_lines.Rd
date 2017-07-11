@@ -37,3 +37,4 @@ PZ <- insert_lines(PZ, lines = "noise beta", after = 8)
 \seealso{
 \code{\link{bi_model}}
 }
+

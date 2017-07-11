@@ -17,3 +17,4 @@ The method \code{predict} is an alias for \code{sample(target="prediction")}. Us
 
 For the help page of the base R \code{optimise} function, see \code{\link[stats]{optimise}}.
 }
+

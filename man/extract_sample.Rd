@@ -23,3 +23,4 @@ list of parameters and trajectories
 This function takes the provided \code{\link{libbi}}
     results and extracts a data frame.
 }
+

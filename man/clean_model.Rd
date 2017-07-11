@@ -20,3 +20,4 @@ Cleans the model by working out correct indents, removing long comments and
 \code{\link{bi_model}}
 }
 \keyword{internal}
+

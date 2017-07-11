@@ -2,11 +2,9 @@
 % Please edit documentation in R/libbi.R
 \name{filter}
 \alias{filter}
-\alias{filter.libbi}
-\alias{filter}
 \alias{filter.bi_model}
-\alias{filter}
 \alias{filter.character}
+\alias{filter.libbi}
 \title{Using the LibBi wrapper to filter}
 \usage{
 \method{filter}{libbi}(x, ...)
@@ -31,3 +29,4 @@ If \code{x} is given as a character string, it will be interpreted as the filena
 
 For the help page of the base R \code{filter} function, see \code{\link[stats]{filter}}.
 }
+

@@ -71,3 +71,4 @@ if (bi_object$run_flag) {
 \seealso{
 \code{\link{libbi}}
 }
+

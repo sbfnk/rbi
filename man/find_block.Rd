@@ -21,3 +21,4 @@ Finds a block and returns the range of line numbers encompassed by that block.
 \code{\link{bi_model}}
 }
 \keyword{internal}
+

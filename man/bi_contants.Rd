@@ -19,3 +19,4 @@ This function gets the name of all the variables in the passed file, list or \co
 example_output_file <- system.file(package="rbi", "example_output.nc")
 bi_contents(example_output_file)
 }
+

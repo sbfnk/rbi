@@ -28,3 +28,4 @@ PZ <- fix(PZ, alpha = 0)
 \seealso{
 \code{\link{bi_model}}
 }
+

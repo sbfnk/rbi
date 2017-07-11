@@ -28,3 +28,4 @@ PZ <- remove_lines(PZ, 2)
 \seealso{
 \code{\link{bi_model}}
 }
+

@@ -34,3 +34,4 @@ bi_object <- libbi(model = system.file(package="rbi", "PZ.bi"))
 \seealso{
 \code{\link{sample}}, \code{\link{filter}}, \code{\link{optimise}}, \code{\link{rewrite}}
 }
+

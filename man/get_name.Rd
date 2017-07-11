@@ -26,3 +26,4 @@ get_name(PZ)
 \seealso{
 \code{\link{bi_model}}
 }
+

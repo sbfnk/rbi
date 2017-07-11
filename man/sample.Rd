@@ -2,11 +2,9 @@
 % Please edit documentation in R/libbi.R
 \name{sample}
 \alias{sample}
-\alias{sample.libbi}
-\alias{sample}
 \alias{sample.bi_model}
-\alias{sample}
 \alias{sample.character}
+\alias{sample.libbi}
 \title{Using the LibBi wrapper to sample}
 \usage{
 \method{sample}{libbi}(x, ...)
@@ -31,3 +29,4 @@ If \code{x} is given as a character string, it will be interpreted as the filena
 
 For the help page of the base R \code{sample} function, see \code{\link[base]{sample}}.
 }
+

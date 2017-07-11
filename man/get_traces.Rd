@@ -32,3 +32,4 @@ This function takes the provided \code{\link{libbi}} object
     which has been run and returns a data frame with the parameter
     traces.
 }
+
