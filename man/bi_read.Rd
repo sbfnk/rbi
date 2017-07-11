@@ -5,7 +5,7 @@
 \title{Bi Read}
 \usage{
 bi_read(x, vars, dims, model, type, missval.threshold, coord_name, vector, thin,
-  verbose, clear_cache, init.to.param = FALSE)
+  verbose, clear_cache, init.to.param = FALSE, ...)
 }
 \arguments{
 \item{x}{either a path to a NetCDF file, or a NetCDF connection created using \code{nc_open}, or a \code{\link{libbi}} object from which to read the output}
@@ -31,6 +31,8 @@ bi_read(x, vars, dims, model, type, missval.threshold, coord_name, vector, thin,
 \item{clear_cache}{if TRUE, will clear the cache and re-read the file even if cached data exists}
 
 \item{init.to.param}{logical; if TRUE, convert states to initial values}
+
+\item{...}{any extra parameters to \code{\link{bi_open}}, especially \code{file}}
 }
 \value{
 list of results

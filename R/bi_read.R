@@ -19,6 +19,7 @@
 #' @param verbose if TRUE, will print variables as they are read
 #' @param clear_cache if TRUE, will clear the cache and re-read the file even if cached data exists
 #' @param init.to.param logical; if TRUE, convert states to initial values
+#' @param ... any extra parameters to \code{\link{bi_open}}, especially \code{file}
 #' @return list of results
 #' @importFrom ncdf4 nc_close ncvar_get
 #' @importFrom data.table setkeyv setnames setDF is.data.table
@@ -27,9 +28,9 @@
 #' example_output_file <- system.file(package="rbi", "example_output.nc")
 #' d <- bi_read(example_output_file)
 #' @export
-bi_read <- function(x, vars, dims, model, type, missval.threshold, coord_name, vector, thin, verbose, clear_cache, init.to.param=FALSE)
+bi_read <- function(x, vars, dims, model, type, missval.threshold, coord_name, vector, thin, verbose, clear_cache, init.to.param=FALSE, ...)
 {
-  nc <- bi_open(x)
+  nc <- bi_open(x, ...)
   res <- list()
 
   thin <-
