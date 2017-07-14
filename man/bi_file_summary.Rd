@@ -4,10 +4,10 @@
 \alias{bi_file_summary}
 \title{NetCDF File Summary}
 \usage{
-bi_file_summary(filename)
+bi_file_summary(...)
 }
 \arguments{
-\item{filename}{A path to a NetCDF file}
+\item{...}{Any extra parameters to \code{\link{bi_open}}, especially \code{x} and \code{file}}
 }
 \value{
 None
@@ -16,5 +16,9 @@ None
 This function prints a little summary of the content
 of a NetCDF file, as well as its creation time. You can
 then retrieve variables of interest using \code{\link{bi_read}}.
+}
+\examples{
+example_output_file <- system.file(package="rbi", "example_output.nc")
+bi_file_summary(example_output_file)
 }
 

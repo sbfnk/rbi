@@ -5,14 +5,15 @@
 #' This function prints a little summary of the content
 #' of a NetCDF file, as well as its creation time. You can
 #' then retrieve variables of interest using \code{\link{bi_read}}.
-#' @param filename A path to a NetCDF file
+#' @param ... Any extra parameters to \code{\link{bi_open}}, especially \code{x} and \code{file}
 #' @return None
 #' @export
-#' @importFrom ncdf4 nc_open nc_close
-#' 
-bi_file_summary <- function(filename){
-  print(file.info(tools::file_path_as_absolute(filename))[,c("mtime")])
-  ncfile <- nc_open(tools::file_path_as_absolute(filename), verbose = FALSE)
+#' @importFrom ncdf4 nc_close
+#' @examples
+#' example_output_file <- system.file(package="rbi", "example_output.nc")
+#' bi_file_summary(example_output_file)
+bi_file_summary <- function(...){
+  ncfile <- bi_open(...)
   print(ncfile)
   nc_close(ncfile)
 }
