@@ -1,4 +1,13 @@
-# rbi 0.7.9999
+# rbi 0.8.0
+
+* `supplement` option to `save_libbi` to store supplementary information
+* Temporary directories are now removed when quitting R or collecting garbage
+* Improved chaining of `libbi` calls
+* Fixed problems with `predict`
+* Fixed add_output when passed a list
+* Fixed a bug in writing observation files; extra dimensions are now written in the correct order
+* Improved writing of observation files with `ns` or other dimensions
+* Improved error handling: `libbi` calls now finish and yield a warning if the call to the libbi executable fails; this makes it possible to inspect the object to diagnoise the problem
 
 # rbi 0.7.0
 
