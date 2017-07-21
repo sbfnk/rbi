@@ -21,4 +21,3 @@ then retrieve variables of interest using \code{\link{bi_read}}.
 example_output_file <- system.file(package="rbi", "example_output.nc")
 bi_file_summary(example_output_file)
 }
-

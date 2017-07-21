@@ -2,9 +2,9 @@
 % Please edit documentation in R/rbi-package.R
 \docType{package}
 \name{rbi-package}
-\alias{RBi}
-\alias{rbi}
 \alias{rbi-package}
+\alias{rbi}
+\alias{RBi}
 \title{RBi - R interface for \code{libbi}}
 \description{
 \code{rbi} is an interface to \code{libbi}, a library for Bayesian Inference
@@ -38,14 +38,13 @@ bi_write("mu_sigma.nc", mu_sigma)
 \dontrun{demo(PZ_filtering)}
 
 }
-\author{
-Pierre E. Jacob \email{pierre.jacob.work@gmail.com}, Anthony Lee \email{awllee@gmail.com}, Lawrence Murray \email{lawrence.murray@csiro.au}, Sebastian Funk \email{sebastian.funk@lshtm.ac.uk}
-}
 \references{
 \url{http://libbi.org/}
 }
 \seealso{
 \code{\link{libbi}}
 }
+\author{
+Pierre E. Jacob \email{pierre.jacob.work@gmail.com}, Anthony Lee \email{awllee@gmail.com}, Lawrence Murray \email{lawrence.murray@csiro.au}, Sebastian Funk \email{sebastian.funk@lshtm.ac.uk}
+}
 \keyword{package}
-

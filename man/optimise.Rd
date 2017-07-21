@@ -2,9 +2,11 @@
 % Please edit documentation in R/libbi.R
 \name{optimise}
 \alias{optimise}
-\alias{optimise.bi_model}
-\alias{optimise.character}
 \alias{optimise.libbi}
+\alias{optimise}
+\alias{optimise.bi_model}
+\alias{optimise}
+\alias{optimise.character}
 \title{Using the LibBi wrapper to optimise}
 \usage{
 \method{optimise}{libbi}(x, ...)
@@ -29,4 +31,3 @@ If \code{x} is given as a character string, it will be interpreted as the filena
 
 For the help page of the base R \code{optimise} function, see \code{\link[stats]{optimise}}.
 }
-

@@ -21,4 +21,3 @@ a character vector of the lines in the block
 Returns the contents of a block in a LibBi model as a character vector of
   lines.
 }
-

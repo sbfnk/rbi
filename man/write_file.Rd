@@ -30,4 +30,3 @@ write_file(PZ, "PZ.bi")
 \seealso{
 \code{\link{bi_model}}
 }
-

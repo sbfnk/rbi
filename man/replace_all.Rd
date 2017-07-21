@@ -25,4 +25,3 @@ Takes every occurrence of one string and replaces it with another
 \seealso{
 \code{\link{bi_model}}
 }
-

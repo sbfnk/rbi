@@ -15,4 +15,3 @@
 \description{
 This reads in the output file of the \code{\link{libbi}} object (which has been run before) and prints summary information of parameters
 }
-

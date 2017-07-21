@@ -20,4 +20,3 @@ This is used by the \code{\link{run}} functions of rbi, if 'sample_obs=TRUE'
 \code{\link{bi_model}}
 }
 \keyword{internal}
-

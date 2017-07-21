@@ -19,4 +19,3 @@ This function opens an NetCDF file
 The file can be specified as a string to the filepath, in which
 case a NetCDF connection is opened, or directly as a NetCDF connection.
 }
-

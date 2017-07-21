@@ -24,4 +24,3 @@ bi <- libbi(model = system.file(package="rbi", "PZ.bi"))
 example_output_file <- system.file(package="rbi", "example_output.nc")
 bi <- add_output(bi, example_output_file)
 }
-

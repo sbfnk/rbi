@@ -19,4 +19,3 @@ Checks if a model is empty (i.e., has been initialised without any content)
 \code{\link{bi_model}}
 }
 \keyword{internal}
-
