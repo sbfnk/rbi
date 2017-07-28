@@ -11,7 +11,7 @@
 #' @examples
 #' model_file_name <- system.file(package="rbi", "PZ.bi")
 #' PZ <- bi_model(filename = model_file_name)
-#' @seealso \code{\link{fix}}, \code{\link{insert_lines}}, \code{\link{remove_lines}}, \code{\link{replace_all}}, \code{\link{get_name}}, \code{\link{set_name}}, \code{\link{write_file}}
+#' @seealso \code{\link{fix}}, \code{\link{insert_lines}}, \code{\link{remove_lines}}, \code{\link{replace_all}}, \code{\link{get_name}}, \code{\link{set_name}}, \code{\link{write_model}}
 #' @export
 bi_model <- function(filename, lines, ...) {
   if (sum(!missing(filename), !missing(lines)) > 1) {
@@ -378,14 +378,15 @@ remove_lines.bi_model <- function(x, what, ...) {
   return(clean_model(x))
 }
 
+
 #' @export
-write_file <- function(x, ...) UseMethod("write_file")
-#' @name write_file
+write_model <- function(x, ...) UseMethod("write_model")
+#' @name write_model
 #' @title Writes a bi model to a file.
 #' @description
 #' Writes a bi model to a file given by \code{filename}. The extension '.bi' will be added if necessary.
 #'
-#' @param x a \code{\link{bi_model}} object
+#' @param x a \code{\link{bi_model}} object, or a \code{\link{libbi}} object conatining a model
 #' @param filename name of the file to be written
 #' @param update.name whether to update the model name with the file name
 #' @param ... ignored
@@ -394,10 +395,10 @@ write_file <- function(x, ...) UseMethod("write_file")
 #' @examples
 #' model_file_name <- system.file(package="rbi", "PZ.bi")
 #' PZ <- bi_model(filename = model_file_name)
-#' write_file(PZ, "PZ.bi")
-#' @rdname write_file
+#' write_model(PZ, "PZ.bi")
+#' @rdname write_model
 #' @export
-write_file.bi_model <- function(x, filename, update.name=TRUE, ...) {
+write_model.bi_model <- function(x, filename, update.name=TRUE, ...) {
   "Write model to file"
   if (!grepl("\\.bi$", filename)) {
     filename <- paste(filename, "bi", sep = ".")
@@ -408,6 +409,13 @@ write_file.bi_model <- function(x, filename, update.name=TRUE, ...) {
   }
 
   writeLines(print(x, screen=FALSE), con = filename, sep = "\n")
+}
+#' @rdname write_model
+#' @name write_model
+#' @export
+write_model.libbi <- function(x, filename, ...){
+  if (missing(filename)) filename <- x$model_file_name
+  write_model(x$model, filename=filename, ...)
 }
 
 #' @name find_block

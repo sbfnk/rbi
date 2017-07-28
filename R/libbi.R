@@ -198,7 +198,7 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
       tempfile(pattern=paste(get_name(x$model), "model", sep = "_"),
                fileext=".bi",
                tmpdir=absolute_path(x$working_folder))
-    write_file(x$model, x$model_file_name)
+    write_model(x)
   }
 
   ## read file options: input, init, obs
@@ -373,7 +373,7 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
         tempfile(pattern=paste(get_name(run_model), "model", sep = "_"),
                  fileext=".bi",
                  tmpdir=absolute_path(x$working_folder))
-      write_file(run_model, run_model_file_name)
+      write_model(run_model, run_model_file_name)
       all_options[["model-file"]] <- run_model_file_name
     } else {
       all_options[["model-file"]] <- x$model_file_name

@@ -22,5 +22,5 @@ model_file_name <- system.file(package="rbi", "PZ.bi")
 PZ <- bi_model(filename = model_file_name)
 }
 \seealso{
-\code{\link{fix}}, \code{\link{insert_lines}}, \code{\link{remove_lines}}, \code{\link{replace_all}}, \code{\link{get_name}}, \code{\link{set_name}}, \code{\link{write_file}}
+\code{\link{fix}}, \code{\link{insert_lines}}, \code{\link{remove_lines}}, \code{\link{replace_all}}, \code{\link{get_name}}, \code{\link{set_name}}, \code{\link{write_model}}
 }
