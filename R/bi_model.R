@@ -352,6 +352,7 @@ remove_lines <- function(x, ...) UseMethod("remove_lines")
 #'
 #' @param x a \code{\link{bi_model}} object
 #' @param what either a vector of line number(s) to remove, or a vector of blocks to remove (e.g., "parameter")
+#' @param match any string to match (passed to a \link{grep} call); if given only matching strings are removed
 #' @param ... ignored
 #' @return the updated bi model
 #' @seealso \code{\link{bi_model}}
@@ -361,7 +362,7 @@ remove_lines <- function(x, ...) UseMethod("remove_lines")
 #' PZ <- remove_lines(PZ, 2)
 #' @rdname remove_lines
 #' @export
-remove_lines.bi_model <- function(x, what, ...) {
+remove_lines.bi_model <- function(x, what, match, ...) {
   if (missing(what)) {
     stop("'what' must be given")
   }
@@ -370,7 +371,12 @@ remove_lines.bi_model <- function(x, what, ...) {
   } else if (is.character(what)) {
     block <- find_block(x, what)
     if (length(block) > 0) {
-      x <- x[-block]
+      if (!missing(match)) {
+        block <- block[grep(match, x[block])]
+      }
+      if (length(block) > 0) {
+        x <- x[-block]
+      }
     }
   } else {
     stop("'what' must be a numeric or character vector.")
