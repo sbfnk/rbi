@@ -24,5 +24,5 @@ Adds an (output, obs, etc.) file to a \code{\link{libbi}} object. This is useful
 \examples{
 bi <- libbi(model = system.file(package="rbi", "PZ.bi"))
 example_output_file <- system.file(package="rbi", "example_output.nc")
-bi <- attach_file(bi, example_output_file)
+bi <- attach_file(bi, "output", example_output_file)
 }
