@@ -19,8 +19,8 @@
 #' @param verbose if TRUE, will print variables as they are read
 #' @param clear_cache if TRUE, will clear the cache and re-read the file even if cached data exists
 #' @param init.to.param logical; if TRUE, convert states to initial values
-#' @param ... any extra parameters to \code{\link{bi_open}}, especially \code{file}
 #' @return list of results
+#' @inheritParams bi_open
 #' @importFrom ncdf4 nc_close ncvar_get
 #' @importFrom data.table setkeyv setnames setDF is.data.table
 #' @importFrom utils setTxtProgressBar txtProgressBar
@@ -28,9 +28,13 @@
 #' example_output_file <- system.file(package="rbi", "example_output.nc")
 #' d <- bi_read(example_output_file)
 #' @export
-bi_read <- function(x, vars, dims, model, type, missval.threshold, coord_name, vector, thin, verbose, clear_cache, init.to.param=FALSE, ...)
+bi_read <- function(x, vars, dims, model, type, file, missval.threshold, coord_name, vector, thin, verbose, clear_cache, init.to.param=FALSE)
 {
-  nc <- bi_open(x, ...)
+  if (missing(file)) {
+    nc <- bi_open(x)
+  } else {
+    nc <- bi_open(x, file)
+  }
   res <- list()
 
   thin <-
@@ -106,9 +110,11 @@ bi_read <- function(x, vars, dims, model, type, missval.threshold, coord_name, v
   res <- base::vector("list", length(nc_var_names[["other"]]))
   names(res) <- nc_var_names[["other"]]
 
-  ## associate time and coord variables
   ## read variables
-  if ("libbi" %in% class(x) && x$use_cache) {
+
+  ## cache
+  if ("libbi" %in% class(x) && x$use_cache &&
+      (missing(file) || file == "output")) {
     if (!missing(clear_cache) && clear_cache) {
       x$.cache$data <- NULL
       x$.cache$thin <- NULL
@@ -261,7 +267,8 @@ bi_read <- function(x, vars, dims, model, type, missval.threshold, coord_name, v
 
   if (typeof(x) %in% c("character", "libbi")) nc_close(nc)
 
-  if ("libbi" %in% class(x) && x$use_cache) {
+  if ("libbi" %in% class(x) && x$use_cache &&
+      (missing(file) || file == "output")) {
     if (!("data" %in% names(x$.cache))) {
       x$.cache$data <- list()
     }
