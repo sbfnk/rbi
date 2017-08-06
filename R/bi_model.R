@@ -352,7 +352,7 @@ remove_lines <- function(x, ...) UseMethod("remove_lines")
 #'
 #' @param x a \code{\link{bi_model}} object
 #' @param what either a vector of line number(s) to remove, or a vector of blocks to remove (e.g., "parameter")
-#' @param match any string to match (passed to a \link{grep} call); if given only matching strings are removed
+#' @param only only remove lines assigning given names (as a vector of character strings)
 #' @param ... ignored
 #' @return the updated bi model
 #' @seealso \code{\link{bi_model}}
@@ -362,25 +362,35 @@ remove_lines <- function(x, ...) UseMethod("remove_lines")
 #' PZ <- remove_lines(PZ, 2)
 #' @rdname remove_lines
 #' @export
-remove_lines.bi_model <- function(x, what, match, ...) {
+remove_lines.bi_model <- function(x, what, only, ...) {
   if (missing(what)) {
     stop("'what' must be given")
   }
+  to_remove <- c()
   if (is.numeric(what)) {
-    x <- x[-what]
+    to_remove <- what
   } else if (is.character(what)) {
-    block <- find_block(x, what)
-    if (length(block) > 0) {
-      if (!missing(match)) {
-        block <- block[grep(match, x[block])]
-      }
-      if (length(block) > 0) {
-        x <- x[-block]
-      }
-    }
+    to_remove <- find_block(x, what)
   } else {
     stop("'what' must be a numeric or character vector.")
   }
+
+  if (length(to_remove) > 0 && !missing(only)) {
+    pattern <- "^(const)?[[:space:]]?([A-Za-z_0-9[\\]]*)[[:space:]]*(~|=|<-)"
+    assign_lines <- grep(pattern, x[to_remove], perl=TRUE)
+    assign_vars <- sub(paste0(pattern, ".*$"), "\\2",
+                       x[to_remove][assign_lines], perl=TRUE)
+    assign_vars <- sub("\\[.*]", "", assign_vars)
+    filter_lines <- assign_lines[which(!(assign_vars %in% only))]
+    if (length(filter_lines) > 0) {
+      to_remove <- to_remove[-filter_lines]
+    }
+  }
+
+  if (length(to_remove) > 0) {
+    x <- x[-to_remove]
+  }
+
   return(clean_model(x))
 }
 

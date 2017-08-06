@@ -365,7 +365,10 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
     if ("target" %in% names(all_options) &&
         all_options[["target"]] == "prediction") {
       run_model <- remove_lines(run_model, "parameter")
-      run_model <- remove_lines(run_model, "initial", match="~")
+      if ("init-file" %in% names(x$option)) {
+        init_given <- bi_contents(x$options[["init-file"]])
+        run_model <- remove_lines(run_model, "initial", only = init_given)
+      }
       run_model_modified <- TRUE
     }
     if (run_model_modified) {

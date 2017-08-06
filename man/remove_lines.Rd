@@ -5,14 +5,14 @@
 \alias{remove_lines.bi_model}
 \title{Remove line(s) and/or block(s) in a libbi model}
 \usage{
-\method{remove_lines}{bi_model}(x, what, match, ...)
+\method{remove_lines}{bi_model}(x, what, only, ...)
 }
 \arguments{
 \item{x}{a \code{\link{bi_model}} object}
 
 \item{what}{either a vector of line number(s) to remove, or a vector of blocks to remove (e.g., "parameter")}
 
-\item{match}{any string to match (passed to a \link{grep} call); if given only matching strings are removed}
+\item{only}{only remove lines assigning given names (as a vector of character strings)}
 
 \item{...}{ignored}
 }
