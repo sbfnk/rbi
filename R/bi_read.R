@@ -271,7 +271,7 @@ bi_read <- function(x, vars, dims, model, type, file, missval.threshold, coord_n
     }
   }
 
-  if (typeof(x) %in% c("character", "libbi")) nc_close(nc)
+  if (any(class(x) %in% c("character", "libbi"))) nc_close(nc)
 
   if ("libbi" %in% class(x) && x$use_cache &&
       (missing(file) || file == "output")) {
