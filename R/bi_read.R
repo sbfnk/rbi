@@ -226,8 +226,14 @@ bi_read <- function(x, vars, dims, model, type, file, missval.threshold, coord_n
         if (length(cols) > 0) setkeyv(mav, cols)
         rownames(mav) <- seq_len(nrow(mav))
 
-        if (!missing(dims) && !is.null(dims) && length(dims) == 1 && "coord" %in% colnames(mav)) {
+        if ("libbi" %in% class(x) && length(x$coord_dim) == 1 && "coord" %in% colnames(mav)) {
+          setnames(mav, "coord", x$coord_dim)
+        } else if (!missing(dims) && !is.null(dims) && length(dims) == 1 && "coord" %in% colnames(mav)) {
           setnames(mav, "coord", names(dims))
+        }
+
+        if ("libbi" %in% class(x) && length(x$time_dim) == 1 && "time" %in% colnames(mav)) {
+          setnames(mav, "time", x$time_dim)
         }
 
         for (col in colnames(mav)) {
