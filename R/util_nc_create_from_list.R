@@ -179,16 +179,18 @@ netcdf_create_from_list <- function(filename, variables, time_dim, coord_dims, v
           if (length(coord_dims) > 1) {
             sort_keys <- c(coord_dims)
             index_cols <- colnames(index_table)
-            if ("nr" %in% index_cols) sort_keys <- c(sort_keys, "nr")
+            if (nr_index %in% index_cols) sort_keys <- c(sort_keys, nr_index)
             if ("ns" %in% index_cols) sort_keys <- c(sort_keys, "ns")
             setkeyv(index_table, sort_keys)
             index_table[[coord_var]] <- seq_len(nrow(index_table))
             id_columns <- c()
-            if ("nr" %in% index_cols) id_columns <- c("nr", id_columns)
+            if (nr_index %in% index_cols) id_columns <- c(nr_index, id_columns)
             if ("ns" %in% index_cols) id_columns <- c("ns", id_columns)
-            coord_table <-
-              data.table::melt(index_table[, c(id_columns, coord_dims),
-                                           with = FALSE], id.vars=id_columns)
+            if (length(id_columns) > 0) {
+              coord_table <-
+                data.table::melt(index_table[, c(id_columns, coord_dims),
+                                             with = FALSE], id.vars=id_columns)
+            }
             sort_keys <- rev(setdiff(colnames(coord_table), "value"))
             setkeyv(coord_table, sort_keys)
             values[[coord_var]] <- coord_table[[value_column]]
