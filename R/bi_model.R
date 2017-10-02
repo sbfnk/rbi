@@ -568,7 +568,7 @@ var_names.bi_model <- function(x, type, dim = FALSE, opt = FALSE,
       ## put commas in parentheses back
       names_vec <-
         c(names_vec,
-          unlist(strsplit(names, '\\([^)]+,(*SKIP)(*FAIL)|,\\s*', perl=TRUE)))
+          unlist(strsplit(names, '[([][^)\\]]+,(*SKIP)(*FAIL)|,\\s*', perl=TRUE)))
     }
   }
   if (!aux) names_vec <- grep("^__.*_$", names_vec, invert=TRUE, value=TRUE)
