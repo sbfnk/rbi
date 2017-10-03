@@ -289,7 +289,7 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
       file_dims <- do.call(bi_write, write_opts)
       x$dims[names(file_dims$dims)] <- file_dims$dims
       if (!is.null(file_dims$time_dim)) x$time_dim <- file_dims$time_dim
-      if (!is.null(file_dims$coord_dims)) x$coord_dims <- file_dims$coord_dims
+      if (file == "obs" && !is.null(file_dims$coord_dims)) x$coord_dims <- file_dims$coord_dims
       file_options[[paste(file, "file", sep = "-")]] <- arg_file_name
     } else if (is.character(arg)) {
       file_options[[paste(file, "file", sep = "-")]] <- arg

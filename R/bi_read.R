@@ -13,7 +13,6 @@
 #' @param model model file or a \code{bi_model} object (if \code{x} is not a \code{libbi} object)
 #' @param type vector of types of variable to read (out of "param", "state", "noise", "obs"). This needs 'x' to be a \code{\link{libbi}} object or \code{model} to be specified
 #' @param missval.threshold upper threshold for the likelihood
-#' @param coord_name name of coord dimension (if any)
 #' @param vector if TRUE, will return results as vectors, not data.frames
 #' @param thin thinning (keep only 1/thin of samples)
 #' @param verbose if TRUE, will print variables as they are read
@@ -28,7 +27,7 @@
 #' example_output_file <- system.file(package="rbi", "example_output.nc")
 #' d <- bi_read(example_output_file)
 #' @export
-bi_read <- function(x, vars, dims, model, type, file, missval.threshold, coord_name, vector, thin, verbose, clear_cache, init.to.param=FALSE)
+bi_read <- function(x, vars, dims, model, type, file, missval.threshold, coord_dims, vector, thin, verbose, clear_cache, init.to.param=FALSE)
 {
   if (missing(file)) {
     nc <- bi_open(x)
@@ -41,6 +40,8 @@ bi_read <- function(x, vars, dims, model, type, file, missval.threshold, coord_n
     as.integer(ifelse(missing(thin),
                       ifelse("libbi" %in% class(x), x$thin, 1), thin))
 
+  if (missing(coord_dims)) coord_dims <- NULL
+
   if ("libbi" %in% class(x) && !is.null(x$dims)) {
     if (missing(model)) {
       model <- x$model
@@ -51,6 +52,11 @@ bi_read <- function(x, vars, dims, model, type, file, missval.threshold, coord_n
       dims <- x$dims
     } else {
       warning("Given 'dims' will overwrite dimensions in passed libbi object")
+    }
+    if (is.null(coord_dims)) {
+      coord_dims <- x$coord_dims
+    } else {
+      warning("Given 'coord_dims' will overwrite dimensions in passed libbi object")
     }
   }
 
@@ -205,8 +211,13 @@ bi_read <- function(x, vars, dims, model, type, file, missval.threshold, coord_n
           all_matching_dims <- union(all_matching_dims, matching_dims)
           if (length(matching_vars) == 1)  {
             merge_values <- ncvar_get(nc, matching_vars)
-            mav_merge <- data.table::data.table(data.table::melt(merge_values, varnames = matching_dims, value.name = time_coord_names[var_type]))
-            mav <- merge(mav_merge, mav, by = unname(matching_dims))
+            if (var_type == "coord" && !is.null(coord_dims[[var_name]])) {
+              colnames(merge_values) <- coord_dims[[var_name]]
+              mav <- cbind(merge_values, mav)
+            } else {
+              mav_merge <- data.table::data.table(data.table::melt(merge_values, varnames = matching_dims, value.name = time_coord_names[var_type]))
+              mav <- merge(mav_merge, mav, by = unname(matching_dims))
+            }
           } else if (length(matching_vars) > 1) {
             stop(paste0("Found multiple matching", var_type, " variables for ", var_name, ": ", matching_vars))
           }
@@ -239,7 +250,7 @@ bi_read <- function(x, vars, dims, model, type, file, missval.threshold, coord_n
         for (col in colnames(mav)) {
           if (!missing(dims) && !is.null(dims) && col %in% names(dims)) {
             mav[[col]] <- factor(mav[[col]], labels = dims[[col]])
-          } else if (!(col %in% c("value", time_coord_names[c("time", "coord")]))) {
+          } else if (!(col %in% c("value", time_coord_names[c("time", "coord")], coord_dims[[var_name]]))) {
             mav[[col]] <- mav[[col]] - 1
           }
         }
