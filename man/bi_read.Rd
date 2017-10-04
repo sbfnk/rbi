@@ -4,7 +4,7 @@
 \alias{bi_read}
 \title{Bi Read}
 \usage{
-bi_read(x, vars, dims, model, type, file, missval.threshold, coord_name, vector,
+bi_read(x, vars, dims, model, type, file, missval.threshold, coord_dims, vector,
   thin, verbose, clear_cache, init.to.param = FALSE)
 }
 \arguments{
@@ -21,8 +21,6 @@ bi_read(x, vars, dims, model, type, file, missval.threshold, coord_name, vector,
 \item{file}{file to open (out of "input", "init", "obs", "output"), if \code{x} is given as a \code{libbi} object; by default, will read output file}
 
 \item{missval.threshold}{upper threshold for the likelihood}
-
-\item{coord_name}{name of coord dimension (if any)}
 
 \item{vector}{if TRUE, will return results as vectors, not data.frames}
 

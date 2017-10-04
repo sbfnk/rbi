@@ -16,7 +16,7 @@ if it already exists.}
 
 \item{time_dim}{the name of the time dimension, if one exists; default: "time"}
 
-\item{coord_dims}{the names of the coordinate dimension, if any}
+\item{coord_dims}{the names of the coordinate dimension, if any; should be a named list of character vectors, they are matched to variables names}
 
 \item{value_column}{if any \code{variables} are data frames, which column contains the values (default: "value")}
 
