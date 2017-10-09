@@ -213,6 +213,7 @@ bi_read <- function(x, vars, dims, model, type, file, missval.threshold, coord_d
             merge_values <- ncvar_get(nc, matching_vars)
             if (var_type == "coord" && !is.null(coord_dims[[var_name]])) {
               colnames(merge_values) <- coord_dims[[var_name]]
+              merge_values <- apply(merge_values, 2, as.integer)
               mav <- cbind(merge_values, mav)
             } else {
               mav_merge <- data.table::data.table(data.table::melt(merge_values, varnames = matching_dims, value.name = time_coord_names[var_type]))
