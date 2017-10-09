@@ -12,7 +12,9 @@
 #' @param dims factors for dimensions
 #' @param model model file or a \code{bi_model} object (if \code{x} is not a \code{libbi} object)
 #' @param type vector of types of variable to read (out of "param", "state", "noise", "obs"). This needs 'x' to be a \code{\link{libbi}} object or \code{model} to be specified
+#' @param file which file to read (if \code{x} is given as a \code{\link{libbi}} object): one of "output" (default), "init", "input", "obs"
 #' @param missval.threshold upper threshold for the likelihood
+#' @param coord_dims any \code{coord} dimensions, given as a named list of character vectors, where each element corresponds to the variable of the same name, and the character vector are the \code{coord} dimensions
 #' @param vector if TRUE, will return results as vectors, not data.frames
 #' @param thin thinning (keep only 1/thin of samples)
 #' @param verbose if TRUE, will print variables as they are read
