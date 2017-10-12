@@ -43,7 +43,7 @@ before_install:
       brew install gcc llvm;
       brew link --overwrite gcc;
       brew install libbi;
-      printf "CC=/usr/local/opt/llvm/bin/clang -fopenmp\nCXX=/usr/local/opt/llvm/bin/clang++\nCFLAGS=-g -O3 -Wall -pedantic -std=gnu99 -mtune=native -pipe\nCXXFLAGS=-g -O3 -Wall -pedantic -std=c++11 -mtune=native -pipe\nLDFLAGS=-L/usr/local/opt/gettext/lib -L/usr/local/opt/llvm/lib -Wl,-rpath,/usr/local/opt/llvm/lib\nCPPFLAGS=-I/usr/local/opt/gettext/include -I/usr/local/opt/llvm/include" > ~/.R/Makevars
+      printf "CC=/usr/local/opt/llvm/bin/clang -fopenmp\nCXX=/usr/local/opt/llvm/bin/clang++\nCFLAGS=-g -O3 -Wall -pedantic -std=gnu99 -mtune=native -pipe\nCXXFLAGS=-g -O3 -Wall -pedantic -std=c++11 -mtune=native -pipe\nLDFLAGS=-L/usr/local/opt/gettext/lib -L/usr/local/opt/llvm/lib -Wl,-rpath,/usr/local/opt/llvm/lib\nCPPFLAGS=-I/usr/local/opt/gettext/include -I/usr/local/opt/llvm/include" > ~/.R/Makevars;
     fi
   - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
       sudo mkdir -p /home/linuxbrew;
