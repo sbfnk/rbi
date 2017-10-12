@@ -42,7 +42,13 @@ bi_read <- function(x, vars, dims, model, type, file, missval.threshold, coord_d
     as.integer(ifelse(missing(thin),
                       ifelse("libbi" %in% class(x), x$thin, 1), thin))
 
-  if (missing(coord_dims)) coord_dims <- NULL
+  legacy_coord_dims <- NA_character_
+  if (missing(coord_dims)) {
+    coord_dims <- NULL
+  } else if (is.character(coord_dims)) {
+    legacy_coord_dims <- coord_dims
+    coord_dims <- list()
+  }
 
   if ("libbi" %in% class(x) && !is.null(x$dims)) {
     if (missing(model)) {
@@ -144,13 +150,14 @@ bi_read <- function(x, vars, dims, model, type, file, missval.threshold, coord_d
       message(date(), " ", var_name)
     }
     if (missing(vars) || var_name %in% vars) {
-      dim_names <- var_dims[["other"]][[var_name]]
-      dim_lengths <- vapply(seq_along(dim_names), function(y)
+
+      dim_var_names <- var_dims[["other"]][[var_name]]
+      dim_lengths <- vapply(seq_along(dim_var_names), function(y)
       {
         nc[["var"]][[var_name]][["dim"]][[y]][["len"]]
       }, 0)
-      names(dim_lengths) <- dim_names
-      if ("np" %in% dim_names && thin > 1) {
+      names(dim_lengths) <- dim_var_names
+      if ("np" %in% dim_var_names && thin > 1) {
         np_indices <- seq(1, dim_lengths["np"], by = thin)
         dim_lengths["np"] <- length(np_indices)
 
@@ -183,14 +190,14 @@ bi_read <- function(x, vars, dims, model, type, file, missval.threshold, coord_d
 
       if ("np" %in% names(dim_lengths) && dim_lengths[["np"]] == 1) {
         dim_lengths <- dim_lengths[names(dim_lengths) != "np"]
-        dim_names <- names(dim_lengths)
+        dim_var_names <- names(dim_lengths)
       }
 
-      if (any(duplicated(dim_names))) {
-        duplicated_dim_names <- dim_names[duplicated(dim_names)]
+      if (any(duplicated(dim_var_names))) {
+        duplicated_dim_names <- dim_var_names[duplicated(dim_names)]
         for (dup_dim in duplicated_dim_names) {
-          dim_names[dim_names == dup_dim] <-
-            paste(dup_dim, seq_along(dim_names[dim_names == dup_dim]), sep = ".")
+          dim_var_names[dim_var_names == dup_dim] <-
+            paste(dup_dim, seq_along(dim_var_names[dim_var_names == dup_dim]), sep = ".")
         }
       }
 
@@ -201,19 +208,22 @@ bi_read <- function(x, vars, dims, model, type, file, missval.threshold, coord_d
 
       if (!is.null(dim(all_values))) {
 
-        mav <- data.table::data.table(data.table::melt(all_values, varnames = dim_names))
+        mav <- data.table::data.table(data.table::melt(all_values, varnames = dim_var_names))
         ## remove any extraneous dimensions from melting
-        mav <- mav[, c(dim_names, "value"), with=F]
+        mav <- mav[, c(dim_var_names, "value"), with=F]
 
         ## find matching time and coord variables
         all_matching_dims <- c()
         for (var_type in names(time_coord_names)) {
-          matching_dims <- unname(unlist(var_dims[[var_type]])[unlist(var_dims[[var_type]]) %in% dim_names])
-          matching_vars <- names(var_dims[[var_type]])[vapply(var_dims[[var_type]], function(x) {any(x %in% dim_names)}, TRUE)]
+          matching_dims <- unname(unlist(var_dims[[var_type]])[unlist(var_dims[[var_type]]) %in% dim_var_names])
+          matching_vars <- names(var_dims[[var_type]])[vapply(var_dims[[var_type]], function(x) {any(x %in% dim_var_names)}, TRUE)]
           all_matching_dims <- union(all_matching_dims, matching_dims)
           if (length(matching_vars) == 1)  {
             merge_values <- ncvar_get(nc, matching_vars)
             if (var_type == "coord" && !is.null(coord_dims[[var_name]])) {
+              if (length(dim(merge_values)) == 1) {
+                merge_values <- data.table::data.table(coord=merge_values)
+              }
               colnames(merge_values) <- coord_dims[[var_name]]
               merge_values <- apply(merge_values, 2, as.integer)
               mav <- cbind(merge_values, mav)
