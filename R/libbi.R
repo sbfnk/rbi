@@ -326,6 +326,13 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
     x$options <- all_options
     all_options[["output-file"]] <- x$output_file_name
 
+    ## set obs-file to NULL if targeting prior or prediction
+    obs_file_save <- x$options[["obs-file"]]
+    if ("target" %in% names(all_options) &&
+        all_options[["target"]] %in% c("prior", "prediction")) {
+      all_options[["obs-file"]] <- NULL
+    }
+
     ## remove arguments of other clients
     retain_options <-
       setdiff(names(all_options),
@@ -444,6 +451,9 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
       }
       nc_close(nc)
     }
+
+    ## recover saved obs file name
+    x$options[["obs-file"]] <- obs_file_save
 
     if (client == "rewrite") {
       model_lines <- readLines(x$log_file_name)
@@ -638,7 +648,7 @@ attach_file.libbi <- function(x, file, data, force=FALSE, ...){
       tempfile(pattern=paste(get_name(x$model), file, sep = "_"),
                fileext=".nc", tmpdir=absolute_path(x$working_folder))
     write_opts <- list(filename = target_file_name, variables = data)
-    if ("coord_dims" %in% names(x)) {
+    if (file == "obs" && "coord_dims" %in% names(x)) {
       write_opts[["coord_dims"]] <- x$coord_dims
     }
     if ("time_dim" %in% names(x)) {
