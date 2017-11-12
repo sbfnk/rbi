@@ -47,6 +47,12 @@ option_list <- function(...){
         string[["with"]] <- NULL
         string <- c(string, with_list)
       }
+      if ("without" %in% names(string)) {
+        without_list <- as.list(rep("", length(string[["without"]])))
+        names(without_list) <- paste("without", string[["without"]], sep="-")
+        string[["without"]] <- NULL
+        string <- c(string, without_list)
+      }
       for (name in names(string)) options[name] <- string[[name]]
     } else {
       stop("arguments to 'option_list' must be lists or character vectors")
