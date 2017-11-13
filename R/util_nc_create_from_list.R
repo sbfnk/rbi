@@ -131,7 +131,10 @@ netcdf_create_from_list <- function(filename, variables, time_dim, coord_dims, v
       ## first, check for time and coord columns
       present_index_cols <- intersect(colnames(element), unlist(index_cols))
       index_table <- unique(element[, present_index_cols, with = FALSE])
-      nr_table <- index_table
+      if (nrow(index_table) > 0) {
+        setkeyv(index_table, unlist(index_cols))
+      }
+      nr_table <- data.table::copy(index_table)
       if (nrow(index_table) > 0) {
         if ("ns" %in% cols) {
           nr_table <- unique(nr_table[, setdiff(colnames(nr_table), "ns"), with = FALSE])
@@ -141,7 +144,7 @@ netcdf_create_from_list <- function(filename, variables, time_dim, coord_dims, v
         if (nrow(nr_table) > 0) {
           nr_index <- paste("nr", name, sep = "_")
           nr_table[[nr_index]] <- seq_len(nrow(nr_table)) - 1
-          index_table <- merge(index_table, nr_table)
+          index_table <- merge(index_table, nr_table, by=present_index_cols)
           setkeyv(index_table, nr_index)
           nr_dim <- ncdim_def(nr_index, "", nr_table[[nr_index]])
           dims[[nr_index]] <- nr_dim
@@ -253,7 +256,7 @@ netcdf_create_from_list <- function(filename, variables, time_dim, coord_dims, v
 
       table_order <- rev(names(var_dims))
       if (nrow(nr_table) > 0) {
-        element <- merge(element, nr_table)
+        element <- merge(element, nr_table, by=present_index_cols)
       }
 
       new_order <- lapply(intersect(table_order, colnames(element)), function(x) {element[[x]]})
