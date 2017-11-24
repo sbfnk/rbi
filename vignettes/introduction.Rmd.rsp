@@ -345,13 +345,13 @@ bi
 
 # Creating `libbi` objects from previous runs
 
-To recreate a `libbi` object from a previous R session, use `add_output`.
+To recreate a `libbi` object from a previous R session, use `attach_file`.
 For example, one could use the following code to get the acceptance rate and plots for a *LibBi* run with a given output and model file:
 
 ```{R}
 PZ_run_file <- system.file(package="rbi", "example_output.nc")
 PZ_model_file <- system.file(package="rbi", "PZ.bi")
-PZ_posterior <- add_output(libbi(PZ_model_file), PZ_run_file)
+PZ_posterior <- attach_file(libbi(PZ_model_file), "output", PZ_run_file)
 traces <- mcmc(get_traces(PZ_posterior))
 a <- 1 - rejectionRate(traces) 
 a
