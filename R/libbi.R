@@ -621,6 +621,7 @@ attach_file <- function(x, ...) UseMethod("attach_file")
 #' @description
 #' Adds an (output, obs, etc.) file to a \code{\link{libbi}} object. This is useful to recreate a \code{\link{libbi}} object from the model and output files of a previous run
 #' @param x a \code{\link{libbi}} object
+#' @param file the type of the file to attach, one of "output", "obs", "input" or "init"
 #' @param data name of the file to attach, or a list of data frames that contain the outputs
 #' @param force attach the file even if one like this already exists in the libbi object
 #' @param ... ignored

@@ -10,7 +10,7 @@
 \arguments{
 \item{x}{a \code{\link{libbi}} object}
 
-\item{file}{file to open (out of "input", "init", "obs", "output"), if \code{x} is given as a \code{libbi} object; by default, will read output file}
+\item{file}{the type of the file to attach, one of "output", "obs", "input" or "init"}
 
 \item{data}{name of the file to attach, or a list of data frames that contain the outputs}
 
