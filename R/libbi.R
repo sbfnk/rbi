@@ -258,6 +258,11 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
       }
       file_options[[paste(file, "file", sep = "-")]] <-
         arg$output_file_name
+      if (length(arg$time_dim) > 0) {
+        x$time_dim <- arg$time_dim
+      } else {
+        x$time_dim <- "time"
+      }
     } else if (is.list(arg)) {
       arg_file_name <-
         tempfile(pattern=paste(get_name(x$model), file, sep = "_"),
