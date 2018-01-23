@@ -27,21 +27,21 @@ r_binary_packages:
   - testthat
   - digest
   - praise
-
-r_github_packages:
-  - jimhester/covr
+  - R.rsp
+  - covr
+  - knitr
 
 after_success:
   - Rscript -e 'library(covr); covr::codecov()'
 
 before_install:
+  - export HOMEBREW_NO_AUTO_UPDATE=1
+  - export HOMEBREW_DEVELOPER=1
+  - export HOMEBREW_FORCE_VENDOR_RUBY=1
   - if [ -f ".git/shallow" ]; then travis_retry git fetch --unshallow; fi
   - if [ "${TRAVIS_OS_NAME}" = "osx" ]; then
-      sudo chown -R $USER $(brew --repo);
-      sudo chown -R $USER $(brew --prefix);
-      brew tap homebrew/science;
-      brew install gcc llvm;
-      brew link --overwrite gcc;
+      brew cask uninstall --force oclint;
+      brew tap sbfnk/libbi;
       brew install libbi;
       mkdir -p ~/.R;
       echo "Q0M9L3Vzci9sb2NhbC9vcHQvbGx2bS9iaW4vY2xhbmcgLWZvcGVubXAKQ1hYPS91c3IvbG9jYWwvb3B0L2xsdm0vYmluL2NsYW5nKysKQ0ZMQUdTPS1nIC1PMyAtV2FsbCAtcGVkYW50aWMgLXN0ZD1nbnU5OSAtbXR1bmU9bmF0aXZlIC1waXBlCkNYWEZMQUdTPS1nIC1PMyAtV2FsbCAtcGVkYW50aWMgLXN0ZD1jKysxMSAtbXR1bmU9bmF0aXZlIC1waXBlCkxERkxBR1M9LUwvdXNyL2xvY2FsL29wdC9nZXR0ZXh0L2xpYiAtTC91c3IvbG9jYWwvb3B0L2xsdm0vbGliIC1XbCwtcnBhdGgsL3Vzci9sb2NhbC9vcHQvbGx2bS9saWIKQ1BQRkxBR1M9LUkvdXNyL2xvY2FsL29wdC9nZXR0ZXh0L2luY2x1ZGUgLUkvdXNyL2xvY2FsL29wdC9sbHZtL2luY2x1ZGU=" | base64 -D > ~/.R/Makevars;
@@ -52,12 +52,12 @@ before_install:
       LINUXBREW=/home/linuxbrew/.linuxbrew;
       git clone https://github.com/Linuxbrew/brew.git "$LINUXBREW";
       export PATH="$LINUXBREW/bin:$PATH";
-      export LD_LIBRARY_PATH=$(echo $LD_LIBRARY_PATH | sed 's/:$//');
-      brew tap homebrew/science;
-      brew install --with-libidn curl;
-      brew install --with-libidn gmp;
+      exprt LD_LIBRARY_PATH="$LINUXBREW/lib:$LD_LIBRARY_PATH";
+      export CPPFLAGS="-I$LINUXBREW/include $CPPFLAGS";
+      export LDFLAGS="-L$LINUXBREW/lib $LDFLAGS";
+      brew tap sbfnk/libbi;
+      chmod 644 /home/linuxbrew/.linuxbrew/Library/Taps/sbfnk/homebrew-libbi/libbi.rb;
       brew install libbi;
       mkdir -p ~/.R;
-      echo "Q0M9L3Vzci9iaW4vZ2NjCkNYWD0vdXNyL2Jpbi9nKysKQ0ZMQUdTPS1zdGQ9Yzk5ICRDRkxBR1MKQ1hYRkxBR1M9LXN0ZD1jKys5OSAkQ1hYRkxBR1M=" | base64 -D > ~/.R/Makevars;
     fi
 
