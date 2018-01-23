@@ -66,7 +66,7 @@ get_traces <- function(x, model, burnin, all = FALSE, ...) {
     if (length(extra.dims) > 0) {
       df <-
         dcast(data.table(res[[param]]),
-              as.formula(paste("np", paste(extra.dims, collapse = "+"),
+              as.formula(paste("np", paste(paste0("`", extra.dims, "`"), collapse = "+"),
                                sep = "~")), value.var = "value")
       names(df)[-1] <- paste(param, names(df)[-1], sep = ".")
     } else {
