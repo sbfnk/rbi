@@ -4,7 +4,7 @@
 \alias{netcdf_create_from_list}
 \title{Create NetCDF File from R list}
 \usage{
-netcdf_create_from_list(filename, variables, time_dim, coord_dims,
+netcdf_create_from_list(filename, variables, time_dim, coord_dims, dim_factors,
   value_column = "value", guess_time = FALSE, guess_coord = FALSE,
   verbose)
 }
@@ -17,6 +17,8 @@ if it already exists.}
 \item{time_dim}{the name of the time dimension, if one exists; default: "time"}
 
 \item{coord_dims}{the names of the coordinate dimension, if any; should be a named list of character vectors, they are matched to variables names}
+
+\item{dim_factors}{factors that dimensions have; this corresponds to the \code{dims} element of a \code{\link{libbi}} object}
 
 \item{value_column}{if any \code{variables} are data frames, which column contains the values (default: "value")}
 

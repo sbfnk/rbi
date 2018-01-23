@@ -8,7 +8,7 @@
 #' @param variables a \code{list}
 #' @param time_dim the name of the time dimension, if one exists; default: "time"
 #' @param coord_dims the names of the coordinate dimension, if any; should be a named list of character vectors, they are matched to variables names
-#' @param dim_factors factors that dimensions have; this corresponds to the \code{dims} element of a \link{\code{libbi}} object
+#' @param dim_factors factors that dimensions have; this corresponds to the \code{dims} element of a \code{\link{libbi}} object
 #' @param value_column if any \code{variables} are data frames, which column contains the values (default: "value")
 #' @param guess_time whether to guess time dimension; this would be a numerical column in the data frame given which is not the \code{value_column}; only one such column must exist
 #' @param guess_coord whether to guess the coordinate dimension; this would be a column with varying value which is not the time or value column
