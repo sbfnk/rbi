@@ -42,7 +42,7 @@ test_that("we can print an empty libbi object",
 test_that("we can run libbi",
 {
   skip_on_cran()
-  dataset <- bi_generate_dataset(model=model, end_time=50)
+  dataset <- bi_generate_dataset(model=model, end_time=50, verbose=TRUE)
   expect_true(nrow(bi_read(dataset)[["N"]]) > 0)
   dataset <- bi_generate_dataset(model=model, options=list(end_time=50),
                                  dims=list(a=c("first", "second")))

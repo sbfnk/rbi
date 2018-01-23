@@ -1,63 +1,46 @@
-language: r
-cache: packages
-
 matrix:
   include:
     - os: linux
-      dist: trusty
       sudo: required
     - os: osx
+      sudo: required
   allow_failures:
     - os: linux
-
-r_binary_packages:
-  - magrittr
-  - lazyeval
-  - mime
-  - curl
-  - openssl
-  - R6
-  - jsonlite
-  - httr
-  - crayon
-  - reshape2
-  - ncdf4
-  - data.table
-  - coda
-  - testthat
-  - digest
-  - praise
-
-r_github_packages:
-  - jimhester/covr
 
 after_success:
   - Rscript -e 'library(covr); covr::codecov()'
 
 before_install:
+  - export HOMEBREW_NO_AUTO_UPDATE=1
+  - export HOMEBREW_DEVELOPER=1
+  - export HOMEBREW_FORCE_VENDOR_RUBY=1
+  - export PATH="/home/linuxbrew/.linuxbrew/bin:$PATH";
   - if [ -f ".git/shallow" ]; then travis_retry git fetch --unshallow; fi
   - if [ "${TRAVIS_OS_NAME}" = "osx" ]; then
-      sudo chown -R $USER $(brew --repo);
-      sudo chown -R $USER $(brew --prefix);
-      brew tap homebrew/science;
-      brew install gcc llvm;
-      brew link --overwrite gcc;
-      brew install libbi;
-      mkdir -p ~/.R;
-      echo "Q0M9L3Vzci9sb2NhbC9vcHQvbGx2bS9iaW4vY2xhbmcgLWZvcGVubXAKQ1hYPS91c3IvbG9jYWwvb3B0L2xsdm0vYmluL2NsYW5nKysKQ0ZMQUdTPS1nIC1PMyAtV2FsbCAtcGVkYW50aWMgLXN0ZD1nbnU5OSAtbXR1bmU9bmF0aXZlIC1waXBlCkNYWEZMQUdTPS1nIC1PMyAtV2FsbCAtcGVkYW50aWMgLXN0ZD1jKysxMSAtbXR1bmU9bmF0aXZlIC1waXBlCkxERkxBR1M9LUwvdXNyL2xvY2FsL29wdC9nZXR0ZXh0L2xpYiAtTC91c3IvbG9jYWwvb3B0L2xsdm0vbGliIC1XbCwtcnBhdGgsL3Vzci9sb2NhbC9vcHQvbGx2bS9saWIKQ1BQRkxBR1M9LUkvdXNyL2xvY2FsL29wdC9nZXR0ZXh0L2luY2x1ZGUgLUkvdXNyL2xvY2FsL29wdC9sbHZtL2luY2x1ZGU=" | base64 -D > ~/.R/Makevars;
+      FORMULA="libbi";
+      brew cask uninstall --force oclint;
+      brew tap sbfnk/libbi;
+      curl https://cran.rstudio.com/bin/macosx/R-3.4.3.pkg
+      sudo installer -pkg R-3.2.3.pkg -target /
+      R -e 'Sys.getenv()';
     fi
   - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
-      sudo mkdir -p /home/linuxbrew;
-      sudo chown "$USER" /home/linuxbrew;
-      LINUXBREW=/home/linuxbrew/.linuxbrew;
-      git clone https://github.com/Linuxbrew/brew.git "$LINUXBREW";
-      export PATH="$LINUXBREW/bin:$PATH";
-      export LD_LIBRARY_PATH=$(echo $LD_LIBRARY_PATH | sed 's/:$//');
-      brew tap homebrew/science;
-      brew install --with-libidn curl;
-      brew install --with-libidn gmp;
-      brew install libbi;
-      mkdir -p ~/.R;
-      echo "Q0M9L3Vzci9iaW4vZ2NjCkNYWD0vdXNyL2Jpbi9nKysKQ0ZMQUdTPS1zdGQ9Yzk5ICRDRkxBR1MKQ1hYRkxBR1M9LXN0ZD1jKys5OSAkQ1hYRkxBR1M=" | base64 -D > ~/.R/Makevars;
+      sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)";
+      LINUXBREW="/home/linuxbrew/.linuxbrew"
+      FORMULA="libbi-linux";
+      export PATH="$LINUXBREW/bin:$LINUXBREW/sbin:$PATH";
+      brew tap sbfnk/libbi;
+      chmod 644 $LINUXBREW/Homebrew/Library/Taps/sbfnk/homebrew-libbi/"$FORMULA".rb;
+      /bin/rm /home/travis/R-bin/lib/libcurl* /home/travis/R-bin/lib/libz.*;
     fi
+  - brew install sbfnk/libbi/$FORMULA; true
+  - R -e 'install.packages("devtools")'
+
+install: 
+  - R -e 'devtools::install_deps(dep = T)'
+
+script:
+  - R CMD build .
+  - R CMD check *.tar.gz
+
 
