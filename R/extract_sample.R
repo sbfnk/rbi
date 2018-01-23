@@ -31,6 +31,7 @@ extract_sample <- function(x, np, ...) {
     }
   }, 0))
 
+  if (missing(np)) np <- sample(seq_len(max_np), 1)
   find_np <- ifelse(tolower(np) == "last", max_np, np)
   if (find_np > max_np) {
     stop("np requested greater than the maximum ", max_np)
