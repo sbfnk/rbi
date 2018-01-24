@@ -4,7 +4,7 @@
 #' @description
 #' \code{libbi} allows to call \code{LibBi}.
 #' Upon creating a new libbi object, the following arguments can be given.
-#' Once the instance is created, \code{LibBi} can be run through the \code{\link{sample}}, \code{\link{filter}}, or \code{\link{optimise}}, or \code{\link{rewrite}}
+#' Once the instance is created, \code{LibBi} can be run through the \code{\link[rbi]{sample}}, \code{\link[rbi]{filter}}, or \code{\link{optimise}}, or \code{\link{rewrite}}
 #' methods. Note that \code{\link{libbi}} objects can be plotted using \code{\link{plot}} if the \code{rbi.helpers} package is loaded.
 #'
 #' @param model either a character vector giving the path to a model file (typically ending in ".bi"), or a \code{bi_model} object
@@ -491,8 +491,6 @@ sample <- function(x, ...) UseMethod("sample")
 #' The method \code{sample} launches \code{libbi} to sample from a (prior, posterior or joint) distribution. See the options to \code{\link{run.libbi}} for how to specify the various components of sampling with LibBi, and the LibBi manual for all options that can be passed when the client is \code{sample}.
 #'
 #' If \code{x} is given as a 'bi_model', a \code{\link{libbi}} object will be created from the model
-#' If \code{x} is given as a character string, it will be interpreted as the filename of a model to sample from.
-#'
 #' For the help page of the base R \code{sample} function, see \code{\link[base]{sample}}.
 #' @param x a \code{\link{libbi} or \link{bi_model}} object, or the name of a file containing the model
 #' @param ... options to be passed to \code{\link{run.libbi}}
@@ -506,12 +504,6 @@ sample.libbi <- function(x, ...){
 #' @export
 sample.bi_model <- function(x, ...){
   run.libbi(libbi(model=x), client="sample", ...)
-}
-#' @rdname sample
-#' @name sample
-#' @export
-sample.character <- function(x, ...){
-  run.libbi(libbi(model=bi_model(x)), client="sample", ...)
 }
 #' @export
 sample.default <- function(x, ...){
@@ -527,8 +519,6 @@ filter <- function(x, ...) UseMethod("filter")
 #' The method \code{filter} launches \code{libbi} to filter state trajectories. See the options to \code{\link{run.libbi}} for how to specify the various components of sampling with LibBi, and the LibBi manual for all options that can be passed when the client is \code{filter}.
 #'
 #' If \code{x} is given as a 'bi_model', a \code{\link{libbi}} object will be created from the model
-#' If \code{x} is given as a character string, it will be interpreted as the filename of a model to sample from.
-#'
 #' For the help page of the base R \code{filter} function, see \code{\link[stats]{filter}}.
 #' @param x a \code{\link{libbi} or \link{bi_model}} object, or the name of a file containing the model
 #' @param ... options to be passed to \code{\link{run.libbi}}
@@ -542,12 +532,6 @@ filter.libbi <- function(x, ...){
 #' @export
 filter.bi_model <- function(x, ...){
   run.libbi(libbi(x), client="filter", ...)
-}
-#' @rdname filter
-#' @name filter
-#' @export
-filter.character <- function(x, ...){
-  run.libbi(libbi(bi_model(x)), client="filter", ...)
 }
 #' @export
 filter.default <- function(x, ...){
@@ -563,8 +547,6 @@ optimise <- function(x, ...) UseMethod("optimise")
 #' The method \code{optimise} launches \code{libbi} to optimise the parameters with respect to the likelihood or posterior distribution. See the options to \code{\link{run.libbi}} for how to specify the various components of sampling with LibBi, and the LibBi manual for all options that can be passed when the client is \code{optimise}.
 #'
 #' If \code{x} is given as a 'bi_model', a \code{\link{libbi}} object will be created from the model
-#' If \code{x} is given as a character string, it will be interpreted as the filename of a model to sample from.
-#'
 #' For the help page of the base R \code{optimise} function, see \code{\link[stats]{optimise}}.
 #' @param x a \code{\link{libbi} or \link{bi_model}} object, or the name of a file containing the model
 #' @param ... options to be passed to \code{\link{run.libbi}}
@@ -578,12 +560,6 @@ optimise.libbi <- function(x, ...){
 #' @export
 optimise.bi_model <- function(x, ...){
   run.libbi(libbi(x), client="optimise", ...)
-}
-#' @rdname optimise
-#' @name optimise
-#' @export
-optimise.character <- function(x, ...){
-  run.libbi(libbi(bi_model(x)), client="optimise", ...)
 }
 #' @export
 optimise.default <- function(x, ...){
@@ -599,8 +575,6 @@ rewrite <- function(x, ...) UseMethod("rewrite")
 #' The method \code{rewrite} launches \code{LibBi} to rewrite a model to inspect its internal representation in \code{LibBi}
 #'
 #' If \code{x} is given as a 'bi_model', a \code{\link{libbi}} object will be created from the model
-#' If \code{x} is given as a character string, it will be interpreted as the filename of a model to sample from.
-#'
 #' @param x a \code{\link{libbi} or \link{bi_model}} object, or the name of a file containing the model
 #' @param ... options to be passed to \code{\link{run.libbi}}
 #' @return a \code{\link{bi_model}} object
@@ -613,12 +587,6 @@ rewrite.libbi <- function(x, ...){
 #' @export
 rewrite.bi_model <- function(x, ...){
   run.libbi(libbi(x), client="rewrite", ...)
-}
-#' @rdname rewrite
-#' @name rewrite
-#' @export
-rewrite.character <- function(x, ...){
-  run.libbi(libbi(bi_model(x)), client="rewrite", ...)
 }
 
 #' @export
@@ -834,6 +802,8 @@ summary.libbi <- function(object, ...){
   return(summary_table)
 }
 
+#' @export
+assert_output <- function(x, ...) UseMethod("assert_output")
 #' @name assert_output
 #' @rdname assert_output
 #' @title Check that a LibBi wrapper has valid output
@@ -842,7 +812,7 @@ summary.libbi <- function(object, ...){
 #' @param x a \code{\link{libbi}} object
 #' @param ... ignored
 #' @keywords internal
-assert_output <- function(x, ...)
+assert_output.libbi <- function(x, ...)
 {
     if (!x$run_flag) {
       stop("The libbi object must be run first (using sample, filter or optimise).")
@@ -864,4 +834,49 @@ assert_output <- function(x, ...)
 #' @param ... ignored
 predict.libbi <- function(object, ...) {
   sample(object, target="prediction", ...)
+}
+
+#' @name join
+#' @rdname join
+#' @title Join multiple \code{\link{libbi}} objects
+#' @description
+#' This function can be used to join multiple \code{\link{libbi}} objects into one (e.g., parallel MCMC runs into one long change)
+#' @export
+#' @param object a \code{\link{libbi}} object
+#' @param ... ignored
+join.libbi <- function(x, ...) {
+  output <- bi_read(x)
+  for (to_join in list(...)) {
+    join_output <- bi_read(to_join)
+    for (var in intersect(names(output), names(join_output))) {
+      if (var=="clock") {
+        output$clock <- output$clock + join_output$clock
+      } else if (is.data.frame(output[[var]]) && is.data.frame(join_output[[var]]) &&
+                 "np" %in% colnames(output[[var]]) && "np" %in% colnames(join_output[[var]])) {
+        join_output[[var]]$np <- join_output[[var]]$np + max(output[[var]]$np) + 1
+        output[[var]] <- rbind(output[[var]], join_output[[var]])
+      }
+    }
+  }
+  attach_file(x, file="output", output, force=TRUE)
+}
+
+#' @rdname logLik
+#' @name logLik
+#' @title Using the LibBi wrapper to logLik
+#' @description
+#' The method \code{logLik} extracts the log-likelihood of a \code{libbi} object. This can be done, for example, after a call to \code{\link[rbi]{sample}} to inspect the chain log-likelihoods.
+#'
+#' For the help page of the base R \code{logLik} function, see \code{\link[stats]{logLik}}.
+#' @param x a \code{\link{libbi} object
+#' @param ... options to be passed to \code{\link{run.libbi}}
+#' @return a vector of log-likelihood
+#' @export
+logLik.libbi <- function(x, ...){
+  res <- bi_read(x)
+  return(res$loglikelihood$value)
+}
+#' @export
+logLik.default <- function(x, ...){
+  stats::logLik(x, ...)
 }
