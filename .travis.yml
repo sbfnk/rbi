@@ -7,6 +7,11 @@ matrix:
   allow_failures:
     - os: linux
 
+addon:
+  apt:
+    packages:
+      r-base-core
+
 after_success:
   - Rscript -e 'library(covr); covr::codecov()'
 
@@ -14,26 +19,27 @@ before_install:
   - export HOMEBREW_NO_AUTO_UPDATE=1
   - export HOMEBREW_DEVELOPER=1
   - export HOMEBREW_FORCE_VENDOR_RUBY=1
-  - export PATH="/home/linuxbrew/.linuxbrew/bin:$PATH";
   - if [ -f ".git/shallow" ]; then travis_retry git fetch --unshallow; fi
   - if [ "${TRAVIS_OS_NAME}" = "osx" ]; then
       FORMULA="libbi";
+      brew update;
       brew cask uninstall --force oclint;
       brew tap sbfnk/libbi;
-      curl https://cran.rstudio.com/bin/macosx/R-3.4.3.pkg
-      sudo installer -pkg R-3.2.3.pkg -target /
-      R -e 'Sys.getenv()';
+      curl https://cran.rstudio.com/bin/macosx/R-3.4.3.pkg -o R.pkg;
+      sudo installer -pkg R.pkg -target /;
     fi
   - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
-      sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)";
+      sudo apt-get -qq update;
+      sudo apt-get install -y libxml2-dev;
       LINUXBREW="/home/linuxbrew/.linuxbrew"
       FORMULA="libbi-linux";
       export PATH="$LINUXBREW/bin:$LINUXBREW/sbin:$PATH";
+      sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)";
       brew tap sbfnk/libbi;
       chmod 644 $LINUXBREW/Homebrew/Library/Taps/sbfnk/homebrew-libbi/"$FORMULA".rb;
-      /bin/rm /home/travis/R-bin/lib/libcurl* /home/travis/R-bin/lib/libz.*;
     fi
   - brew install sbfnk/libbi/$FORMULA; true
+  - echo 'options(repos=structure(c(CRAN="https://cloud.r-project.org/")))' > ~/.Rprofile
   - R -e 'install.packages("devtools")'
 
 install: 
