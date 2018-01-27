@@ -42,13 +42,21 @@ test_that("we can print an empty libbi object",
 test_that("we can run libbi",
 {
   skip_on_cran()
+  bi <- sample(bi, proposal="prior", options="--start-time 0", nsamples=10, dry="run", verbose=TRUE)
+  if (Sys.which("ldd") != "") {
+    Sys.getenv()
+    hidden_dir <- grep("^\\.test", list.files(bi$working_folder, all.files=TRUE), value=TRUE)[1]
+    working_dir <- paste(bi$working_folder, hidden_dir, "build_assert_openmp", sep="/")
+    system(paste("ldd", paste(working_dir, "sample", sep="/")))
+    system(paste("objdump -x", paste(working_dir, "sample", sep="/")))
+  }
+
   dataset <- bi_generate_dataset(model=model, end_time=50, verbose=TRUE)
   expect_true(nrow(bi_read(dataset)[["N"]]) > 0)
   dataset <- bi_generate_dataset(model=model, options=list(end_time=50),
                                  dims=list(a=c("first", "second")))
   dataset_r <- bi_read(dataset)
   expect_true(nrow(bi_read(dataset)[["N"]]) > 0)
-  bi <- sample(bi, proposal="prior", options="--start-time 0", nsamples=10)
   bi <- sample(model, sample_obs=TRUE, obs=dataset_r, output_all=TRUE, fix=c(e=0.5), nsamples=10)
   res <- bi_read(bi)
   res <- bi_read(bi, thin=2)

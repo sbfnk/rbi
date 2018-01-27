@@ -1,16 +1,34 @@
+language: r
+cache: packages
+
 matrix:
   include:
     - os: linux
       sudo: required
     - os: osx
-      sudo: required
   allow_failures:
     - os: linux
 
-addon:
-  apt:
-    packages:
-      r-base-core
+r_binary_packages:
+  - magrittr
+  - lazyeval
+  - mime
+  - curl
+  - openssl
+  - R6
+  - jsonlite
+  - httr
+  - crayon
+  - reshape2
+  - ncdf4
+  - data.table
+  - coda
+  - testthat
+  - digest
+  - praise
+  - R.rsp
+  - knitr
+  - covr
 
 after_success:
   - Rscript -e 'library(covr); covr::codecov()'
@@ -22,31 +40,19 @@ before_install:
   - if [ -f ".git/shallow" ]; then travis_retry git fetch --unshallow; fi
   - if [ "${TRAVIS_OS_NAME}" = "osx" ]; then
       FORMULA="libbi";
-      brew update;
       brew cask uninstall --force oclint;
       brew tap sbfnk/libbi;
-      curl https://cran.rstudio.com/bin/macosx/R-3.4.3.pkg -o R.pkg;
-      sudo installer -pkg R.pkg -target /;
     fi
   - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
-      sudo apt-get -qq update;
-      sudo apt-get install -y libxml2-dev;
-      LINUXBREW="/home/linuxbrew/.linuxbrew"
-      FORMULA="libbi-linux";
+      LINUXBREW="/home/linuxbrew/.linuxbrew";
       export PATH="$LINUXBREW/bin:$LINUXBREW/sbin:$PATH";
       sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)";
+      FORMULA="libbi-linux";
+      brew install libgcrypt;
       brew tap sbfnk/libbi;
       chmod 644 $LINUXBREW/Homebrew/Library/Taps/sbfnk/homebrew-libbi/"$FORMULA".rb;
     fi
   - brew install sbfnk/libbi/$FORMULA; true
-  - echo 'options(repos=structure(c(CRAN="https://cloud.r-project.org/")))' > ~/.Rprofile
-  - R -e 'install.packages("devtools")'
-
-install: 
-  - R -e 'devtools::install_deps(dep = T)'
-
-script:
-  - R CMD build .
-  - R CMD check *.tar.gz
-
-
+  - which R
+  - env
+  - R -e 'Sys.getenv()'
