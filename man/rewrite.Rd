@@ -5,15 +5,11 @@
 \alias{rewrite.libbi}
 \alias{rewrite}
 \alias{rewrite.bi_model}
-\alias{rewrite}
-\alias{rewrite.character}
 \title{Using the LibBi wrapper to rewrite}
 \usage{
 \method{rewrite}{libbi}(x, ...)
 
 \method{rewrite}{bi_model}(x, ...)
-
-\method{rewrite}{character}(x, ...)
 }
 \arguments{
 \item{x}{a \code{\link{libbi} or \link{bi_model}} object, or the name of a file containing the model}
@@ -27,5 +23,4 @@ a \code{\link{bi_model}} object
 The method \code{rewrite} launches \code{LibBi} to rewrite a model to inspect its internal representation in \code{LibBi}
 
 If \code{x} is given as a 'bi_model', a \code{\link{libbi}} object will be created from the model
-If \code{x} is given as a character string, it will be interpreted as the filename of a model to sample from.
 }

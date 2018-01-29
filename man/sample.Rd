@@ -5,15 +5,11 @@
 \alias{sample.libbi}
 \alias{sample}
 \alias{sample.bi_model}
-\alias{sample}
-\alias{sample.character}
 \title{Using the LibBi wrapper to sample}
 \usage{
 \method{sample}{libbi}(x, ...)
 
 \method{sample}{bi_model}(x, ...)
-
-\method{sample}{character}(x, ...)
 }
 \arguments{
 \item{x}{a \code{\link{libbi} or \link{bi_model}} object, or the name of a file containing the model}
@@ -27,7 +23,5 @@ a \code{\link{libbi}} object
 The method \code{sample} launches \code{libbi} to sample from a (prior, posterior or joint) distribution. See the options to \code{\link{run.libbi}} for how to specify the various components of sampling with LibBi, and the LibBi manual for all options that can be passed when the client is \code{sample}.
 
 If \code{x} is given as a 'bi_model', a \code{\link{libbi}} object will be created from the model
-If \code{x} is given as a character string, it will be interpreted as the filename of a model to sample from.
-
 For the help page of the base R \code{sample} function, see \code{\link[base]{sample}}.
 }

@@ -25,7 +25,7 @@ a \code{\link{libbi}} object
 \description{
 \code{libbi} allows to call \code{LibBi}.
 Upon creating a new libbi object, the following arguments can be given.
-Once the instance is created, \code{LibBi} can be run through the \code{\link{sample}}, \code{\link{filter}}, or \code{\link{optimise}}, or \code{\link{rewrite}}
+Once the instance is created, \code{LibBi} can be run through the \code{\link[rbi]{sample}}, \code{\link[rbi]{filter}}, or \code{\link{optimise}}, or \code{\link{rewrite}}
 methods. Note that \code{\link{libbi}} objects can be plotted using \code{\link{plot}} if the \code{rbi.helpers} package is loaded.
 }
 \examples{

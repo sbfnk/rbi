@@ -868,7 +868,7 @@ join.libbi <- function(x, ...) {
 #' The method \code{logLik} extracts the log-likelihood of a \code{libbi} object. This can be done, for example, after a call to \code{\link[rbi]{sample}} to inspect the chain log-likelihoods.
 #'
 #' For the help page of the base R \code{logLik} function, see \code{\link[stats]{logLik}}.
-#' @param x a \code{\link{libbi} object
+#' @param x a \code{\link{libbi}} object
 #' @param ... options to be passed to \code{\link{run.libbi}}
 #' @return a vector of log-likelihood
 #' @export
