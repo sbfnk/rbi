@@ -9,27 +9,6 @@ matrix:
   allow_failures:
     - os: linux
 
-r_binary_packages:
-  - magrittr
-  - lazyeval
-  - mime
-  - curl
-  - openssl
-  - R6
-  - jsonlite
-  - httr
-  - crayon
-  - reshape2
-  - ncdf4
-  - data.table
-  - coda
-  - testthat
-  - digest
-  - praise
-  - R.rsp
-  - knitr
-  - covr
-
 after_success:
   - Rscript -e 'library(covr); covr::codecov()'
 
@@ -48,10 +27,12 @@ before_install:
       export PATH="$LINUXBREW/bin:$LINUXBREW/sbin:$PATH";
       sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)";
       FORMULA="libbi-linux";
-      brew install libgcrypt;
+      brew install libgcrypt libssh2 icu4c r;
+      R -e 'install.packages("devtools", repos="http://cran.rstudio.com/")';
       brew tap sbfnk/libbi;
       chmod 644 $LINUXBREW/Homebrew/Library/Taps/sbfnk/homebrew-libbi/"$FORMULA".rb;
-    fi
+      Rscript -e 'devtools::install_deps(dependencies = TRUE)';
+      fi
   - brew install sbfnk/libbi/$FORMULA; true
   - which R
   - env
