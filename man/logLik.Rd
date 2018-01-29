@@ -5,10 +5,10 @@
 \alias{logLik.libbi}
 \title{Using the LibBi wrapper to logLik}
 \usage{
-\method{logLik}{libbi}(x, ...)
+\method{logLik}{libbi}(object, ...)
 }
 \arguments{
-\item{x}{a \code{\link{libbi}} object}
+\item{object}{a \code{\link{libbi}} object}
 
 \item{...}{options to be passed to \code{\link{run.libbi}}}
 }
