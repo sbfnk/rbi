@@ -43,14 +43,6 @@ test_that("we can run libbi",
 {
   skip_on_cran()
   bi <- sample(bi, proposal="prior", options="--start-time 0", nsamples=10, dry="run", verbose=TRUE)
-  if (Sys.which("ldd") != "") {
-    Sys.getenv()
-    hidden_dir <- grep("^\\.test", list.files(bi$working_folder, all.files=TRUE), value=TRUE)[1]
-    working_dir <- paste(bi$working_folder, hidden_dir, "build_assert_openmp", sep="/")
-    system(paste("ldd", paste(working_dir, "sample", sep="/")))
-    system(paste("objdump -x", paste(working_dir, "sample", sep="/")))
-  }
-
   dataset <- bi_generate_dataset(model=model, end_time=50, verbose=TRUE)
   expect_true(nrow(bi_read(dataset)[["N"]]) > 0)
   dataset <- bi_generate_dataset(model=model, options=list(end_time=50),
