@@ -53,6 +53,12 @@ option_list <- function(...){
         string[["without"]] <- NULL
         string <- c(string, without_list)
       }
+      if ("dry" %in% names(string)) {
+        dry_list <- as.list(rep("", length(string[["dry"]])))
+        names(dry_list) <- paste("dry", string[["dry"]], sep="-")
+        string[["dry"]] <- NULL
+        string <- c(string, dry_list)
+      }
       for (name in names(string)) options[name] <- string[[name]]
     } else {
       stop("arguments to 'option_list' must be lists or character vectors")
