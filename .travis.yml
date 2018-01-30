@@ -4,7 +4,6 @@ cache: packages
 matrix:
   include:
     - os: linux
-      dist: trusty
       sudo: required
     - os: osx
   allow_failures:
@@ -27,9 +26,10 @@ r_binary_packages:
   - testthat
   - digest
   - praise
-  - R.rsp
   - covr
+  - R.rsp
   - knitr
+  - roxygen2
 
 after_success:
   - Rscript -e 'library(covr); covr::codecov()'
@@ -40,24 +40,18 @@ before_install:
   - export HOMEBREW_FORCE_VENDOR_RUBY=1
   - if [ -f ".git/shallow" ]; then travis_retry git fetch --unshallow; fi
   - if [ "${TRAVIS_OS_NAME}" = "osx" ]; then
+      FORMULA="libbi";
       brew cask uninstall --force oclint;
       brew tap sbfnk/libbi;
-      brew install libbi;
-      mkdir -p ~/.R;
-      echo "Q0M9L3Vzci9sb2NhbC9vcHQvbGx2bS9iaW4vY2xhbmcgLWZvcGVubXAKQ1hYPS91c3IvbG9jYWwvb3B0L2xsdm0vYmluL2NsYW5nKysKQ0ZMQUdTPS1nIC1PMyAtV2FsbCAtcGVkYW50aWMgLXN0ZD1nbnU5OSAtbXR1bmU9bmF0aXZlIC1waXBlCkNYWEZMQUdTPS1nIC1PMyAtV2FsbCAtcGVkYW50aWMgLXN0ZD1jKysxMSAtbXR1bmU9bmF0aXZlIC1waXBlCkxERkxBR1M9LUwvdXNyL2xvY2FsL29wdC9nZXR0ZXh0L2xpYiAtTC91c3IvbG9jYWwvb3B0L2xsdm0vbGliIC1XbCwtcnBhdGgsL3Vzci9sb2NhbC9vcHQvbGx2bS9saWIKQ1BQRkxBR1M9LUkvdXNyL2xvY2FsL29wdC9nZXR0ZXh0L2luY2x1ZGUgLUkvdXNyL2xvY2FsL29wdC9sbHZtL2luY2x1ZGU=" | base64 -D > ~/.R/Makevars;
     fi
   - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
-      sudo mkdir -p /home/linuxbrew;
-      sudo chown "$USER" /home/linuxbrew;
-      LINUXBREW=/home/linuxbrew/.linuxbrew;
-      git clone https://github.com/Linuxbrew/brew.git "$LINUXBREW";
-      export PATH="$LINUXBREW/bin:$PATH";
-      exprt LD_LIBRARY_PATH="$LINUXBREW/lib:$LD_LIBRARY_PATH";
-      export CPPFLAGS="-I$LINUXBREW/include $CPPFLAGS";
-      export LDFLAGS="-L$LINUXBREW/lib $LDFLAGS";
+      LINUXBREW="/home/linuxbrew/.linuxbrew";
+      export PATH="$LINUXBREW/bin:$LINUXBREW/sbin/$PATH";
+      sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)";
+      FORMULA="libbi-linux";
       brew tap sbfnk/libbi;
-      chmod 644 /home/linuxbrew/.linuxbrew/Library/Taps/sbfnk/homebrew-libbi/libbi.rb;
-      brew install libbi;
-      mkdir -p ~/.R;
+      chmod 644 $LINUXBREW/Homebrew/Library/Taps/sbfnk/homebrew-libbi/"$FORMULA".rb;
+      mkdir ~/.R;
+      echo "LD_LIBRARY_PATH=$(brew --prefix curl)/lib" > ~/.R/Makevars;
     fi
-
+  - brew install sbfnk/libbi/$FORMULA; true

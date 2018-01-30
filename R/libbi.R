@@ -67,7 +67,7 @@ run <- function(x, ...) UseMethod("run")
 #' @param proposal proposal distribution to use; either "model" (default: proposal distribution in the model) or "prior" (propose from the prior distribution)
 #' @param model either a character vector giving the path to a model file (typically ending in ".bi"), or a \code{bi_model} object; by default, will use any model given in \code{x}
 #' @param fix any variable to fix, as a named vector
-#' @param options list of additional arguments to pass to the call to \code{LibBi}. Any arguments starting with `enable`/`disable` can be specified as boolean (e.g., `assert=TRUE`). Any `dry-` options can be specified with a `"dry"` argument, e.g., `parse="dry"`. Any options that would be specified with `with`/`without` can be specified as character vector to an option named `with`/`without`, respectively, e.g. with="transform-obs-to-state".
+#' @param options list of additional arguments to pass to the call to \code{LibBi}. Any arguments starting with `enable`/`disable` can be specified as boolean (e.g., `assert=TRUE`). Any `dry-` options can be specified with a `"dry"` argument, e.g., `dry="parse"`. Any options that would be specified with `with`/`without` can be specified as character vector to an option named `with`/`without`, respectively, e.g. with="transform-obs-to-state".
 #' @param config path to a configuration file, containing multiple arguments
 #' @param add_options deprecated, replaced by \code{options}
 #' @param log_file_name path to a file to text file to report the output of \code{LibBi}
@@ -836,13 +836,15 @@ predict.libbi <- function(object, ...) {
   sample(object, target="prediction", ...)
 }
 
+#' @export
+join <- function(x, ...) UseMethod("join")
 #' @name join
 #' @rdname join
 #' @title Join multiple \code{\link{libbi}} objects
 #' @description
 #' This function can be used to join multiple \code{\link{libbi}} objects into one (e.g., parallel MCMC runs into one long change)
 #' @export
-#' @param object a \code{\link{libbi}} object
+#' @param x a \code{\link{libbi}} object
 #' @param ... ignored
 join.libbi <- function(x, ...) {
   output <- bi_read(x)
@@ -868,15 +870,11 @@ join.libbi <- function(x, ...) {
 #' The method \code{logLik} extracts the log-likelihood of a \code{libbi} object. This can be done, for example, after a call to \code{\link[rbi]{sample}} to inspect the chain log-likelihoods.
 #'
 #' For the help page of the base R \code{logLik} function, see \code{\link[stats]{logLik}}.
-#' @param x a \code{\link{libbi}} object
+#' @param object a \code{\link{libbi}} object
 #' @param ... options to be passed to \code{\link{run.libbi}}
 #' @return a vector of log-likelihood
 #' @export
-logLik.libbi <- function(x, ...){
-  res <- bi_read(x)
+logLik.libbi <- function(object, ...){
+  res <- bi_read(object)
   return(res$loglikelihood$value)
-}
-#' @export
-logLik.default <- function(x, ...){
-  stats::logLik(x, ...)
 }

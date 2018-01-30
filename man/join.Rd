@@ -5,12 +5,12 @@
 \alias{join.libbi}
 \title{Join multiple \code{\link{libbi}} objects}
 \usage{
-join.libbi(x, ...)
+\method{join}{libbi}(x, ...)
 }
 \arguments{
-\item{...}{ignored}
+\item{x}{a \code{\link{libbi}} object}
 
-\item{object}{a \code{\link{libbi}} object}
+\item{...}{ignored}
 }
 \description{
 This function can be used to join multiple \code{\link{libbi}} objects into one (e.g., parallel MCMC runs into one long change)
