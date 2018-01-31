@@ -49,6 +49,7 @@ libbi <- function(model, path_to_libbi, dims, use_cache=TRUE, ...){
                    run_flag=FALSE,
                    error_flag=FALSE,
                    use_cache=use_cache,
+                   supplement=NULL,
                    .gc_env=emptyenv(),
                    .cache=new.env(parent = emptyenv())), class="libbi")
   return(do.call(run, c(list(x=new_obj, client=character(0)), list(...))))
@@ -670,6 +671,7 @@ save_libbi.libbi <- function(x, filename, supplement, ...) {
                    time_dim=x$time_dim,
                    coord_dims=x$coord_dims,
                    thin=1,
+                   supplement=x$supplement,
                    output=bi_read(x))
 
   options <- x$options
