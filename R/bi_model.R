@@ -383,6 +383,7 @@ remove_lines.bi_model <- function(x, what, only, ...) {
     assign_vars <- sub("\\[.*]", "", assign_vars)
     filter_lines <- assign_lines[which(!(assign_vars %in% only))]
     if (length(filter_lines) > 0) {
+      filter_lines <- c(1, filter_lines, length(to_remove))
       to_remove <- to_remove[-filter_lines]
     }
   }
