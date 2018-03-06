@@ -44,6 +44,7 @@ bi_open <- function(x, file = "output")
         stop("Unknown 'file' type: ", file)
       }
     } else {
+      assert_output(x)
       filename <- x$output_file_name
     }
     nc <- nc_open(filename)
