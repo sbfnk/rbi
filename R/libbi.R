@@ -182,7 +182,7 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
   ## check if 'model-file' is contained in any options
   all_options <- option_list(getOption("libbi_args"), config_file_options, x$options, new_options, list(...))
   if ("model-file" %in% names(all_options)) {
-    if (is_empty(x$model)) {
+    if (missing(model)) {
       x$model_file_name <- absolute_path(all_options[["model-file"]], getwd())
       x$model <- bi_model(x$model_file_name)
     } else {
