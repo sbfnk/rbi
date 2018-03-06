@@ -861,6 +861,9 @@ join.libbi <- function(x, ...) {
         output[[var]] <- rbind(output[[var]], join_output[[var]])
       }
     }
+    for (var in setdiff(names(output), names(join_output))) {
+      output[[var]] <- NULL
+    }
   }
   attach_file(x, file="output", output, force=TRUE)
 }
