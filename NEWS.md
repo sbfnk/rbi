@@ -1,3 +1,12 @@
+# rbi 0.9.0
+
+* Fixed a few bugs when working with multiple dimensions
+* New functions: `join` and `logLik`
+* Save supplement when saving a `libbi` option
+* Fixed the `dry` option
+* Fixed handling of `without` options
+* Fixed handling of `predict` function
+
 # rbi 0.8.0
 
 * `supplement` option to `save_libbi` to store supplementary information
