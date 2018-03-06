@@ -10,7 +10,7 @@ model test {
   obs M[a]
 
   state N[a] (has_input = 0)
-  noise e[a]
+  noise e[a, b]
   param m[a, b]
 
   sub parameter {
@@ -22,8 +22,8 @@ model test {
   }
 
   sub transition {
-    e[a] ~ gaussian(mean = m[a,0], std = m[a,1])
-    N[a] <- N[a] + e[a]
+    e[a, b] ~ gaussian(mean = m[a,b])
+    N[a] <- N[a] + e[a, 0] + e[a, 1]
   }
 
   sub observation {
@@ -52,14 +52,17 @@ test_that("we can run libbi and analyse results",
   dataset_r <- bi_read(dataset)
   expect_true(nrow(bi_read(dataset)[["N"]]) > 0)
   bi <- sample(model, sample_obs=TRUE, obs=dataset_r, output_all=TRUE, fix=c(e=0.5), nsamples=10, with="output-at-obs", without="gdb")
-  bi <- sample(bi, seed=1234, model_file=bi$model_file, working_folder=bi$working_folder)
-  dry <- sample(bi, dry="run")
+  bi2 <- sample(bi, seed=1234, model_file=bi$model_file, obs=dataset, working_folder=bi$working_folder, with="transform-initial-to-param")
+
+  bi <- join(bi, bi2)
   pred <- predict(bi, end_time=100)
 
   res <- bi_read(bi)
   pred_res <- bi_read(pred, thin=2)
 
   traces <- get_traces(bi, burnin=2)
+
+  ll <- logLik(bi)
 
   expect_equal(class(bi), "libbi")
   expect_equal(class(pred), "libbi")
@@ -71,11 +74,19 @@ test_that("we can run libbi and analyse results",
   expect_equal(nrow(summary(bi)), 1)
   expect_equal(ncol(res$N), 4)
   expect_true(nrow(traces) > 0)
+  expect_true(is.numeric(ll))
 })
 
 test_that("we can rewrite a model",
 {
   skip_on_cran()
   rewrite(bi)
+})
+
+test_that("errors are recognised",
+{
+  skip_on_cran()
+  expect_warning(sample(bi, with="dummy"), "LibBi terminated with an error")
+  expect_error(sample(bi, config="@dummy.conf"))
 })
 

@@ -20,13 +20,27 @@ test_that("parameters can be fixed",
 
 test_that("lines can be inserted",
 {
-  expect_true(!is_empty(insert_lines(PZ, lines = "noise beta", after = 8)))
+  expect_true(!is_empty(insert_lines(PZ, lines = "noise beta", after = 0)))
+  expect_true(!is_empty(insert_lines(PZ, lines = "noise beta", after = 32)))
+  expect_true(!is_empty(insert_lines(PZ, lines = "noise beta", before = 9)))
   expect_true(!is_empty(insert_lines(PZ, lines = "beta ~ normal()", at_beginning_of = "transition")))
+  expect_true(!is_empty(insert_lines(PZ, lines = "beta ~ normal()", before = "dummy")))
+  expect_true(!is_empty(insert_lines(PZ, lines = "beta ~ normal()", after = "parameter")))
+  expect_error(insert_lines(PZ, lines = "noise beta"))
+  expect_error(insert_lines(PZ, lines = "noise beta", after=33))
 })
 
 test_that("lines can be removed",
 {
   expect_true(length(remove_lines(PZ, "parameter", only="sigma")[]) > 0)
+  expect_true(length(remove_lines(PZ, 15)[]) > 0)
+  expect_error(remove_lines(PZ))
+  expect_error(remove_lines(PZ, list()))
+})
+
+test_that("strings can be replaced",
+{
+  expect_true(length(replace_all(PZ, "sigma", "lambda")[]) > 0)
 })
 
 test_that("models can be written to file",
@@ -62,5 +76,6 @@ test_that("blocks operations work",
   expect_equal(get_block(add_block(PZ, "observation", "dummy"),
                          "observation"),
                "dummy")
+  expect_equal(length(get_block(add_block(PZ, "dummy"), "dummy")), 0)
 })
 
