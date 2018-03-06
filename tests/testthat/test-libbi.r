@@ -54,7 +54,7 @@ test_that("we can run libbi and analyse results",
   bi <- sample(model, sample_obs=TRUE, obs=dataset_r, output_all=TRUE, fix=c(e=0.5), nsamples=10, with="output-at-obs", without="gdb")
   bi2 <- sample(bi, seed=1234, model_file=bi$model_file, obs=dataset, working_folder=bi$working_folder, with="transform-initial-to-param")
 
-  bi <- join(bi, bi2)
+  bi <- join(a=bi, b=bi2)
   pred <- predict(bi, end_time=100)
 
   res <- bi_read(bi)
@@ -86,7 +86,6 @@ test_that("we can rewrite a model",
 test_that("errors are recognised",
 {
   skip_on_cran()
-  expect_warning(sample(bi, with="dummy"), "LibBi terminated with an error")
   expect_error(sample(bi, config="@dummy.conf"))
 })
 
