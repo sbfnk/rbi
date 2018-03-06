@@ -877,6 +877,7 @@ join.libbi <- function(x, ...) {
 #' @return a vector of log-likelihood
 #' @export
 logLik.libbi <- function(object, ...){
+  assert_output(object)
   res <- bi_read(object)
   return(res$loglikelihood$value)
 }
