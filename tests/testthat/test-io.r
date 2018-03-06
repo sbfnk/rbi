@@ -3,6 +3,7 @@ context("Testing saving and retrieving libbi objects")
 bi <- libbi(model = system.file(package="rbi", "PZ.bi"))
 example_output_file <- system.file(package="rbi", "example_output.nc")
 bi <- attach_file(bi, "output", example_output_file)
+bi <- attach_file(bi, file="init", bi_read(bi, vars=c("mu", "sigma")))
 
 test_that("we can't add output twice'",
 {

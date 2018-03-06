@@ -26,7 +26,7 @@ test_that("lines can be inserted",
 
 test_that("lines can be removed",
 {
-  expect_true(length(remove_lines(PZ, 2)[]) > 0)
+  expect_true(length(remove_lines(PZ, "parameter", only="sigma")[]) > 0)
 })
 
 test_that("models can be written to file",
