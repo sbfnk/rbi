@@ -12,7 +12,7 @@
 \method{write_model}{libbi}(x, filename, ...)
 }
 \arguments{
-\item{x}{a \code{\link{bi_model}} object, or a \code{\link{libbi}} object conatining a model}
+\item{x}{a \code{\link{bi_model}} object, or a \code{\link{libbi}} object containing a model}
 
 \item{filename}{name of the file to be written}
 

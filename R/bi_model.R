@@ -403,7 +403,7 @@ write_model <- function(x, ...) UseMethod("write_model")
 #' @description
 #' Writes a bi model to a file given by \code{filename}. The extension '.bi' will be added if necessary.
 #'
-#' @param x a \code{\link{bi_model}} object, or a \code{\link{libbi}} object conatining a model
+#' @param x a \code{\link{bi_model}} object, or a \code{\link{libbi}} object containing a model
 #' @param filename name of the file to be written
 #' @param update.name whether to update the model name with the file name
 #' @param ... ignored
