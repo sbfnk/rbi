@@ -34,10 +34,9 @@ install_github("libbi/rbi")
 
 The **RBi** package has only been tested on GNU/Linux and OS X, but it should mostly work everywhere `R` works.
 
-If you want to use **RBi** as a wrapper to **LibBi** then you need a working version of [LibBi](https://github.com/libbi/LibBi). To install **LibBi** on a Mac or Unix, the easiest way is via the [homebrew-science](https://brew.sh/homebrew-science/) tap: Install [Homebrew](http://brew.sh) (on OS X) or [Linuxbrew](http://linuxbrew.sh) (on linux), then issue the following commands (using a command shell, i.e. Terminal or similar):
+If you want to use **RBi** as a wrapper to **LibBi** then you need a working version of [LibBi](https://github.com/libbi/LibBi). To install **LibBi** on a Mac or Unix, the easiest way is to install [Homebrew](http://brew.sh) (on OS X) or [Linuxbrew](http://linuxbrew.sh) (on linux), followed by (using a command shell, i.e. Terminal or similar):
 
 ```sh
-brew tap homebrew/science
 brew install libbi
 ``` 
 
