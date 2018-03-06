@@ -6,9 +6,9 @@
 \title{Using the LibBi wrapper to launch LibBi}
 \usage{
 \method{run}{libbi}(x, client, proposal = c("model", "prior"), model, fix,
-  options, config, add_options, log_file_name, stdoutput_file_name, init, input,
-  obs, time_dim, coord_dims, working_folder, output_all, sample_obs, thin,
-  chain = TRUE, seed = TRUE, ...)
+  options, config, add_options, log_file_name, init, input, obs, time_dim,
+  coord_dims, working_folder, output_all, sample_obs, thin, chain = TRUE,
+  seed = TRUE, ...)
 }
 \arguments{
 \item{x}{a \code{\link{libbi}} object}
@@ -28,8 +28,6 @@
 \item{add_options}{deprecated, replaced by \code{options}}
 
 \item{log_file_name}{path to a file to text file to report the output of \code{LibBi}}
-
-\item{stdoutput_file_name}{deprecated; use log_file_name instead}
 
 \item{init}{initialisation of the model, either supplied as a list of values and/or data frames, or a (netcdf) file name, or a \code{\link{libbi}} object which has been run (in which case the output of that run is used as input). If the object given as \code{x} has been run before, it will be used here with \code{init-np} set to the last iteration of the previous run, unless \code{init} is given explicitly.}
 
