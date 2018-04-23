@@ -233,12 +233,21 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
         if (x$thin > 1) {
           x$thin <- 1
         }
-        x$options[["init"]] <- read_init
+        if (length(read_init) > 0) {
+          x$options[["init"]] <- read_init
+        } else {
+          x$options[["init"]] <- NULL
+        }
       } else {
         read_init <- bi_read(x, type=types, init.to.param=chain_init)
-        x$options[["init"]] <- extract_sample(read_init, "last")
+        ## only take last sample
+        if (length(read_init) > 0) {
+          x$options[["init"]] <- extract_sample(read_init, "last")
+        } else {
+          x$options[["init"]] <- NULL
+        }
       }
-      file_args <- union(file_args, "init")
+      if (!is.null(x$options)) file_args <- union(file_args, "init")
     }
   }
 
