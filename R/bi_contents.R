@@ -1,4 +1,4 @@
-#' @rdname bi_contants
+#' @rdname bi_contents
 #' @name bi_contents
 #' @title Bi contents
 #' @description
