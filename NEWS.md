@@ -1,3 +1,8 @@
+# rbi 0.9.1
+
+* Fixed a bug in `bi_generate_dataset`
+* Fixed chaining when there are no variables to chain
+
 # rbi 0.9.0
 
 * Fixed a few bugs when working with multiple dimensions

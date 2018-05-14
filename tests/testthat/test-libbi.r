@@ -44,8 +44,8 @@ test_that("we can print an empty libbi object",
 test_that("we can run libbi and analyse results",
 {
   skip_on_cran()
-  bi <- sample(bi, proposal="prior", options="--start-time 0", nsamples=10, dry="run", verbose=TRUE)
-  dataset <- bi_generate_dataset(model=model, end_time=50, verbose=TRUE)
+  bi <- sample(bi, proposal="prior", options="--start-time 0", nsamples=10, dry="run")
+  dataset <- bi_generate_dataset(model=model, end_time=50)
   expect_true(nrow(bi_read(dataset)[["N"]]) > 0)
   dataset <- bi_generate_dataset(model=model, options=list(end_time=50),
                                  dims=list(a=c("first", "second")))
@@ -80,7 +80,7 @@ test_that("we can run libbi and analyse results",
 test_that("we can rewrite a model",
 {
   skip_on_cran()
-  rewrite(bi)
+  expect_match(rewrite(bi), ".")
 })
 
 test_that("errors are recognised",
