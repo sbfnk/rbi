@@ -20,16 +20,20 @@ r_binary_packages:
   - httr
   - crayon
   - reshape2
-  - ncdf4
   - data.table
   - coda
   - testthat
   - digest
   - praise
-  - covr
-  - R.rsp
   - knitr
   - roxygen2
+
+r_packages:
+  - R.rsp
+  - ncdf4
+
+r_github_pacakges:
+  - r-lib/covr
 
 after_success:
   - Rscript -e 'library(covr); covr::codecov()'
