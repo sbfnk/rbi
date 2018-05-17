@@ -26,14 +26,13 @@ r_binary_packages:
   - digest
   - praise
   - knitr
-  - roxygen2
-
-r_packages:
-  - R.rsp
-  - ncdf4
+  - xml2
 
 r_github_pacakges:
   - r-lib/covr
+
+brew_packages:
+  - libbi
 
 after_success:
   - Rscript -e 'library(covr); covr::codecov()'
@@ -43,19 +42,11 @@ before_install:
   - export HOMEBREW_DEVELOPER=1
   - export HOMEBREW_FORCE_VENDOR_RUBY=1
   - if [ -f ".git/shallow" ]; then travis_retry git fetch --unshallow; fi
-  - if [ "${TRAVIS_OS_NAME}" = "osx" ]; then
-      FORMULA="libbi";
-      brew cask uninstall --force oclint;
-      brew tap sbfnk/libbi;
-    fi
   - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
       LINUXBREW="/home/linuxbrew/.linuxbrew";
       export PATH="$LINUXBREW/bin:$LINUXBREW/sbin/$PATH";
       sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)";
-      FORMULA="libbi-linux";
-      brew tap sbfnk/libbi;
-      chmod 644 $LINUXBREW/Homebrew/Library/Taps/sbfnk/homebrew-libbi/"$FORMULA".rb;
-      mkdir ~/.R;
-      echo "LD_LIBRARY_PATH=$(brew --prefix curl)/lib" > ~/.R/Makevars;
+      brew install libssh2;
+      brew install libbi;
     fi
-  - brew install sbfnk/libbi/$FORMULA; true
+  - Rscript -e 'install.packages(c("roxygen2", "R.rsp"))'
