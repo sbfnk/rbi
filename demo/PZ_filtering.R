@@ -30,7 +30,13 @@ output <- bi_read(bi_object)
 logw <- xtabs(value ~ time + np, data = output$logweight)
 P <- output$P$value
 Z <- output$Z$value
+
 # Then compute the filtering means
+log2normw <- function(lw){
+  w <- exp(lw - max(lw))
+  return(w / sum(w))
+}
+
 w = t(apply(X=logw, MARGIN=1, FUN=log2normw))
 Pmeans = apply(X = P*w, MARGIN=1, FUN=sum)
 Zmeans = apply(X = Z*w, MARGIN=1, FUN=sum)
