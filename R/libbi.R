@@ -189,11 +189,14 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
       warning("'model-file' and 'model' options both provided. Will ignore 'model-file'.")
     }
   } else if (!is_empty(x$model)) {
-    x$model_file_name <-
-      tempfile(pattern=paste(get_name(x$model), "model", sep = "_"),
-               fileext=".bi",
-               tmpdir=absolute_path(x$working_folder))
-    write_model(x)
+    if (length(x$model_file_name) == 0 ||
+        !all((x$model == bi_model(x$model_file_name))[-1])) {
+      x$model_file_name <-
+        tempfile(pattern=paste(get_name(x$model), "model", sep = "_"),
+                 fileext=".bi",
+                 tmpdir=absolute_path(x$working_folder))
+      write_model(x)
+    }
   }
 
   ## read file options: input, init, obs
