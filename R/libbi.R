@@ -225,13 +225,9 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
       if (init_np_given) {
         warning("'init-np' given as new option and 'chain=TRUE'. Will ignore 'init-np' option. To use the 'init-np' option, set 'chain=FALSE'")
       }
-      ## TODO: check if initial parameters exist
-      types <- "param"
-      chain_init <- ("with-transform-initial-to-param" %in% names(all_options))
-      if (chain_init) types <- c(types, "state")
       if ("target" %in% names(all_options) &&
           all_options[["target"]] == "prediction") {
-        read_init <- bi_read(x, type=types)
+        read_init <- bi_read(x, type=c("param", "state"))
         np_dims <- bi_dim_len(x$output_file_name, "np")
         file_options[["nsamples"]] <- floor(np_dims / x$thin)
         if (x$thin > 1) {
@@ -243,6 +239,10 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
           x$options[["init"]] <- NULL
         }
       } else {
+        ## TODO: check if initial parameters exist
+        types <- "param"
+        chain_init <- ("with-transform-initial-to-param" %in% names(all_options))
+        if (chain_init) types <- c(types, "state")
         read_init <- bi_read(x, type=types, init.to.param=chain_init)
         ## only take last sample
         if (length(read_init) > 0) {
@@ -385,20 +385,6 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
       run_model_modified <- TRUE
     }
 
-    if ("target" %in% names(all_options)) {
-      if (all_options[["target"]] %in% c("joint", "prior", "prediction")) {
-        run_model <- remove_lines(run_model, "proposal_initial")
-        run_model <- remove_lines(run_model, "proposal_parameter")
-        run_model_modified <- TRUE
-      }
-      if (all_options[["target"]] == "prediction" &&
-          "init-file" %in% names(x$option)) {
-        init_given <- bi_contents(x$options[["init-file"]])
-        run_model <- remove_lines(run_model, "initial", only = init_given)
-        run_model <- remove_lines(run_model, "parameter", only = init_given)
-        run_model_modified <- TRUE
-      }
-    }
     if (run_model_modified) {
       run_model_file_name <-
         tempfile(pattern=paste(get_name(run_model), "model", sep = "_"),
