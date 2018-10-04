@@ -161,6 +161,7 @@ obs_to_noise <- function(x) {
   state_block <- sub(obs_var_pattern, "__sample_\\1", obs_block)
   state_variables <- paste0("__sample_", obs_variables)
   new_model <- insert_lines(new_model, state_block, at_end_of = "transition")
+  new_model <- insert_lines(new_model, state_block, at_end_of = "initial")
   dims <- var_names(x, "dim")
   if (length(dims) > 0) {
     insert_after <- max(grep("^[[:space:]]*dim[[:space:]]", new_model))
