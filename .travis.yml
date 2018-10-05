@@ -27,6 +27,9 @@ r_binary_packages:
   - praise
   - knitr
   - xml2
+  - ncdf4
+  - R.rsp
+  - roxygen2
 
 apt_packages:
   - libblas-dev
@@ -48,7 +51,6 @@ after_success:
   - Rscript -e 'library(covr); covr::codecov()'
 
 before_install:
-  - if [ -f ".git/shallow" ]; then travis_retry git fetch --unshallow; fi
   - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
       curl -fLo /tmp/thrust-1.8.2.zip https://github.com/thrust/thrust/releases/download/1.8.2/thrust-1.8.2.zip;
       unzip /tmp/thrust-1.8.2.zip;
@@ -60,4 +62,3 @@ before_install:
       cpanm --quiet --sudo .;
       popd;
     fi
-  - Rscript -e 'install.packages(c("roxygen2", "R.rsp"))'
