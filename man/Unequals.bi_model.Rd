@@ -14,8 +14,9 @@
 \item{e2}{a \code{\link{bi_model}}}
 
 \item{...}{ignored}
-
-\item{value}{TRUE or FALSE}
+}
+\value{
+TRUE or FALSE
 }
 \description{
 Ignores differences in the model name.
