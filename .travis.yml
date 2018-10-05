@@ -58,6 +58,6 @@ before_install:
       cd LibBi-stable;
       cpanm --quiet --installdeps --notest --sudo .;
       cpanm --quiet --sudo .;
-      cd ..
+      cd ..;
     fi
   - Rscript -e 'install.packages(c("roxygen2", "R.rsp"))'
