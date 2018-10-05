@@ -718,7 +718,7 @@ set_name.bi_model <- function(x, name, ...) {
 #' PZ <- bi_model(filename = model_file_name)
 #' PZ == PZ # TRUE
 #' @export
-#' @param value TRUE or FALSE
+#' @return value TRUE or FALSE
 `==.bi_model` <- function(e1, e2, ...) {
   return(length(e1) == length(e2) &&
            all(find_block(e1, "model")==find_block(e2, "model")))
@@ -738,7 +738,7 @@ set_name.bi_model <- function(x, name, ...) {
 #' PZ <- bi_model(filename = model_file_name)
 #' PZ != PZ # FALSE
 #' @export
-#' @param value TRUE or FALSE
+#' @return TRUE or FALSE
 `!=.bi_model` <- function(e1, e2) {
   return(!(e1 == e2))
 }
