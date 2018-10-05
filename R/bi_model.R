@@ -414,6 +414,8 @@ write_model.libbi <- function(x, filename, ...){
   write_model(x$model, filename=filename, ...)
 }
 
+#' @export
+find_block <- function(x, ...) UseMethod("find_block")
 #' @name find_block
 #' @title Find a block in a LibBi model
 #'
@@ -425,7 +427,7 @@ write_model.libbi <- function(x, filename, ...){
 #' @param x a \code{\link{bi_model}} object
 #' @param name of the block to find
 #' @rdname find_block
-find_block <- function(x, name) {
+find_block.bi_model <- function(x, name) {
   lines <- as.character(x)
   sub_regexp <- paste0("^[[:space:]]*(sub[[:space:]]+)?[[:space:]]*", name, "[[:space:]]*(\\(.*\\))?[[:space:]]*\\{")
   sub_line <- grep(sub_regexp, lines)
