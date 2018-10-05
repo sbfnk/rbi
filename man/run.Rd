@@ -7,8 +7,8 @@
 \usage{
 \method{run}{libbi}(x, client, proposal = c("model", "prior"), model, fix,
   options, config, add_options, log_file_name, init, input, obs, time_dim,
-  coord_dims, working_folder, output_all, sample_obs, thin, chain = TRUE,
-  seed = TRUE, ...)
+  coord_dims, working_folder, output_all, thin, chain = TRUE, seed = TRUE,
+  ...)
 }
 \arguments{
 \item{x}{a \code{\link{libbi}} object}
@@ -42,8 +42,6 @@
 \item{working_folder}{path to a folder from which to run \code{LibBi}; default to a temporary folder.}
 
 \item{output_all}{logical; if set to TRUE, all parameters, states and observations will be saved; good for debugging}
-
-\item{sample_obs}{logical; if set to TRUE, will sample observations}
 
 \item{thin}{any thinning of MCMC chains (1 means all will be kept, 2 skips every other sample etc.); note that \code{LibBi} itself will write all data to the disk. Only when the results are read in with \code{\link{bi_read}} will thinning be applied.}
 
