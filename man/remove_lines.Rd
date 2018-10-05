@@ -5,7 +5,8 @@
 \alias{remove_lines.bi_model}
 \title{Remove line(s) and/or block(s) in a libbi model}
 \usage{
-\method{remove_lines}{bi_model}(x, what, only, ...)
+\method{remove_lines}{bi_model}(x, what, only, type = c("assignment",
+  "sample"), ...)
 }
 \arguments{
 \item{x}{a \code{\link{bi_model}} object}
@@ -13,6 +14,8 @@
 \item{what}{either a vector of line number(s) to remove, or a vector of blocks to remove (e.g., "parameter")}
 
 \item{only}{only remove lines assigning given names (as a vector of character strings)}
+
+\item{type}{which types of lines to remove, from "sample" and "assignment" (default: both)}
 
 \item{...}{ignored}
 }
