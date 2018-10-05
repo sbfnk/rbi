@@ -29,7 +29,7 @@
 #' example_output_file <- system.file(package="rbi", "example_output.nc")
 #' d <- bi_read(example_output_file)
 #' @export
-bi_read <- function(x, vars, dims, model, type, file, missval.threshold, coord_dims, vector, thin, verbose, clear_cache, init.to.param=FALSE)
+bi_read <- function(x, vars, dims, model, type, file, missval.threshold, coord_dims, vector, thin, verbose=FALSE, clear_cache=FALSE, init.to.param=FALSE)
 {
   if (missing(file)) {
     nc <- bi_open(x)
@@ -132,7 +132,7 @@ bi_read <- function(x, vars, dims, model, type, file, missval.threshold, coord_d
   ## cache
   if ("libbi" %in% class(x) && x$use_cache &&
       (missing(file) || file == "output")) {
-    if (!missing(clear_cache) && clear_cache) {
+    if (clear_cache) {
       x$.cache$data <- NULL
       x$.cache$thin <- NULL
     }
@@ -143,13 +143,13 @@ bi_read <- function(x, vars, dims, model, type, file, missval.threshold, coord_d
     cached_other <- rep(FALSE, length(nc_var_names[["other"]]))
   }
   for (var_name in nc_var_names[["other"]][cached_other]) {
-    if (!missing(verbose) && verbose) {
+    if (verbose) {
       message(date(), " ", var_name, " (cached)")
     }
     res[[var_name]] <- x$.cache$data[[var_name]]
   }
   for (var_name in nc_var_names[["other"]][!cached_other]) {
-    if (!missing(verbose) && verbose) {
+    if (verbose) {
       message(date(), " ", var_name)
     }
     if (missing(vars) || var_name %in% vars) {
@@ -166,7 +166,7 @@ bi_read <- function(x, vars, dims, model, type, file, missval.threshold, coord_d
 
         all_values <- array(dim = dim_lengths)
 
-        if (!missing(verbose) && verbose) pb <- txtProgressBar(min = 0, max = length(np_indices), char = ".", style = 1)
+        if (verbose) pb <- txtProgressBar(min = 0, max = length(np_indices), char = ".", style = 1)
 
         for (i in seq_along(np_indices))
         {
@@ -184,9 +184,9 @@ bi_read <- function(x, vars, dims, model, type, file, missval.threshold, coord_d
                       list(ncvar_get(nc, var_name,
                                      start = start_vec,
                                      count = count_vec))))
-          if (!missing(verbose) && verbose) setTxtProgressBar(pb, i)
+          if (verbose) setTxtProgressBar(pb, i)
         }
-        if (!missing(verbose) && verbose) close(pb)
+        if (verbose) close(pb)
       } else {
         all_values <- ncvar_get(nc, var_name)
       }

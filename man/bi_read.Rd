@@ -4,8 +4,9 @@
 \alias{bi_read}
 \title{Bi Read}
 \usage{
-bi_read(x, vars, dims, model, type, file, missval.threshold, coord_dims, vector,
-  thin, verbose, clear_cache, init.to.param = FALSE)
+bi_read(x, vars, dims, model, type, file, combine = FALSE, missval.threshold,
+  coord_dims, vector, thin, verbose = FALSE, clear_cache = FALSE,
+  init.to.param = FALSE)
 }
 \arguments{
 \item{x}{either a path to a NetCDF file, or a NetCDF connection created using \code{nc_open}, or a \code{\link{libbi}} object from which to read the output}
@@ -19,6 +20,8 @@ bi_read(x, vars, dims, model, type, file, missval.threshold, coord_dims, vector,
 \item{type}{vector of types of variable to read (out of "param", "state", "noise", "obs"). This needs 'x' to be a \code{\link{libbi}} object or \code{model} to be specified}
 
 \item{file}{which file to read (if \code{x} is given as a \code{\link{libbi}} object): one of "output" (default), "init", "input", "obs"}
+
+\item{combine}{whether to return a combined data frame (rather than a list of data frames)}
 
 \item{missval.threshold}{upper threshold for the likelihood}
 
