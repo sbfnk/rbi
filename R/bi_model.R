@@ -317,7 +317,7 @@ remove_lines <- function(x, ...) UseMethod("remove_lines")
 #' @param x a \code{\link{bi_model}} object
 #' @param what either a vector of line number(s) to remove, or a vector of blocks to remove (e.g., "parameter")
 #' @param only only remove lines assigning given names (as a vector of character strings)
-#' @param type which types of lines to remove, from "sample" and "assignment" (default: both)
+#' @param type which types of lines to remove, either "all", "sample" (i.e., lines with a "~") or "assignment" (lines with a "<-" or "=") (default: "all")
 #' @param ... ignored
 #' @return the updated bi model
 #' @seealso \code{\link{bi_model}}
@@ -327,7 +327,7 @@ remove_lines <- function(x, ...) UseMethod("remove_lines")
 #' PZ <- remove_lines(PZ, 2)
 #' @rdname remove_lines
 #' @export
-remove_lines.bi_model <- function(x, what, only, type=c("assignment", "sample"), ...) {
+remove_lines.bi_model <- function(x, what, only, type=c("all", "assignment", "sample"), ...) {
   if (missing(what)) {
     stop("'what' must be given")
   }
@@ -344,27 +344,24 @@ remove_lines.bi_model <- function(x, what, only, type=c("assignment", "sample"),
   operators <- list(assignment=c("=", "<-"), sample="~")
 
   ## check if we don't want to remove everything
-  if (length(to_remove) > 0 &&
-        (length(operators) > length(type) || !missing(only))) {
-    for (op_type in names(operators)) {
+  if (length(to_remove) > 0 && (type != "all" || !missing(only))) {
+      if (type == "all") {
+          op_types <- unlist(operators)
+      } else {
+          op_types <- operators[[type]]
+      }
       pattern <-
         paste0("^(const)?[[:space:]]?([A-Za-z_0-9[\\]]*)[[:space:]]*(",
-               paste(operators[[op_type]], collapse="|"), ")")
+               paste(op_types, collapse="|"), ")")
       assign_lines <- grep(pattern, x[to_remove], perl=TRUE)
       assign_vars <- sub(paste0(pattern, ".*$"), "\\2",
                          x[to_remove][assign_lines], perl=TRUE)
       assign_vars <- sub("\\[.*]", "", assign_vars)
-      if (!(op_type %in% type)) filter_lines <- assign_lines
-      else if (!missing(only)) {
-        filter_lines <- assign_lines[which(!(assign_vars %in% only))]
-      } else {
-        filter_lines <- c()
+      if (!missing(only)) assign_lines <- assign_lines[which(!(assign_vars %in% only))]
+      if (length(assign_lines) > 0) {
+        assign_lines <- c(1, assign_lines, length(to_remove))
+        to_remove <- to_remove[-assign_lines]
       }
-      if (length(filter_lines) > 0) {
-        filter_lines <- c(1, filter_lines, length(to_remove))
-        to_remove <- to_remove[-filter_lines]
-      }
-    }
   }
 
   if (length(to_remove) > 0) {
