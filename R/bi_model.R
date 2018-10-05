@@ -726,3 +726,42 @@ set_name.bi_model <- function(x, name, ...) {
     else model_char[i] <- value
     return(clean_model(model_char))
 }
+
+#' @name Equals.bi_model
+#' @rdname Equals.bi_model
+#' @title Check if two models are equal
+#' @aliases `==.bi_model`
+#' @description
+#' Ignores differences in the model name.
+#' @param e1 a \code{\link{bi_model}}
+#' @param e2 a \code{\link{bi_model}}
+#' @param ... ignored
+#' @examples
+#' model_file_name <- system.file(package="rbi", "PZ.bi")
+#' PZ <- bi_model(filename = model_file_name)
+#' PZ == PZ # TRUE
+#' @export
+#' @param value TRUE or FALSE
+`==.bi_model` <- function(e1, e2, ...) {
+  return(length(e1) == length(e2) &&
+           all(find_block(e1, "model")==find_block(e2, "model")))
+}
+
+#' @name Unequals.bi_model
+#' @rdname Unequals.bi_model
+#' @title Check if two models are unequal
+#' @aliases `!=.bi_model`
+#' @description
+#' Ignores differences in the model name.
+#' @param e1 a \code{\link{bi_model}}
+#' @param e2 a \code{\link{bi_model}}
+#' @param ... ignored
+#' @examples
+#' model_file_name <- system.file(package="rbi", "PZ.bi")
+#' PZ <- bi_model(filename = model_file_name)
+#' PZ != PZ # FALSE
+#' @export
+#' @param value TRUE or FALSE
+`!=.bi_model` <- function(e1, e2) {
+  return(!(e1 == e2))
+}
