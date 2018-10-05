@@ -3,7 +3,6 @@
 \name{optimise}
 \alias{optimise}
 \alias{optimise.libbi}
-\alias{optimise}
 \alias{optimise.bi_model}
 \title{Using the LibBi wrapper to optimise}
 \usage{
