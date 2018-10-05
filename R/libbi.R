@@ -118,7 +118,6 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
   libbi_client_args[["optimise"]] <-
     unique(c(libbi_client_args[["optimise"]], libbi_client_args[["filter"]]))
 
-  if (missing(sample_obs)) sample_obs <- FALSE
   if (missing(output_all)) output_all <- FALSE
   proposal <- match.arg(proposal)
 
@@ -128,6 +127,22 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
     new_options <- list()
   } else {
     new_options <- option_list(options)
+  }
+
+  if (!missing(sample_obs)) {
+    warning('argument `sample_obs` is deprecated; please use `with="transform-obs-to-state"` instead.', call. = FALSE)
+    if (sample_obs) {
+      if ("without-transform-obs-to-state" %in% names(new_options)) {
+        stop("`sample_obs==TRUE` and `without-transform-obs-to-state` is set. This is contradictory.")
+      }
+      new_options[["with-transform-obs-to-state"]] <- ""
+    }
+    if (!sample_obs) {
+      if ("without-transform-obs-to-state" %in% names(new_options)) {
+        stop("`sample_obs==FALSE` and `with-transform-obs-to-state` is set. This is contradictory.")
+      }
+      new_options[["without-transform-obs-to-state"]] <- ""
+    }
   }
 
   if (missing(config) || config == ""){
@@ -380,11 +395,6 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
       run_model_modified <- TRUE
     }
 
-    if (sample_obs) {
-      run_model <- obs_to_noise(run_model)
-      run_model_modified <- TRUE
-    }
-
     if (run_model_modified) {
       run_model_file_name <-
         tempfile(pattern=paste(get_name(run_model), "model", sep = "_"),
@@ -450,14 +460,6 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
     }
     x$error_flag <- FALSE
     if (verbose) print("... LibBi has finished!")
-
-    if (sample_obs && file.exists(x$output_file_name)) {
-      nc <- nc_open(x$output_file_name, write=TRUE)
-      for (obs_name in var_names(run_model, "obs")) {
-        ncvar_rename(nc, paste0("__sample_", obs_name), obs_name)
-      }
-      nc_close(nc)
-    }
 
     ## recover saved obs file name
     x$options[["obs-file"]] <- obs_file_save

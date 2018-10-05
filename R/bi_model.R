@@ -140,43 +140,6 @@ propose_prior <- function(x) {
   return(clean_model(new_model))
 }
 
-#' @name obs_to_noise
-#' @title Copy obs variables to state variables (with '__sample_' prepended)
-#'
-#' @description
-#' This is used by the \code{\link{run}} functions of rbi, if 'sample_obs=TRUE'
-#'   is specified.
-#' @param x a \code{\link{bi_model}} object
-#' @return a \code{\link{bi_model}}
-#' @seealso \code{\link{bi_model}}
-#' @keywords internal
-#' @rdname obs_to_noise
-obs_to_noise <- function(x) {
-  new_model <- bi_model(lines = x)
-  obs_block <- get_block(x, "observation")
-  obs_variables <- var_names(x, "obs", dim=TRUE)
-  obs_variable_names <- var_names(x, "obs", dim=FALSE)
-
-  obs_var_pattern <- paste0("^(", paste(obs_variable_names, collapse = "|"), ")")
-  state_block <- sub(obs_var_pattern, "__sample_\\1", obs_block)
-  state_variables <- paste0("__sample_", obs_variables)
-  new_model <- insert_lines(new_model, state_block, at_end_of = "transition")
-  new_model <- insert_lines(new_model, state_block, at_end_of = "initial")
-  dims <- var_names(x, "dim")
-  if (length(dims) > 0) {
-    insert_after <- max(grep("^[[:space:]]*dim[[:space:]]", new_model))
-  } else {
-    insert_after <- 1
-  }
-
-  new_model <-
-    insert_lines(new_model,
-                 paste("noise ", paste(state_variables, collapse = ", ")),
-                 after = insert_after)
-
-  return(clean_model(new_model))
-}
-
 #' @name clean_model
 #' @title Strip model code to its bare bones
 #'
