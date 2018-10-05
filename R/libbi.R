@@ -196,6 +196,7 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
 
   ## check if 'model-file' is contained in any options
   all_options <- option_list(getOption("libbi_args"), config_file_options, x$options, new_options, list(...))
+
   if ("model-file" %in% names(all_options)) {
     if (missing(model)) {
       x$model_file_name <- absolute_path(all_options[["model-file"]], getwd())
@@ -205,7 +206,7 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
     }
   } else if (!is_empty(x$model)) {
     if (length(x$model_file_name) == 0 ||
-        !all((x$model == bi_model(x$model_file_name))[-1])) {
+          !(x$model == bi_model(x$model_file_name))) {
       x$model_file_name <-
         tempfile(pattern=paste(get_name(x$model), "model", sep = "_"),
                  fileext=".bi",
@@ -371,7 +372,6 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
     all_options <- all_options[retain_options]
 
     run_model <- x$model
-    run_model_modified <- FALSE
 
     if (output_all) {
       no_output_pattern <- "[[:space:]]*has_output[[:space:]]*=[[:space:]]*0[[:space:]]*"
@@ -382,20 +382,17 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
       updated_lines <- gsub(",\\)", ")", updated_lines)
       updated_lines <- sub("()", "", updated_lines)
       run_model[no_output] <- updated_lines
-      run_model_modified <- TRUE
     }
 
     if (proposal == "prior") {
       run_model <- propose_prior(run_model)
-      run_model_modified <- TRUE
     }
 
     if (!missing(fix)) {
       run_model <- do.call(fix.bi_model, c(list(x=run_model), as.list(fix)))
-      run_model_modified <- TRUE
     }
 
-    if (run_model_modified) {
+    if (run_model != x$model) {
       run_model_file_name <-
         tempfile(pattern=paste(get_name(run_model), "model", sep = "_"),
                  fileext=".bi",
