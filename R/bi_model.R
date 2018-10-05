@@ -429,7 +429,7 @@ find_block <- function(x, ...) UseMethod("find_block")
 #' @rdname find_block
 find_block.bi_model <- function(x, name) {
   lines <- as.character(x)
-  sub_regexp <- paste0("^[[:space:]]*(sub[[:space:]]+)?[[:space:]]*", name, "[[:space:]]*(\\(.*\\))?[[:space:]]*\\{")
+  sub_regexp <- paste0("^[[:space:]]*(sub[[:space:]]+)?[[:space:]]*", name, "([[:space:]][a-zA-Z0-9_\\.]+)?[[:space:]]*(\\(.*\\))?[[:space:]]*\\{")
   sub_line <- grep(sub_regexp, lines)
   if (length(sub_line) == 1) {
     lines[sub_line] <- sub(sub_regexp, "", lines[sub_line])
