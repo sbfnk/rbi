@@ -32,6 +32,7 @@ r_binary_packages:
   - roxygen2
 
 apt_packages:
+  - libthrust-dev
   - libblas-dev
   - liblapack-dev
   - libqrupdate-dev
@@ -52,9 +53,6 @@ after_success:
 
 before_install:
   - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
-      curl -fLo /tmp/thrust-1.8.2.zip https://github.com/thrust/thrust/releases/download/1.8.2/thrust-1.8.2.zip;
-      unzip /tmp/thrust-1.8.2.zip;
-      sudo mv thrust /usr/local/include;
       curl -fLo /tmp/LibBi.tar.gz https://github.com/lawmurray/LibBi/archive/stable.tar.gz;
       tar xzf /tmp/LibBi.tar.gz -C ~;
       pushd ~/LibBi-stable;
