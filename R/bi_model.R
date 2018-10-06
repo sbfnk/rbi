@@ -721,7 +721,7 @@ set_name.bi_model <- function(x, name, ...) {
 #' @return value TRUE or FALSE
 `==.bi_model` <- function(e1, e2, ...) {
   return(length(e1) == length(e2) &&
-           all(find_block(e1, "model")==find_block(e2, "model")))
+           all(get_block(e1, "model")==get_block(e2, "model")))
 }
 
 #' @name Unequals.bi_model
