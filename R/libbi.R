@@ -42,6 +42,7 @@ libbi <- function(model, path_to_libbi, dims, use_cache=TRUE, ...){
                    time_dim=character(0),
                    coord_dims=NULL,
                    thin=1,
+                   output_every=NA_real_,
                    command=character(0),
                    output_file_name=character(0),
                    log_file_name=character(0),
@@ -81,6 +82,7 @@ run <- function(x, ...) UseMethod("run")
 #' @param output_all logical; if set to TRUE, all parameters, states and observations will be saved; good for debugging
 #' @param sample_obs logical; if set to TRUE, will sample observations
 #' @param thin any thinning of MCMC chains (1 means all will be kept, 2 skips every other sample etc.); note that \code{LibBi} itself will write all data to the disk. Only when the results are read in with \code{\link{bi_read}} will thinning be applied.
+#' @param output_every real; if given, \code{noutputs} will be set so that there is output every \code{output_every} time steps.
 #' @param chain logical; if set to TRUE and \code{x} has been run before, the previous output file will be used as \code{init} file, and \code{init-np} will be set to the last iteration of the previous run (unless target=="prediction"). This is useful for running inference chains.
 #' @param seed Either a number (the seed to supply to \code{LibBi}), or a logical variable: TRUE if a seed is to be generated for \code{RBi}, FALSE if \code{LibBi} is to generate its own seed
 #' @param ... any unrecognised options will be added to \code{options}
@@ -95,7 +97,7 @@ run <- function(x, ...) UseMethod("run")
 #' @importFrom ncdf4 nc_open nc_close ncvar_rename
 #' @importFrom stats runif
 #' @export
-run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, options, config, add_options, log_file_name, init, input, obs, time_dim, coord_dims, working_folder, output_all, sample_obs, thin, chain=TRUE, seed=TRUE, ...){
+run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, options, config, add_options, log_file_name, init, input, obs, time_dim, coord_dims, working_folder, output_all, sample_obs, thin, output_every, chain=TRUE, seed=TRUE, ...){
 
   ## client options
   libbi_client_args <-
@@ -122,6 +124,7 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
   proposal <- match.arg(proposal)
 
   if (!missing(thin)) x$thin <- thin
+  if (!missing(output_every)) x$output_every <- output_every
 
   if (missing(options)){
     new_options <- list()
@@ -196,6 +199,7 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
 
   ## check if 'model-file' is contained in any options
   all_options <- option_list(getOption("libbi_args"), config_file_options, x$options, new_options, list(...))
+  updated_options <- c(names(args), names(new_options), names(config_file_options))
 
   if ("model-file" %in% names(all_options)) {
     if (missing(model)) {
@@ -215,8 +219,25 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
     }
   }
 
-  ## read file options: input, init, obs
   args <- match.call()
+
+  if (!is.na(x$output_every)) {
+    if ("noutputs" %in% updated_options) {
+      if (missing(output_every)) {
+        x$output_every <- NA_real_
+      } else {
+        stop("noutputs' and 'output_every' both given. Must be one or the other")
+      }
+    } else {
+      start_time <-
+        ifelse("start-time" %in% names(all_options), all_options[["end-time"]],  0)
+      end_time <-
+        ifelse("end-time" %in% names(all_options), all_options[["end-time"]],  0)
+      new_options[["noutputs"]] <- (end_time-start_time)/output_every
+    }
+  }
+
+  ## read file options: input, init, obs
   file_types <- c("input", "init", "obs")
   file_args <- intersect(names(args), file_types)
   ## assign file args to global options
@@ -226,8 +247,7 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
 
   if (x$run_flag && length(x$output_file_name) == 1 &&
       file.exists(x$output_file_name)) {
-    init_file_given <-
-      "init" %in% file_args || "init-file" %in% names(new_options)
+    init_file_given <- "init" %in% file_args || "init-file" %in% updated_options
     init_np_given <- "init-np" %in% names(new_options)
     init_given <- init_file_given || init_np_given
     if (missing(chain)) { ## if chain not specified, only chain if no init
@@ -255,7 +275,6 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
           x$options[["init"]] <- NULL
         }
       } else {
-        ## TODO: check if initial parameters exist
         types <- "param"
         chain_init <- ("with-transform-initial-to-param" %in% names(all_options))
         if (chain_init) types <- c(types, "state")
@@ -670,6 +689,7 @@ save_libbi.libbi <- function(x, filename, supplement, ...) {
                    time_dim=x$time_dim,
                    coord_dims=x$coord_dims,
                    thin=1,
+                   output_every=x$output_every,
                    supplement=x$supplement,
                    output=bi_read(x))
 
@@ -711,7 +731,7 @@ read_libbi <- function(file, ...) {
   libbi_options <- list(...)
 
   pass_options <- c("model", "dims", "time_dim", "coord_dims", "options",
-                    "thin", "init", "input", "obs")
+                    "thin", "output-every", "init", "input", "obs")
 
   for (option in pass_options) {
     if (!(option %in% names(libbi_options)) &&
