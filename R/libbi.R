@@ -305,7 +305,7 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
         arg$output_file_name
       if (length(arg$time_dim) > 0) {
         x$time_dim <- arg$time_dim
-      } else {
+      } else if (length(x$time_dim) == 0){
         x$time_dim <- "time"
       }
     } else if (is.list(arg)) {
