@@ -28,11 +28,13 @@ pre code {
 
 ### Latest Version: _0.9.1_
 
-The package has been tested on macOS/OSX and Linux. It requires a working installation of **LibBi**, which is easiest done using the the `brew` command: Install [Homebrew](https://brew.sh) (on OS X) or [Linuxbrew](http://linuxbrew.sh) (on linux), then issue the following command (using a command shell, i.e. Terminal or similar):
+The package has been tested on macOS/OSX and Linux. It requires a working installation of **LibBi**. One macOS, this is easiest done using the the `brew` command: Install [Homebrew](https://brew.sh), then issue the following command (using a command shell, i.e. Terminal or similar):
 
 ```{sh eval=FALSE}
 brew install libbi
 ```
+
+On linux, follow the [instructions](https://github.com/lawmurray/LibBi/blob/master/INSTALL_LINUX.md) provided with LibBii.
 
 If you have any trouble installing **LibBi** you can get help on the [LibBi Users](https://groups.google.com/forum/#!forum/libbi-users) mailing list.
 
@@ -91,6 +93,8 @@ As an example, we consider a simplified version of the SIR model discussed in [D
 model_file <- system.file(package="rbi", "SIR.bi")
 SIRmodel <- bi_model(model_file) # load model
 ```
+
+Other ways of implementing a (deterministic or stochastic) SIR model can be found in the [collection of SIR models for LibBi](http://sbfnk.github.io/rbi/idd_models.html), where you also find how to load them into a `bi_model` object, e.g. `SIRmodel`. Feel free to run the commands below with different versions of the model.
 
 The `SIRmodel` object now contains the model, which can be displayed with
 
@@ -162,7 +166,7 @@ lines(dataset$Incidence$time, dataset$Incidence$value)
 
 # The `libbi` class
 
-The `libbi` class manages the interaction with **LibBi** such as sampling from the prior or posterior distribution. For example, the `SIRdata` object above is of tyep `libbi`:
+The `libbi` class manages the interaction with **LibBi** such as sampling from the prior or posterior distribution. For example, the `SIRdata` object above is of type `libbi`:
 
 ```{R}
 class(SIRdata)
@@ -188,7 +192,6 @@ bi <- sample(bi, target="prior", nsamples=1000, end_time=16*7, noutputs=16)
 ```{R echo=FALSE}
 bi <- rbi::sample(bi, target="prior", nsamples=1000, end_time=16*7, noutputs=16, seed=4775)
 ```
-
 
 This step calls **LibBi** to sample from the prior distribution of the previously specified model, generating 1,000 samples and each time running the model for 16 * 7 = 112 time steps and writing 16 outputs (i.e., every 7 time steps). **LibBi** parses the model, creates C++ code, compiles it and run the model. If the model is run again, it should do so much quicker because it will use the already compiled C++ code to run the model:
 
@@ -247,13 +250,21 @@ We can see that the time-varying variables are represented as data frames with t
 Let's perform inference using Particle Markov-chain Metropolis Hastings (PMMH). The following command will generate 16 * 10,000 = 160,000 simulations and therefore may take a little while to run (if you want to see the samples progress, use `verbose=TRUE` in the `bi$run` call).
 
 ```{R eval=FALSE}
-bi <- sample(bi,target="posterior", nparticles=16, obs=SIRdata, sample_obs=TRUE, nsamples=10000)
+bi <- sample(bi, target="posterior", nparticles=16, obs=SIRdata, nsamples=10000)
 ```
 ```{R echo=FALSE}
-bi <- rbi::sample(bi,target="posterior", nparticles=16, obs=SIRdata, sample_obs=TRUE, nsamples=10000, seed=743747902)
+bi <- rbi::sample(bi,target="posterior", nparticles=16, obs=SIRdata, nsamples=10000, seed=743747902)
 ```
 
-This samples from the posterior distribution. Remember that options are preserved from previous runs, so we don't need to specify `nsamples`, `end_time` and `noutputs` again, unless we want to change them. The `nparticles` option specifies the number of particles, and the `sample_obs` option tells the `sample` command that we also want observation samples from the posterior distribution of trajectories. 
+This samples from the posterior distribution. Remember that options are preserved from previous runs, so we don't need to specify `nsamples`, `end_time` and `noutputs` again, unless we want to change them. The `nparticles` option specifies the number of particles. 
+
+You can also pass a list of data frames (each element of the list corresponding to one observed variable as the `obs` argument, for example
+
+```{R eval=FALSE}
+df <- data.frame(value = c(1,6,2,26,99,57,78,57,15,9,4,1,1,1,0,2,0)
+                 time = c(0,7,14,21,28,35,42,49,56,63,70,77,84,91,98,105,112))
+bi <- sample(bi,target="posterior", nparticles=16, obs=list(Incidence=df), nsamples=10000)
+```
 
 The random seed used for the libbi run is saved as an option to the `libbi` object:
 
@@ -279,7 +290,7 @@ posterior <- bi_read(bi)
 str(posterior)
 ```
 
-We can see that this has three more objects than previously when we specified `target="prior"`: `loglikelihood` (the estimated log-likelihood of the parameters at each MCMC step), `logprior` (the estimated log-prior density of the parameters at each MCMC step), and `Incidence` (sampled observations, as we specified `sample_obs=TRUE`).
+We can see that this has two more objects than previously when we specified `target="prior"`: `loglikelihood` (the estimated log-likelihood of the parameters at each MCMC step) and `logprior` (the estimated log-prior density of the parameters at each MCMC step).
 
 To get a summary of the parameters sampled, use
 
@@ -321,6 +332,20 @@ dataset[var_names(bi$model, "param")]
 
 For more details on using **coda** to further analyse the chains, see the website of the [coda package](https://cran.r-project.org/package=coda). For more plotting functionality, see the `plot_libbi` function in [RBi.helpers](https://github.com/sbfnk/rbi.helpers).
 
+# Predictions
+
+We can use the `predict` function to re-simulate the fitted model. This can be useful, for example, to randomly sample observations. To do this, you would use
+
+```{R eval=FALSE}
+pred <- predict(bi, with=c("transform-obs-to-state"))
+```
+
+```{R echo=FALSE}
+pred <- rbi::predict(bi, with=c("transform-obs-to-state"))
+```
+
+where `with=c("transform-obs-to-state")` tells LibBi to treat observations as a state variable, that is to randomly generate observations (see the `with-transform-obs-to-state` option in the [LibBi manual](http://libbi.org/docs/LibBi-Manual.pdf)).
+
 # Filtering
 
 The other so-called clients of **LibBi** (besides `sample`) are supported through commands of the same name: `filter`, `optimise` and `rewrite`. For example, to run a particle filter on the last posterior sample generated above, you can use:
@@ -358,11 +383,17 @@ a
 
 # Debugging
 
-If `libbi` throws an error, it is best to investigate with `verbose = TRUE`, and setting `working_folder` to a folder that one can then use for debugging. Output of the `libbi` call can be saved in a file using the `log_file_name` option (by default a temporary file).
+For a general check of model syntax, the `rewrite` command is useful:
+
+```{R eval=FALSE}
+rewrite(SIRmodel)
+```
+
+This generates the internal representation of the model for LibBi. It doesn't matter so much what this looks like, but it will throw an error if there is a problem. If `libbi` throws an error, it is best to investigate with `verbose = TRUE`, and setting `working_folder` to a folder that one can then use for debugging. Output of the `libbi` call can be saved in a file using the `log_file_name` option (by default a temporary file).
 
 # Related packages
 
-[RBi.helpers](https://github.com/sbfnk/rbi.helpers) contains higher-level methods to interact with **LibBi**, including methods for plotting the results of libbi runs and for adapting the proposal distribution and number of particles.
+[RBi.helpers](https://github.com/sbfnk/rbi.helpers) contains higher-level methods to interact with **LibBi**, including methods for plotting the results of libbi runs and for adapting the proposal distribution and number of particles. For more information, see the [RBi.helpers vignette(http://sbfnk.github.io/mfiidd/rbi_helpers.html).
 
 # References
  * Murray, L.M. (2013). [Bayesian state-space modelling on high-performance hardware using LibBi](https://arxiv.org/abs/1306.3277).
