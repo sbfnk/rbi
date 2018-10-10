@@ -40,6 +40,6 @@ NULL
 
 ## set global option
 .onLoad <- function(libname, pkgname) {
-  libbi_args <- list()
-  options(list("libbi_args" = libbi_args))
+  
+  if (is.null(getOption("libbi_args"))) options(list("libbi_args" = list()))
 }
