@@ -341,7 +341,7 @@ pred <- predict(bi, with=c("transform-obs-to-state"))
 ```
 
 ```{R echo=FALSE}
-pred <- rbi::predict(bi, with=c("transform-obs-to-state"))
+pred <- predict(bi, with=c("transform-obs-to-state"))
 ```
 
 where `with=c("transform-obs-to-state")` tells LibBi to treat observations as a state variable, that is to randomly generate observations (see the `with-transform-obs-to-state` option in the [LibBi manual](http://libbi.org/docs/LibBi-Manual.pdf)).
@@ -393,7 +393,7 @@ This generates the internal representation of the model for LibBi. It doesn't ma
 
 # Related packages
 
-[RBi.helpers](https://github.com/sbfnk/rbi.helpers) contains higher-level methods to interact with **LibBi**, including methods for plotting the results of libbi runs and for adapting the proposal distribution and number of particles. For more information, see the [RBi.helpers vignette(http://sbfnk.github.io/mfiidd/rbi_helpers.html).
+[RBi.helpers](https://github.com/sbfnk/rbi.helpers) contains higher-level methods to interact with **LibBi**, including methods for plotting the results of libbi runs and for adapting the proposal distribution and number of particles. For more information, see the [RBi.helpers vignette](http://sbfnk.github.io/rbi/rbi_helpers.html).
 
 # References
  * Murray, L.M. (2013). [Bayesian state-space modelling on high-performance hardware using LibBi](https://arxiv.org/abs/1306.3277).
