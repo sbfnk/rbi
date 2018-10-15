@@ -5,10 +5,10 @@
 \alias{run.libbi}
 \title{Using the LibBi wrapper to launch LibBi}
 \usage{
-\method{run}{libbi}(x, client, proposal = c("model", "prior"), model, fix,
-  options, config, add_options, log_file_name, init, input, obs, time_dim,
-  coord_dims, working_folder, output_all, sample_obs, thin, output_every,
-  chain = TRUE, seed = TRUE, ...)
+\method{run}{libbi}(x, client, proposal = c("model", "prior"), model,
+  fix, options, config, add_options, log_file_name, init, input, obs,
+  time_dim, coord_dims, working_folder, force_inputs = TRUE, output_all,
+  sample_obs, thin, output_every, chain = TRUE, seed = TRUE, ...)
 }
 \arguments{
 \item{x}{a \code{\link{libbi}} object}
@@ -29,7 +29,7 @@
 
 \item{log_file_name}{path to a file to text file to report the output of \code{LibBi}}
 
-\item{init}{initialisation of the model, either supplied as a list of values and/or data frames, or a (netcdf) file name, or a \code{\link{libbi}} object which has been run (in which case the output of that run is used as input). If the object given as \code{x} has been run before, it will be used here with \code{init-np} set to the last iteration of the previous run, unless \code{init} is given explicitly.}
+\item{init}{initialisation of the model, either supplied as a list of values and/or data frames, or a (netcdf) file name, or a \code{\link{libbi}} object which has been run (in which case the output of that run is used). If the object given as \code{x} has been run before, it will be used here with \code{init-np} set to the last iteration of the previous run, unless \code{init} is given explicitly.}
 
 \item{input}{input of the model, either supplied as a list of values and/or data frames, or a (netcdf) file name, or a \code{\link{libbi}} object which has been run (in which case the output of that run is used as input)}
 
@@ -40,6 +40,8 @@
 \item{coord_dims}{The coord dimension(s) in any \code{obs} R objects that have been passed; if not given, will be guessed}
 
 \item{working_folder}{path to a folder from which to run \code{LibBi}; default to a temporary folder.}
+
+\item{force_inputs}{logical; if set to TRUE (default) any variables found in a given input file will be converted to input variables}
 
 \item{output_all}{logical; if set to TRUE, all parameters, states and observations will be saved; good for debugging}
 

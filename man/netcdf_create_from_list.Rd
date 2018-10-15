@@ -4,9 +4,9 @@
 \alias{netcdf_create_from_list}
 \title{Create NetCDF File from R list}
 \usage{
-netcdf_create_from_list(filename, variables, time_dim, coord_dims, dim_factors,
-  value_column = "value", guess_time = FALSE, guess_coord = FALSE,
-  verbose)
+netcdf_create_from_list(filename, variables, time_dim, coord_dims,
+  dim_factors, value_column = "value", guess_time = FALSE,
+  guess_coord = FALSE, verbose)
 }
 \arguments{
 \item{filename}{a path to a NetCDF file to write the variable into, which will be overwritten
