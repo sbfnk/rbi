@@ -679,20 +679,18 @@ set_name.bi_model <- function(x, name, ...) {
   clean_model(x)
 }
 
-#' @name Extract.bi_model
-#' @rdname Extract.bi_model
+#' @name Extract_assign.bi_model
+#' @rdname Extract_assign.bi_model
 #' @title Subset and replace model lines
 #' @aliases `[<-.bi_model`
 #' @description
-#' Extracts a subset of lines from the model and, if used with the assignment
-#'   operator, assigns new character strings.
+#' Extracts a subset of lines from the model and assigns new character strings.
 #' @param x A bi_model
 #' @param i A vector of line numbers
 #' @param ... ignored
 #' @examples
 #' model_file_name <- system.file(package="rbi", "PZ.bi")
 #' PZ <- bi_model(filename = model_file_name)
-#' PZ[3:4]
 #' PZ[3:4] <- c("const e = 0.4", "const m_l = 0.05")
 #' @export
 #' @param value A vector of the same length as \code{i}, containing the
@@ -702,6 +700,34 @@ set_name.bi_model <- function(x, name, ...) {
     if (is.null(value)) model_char <- model_char[-i]
     else model_char[i] <- value
     return(clean_model(model_char))
+}
+
+#' @name Extract.bi_model
+#' @rdname Extract.bi_model
+#' @title Subset model lines
+#' @aliases `[.bi_model`
+#' @description
+#' Extracts a subset of lines from the model.
+#' @param x A bi_model
+#' @param i A vector of line numbers
+#' @param ... ignored
+#' @examples
+#' model_file_name <- system.file(package="rbi", "PZ.bi")
+#' PZ <- bi_model(filename = model_file_name)
+#' PZ[3:4]
+#' @export
+#' @param value A vector of the same length as \code{i}, containing the
+#'   replacement strings, or (if \code{i} is negative, a \code{\link{bi_model}} with
+#'   the respective lines removed)
+`[.bi_model` <-  function(x, i, ...) {
+    model_char <- as.character(x)
+    if (missing(i)) {
+        return(model_char)
+    } else if (any(i >= 0)) {
+        return(model_char[i])
+    } else {
+        return(clean_model(model_char[i]))
+    }
 }
 
 #' @name Equals.bi_model

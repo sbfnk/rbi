@@ -2,6 +2,7 @@
 
 S3method("!=",bi_model)
 S3method("==",bi_model)
+S3method("[",bi_model)
 S3method("[<-",bi_model)
 S3method(add_block,bi_model)
 S3method(attach_file,libbi)
