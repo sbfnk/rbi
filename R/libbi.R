@@ -861,10 +861,10 @@ predict <- function(x, ...) UseMethod("predict")
 #'
 #' For the help page of the base R \code{optimise} function, see \code{\link[stats]{optimise}}.
 #' @export
-#' @param object a \code{\link{libbi}} object
+#' @param x a \code{\link{libbi}} object
 #' @param ... ignored
-predict.libbi <- function(object, ...) {
-  sample(object, target="prediction", ...)
+predict.libbi <- function(x, ...) {
+  sample(x, target="prediction", ...)
 }
 
 #' @export

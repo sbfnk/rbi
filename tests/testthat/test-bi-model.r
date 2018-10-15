@@ -27,7 +27,7 @@ test_that("lines can be inserted",
   expect_true(!is_empty(insert_lines(PZ, lines = "beta ~ normal()", before = "dummy")))
   expect_true(!is_empty(insert_lines(PZ, lines = "beta ~ normal()", after = "parameter")))
   expect_error(insert_lines(PZ, lines = "noise beta"))
-  expect_error(insert_lines(PZ, lines = "noise beta", after=33))
+  expect_error(insert_lines(PZ, lines = "noise beta", after=35))
 })
 
 test_that("lines can be removed",

@@ -14,10 +14,6 @@
 \item{i}{A vector of line numbers}
 
 \item{...}{ignored}
-
-\item{value}{A vector of the same length as \code{i}, containing the
-replacement strings, or (if \code{i} is negative, a \code{\link{bi_model}} with
-the respective lines removed)}
 }
 \description{
 Extracts a subset of lines from the model.

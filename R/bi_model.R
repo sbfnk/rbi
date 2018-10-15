@@ -765,9 +765,6 @@ set_name.bi_model <- function(x, name, ...) {
 #' PZ <- bi_model(filename = model_file_name)
 #' PZ[3:4]
 #' @export
-#' @param value A vector of the same length as \code{i}, containing the
-#'   replacement strings, or (if \code{i} is negative, a \code{\link{bi_model}} with
-#'   the respective lines removed)
 `[.bi_model` <-  function(x, i, ...) {
     model_char <- as.character(x)
     if (missing(i)) {

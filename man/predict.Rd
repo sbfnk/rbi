@@ -5,10 +5,10 @@
 \alias{predict.libbi}
 \title{Using the LibBi wrapper to predict}
 \usage{
-\method{predict}{libbi}(object, ...)
+\method{predict}{libbi}(x, ...)
 }
 \arguments{
-\item{object}{a \code{\link{libbi}} object}
+\item{x}{a \code{\link{libbi}} object}
 
 \item{...}{ignored}
 }
