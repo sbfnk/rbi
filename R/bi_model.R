@@ -34,6 +34,78 @@ bi_model <- function(filename, lines, ...) {
   return(clean_model(model))
 }
 
+#' @rdname remove_vars
+#' @name remove_vars
+#' @title Remove variables
+#' @description
+#' Removes variables from the left-hand side of a model
+#'
+#' Used by \code{\link{fix}} and \code{\link{to_input}}
+#' @param x a \code{\link{bi_model}} object
+#' @param vars vector of variables to remove
+#' @param ... values to be assigned to the (named) variables
+#' @return a bi model object of the new model
+#' @seealso \code{\link{bi_model}}
+remove_vars <- function(x, vars) {
+
+  ## remove variable declarations
+  var_str <-
+    paste0("^[[:space:]]*(noise|param|state|input|const|obs)[[:space:]]+(",
+           paste(vars, collapse = "|"), ")([[:space:][\\=~]|$)")
+  var_line_nbs <- grep(var_str, x)
+
+  save_var_names <- var_names(x)
+
+  if (length(var_line_nbs) > 0)
+  {
+    x <- x[-var_line_nbs]
+  }
+
+  for (var in intersect(vars, save_var_names)) {
+    ## remove assignments
+    assignments <-
+      grep(paste0("^[[:space:]]*", var,
+                  "(/dt)?[[:space:]]*(\\[[^]]*\\])?[[:space:]]*(~|=|<-)"),
+           x)
+    ode_assignments <- 
+      grep(paste0("^[[:space:]]*d", var,
+                  "/dt[[:space:]]*(\\[[^]]*\\])?[[:space:]]*(~|=|<-)"),
+           x)
+    all_assignments <- c(assignments, ode_assignments)
+    if (length(all_assignments) > 0) {
+      x <- x[-all_assignments]
+    }
+  }
+
+  return(clean_model(x))
+}
+
+#' @rdname to_input
+#' @name to_input
+#' @title Convert variables into inputs
+#' @description
+#' Used for predictions, if one doesn't want to re-simulate state/noise trajectories
+#'
+#' @param x a \code{\link{bi_model}} object
+#' @param vars vector of variables to convert to inputs
+#' @return a bi model object of the new model
+#' model_file_name <- system.file(package="rbi", "PZ.bi")
+#' PZ <- bi_model(filename = model_file_name)
+#' PZ <- to_inpug(PZ, P)
+#' @seealso \code{\link{bi_model}}
+to_input <- function(x, vars) {
+
+  x <- remove_vars(x, vars)
+
+  for (var in vars) {
+    ## add input definition
+    fixed_line <- paste("input", var)
+    x <- insert_lines(x, fixed_line, at_beginning="model")
+  }
+
+  return(clean_model(x))
+}
+
 #' @export
 fix <- function(x, ...) UseMethod("fix")
 #' @rdname fix
@@ -56,57 +128,18 @@ fix.bi_model <- function(x, ...) {
 
   fixed <- list(...)
 
-  ## variables that are to be fixed
-  var_str <-
-    paste0("^[[:space:]]*(noise|param|state|input|const|obs)[[:space:]]+(",
-           paste(names(fixed), collapse = "|"), ")([[:space:][\\=~]|$)")
-  var_line_nbs <- grep(var_str, x)
+  x <- remove_vars(x, names(fixed))
 
-  var_vec <- var_names(x)
-
-  unmatched_names <- setdiff(names(fixed), var_vec)
-
-  if (length(var_line_nbs) > 0)
-  {
-    x <- x[-var_line_nbs]
-  }
-
-  for (name in unmatched_names)
-  {
-    fixed_line <-
-      paste0("const ", name, " = ", fixed[[name]])
-    if (length(var_line_nbs) > 0)
-    {
-      first_const_line <- var_line_nbs[1]
-    } else
-    {
-      first_const_line <- grep("^[[:space:]]*(noise|param|state|input|const)[[:space:]]+", x)[1]
-    }
-    x <-
-      c(x[1:(first_const_line - 1)],
-        fixed_line,
-        x[first_const_line:length(x)])
-  }
-
-  for (var in intersect(names(fixed), var_vec)) {
-    ## remove assignments
-    assignments <-
-      grep(paste0("^[[:space:]]*", var,
-                  "(/dt)?[[:space:]]*(\\[[^]]*\\])?[[:space:]]*(~|=|<-)"),
-           x)
-    if (length(assignments) > 0) {
-      x <- x[-assignments]
-    }
+  for (var in names(fixed)) {
 
     ## remove dimensions
     x <-
-      gsub(paste0(var, "[[:space:]]*\\[[^]]*\\]"), var, x)
+      gsub(paste0("(^|[^a-zA-Z_0-0])", var, "[[:space:]]*\\[[^]]*\\]"),
+           paste0("\\1", var), x)
 
     ## add const assignment
     fixed_line <- paste0("const ", var, " = ", fixed[[var]])
-    x <- c(x[1:(var_line_nbs[1] - 1)],
-                   fixed_line, 
-                   x[(var_line_nbs[1]):length(x)])
+    x <- c(x[1], fixed_line, x[2:length(x)])
 
   }
 

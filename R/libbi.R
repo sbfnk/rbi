@@ -73,12 +73,13 @@ run <- function(x, ...) UseMethod("run")
 #' @param config path to a configuration file, containing multiple arguments
 #' @param add_options deprecated, replaced by \code{options}
 #' @param log_file_name path to a file to text file to report the output of \code{LibBi}
-#' @param init initialisation of the model, either supplied as a list of values and/or data frames, or a (netcdf) file name, or a \code{\link{libbi}} object which has been run (in which case the output of that run is used as input). If the object given as \code{x} has been run before, it will be used here with \code{init-np} set to the last iteration of the previous run, unless \code{init} is given explicitly.
+#' @param init initialisation of the model, either supplied as a list of values and/or data frames, or a (netcdf) file name, or a \code{\link{libbi}} object which has been run (in which case the output of that run is used). If the object given as \code{x} has been run before, it will be used here with \code{init-np} set to the last iteration of the previous run, unless \code{init} is given explicitly.
 #' @param input input of the model, either supplied as a list of values and/or data frames, or a (netcdf) file name, or a \code{\link{libbi}} object which has been run (in which case the output of that run is used as input)
 #' @param obs observations of the model, either supplied as a list of values and/or data frames, or a (netcdf) file name, or a \code{\link{libbi}} object which has been run (in which case the output of that run is used as observations)
 #' @param time_dim The time dimension in any R objects that have been passed (\code{init}, \code{input}) and \code{obs}); if not given, will be guessed
 #' @param coord_dims The coord dimension(s) in any \code{obs} R objects that have been passed; if not given, will be guessed
 #' @param working_folder path to a folder from which to run \code{LibBi}; default to a temporary folder.
+#' @param force_inputs logical; if set to TRUE (default) any variables found in a given input file will be converted to input variables
 #' @param output_all logical; if set to TRUE, all parameters, states and observations will be saved; good for debugging
 #' @param sample_obs logical; if set to TRUE, will sample observations
 #' @param thin any thinning of MCMC chains (1 means all will be kept, 2 skips every other sample etc.); note that \code{LibBi} itself will write all data to the disk. Only when the results are read in with \code{\link{bi_read}} will thinning be applied.
@@ -97,7 +98,7 @@ run <- function(x, ...) UseMethod("run")
 #' @importFrom ncdf4 nc_open nc_close ncvar_rename
 #' @importFrom stats runif
 #' @export
-run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, options, config, add_options, log_file_name, init, input, obs, time_dim, coord_dims, working_folder, output_all, sample_obs, thin, output_every, chain=TRUE, seed=TRUE, ...){
+run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, options, config, add_options, log_file_name, init, input, obs, time_dim, coord_dims, working_folder, force_inputs=TRUE, output_all, sample_obs, thin, output_every, chain=TRUE, seed=TRUE, ...){
 
   ## client options
   libbi_client_args <-
@@ -409,6 +410,10 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
 
     if (!missing(fix)) {
       run_model <- do.call(fix.bi_model, c(list(x=run_model), as.list(fix)))
+    }
+
+    if (force_inputs && "input-file" %in% names(all_options)) {
+      run_model <- to_input(run_model, bi_contents(all_options$`input-file`))
     }
 
     if (run_model != x$model) {
