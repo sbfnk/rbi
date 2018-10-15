@@ -851,6 +851,8 @@ assert_output.libbi <- function(x, ...)
     }
 }
 
+#' @export
+predict <- function(x, ...) UseMethod("predict")
 #' @name predict
 #' @rdname predict
 #' @title Using the LibBi wrapper to predict
