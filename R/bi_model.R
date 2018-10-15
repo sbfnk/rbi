@@ -192,6 +192,24 @@ clean_model <- function(x) {
     }
   }
 
+  ## split multiple declarations in a single line
+  comma_lines <-
+    paste0("^[[:space:]]*(noise|param|state|input|const|obs)[[:space:]]+",
+           "([^[:space:]].*,.*$)")
+  comma_line_nbs <- grep(comma_lines, x)
+
+  for (id in seq_along(comma_line_nbs)) {
+    line_nb <- comma_line_nbs[id]
+    type <- sub(comma_lines, "\\1", x[line_nb])
+    type_vars <- sub(comma_lines, "\\2", x[line_nb])
+    vars <-
+      unlist(strsplit(type_vars, '[([][^)\\]]+,(*SKIP)(*FAIL)|,\\s*', perl=TRUE))
+    vars <- gsub("[[:space:]]", "", vars)
+    new_lines <- paste(type, vars)
+    x <- c(x[1:(line_nb-1)], new_lines, x[(line_nb+1):length(x)])
+    comma_line_nbs <- comma_line_nbs + length(new_lines) - 1
+  }
+
   ## remove multiple spaces
   x <- gsub("[[:space:]]+", " ", x)
   ## make sure there is a line break after opening braces 
@@ -529,25 +547,23 @@ var_names.bi_model <- function(x, type, dim = FALSE, opt = FALSE,
     line_nbs <- grep(paste0("^[[:space:]]*", for_type, "[[:space:]]"), x)
     if (length(line_nbs) > 0) {
       ## remove qualifier
-      names <- sub(paste0("^[[:space:]]*", for_type, "[[:space:]]"), "", x[line_nbs])
+      name <- sub(paste0("^[[:space:]]*", for_type, "[[:space:]]"), "", x[line_nbs])
       if (!dim) {
         ## remove dimensions
-        names <- sub("\\[.*\\]", "", names)
+        name <- gsub("\\[[^]]*\\]", "", name)
       }
       if (!opt) {
         ## remove options
-        names <- sub("\\(.*\\)", "", names)
+        name <- sub("\\([^)]*\\)", "", name)
       }
       if (for_type == "const") {
         ## remove assignments
-        names <- sub("=.*$", "", names)
+        name <- sub("=.*$", "", name)
       }
       ## remove spaces
-      names <- gsub("[[:space:]]", "", names)
+      name <- gsub("[[:space:]]", "", name)
       ## put commas in parentheses back
-      names_vec <-
-        c(names_vec,
-          unlist(strsplit(names, '[([][^)\\]]+,(*SKIP)(*FAIL)|,\\s*', perl=TRUE)))
+      names_vec <- c(names_vec, name)
     }
   }
   if (!aux) names_vec <- grep("^__.*_$", names_vec, invert=TRUE, value=TRUE)
