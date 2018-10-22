@@ -787,10 +787,10 @@ print.libbi <- function(x, verbose=FALSE, ...){
       clock <- bi_read(x, "clock")[["clock"]]
       cat("Run time: ", clock/1e6, " seconds\n")
     }
-    states <- intersect(contents, var_names(x$model, "state"))
-    noises <- intersect(contents, var_names(x$model, "noise"))
-    params <- intersect(contents, var_names(x$model, "param"))
-    obs <- intersect(contents, var_names(x$model, "obs"))
+    states <- intersect(contents, var_names(x$model, type="state"))
+    noises <- intersect(contents, var_names(x$model, type="noise"))
+    params <- intersect(contents, var_names(x$model, type="param"))
+    obs <- intersect(contents, var_names(x$model, type="obs"))
     niterations <- bi_dim_len(x$output_file_name, "np")
     if (niterations > 0) cat("Number of samples: ", niterations, "\n")
     if (length(states) > 0) cat("State trajectories recorded: ", paste(states, sep=", "), "\n")

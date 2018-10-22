@@ -95,11 +95,18 @@ remove_vars <- function(x, vars) {
 #' @seealso \code{\link{bi_model}}
 to_input <- function(x, vars) {
 
-  x <- remove_vars(x, vars)
+  ## only consider state or noise variables
+  sn_vars <- var_names(x, vars=vars, type=c("state", "noise"))
+  ## get full variable names, with dimensions
+  dim_vars <- var_names(x, vars=sn_vars, dim=TRUE)
+  names(dim_vars) <- sn_vars
 
-  for (var in vars) {
+  ## remove variables
+  x <- remove_vars(x, sn_vars)
+
+  for (var in sn_vars) {
     ## add input definition
-    fixed_line <- paste("input", var)
+    fixed_line <- paste("input", dim_vars[[var]])
     x <- insert_lines(x, fixed_line, at_beginning="model")
   }
 
@@ -557,10 +564,11 @@ var_names <- function(x, ...) UseMethod("var_names")
 #' @name var_names
 #' @title Get variables
 #' @description
-#' Get all variable names of one or more type(s)
+#' Get variable names of one or more type(s)
 #'
 #' This returns all variable names of a certain type ("param", "state", "obs", "noise", "const") contained in the model of a \code{\link{libbi}} object
 #' @param x a \code{\link{bi_model}} object
+#' @param vars a character vector of variable names; if given, only these variables names will be considered
 #' @param type a character vector of one or more types
 #' @param dim logical; if set to TRUE, names will contain dimensions in brackets
 #' @param opt logical; if set to TRUE, names will contain options (e.g., has_output)
@@ -569,7 +577,7 @@ var_names <- function(x, ...) UseMethod("var_names")
 #' @return variable names
 #' @rdname var_names
 #' @export
-var_names.bi_model <- function(x, type, dim = FALSE, opt = FALSE,
+var_names.bi_model <- function(x, vars, type, dim = FALSE, opt = FALSE,
                                aux = FALSE, ...) {
   names_vec <- c()
   if (missing(type)) {
@@ -581,22 +589,27 @@ var_names.bi_model <- function(x, type, dim = FALSE, opt = FALSE,
     if (length(line_nbs) > 0) {
       ## remove qualifier
       name <- sub(paste0("^[[:space:]]*", for_type, "[[:space:]]"), "", x[line_nbs])
+      clean_name <- name
       if (!dim) {
         ## remove dimensions
         name <- gsub("\\[[^]]*\\]", "", name)
       }
+      clean_name <- gsub("\\[[^]]*\\]", "", clean_name)
       if (!opt) {
         ## remove options
         name <- sub("\\([^)]*\\)", "", name)
       }
+      clean_name <- sub("\\([^)]*\\)", "", clean_name)
       if (for_type == "const") {
         ## remove assignments
         name <- sub("=.*$", "", name)
       }
       ## remove spaces
       name <- gsub("[[:space:]]", "", name)
-      ## put commas in parentheses back
-      names_vec <- c(names_vec, name)
+      clean_name <- gsub("[[:space:]]", "", clean_name)
+
+      ## add to vector
+      if (missing(vars) || clean_name %in% vars) names_vec <- c(names_vec, name)
     }
   }
   if (!aux) names_vec <- grep("^__.*_$", names_vec, invert=TRUE, value=TRUE)

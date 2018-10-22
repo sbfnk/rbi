@@ -51,7 +51,7 @@ get_traces <- function(x, model, burnin, all = FALSE, ...) {
       if (all) {
         res <- x
       } else {
-        res <- x[intersect(names(x), var_names(model, "param"))]
+        res <- x[intersect(names(x), var_names(model, type="param"))]
       }
   } else {
       stop("'x' must be a 'libbi' object or a file name or a list of data frames.")

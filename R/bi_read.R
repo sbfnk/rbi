@@ -91,7 +91,7 @@ bi_read <- function(x, vars, dims, model, type, file, missval.threshold, coord_d
   }
 
   if (!missing(type)) {
-    vars <- var_names(model, type, opt=TRUE)
+    vars <- var_names(model, type=type, opt=TRUE)
     ## remove vars that don't have an output
     vars <- grep("has_output[^=]*=[^[0-1]*0", vars, value=TRUE, invert=TRUE)
     ## remove any other options

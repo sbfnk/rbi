@@ -5,11 +5,13 @@
 \alias{var_names.bi_model}
 \title{Get variables}
 \usage{
-\method{var_names}{bi_model}(x, type, dim = FALSE, opt = FALSE,
+\method{var_names}{bi_model}(x, vars, type, dim = FALSE, opt = FALSE,
   aux = FALSE, ...)
 }
 \arguments{
 \item{x}{a \code{\link{bi_model}} object}
+
+\item{vars}{a character vector of variable names; if given, only these variables names will be considered}
 
 \item{type}{a character vector of one or more types}
 
@@ -25,7 +27,7 @@
 variable names
 }
 \description{
-Get all variable names of one or more type(s)
+Get variable names of one or more type(s)
 
 This returns all variable names of a certain type ("param", "state", "obs", "noise", "const") contained in the model of a \code{\link{libbi}} object
 }
