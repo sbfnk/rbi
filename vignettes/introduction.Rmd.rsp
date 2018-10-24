@@ -120,9 +120,13 @@ To get a list of certain variables, you can use the `var_names` function. For ex
 var_names(SIRmodel, "state")
 ```
 
-There are also various methods for manipulating a model, such as `remove`, `insert`, `replace`.
+There are also various methods for manipulating a model, such as `remove_lines`, `insert_line`, `replace_all`.
 
-The `fix` method fixes a variable to one value. This can be useful, for example, to run the deterministic equivalent of a stochastic model for testing purposes.
+The `fix` method fixes a variable to one value. This can be useful, for example, to run the deterministic equivalent of a stochastic model for testing purposes:
+
+```{R}
+det_SIR_model <- fix(SIRmodel, n_transmission=0, n_recovery=0)
+```
 
 To get documentation for any of these methods, use the links in the documentation for `bi_model`.
 
