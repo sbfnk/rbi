@@ -681,14 +681,31 @@ save_libbi <- function(x, ...) UseMethod("save_libbi")
 #' @param x a \code{\link{libbi}} object
 #' @param filename name of the RDS file to save to
 #' @param supplement any supplementary data to save
+#' @param split Logical, defaults to \code{FALSE}. Should the objects from the
+#'  \code{LibBi} run be saved seperately in a folder.
+#' @param folder name of the folder to save to (only used if \code{split = TRUE}).
 #' @param ... any options to \code{\link{saveRDS}}
 #' @export
-save_libbi.libbi <- function(x, filename, supplement, ...) {
-  if (missing(filename)) {
+save_libbi.libbi <- function(x, filename, supplement, split, folder, ...) {
+  if (missing(filename) & !split) {
     stop("Need to specify a file name")
   }
+  
   assert_output(x)
 
+  if (split & missing(folder)) {
+    stop("In order to save to a folder rather than as an object a folder must be specified")
+  }
+  
+  if (split) {
+    if (!dir.exists(folder)) {
+      stop("The folder specified for saving the Libbi object into does not exist.")
+    }else{
+        dir.create(file.path(folder, "output"))
+      }
+  }
+  
+  
   save_obj <- list(model=x$model,
                    dims=x$dims,
                    time_dim=x$time_dim,
@@ -712,7 +729,20 @@ save_libbi.libbi <- function(x, filename, supplement, ...) {
 
   if (!missing(supplement)) save_obj[["supplement"]] <- supplement
 
-  saveRDS(save_obj, filename, ...)
+  if (split) {
+    for (i in names(save_obj)) {
+      if (i %in% "output") {
+        for (j in names(save_obj[[i]])) {
+          saveRDS(save_obj[[i]][[j]], file.path(folder, i, paste0(j, ".rds")))
+        }
+      }else {
+        saveRDS(list(save_obj[[i]]), file.path(folder, paste0(i, ".rds")))
+      }
+    }
+  }else{
+    saveRDS(save_obj, filename, ...)
+  }
+
 }
 
 #' @export
