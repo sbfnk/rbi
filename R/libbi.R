@@ -689,6 +689,8 @@ save_libbi <- function(x, ...) UseMethod("save_libbi")
 save_libbi.libbi <- function(x, filename, supplement, split, folder, ...) {
   if (missing(filename) & !split) {
     stop("Need to specify a file name")
+  }else if (!missing(filename) & split) {
+    stop("If split is true a folder rather than a filename is required.")
   }
   
   assert_output(x)
