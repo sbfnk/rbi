@@ -1,18 +1,6 @@
 ## Start with the shiny docker image
 FROM rocker/tidyverse:latest
 
-
-## Get latex libs for package install + CRAN
-RUN apt-get install -y \
-    texlive-latex-recommended \
-    texlive-fonts-extra \
-    texinfo \
-    libqpdf-dev 
-    && apt-get clean
-
-## Add package files to repo  
-ADD . /home/rstudio/RBI
-
 ## Get thrust
 RUN wget https://github.com/thrust/thrust/releases/download/1.8.2/thrust-1.8.2.zip \
     && unzip thrust-1.8.2.zip\
@@ -35,8 +23,22 @@ RUN git clone https://github.com/lawmurray/LibBi.git \
     automake \
   && sudo cpan .
 
+## Get latex libs for package install + CRAN
+RUN apt-get install -y \
+    texlive-latex-recommended \
+    texlive-fonts-extra \
+    texinfo \
+    libqpdf-dev \
+    && apt-get clean
+    
+## Add package files to repo  
+ADD . /home/rstudio/RBI
+
 ##Install the dev deps
 RUN Rscript -e 'devtools::install_dev_deps("home/rstudio/RBI")'
+
+## Get pkgdown for site building
+RUN Rscript -e 'devtools::install_github("r-lib/pkgdown")'
 
 ## Install the package
 RUN Rscript -e 'devtools::install("home/rstudio/RBI")'
