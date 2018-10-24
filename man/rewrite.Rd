@@ -3,6 +3,7 @@
 \name{rewrite}
 \alias{rewrite}
 \alias{rewrite.libbi}
+\alias{rewrite}
 \alias{rewrite.bi_model}
 \title{Using the LibBi wrapper to rewrite}
 \usage{

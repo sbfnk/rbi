@@ -749,19 +749,51 @@ save_libbi.libbi <- function(x, filename, supplement, split, folder, ...) {
 read_libbi <- function(x, ...) UseMethod("read_libbi")
 #' @rdname read_libbi
 #' @name read_libbi
-#' @title Read results of a \code{LibBi} run from an RDS file. This completely reconstructs the saved \code{LibBi} object
+#' @title Read results of a \code{LibBi} run from an RDS file or from a folder. This completely reconstructs the saved \code{LibBi} object
 #' @description
-#' This reads all options, files and outputs of a \code{LibBi} run to an RDS file specified
+#' This reads all options, files and outputs of a \code{LibBi} run from a specified RDS file or
+#' folder (if \code{split = TRUE} has been used with \code{save_libbi}).
 #'
 #' @param file name of the RDS file to read
+#' @param folder name of the folder from which to read. This option cannot be used in conjunction
+#' with \code{file}.
 #' @param ... any extra options to pass to \code{\link{read_libbi}} when creating the new object
 #' @return a \code{\link{libbi}} object
-read_libbi <- function(file, ...) {
-  if (missing(file)) {
-    stop("Need to specify a file to read")
+#' @importFrom stringr str_replace
+read_libbi <- function(file, folder, ...) {
+  if (missing(file) & missing(folder)) {
+    stop("Need to specify a file or folder to read from")
   }
-
-  read_obj <- readRDS(file)
+  
+  if (!missing(file) & !missing(folder)) {
+    stop("Both a file and a folder to read from have been specified. Only one model can be read at a time.")
+  }
+  
+  if (!missing(folder) & !dir.exists(folder)) {
+    stop("The specified folder does not exist.")
+  }
+  
+  if (missing(file) & !missing(folder)) {
+    files <- list.files(folder)
+    
+    read_obj <- lapply(files, function(x) {
+      if (x == "output") {
+        files <- list.files(file.path(folder, x))
+        file <- lapply(files, ~readRDS(file.path(folder, x, .)))
+        names(file) <-  str_replace(files,".rds", "")
+        
+      }else{
+        file <- readRDS(file.path(folder, x))
+        file <- file[[1]]
+      }
+      
+      return(file)
+    })
+    
+    names(read_obj) <- str_replace(files,".rds", "")
+  }else{
+    read_obj <- readRDS(file)
+  }
 
   libbi_options <- list(...)
 

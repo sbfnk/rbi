@@ -3,6 +3,7 @@
 \name{sample}
 \alias{sample}
 \alias{sample.libbi}
+\alias{sample}
 \alias{sample.bi_model}
 \title{Using the LibBi wrapper to sample}
 \usage{

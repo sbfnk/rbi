@@ -5,10 +5,10 @@
 \alias{run.libbi}
 \title{Using the LibBi wrapper to launch LibBi}
 \usage{
-\method{run}{libbi}(x, client, proposal = c("model", "prior"), model,
-  fix, options, config, add_options, log_file_name, init, input, obs,
-  time_dim, coord_dims, working_folder, force_inputs = TRUE, output_all,
-  sample_obs, thin, output_every, chain = TRUE, seed = TRUE, ...)
+\method{run}{libbi}(x, client, proposal = c("model", "prior"), model, fix,
+  options, config, add_options, log_file_name, init, input, obs, time_dim,
+  coord_dims, working_folder, force_inputs = TRUE, output_all, sample_obs,
+  thin, output_every, chain = TRUE, seed = TRUE, ...)
 }
 \arguments{
 \item{x}{a \code{\link{libbi}} object}
