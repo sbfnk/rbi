@@ -20,7 +20,8 @@
 #' @param verbose if TRUE, will print variables as they are read
 #' @param clear_cache if TRUE, will clear the cache and re-read the file even if cached data exists
 #' @param init.to.param logical; if TRUE, convert states to initial values
-#' @return list of results
+#' @param flatten logical; if TRUE, will return a flat (long) data frame with a 'var' column indicating the variable, instead of a list
+#' @return list of results, or a
 #' @inheritParams bi_open
 #' @importFrom ncdf4 nc_close ncvar_get
 #' @importFrom data.table setkeyv setnames setDF is.data.table
@@ -29,7 +30,7 @@
 #' example_output_file <- system.file(package="rbi", "example_output.nc")
 #' d <- bi_read(example_output_file)
 #' @export
-bi_read <- function(x, vars, dims, model, type, file, missval.threshold, coord_dims, vector, thin, verbose=FALSE, clear_cache=FALSE, init.to.param=FALSE)
+bi_read <- function(x, vars, dims, model, type, file, missval.threshold, coord_dims, vector, thin, verbose=FALSE, clear_cache=FALSE, init.to.param=FALSE, flatten=FALSE)
 {
   if (missing(file)) {
     nc <- bi_open(x)
@@ -323,6 +324,17 @@ bi_read <- function(x, vars, dims, model, type, file, missval.threshold, coord_d
       }
       x
     })
+  }
+
+  if (flatten) {
+    res <- lapply(names(res), function(x) {
+      if (is.data.frame(res[[x]])) {
+        data.table::data.table(res[[x]])[, var := x]
+      } else {
+        data.table::data.table(value=res[[x]])[, var := x]
+      }
+    })
+    res <- data.table::setDF(data.table::rbindlist(res, fill=TRUE))
   }
 
   return(res)
