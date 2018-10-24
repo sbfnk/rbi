@@ -3,7 +3,6 @@
 \name{filter}
 \alias{filter}
 \alias{filter.libbi}
-\alias{filter}
 \alias{filter.bi_model}
 \title{Using the LibBi wrapper to filter}
 \usage{

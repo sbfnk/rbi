@@ -686,7 +686,7 @@ save_libbi <- function(x, ...) UseMethod("save_libbi")
 #' @param folder name of the folder to save to (only used if \code{split = TRUE}).
 #' @param ... any options to \code{\link{saveRDS}}
 #' @export
-save_libbi.libbi <- function(x, filename, supplement, split, folder, ...) {
+save_libbi.libbi <- function(x, filename, supplement, split = FALSE, folder, ...) {
   if (missing(filename) & !split) {
     stop("Need to specify a file name")
   }else if (!missing(filename) & split) {
@@ -771,24 +771,29 @@ read_libbi <- function(file, folder, ...) {
     stop("Both a file and a folder to read from have been specified. Only one model can be read at a time.")
   }
   
-  if (!missing(folder) & !dir.exists(folder)) {
-    stop("The specified folder does not exist.")
+  if (!missing(folder)) {
+    if (!dir.exists(folder)) {
+      stop("The specified folder does not exist.")
+    }
   }
   
   if (missing(file) & !missing(folder)) {
     files <- list.files(folder)
-    
+
     read_obj <- lapply(files, function(x) {
       if (x == "output") {
         files <- list.files(file.path(folder, x))
-        file <- lapply(files, ~readRDS(file.path(folder, x, .)))
+        file <- lapply(files, function(y) { 
+          readRDS(file.path(folder, x, y))
+          })
         names(file) <-  str_replace(files,".rds", "")
         
-      }else{
+      }else if (grepl(".rds", x)) {
         file <- readRDS(file.path(folder, x))
         file <- file[[1]]
+      } else {
+        file <- NULL
       }
-      
       return(file)
     })
     

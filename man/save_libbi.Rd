@@ -5,7 +5,8 @@
 \alias{save_libbi.libbi}
 \title{Write results of a \code{LibBi} run to an RDS file}
 \usage{
-\method{save_libbi}{libbi}(x, filename, supplement, split, folder, ...)
+\method{save_libbi}{libbi}(x, filename, supplement, split = FALSE,
+  folder, ...)
 }
 \arguments{
 \item{x}{a \code{\link{libbi}} object}

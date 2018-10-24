@@ -3,7 +3,6 @@
 \name{write_model}
 \alias{write_model}
 \alias{write_model.bi_model}
-\alias{write_model}
 \alias{write_model.libbi}
 \title{Writes a bi model to a file.}
 \usage{
