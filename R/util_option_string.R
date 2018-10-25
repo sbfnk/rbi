@@ -26,6 +26,8 @@ option_string <- function(...){
                            if (is.logical(list_options[[option]])) {
                              if (option == "verbose") {
                                  paste0("--verbose")
+                             } else if (option == "debug") {
+                                 paste0("--debug")
                              } else {
                                if (list_options[[option]] == TRUE)
                                  paste0("--enable-", option)
