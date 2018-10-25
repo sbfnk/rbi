@@ -47,7 +47,7 @@ model SIR {
   }
 
   sub observation {
-    Incidence ~ truncated_gaussian(mean = p_rep * Z, std = sqrt(p_rep * (1 - p_rep) * Z + 1), lower = 0)
+    Incidence ~ poisson(p_rep * Z)
   }
 
   sub proposal_initial {
@@ -57,9 +57,7 @@ model SIR {
     Z <- 1
   }
   sub proposal_parameter {
-    inline _old_mean_ = p_rep
-    p_rep ~ truncated_gaussian(mean = p_rep, std = 1 * 0.023805117148865, lower = 0, upper = 1)
-    inline _old_mean_diff_ = p_rep - _old_mean_
-    p_R0 ~ truncated_gaussian(mean = p_R0 + (5.47399428332657) * _old_mean_diff_, std = 1 * 0.150151309758444, lower = 1, upper = 3)
+    p_rep ~ truncated_gaussian(mean = p_rep, std = 0.02, lower = 0, upper = 1)
+    p_R0 ~ truncated_gaussian(mean = p_R0, std = 0.3, lower = 1, upper = 3)
   }
 }
