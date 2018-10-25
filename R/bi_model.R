@@ -105,9 +105,11 @@ to_input <- function(x, vars) {
   x <- remove_vars(x, sn_vars)
 
   for (var in sn_vars) {
-    ## add input definition
+    ## add input definition after dimensions are defined
     fixed_line <- paste("input", dim_vars[[var]])
-    x <- insert_lines(x, fixed_line, at_beginning="model")
+    dim_lines <- grep("^[[:space:]]*dim[[:space:]]", x)
+    if (length(dim_lines)==0) dim_lines <- 1
+    x <- insert_lines(x, fixed_line, after=max(dim_lines))
   }
 
   return(clean_model(x))
