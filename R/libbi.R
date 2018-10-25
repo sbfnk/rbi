@@ -297,7 +297,7 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
     x$options[[file]] <- NULL
     if (class(arg) == "libbi") {
       if (!arg$run_flag) {
-        stop("The libbi object for '", arg, "' should be run first (using sample, filter or optimise).")
+        stop("The libbi object for '", file, "' should be run first (using sample, filter or optimise).")
       } else if (length(arg$output_file_name) == 0 || !file.exists(arg$output_file_name)) {
         stop("The libbi object for '", arg, "' does not contain an output file.")
       }
