@@ -458,21 +458,21 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
 
     cdcommand <- paste("cd", x$working_folder)
     x$command <- paste(c(cdcommand, paste(base_command_string, opt_string)), collapse=";")
-    if (verbose) print("Launching LibBi with the following commands:")
     if (verbose)
       print(paste(c(x$command, log_redir_name), sep = "\n"))
+    if (verbose) message("Launching LibBi...")
     runcommand <- paste(x$command, log_redir_name)
     ret <- system(runcommand)
     if (ret > 0) {
       if (!verbose) {
-        writeLines(readLines(x$log_file_name))
+        writeLines(sub("^Error:", "LibBi error:", readLines(x$log_file_name)))
       }
       warning("LibBi terminated with an error.")
       x$error_flag <- TRUE
       return(x)
     }
     x$error_flag <- FALSE
-    if (verbose) print("... LibBi has finished!")
+    if (verbose) message("...LibBi has finished!")
 
     if (client == "rewrite") {
       model_lines <- readLines(x$log_file_name)
