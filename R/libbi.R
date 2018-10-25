@@ -433,10 +433,16 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
       x$log_file_name <- absolute_path(filename=log_file_name, dirname=getwd())
     }
 
+    log_redir_name <- "2>&1"
+    if (length(x$log_file_name) > 0) {
+      log_redir_name <- paste(log_redir_name, paste("tee", x$log_file_name), sep=" | ")
+    }
     if (verbose || length(x$log_file_name) == 0) {
-      log_redir_name <- ""
+      grep_str <- paste("grep", "-e '\\.\\.\\.$'")
+      if (verbose) grep_str <- paste(grep_str, "-e '^[0-9][0-9]*:'")
+      log_redir_name <- paste(log_redir_name, grep_str, sep=" | ")
     } else {
-      log_redir_name <- paste(">", x$log_file_name, "2>&1")
+      log_redir_name <- paste(log_redir_name, "> /dev/null")
     }
 
     if (length(x$path_to_libbi) == 0) {
