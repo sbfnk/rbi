@@ -11,6 +11,9 @@ sample_obs(x, ...)
 
 \item{...}{any arguments to be passed to \code{\link{predict}}}
 }
+\value{
+a \code{\link{libbi}} object with sampled observations
+}
 \description{
 Sample observations from a LibBi model that has been run
 }

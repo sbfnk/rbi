@@ -868,7 +868,7 @@ predict.libbi <- function(x, ...) {
 ##'
 ##' @param x a \code{\link{libbi}} object
 ##' @param ... any arguments to be passed to \code{\link{predict}}
-##' @return 
+##' @return a \code{\link{libbi}} object with sampled observations
 ##' @author Sebastian Funk
 sample_obs <- function(x, ...) {
   if (!("libbi" %in% class(x))) {
