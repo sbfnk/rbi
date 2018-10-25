@@ -377,13 +377,6 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
     x$options <- all_options
     all_options[["output-file"]] <- x$output_file_name
 
-    ## set obs-file to NULL if targeting prior or prediction
-    obs_file_save <- x$options[["obs-file"]]
-    if ("target" %in% names(all_options) &&
-        all_options[["target"]] %in% c("prior", "join", "prediction")) {
-      all_options[["obs-file"]] <- NULL
-    }
-
     ## remove arguments of other clients
     retain_options <-
       setdiff(names(all_options),
@@ -480,9 +473,6 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
     }
     x$error_flag <- FALSE
     if (verbose) print("... LibBi has finished!")
-
-    ## recover saved obs file name
-    x$options[["obs-file"]] <- obs_file_save
 
     if (client == "rewrite") {
       model_lines <- readLines(x$log_file_name)
