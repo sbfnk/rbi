@@ -461,8 +461,8 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
     cdcommand <- paste("cd", x$working_folder)
     x$command <- paste(c(cdcommand, paste(base_command_string, opt_string)), collapse=";")
     if (verbose) message("Launching LibBi...")
-    ## if (debug)
-    ##   message(paste(c(x$command, log_redir_name)))
+    if (debug)
+      message(paste(c(x$command, log_redir_name)))
     runcommand <- paste(x$command, log_redir_name)
     ret <- system(runcommand)
     if (ret > 0) {
