@@ -133,7 +133,7 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
   }
 
   if (!missing(sample_obs)) {
-    warning('argument `sample_obs` is deprecated; please use `with="transform-obs-to-state"` instead.', call. = FALSE)
+    warning('argument `sample_obs` is deprecated; please use the `sample_obs` function instead.', call. = FALSE)
     if (sample_obs) {
       if ("without-transform-obs-to-state" %in% names(new_options)) {
         stop("`sample_obs==TRUE` and `without-transform-obs-to-state` is set. This is contradictory.")
@@ -861,9 +861,30 @@ predict <- function(x, ...) UseMethod("predict")
 #' For the help page of the base R \code{optimise} function, see \code{\link[stats]{optimise}}.
 #' @export
 #' @param x a \code{\link{libbi}} object
-#' @param ... ignored
+#' @param ... any arguments to be passed to \code{\link{sample}}
 predict.libbi <- function(x, ...) {
   sample(x, target="prediction", ...)
+}
+
+##' Sample observations from a LibBi model that has been run
+##'
+##' @param x a \code{\link{libbi}} object
+##' @param ... any arguments to be passed to \code{\link{predict}}
+##' @return 
+##' @author Sebastian Funk
+sample_obs <- function(x, ...) {
+  if (!("libbi" %in% class(x))) {
+    stop("'x' must bee a 'libbi' object")
+  }
+  if ("input-file" %in% x$options) {
+    input <- bi_read(x, file="input")
+  } else {
+    input <- list()
+  }
+  ## transform output to input
+  out <- bi_read(x)
+  for (name in names(out)) input[[name]] <- out[[name]]
+  predict(x, input=input, with="transform-obs-to-state", ...)
 }
 
 #' @export
