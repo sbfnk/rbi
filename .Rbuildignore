@@ -3,4 +3,3 @@ cran-comments.md
 .travis.yml
 ^.*\.Rproj$
 ^\.Rproj\.user$
-^Dockerfile
