@@ -5,22 +5,19 @@
 \alias{save_libbi.libbi}
 \title{Write results of a \code{LibBi} run to an RDS file}
 \usage{
-\method{save_libbi}{libbi}(x, filename, supplement, split = FALSE,
-  folder, ...)
+\method{save_libbi}{libbi}(x, name, supplement, split = FALSE, ...)
 }
 \arguments{
 \item{x}{a \code{\link{libbi}} object}
-
-\item{filename}{name of the RDS file to save to}
 
 \item{supplement}{any supplementary data to save}
 
 \item{split}{Logical, defaults to \code{FALSE}. Should the objects from the
 \code{LibBi} run be saved seperately in a folder.}
 
-\item{folder}{name of the folder to save to (only used if \code{split = TRUE}).}
-
 \item{...}{any options to \code{\link{saveRDS}}}
+
+\item{filename}{name of the RDS file(s) to save to. If \code{split=TRUE}, this will be taken as a base for the names of the files to be created, e.g. 'dir/name' to create files of the form name_....rds in directory 'dir'.}
 }
 \description{
 This saves all options, files and outputs of a \code{LibBi} run to an RDS file specified

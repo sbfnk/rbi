@@ -4,13 +4,13 @@
 \alias{read_libbi}
 \title{Read results of a \code{LibBi} run from an RDS file or from a folder. This completely reconstructs the saved \code{LibBi} object}
 \usage{
-read_libbi(file, folder, ...)
+read_libbi(name, join, ...)
 }
 \arguments{
-\item{file}{name of the RDS file to read}
-
-\item{folder}{name of the folder from which to read. This option cannot be used in conjunction
+\item{name}{name of the RDS file(s) to read; if \code{join} is set to \code{TRUE},  this will assume that files are to be read in beginning with \code{name}.
 with \code{file}.}
+
+\item{join}{if TRUE, will assume that a collection of files was saved with \code{split=TRUE} in \code{save_libbi}; default is FALSE if \code{name} ends on '.rds', and TRUE otherwise, unless set explicitly}
 
 \item{...}{any extra options to pass to \code{\link{read_libbi}} when creating the new object}
 }

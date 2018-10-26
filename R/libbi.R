@@ -679,41 +679,33 @@ save_libbi <- function(x, ...) UseMethod("save_libbi")
 #' This saves all options, files and outputs of a \code{LibBi} run to an RDS file specified
 #'
 #' @param x a \code{\link{libbi}} object
-#' @param filename name of the RDS file to save to
+#' @param filename name of the RDS file(s) to save to. If \code{split=TRUE}, this will be taken as a base for the names of the files to be created, e.g. 'dir/name' to create files of the form name_....rds in directory 'dir'.
 #' @param supplement any supplementary data to save
 #' @param split Logical, defaults to \code{FALSE}. Should the objects from the
 #'  \code{LibBi} run be saved seperately in a folder.
-#' @param folder name of the folder to save to (only used if \code{split = TRUE}).
 #' @param ... any options to \code{\link{saveRDS}}
 #' @export
-save_libbi.libbi <- function(x, filename, supplement, split = FALSE, folder, ...) {
-  if (missing(filename) & !split) {
-    stop("Need to specify a file name")
-  }else if (!missing(filename) & split) {
-    stop("If split is true a folder rather than a filename is required.")
+save_libbi.libbi <- function(x, name, supplement, split = FALSE, ...) {
+  if (missing(name)) {
+    stop("Need to specify a name")
   }
-  
+
   assert_output(x)
 
-  if (split & missing(folder)) {
-    stop("In order to save to a folder rather than as an object a folder must be specified")
-  }
-  
   if (split) {
+    folder <- dirname(name)
+    file_base <- basename(name)
+
     if (!dir.exists(folder)) {
       stop("The folder specified for saving the Libbi object into does not exist.")
-    }else{
-        dir.create(file.path(folder, "output"))
-      }
+    }
   }
-  
-  
+
   save_obj <- list(model=x$model,
-                   dims=x$dims,
-                   time_dim=x$time_dim,
-                   coord_dims=x$coord_dims,
-                   thin=1,
-                   output_every=x$output_every,
+                   internals=list(dims=x$dims,
+                             time_dim=x$time_dim,
+                             coord_dims=x$coord_dims,
+                             output_every=x$output_every),
                    supplement=x$supplement,
                    output=bi_read(x))
 
@@ -733,18 +725,19 @@ save_libbi.libbi <- function(x, filename, supplement, split = FALSE, folder, ...
 
   if (split) {
     for (i in names(save_obj)) {
-      if (i %in% "output") {
+      if (i == "output") {
         for (j in names(save_obj[[i]])) {
-          saveRDS(save_obj[[i]][[j]], file.path(folder, i, paste0(j, ".rds")))
+          filename <- paste(file_base, i, j, sep="_")
+          saveRDS(save_obj[[i]][[j]], file.path(folder, paste0(filename, ".rds")))
         }
-      }else {
-        saveRDS(list(save_obj[[i]]), file.path(folder, paste0(i, ".rds")))
+      } else {
+        filename <- paste(file_base, i, sep="_")
+        saveRDS(save_obj[[i]], file.path(folder, paste0(filename, ".rds")))
       }
     }
-  }else{
-    saveRDS(save_obj, filename, ...)
+  } else{
+    saveRDS(save_obj, name, ...)
   }
-
 }
 
 #' @export
@@ -756,50 +749,45 @@ read_libbi <- function(x, ...) UseMethod("read_libbi")
 #' This reads all options, files and outputs of a \code{LibBi} run from a specified RDS file or
 #' folder (if \code{split = TRUE} has been used with \code{save_libbi}).
 #'
-#' @param file name of the RDS file to read
-#' @param folder name of the folder from which to read. This option cannot be used in conjunction
+#' @param name name of the RDS file(s) to read; if \code{join} is set to \code{TRUE},  this will assume that files are to be read in beginning with \code{name}.
 #' with \code{file}.
+#' @param join if TRUE, will assume that a collection of files was saved with \code{split=TRUE} in \code{save_libbi}; default is FALSE if \code{name} ends on '.rds', and TRUE otherwise, unless set explicitly
 #' @param ... any extra options to pass to \code{\link{read_libbi}} when creating the new object
 #' @return a \code{\link{libbi}} object
-#' @importFrom stringr str_replace
-read_libbi <- function(file, folder, ...) {
-  if (missing(file) & missing(folder)) {
+read_libbi <- function(name, join, ...) {
+  if (missing(name)) {
     stop("Need to specify a file or folder to read from")
   }
-  
-  if (!missing(file) & !missing(folder)) {
-    stop("Both a file and a folder to read from have been specified. Only one model can be read at a time.")
-  }
-  
-  if (!missing(folder)) {
-    if (!dir.exists(folder)) {
-      stop("The specified folder does not exist.")
-    }
-  }
-  
-  if (missing(file) & !missing(folder)) {
-    files <- list.files(folder)
 
-    read_obj <- lapply(files, function(x) {
-      if (x == "output") {
-        files <- list.files(file.path(folder, x))
-        file <- lapply(files, function(y) { 
-          readRDS(file.path(folder, x, y))
-          })
-        names(file) <-  str_replace(files,".rds", "")
-        
-      }else if (grepl(".rds", x)) {
-        file <- readRDS(file.path(folder, x))
-        file <- file[[1]]
+  if (missing(join)) join <- !grepl("\\.rds$", name)
+
+  if (join) {
+    folder <- dirname(name)
+    file_base <- basename(name)
+
+    if (!dir.exists(folder)) {
+      stop("Folder ", folder, "does not exist.")
+    }
+
+    files <- list.files(folder, pattern=paste0("^", file_base, ".*\\.rds$"))
+
+    read_obj <- list()
+    for (file in files) {
+      obj <- readRDS(file.path(folder, file))
+      obj_name <- sub(paste0("^", file_base, "_(.*)\\.rds$"), "\\1", file)
+      if (grepl("^output_", obj_name)) {
+        var_name <- sub("^output_", "", obj_name)
+        obj <- list(obj)
+        names(obj) <- var_name
+        read_obj[["output"]] <- c(read_obj[["output"]], obj)
+      } else if (obj_name == "internals") {
+        read_obj[names(obj)] <- obj
       } else {
-        file <- NULL
+        read_obj[[obj_name]] <- obj
       }
-      return(file)
-    })
-    
-    names(read_obj) <- str_replace(files,".rds", "")
-  }else{
-    read_obj <- readRDS(file)
+    }
+  } else {
+    read_obj <- readRDS(name)
   }
 
   libbi_options <- list(...)
