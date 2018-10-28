@@ -85,6 +85,7 @@ run <- function(x, ...) UseMethod("run")
 #' @param force_inputs logical; if set to TRUE any variables found in a given input file will be converted to input variables (default: FALSE)
 #' @param chain logical; if set to TRUE and \code{x} has been run before, the previous output file will be used as \code{init} file, and \code{init-np} will be set to the last iteration of the previous run (unless target=="prediction"). This is useful for running inference chains.
 #' @param seed Either a number (the seed to supply to \code{LibBi}), or a logical variable: TRUE if a seed is to be generated for \code{RBi}, FALSE if \code{LibBi} is to generate its own seed
+#' @param debug logical; if TRUE, print more verbose messages
 #' @param ... any unrecognised options will be added to \code{options}
 #' @seealso \code{\link{libbi}}
 #' @examples
@@ -96,8 +97,9 @@ run <- function(x, ...) UseMethod("run")
 #' @return a \code{\link{libbi}} object, except if \code{client} is 'rewrite',  in which case a \code{\link{bi_model}} object will be returned
 #' @importFrom ncdf4 nc_open nc_close ncvar_rename
 #' @importFrom stats runif
+#' @importFrom processx run
 #' @export
-run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, options, config, log_file_name, init, input, obs, time_dim, coord_dims, working_folder, output_all=FALSE, sample_obs=FALSE, thin, output_every, force_inputs=FALSE, chain=TRUE, seed=TRUE, ...){
+run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, options, config, log_file_name, init, input, obs, time_dim, coord_dims, working_folder, output_all=FALSE, sample_obs=FALSE, thin, output_every, force_inputs=FALSE, chain=TRUE, seed=TRUE, debug=FALSE, ...){
 
   ## client options
   libbi_client_args <-
@@ -421,10 +423,10 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
 
     if (client == "rewrite") all_options <- all_options["model-file"]
 
-    opt_string <- option_string(all_options)
+    if (debug) all_options[["verbose"]] <- TRUE
     verbose <- ("verbose" %in% names(all_options) && all_options[["verbose"]] == TRUE)
-    debug <- ("debug" %in% names(all_options) && all_options[["debug"]] == TRUE)
-    verbose <- verbose || debug
+
+    run_args <- option_string(all_options)
 
     if (missing(log_file_name) && !verbose) {
       x$log_file_name <- tempfile(pattern="output", fileext=".txt",
@@ -433,17 +435,17 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
       x$log_file_name <- absolute_path(filename=log_file_name, dirname=getwd())
     }
 
-    log_redir_name <- "2>&1"
-    if (length(x$log_file_name) > 0) {
-      log_redir_name <- paste(log_redir_name, paste("tee", x$log_file_name), sep=" | ")
-    }
-    if (verbose || length(x$log_file_name) == 0) {
-      grep_str <- paste("grep", "-e '\\.\\.\\.$'")
-      if (verbose) grep_str <- paste(grep_str, "-e '^[0-9][0-9]*:'")
-      log_redir_name <- paste(log_redir_name, grep_str, sep=" | ")
-    } else {
-      log_redir_name <- paste(log_redir_name, "> /dev/null")
-    }
+    ## log_redir_name <- "2>&1"
+    ## if (length(x$log_file_name) > 0) {
+    ##   log_redir_name <- paste(log_redir_name, paste("tee", x$log_file_name), sep=" | ")
+    ## }
+    ## if (verbose || length(x$log_file_name) == 0) {
+    ##   grep_str <- paste("grep", "-e '\\.\\.\\.$'")
+    ##   if (verbose) grep_str <- paste(grep_str, "-e '^[0-9][0-9]*:'")
+    ##   log_redir_name <- paste(log_redir_name, grep_str, sep=" | ")
+    ## } else {
+    ##   log_redir_name <- paste(log_redir_name, "> /dev/null")
+    ## }
 
     if (length(x$path_to_libbi) == 0) {
       if (is.null(getOption("path_to_libbi"))) {
@@ -462,28 +464,45 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
     if (!file.exists(x$path_to_libbi)) {
       stop("Could not find libbi executable ", x$path_to_libbi)
     }
-    base_command_string <- paste(x$path_to_libbi, client)
+    ## base_command_string <- paste(x$path_to_libbi, client)
 
-    cdcommand <- paste("cd", x$working_folder)
-    x$command <- paste(c(cdcommand, paste(base_command_string, opt_string)), collapse=";")
+    ## cdcommand <- paste("cd", x$working_folder)
+    ## x$command <- paste(c(cdcommand, paste(base_command_string, opt_string)), collapse=";")
     if (verbose) message("Launching LibBi...")
-    if (debug)
-      message(paste(c(x$command, log_redir_name)))
-    runcommand <- paste(x$command, log_redir_name)
-    ret <- system(runcommand)
-    if (ret > 0) {
-      if (!verbose) {
-        writeLines(sub("^Error:", "LibBi error:", readLines(x$log_file_name)))
-      }
-      warning("LibBi terminated with an error.")
+    ## if (debug)
+    ##   message(paste(c(x$command, log_redir_name)))
+    ## runcommand <- paste(x$command, log_redir_name)
+    con <- file(ifelse(length(x$log_file_name) == 0, "", x$log_file_name),
+                open="wt")
+    cb_stdout <- function(line, proc) {
+      if (debug) message(line)
+      writeLines(line, con)
+      flush(con)
+    }
+    cb_stderr <- function(line, proc) {
+      if (debug || (verbose && grepl("\\.\\.\\.$", line))) message(line)
+      writeLines(line, con)
+      flush(con)
+    }
+    x$command <- paste(x$path_to_libbi, client, paste(run_args, collapse=" "))
+    p <-
+      tryCatch(processx::run(command=x$path_to_libbi, args=c(client, run_args),
+                             error_on_status=FALSE, wd=x$working_folder,
+                             spinner=verbose,
+                             stdout_line_callback = cb_stdout,
+                             stderr_line_callback = cb_stderr),
+               finally = close(con))
+    if (p$status != 0) {
+      stderr <- strsplit(p$stderr, "\n")[[1]]
+      warning("LibBi terminated with error: ", last(stderr))
       x$error_flag <- TRUE
       return(x)
-    }
+    } else if (verbose) message("...LibBi has finished!")
     x$error_flag <- FALSE
-    if (verbose) message("...LibBi has finished!")
+    
 
     if (client == "rewrite") {
-      model_lines <- readLines(x$log_file_name)
+      model_lines <- readLines(x$model_file_name)
       first_model_line <-
         min(grep("^[[:space:]]*model[[:space:]]*", model_lines))
       model_lines <- model_lines[first_model_line:length(model_lines)]

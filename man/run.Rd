@@ -9,7 +9,7 @@
   fix, options, config, log_file_name, init, input, obs, time_dim,
   coord_dims, working_folder, output_all = FALSE, sample_obs = FALSE,
   thin, output_every, force_inputs = FALSE, chain = TRUE,
-  seed = TRUE, ...)
+  seed = TRUE, debug = FALSE, ...)
 }
 \arguments{
 \item{x}{a \code{\link{libbi}} object}
@@ -53,6 +53,8 @@
 \item{chain}{logical; if set to TRUE and \code{x} has been run before, the previous output file will be used as \code{init} file, and \code{init-np} will be set to the last iteration of the previous run (unless target=="prediction"). This is useful for running inference chains.}
 
 \item{seed}{Either a number (the seed to supply to \code{LibBi}), or a logical variable: TRUE if a seed is to be generated for \code{RBi}, FALSE if \code{LibBi} is to generate its own seed}
+
+\item{debug}{logical; if TRUE, print more verbose messages}
 
 \item{...}{any unrecognised options will be added to \code{options}}
 }

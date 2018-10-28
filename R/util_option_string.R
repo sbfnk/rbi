@@ -21,32 +21,31 @@ option_string <- function(...){
     }
   }
 
-  string <- paste(paste(vapply(names(list_options),
-                         function(option) {
-                           if (is.logical(list_options[[option]])) {
-                             if (option == "verbose") {
-                                 paste0("--verbose")
-                             } else if (option == "debug") {
-                                 paste0("--verbose")
-                             } else {
-                               if (list_options[[option]] == TRUE)
-                                 paste0("--enable-", option)
-                               else
-                                 paste0("--disable-", option)
-                             }
-                           } else if (option == "dry") {
-                             paste0("--dry-", list_options[[option]])
-                           } else if (option %in% c("with", "without")) {
-                             paste0("--", option, "-", list_options[[option]],
-                                    collapse=" ")
+  string <- lapply(names(list_options),
+                   function(option) {
+                       if (is.logical(list_options[[option]])) {
+                           if (option == "verbose") {
+                               return("--verbose")
                            } else {
-                             paste0("--", option, " ",
-                                    format(list_options[[option]],
-                                           scientific = FALSE))
+                               if (list_options[[option]] == TRUE)
+                                   return(paste0("--enable-", option))
+                               else
+                                   return(paste0("--disable-", option))
                            }
-                         },
-                         ""), collapse = " "), string)
+                       } else if (option == "dry") {
+                           return(paste0("--dry-", list_options[[option]]))
+                       } else if (option %in% c("with", "without")) {
+                           return(paste0("--", option, "-", list_options[[option]]))
+                       } else {
+                           ret <- c(paste0("--", option))
+                           value <- list_options[[option]]
+                           if (value != "") {
+                               ret <- c(ret, format(list_options[[option]],
+                                                    scientific = FALSE))
+                           }
+                           return(ret)
+                       }
+                   })
 
-
-  return(string)
+  return(unlist(string))
 }
