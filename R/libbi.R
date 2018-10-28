@@ -164,14 +164,38 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
     }
   }
 
+  libbi_seed <- integer(0)
+  if (is.logical(seed)) {
+    if (seed == TRUE) {
+      libbi_seed <- ceiling(runif(1, -1, .Machine$integer.max - 1))
+    }
+  } else {
+    libbi_seed <- seed
+  }
+  if (length(libbi_seed) > 0) new_options[["seed"]] <- libbi_seed
+
+  ## check if 'model-file' is contained in any options
+  all_options <- option_list(getOption("libbi_args"), config_file_options, x$options, new_options, list(...))
+  updated_options <- c(names(args), names(new_options), names(config_file_options))
+
+  if ("model-file" %in% names(all_options)) {
+    if (missing(model)) {
+      x$model <- bi_model(x$model_file_name)
+    } else {
+      warning("'model-file' and 'model' options both provided. Will ignore 'model-file'.")
+    }
+  }
+
   ## get model
   if (!missing(model)) x$model <- model
 
   if (!("bi_model" %in% class(x$model))) {
       x$model <- bi_model(filename=x$model)
   }
-  ## save model name, set again after all is done
-  model_name <- get_name(x$model)
+
+  if (is_empty(x$model)) {
+    stop("No model specified")
+  }
 
   if (!missing(working_folder)) {
     x$working_folder <- absolute_path(working_folder)
@@ -189,36 +213,11 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
     }, onexit=TRUE)
   }
 
-  libbi_seed <- integer(0)
-  if (is.logical(seed)) {
-    if (seed == TRUE) {
-      libbi_seed <- ceiling(runif(1, -1, .Machine$integer.max - 1))
-    }
-  } else {
-    libbi_seed <- seed
-  }
-  if (length(libbi_seed) > 0) new_options[["seed"]] <- libbi_seed
-
-  ## check if 'model-file' is contained in any options
-  all_options <- option_list(getOption("libbi_args"), config_file_options, x$options, new_options, list(...))
-  updated_options <- c(names(args), names(new_options), names(config_file_options))
-
-  if ("model-file" %in% names(all_options)) {
-    if (missing(model)) {
-      x$model_file_name <- absolute_path(all_options[["model-file"]], getwd())
-      x$model <- bi_model(x$model_file_name)
-    } else {
-      warning("'model-file' and 'model' options both provided. Will ignore 'model-file'.")
-    }
-  } else if (!is_empty(x$model)) {
-    if (length(x$model_file_name) == 0 ||
-          !(x$model == bi_model(x$model_file_name))) {
-      x$model_file_name <-
-        tempfile(pattern=paste(get_name(x$model), "model", sep = "_"),
-                 fileext=".bi",
-                 tmpdir=absolute_path(x$working_folder))
-      write_model(x)
-    }
+  if (length(x$model_file_name) == 0) {
+    x$model_file_name <-
+      tempfile(pattern=paste(get_name(x$model), "model", sep = "_"),
+               fileext=".bi",
+               tmpdir=absolute_path(x$working_folder))
   }
 
   args <- match.call()
@@ -385,41 +384,33 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
                     setdiff(all_client_args, libbi_client_args[[client]]))
     all_options <- all_options[retain_options]
 
-    run_model <- x$model
+    save_model <- x$model
 
     if (output_all) {
       no_output_pattern <- "[[:space:]]*has_output[[:space:]]*=[[:space:]]*0[[:space:]]*"
-      no_output <- grep(no_output_pattern, run_model)
-      updated_lines <- sub(no_output_pattern, "", run_model[no_output])
+      no_output <- grep(no_output_pattern, x$model)
+      updated_lines <- sub(no_output_pattern, "", x$model[no_output])
       updated_lines <- gsub(",,", ",", updated_lines)
       updated_lines <- gsub("\\(,", "(", updated_lines)
       updated_lines <- gsub(",\\)", ")", updated_lines)
       updated_lines <- sub("()", "", updated_lines)
-      run_model[no_output] <- updated_lines
+      x$model[no_output] <- updated_lines
     }
 
     if (proposal == "prior") {
-      run_model <- propose_prior(run_model)
+      x$model <- propose_prior(x$model)
     }
 
     if (!missing(fix)) {
-      run_model <- do.call(fix.bi_model, c(list(x=run_model), as.list(fix)))
+      x$model <- do.call(fix.bi_model, c(list(x=x$model), as.list(fix)))
     }
 
     if (force_inputs && "input-file" %in% names(all_options)) {
-      run_model <- to_input(run_model, bi_contents(all_options$`input-file`))
+      x$model <- to_input(x$model, bi_contents(all_options$`input-file`))
     }
 
-    if (run_model != x$model) {
-      run_model_file_name <-
-        tempfile(pattern=paste(get_name(run_model), "model", sep = "_"),
-                 fileext=".bi",
-                 tmpdir=absolute_path(x$working_folder))
-      write_model(run_model, run_model_file_name)
-      all_options[["model-file"]] <- run_model_file_name
-    } else {
-      all_options[["model-file"]] <- x$model_file_name
-    }
+    write_model(x)
+    all_options[["model-file"]] <- x$model_file_name
 
     if (client == "rewrite") all_options <- all_options["model-file"]
 
@@ -499,7 +490,6 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
       return(x)
     } else if (verbose) message("...LibBi has finished!")
     x$error_flag <- FALSE
-    
 
     if (client == "rewrite") {
       model_lines <- readLines(x$model_file_name)
@@ -512,8 +502,8 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
       if (x$run_flag && file.exists(x$output_file_name)) {
         x$timestamp <- file.mtime(x$output_file_name)
       }
-      ## set model name back to original name
-      set_name(x$model, model_name)
+      ## get original model back if it has been modified
+      x$model <- save_model
     }
   } else {
     ## if run from the constructor, just add all the options
