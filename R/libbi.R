@@ -908,7 +908,8 @@ sample_obs <- function(x, ...) {
   ## transform output to input
   out <- bi_read(x)
   for (name in names(out)) input[[name]] <- out[[name]]
-  pr <- predict(x, input=input, force_inputs=TRUE, with="transform-obs-to-state", ...)
+  pr <- predict(x, model=remove_lines(x$model, "transition"), input=input,
+                force_inputs=TRUE, with="transform-obs-to-state", ...)
   return(pr)
 }
 
