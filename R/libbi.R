@@ -419,7 +419,7 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
 
     run_args <- option_string(all_options)
 
-    if (missing(log_file_name) && !verbose) {
+    if (missing(log_file_name) && !debug) {
       x$log_file_name <- tempfile(pattern="output", fileext=".txt",
                                   tmpdir=absolute_path(x$working_folder))
     } else if (!missing(log_file_name)) {
@@ -463,8 +463,7 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
     ## if (debug)
     ##   message(paste(c(x$command, log_redir_name)))
     ## runcommand <- paste(x$command, log_redir_name)
-    con <- file(ifelse(length(x$log_file_name) == 0, "", x$log_file_name),
-                open="wt")
+    con <- file(ifelse(length(x$log_file_name) == 0, "", x$log_file_name), open="w+t")
     cb_stdout <- function(line, proc) {
       if (debug) message(line)
       writeLines(line, con)
@@ -810,6 +809,22 @@ print.libbi <- function(x, verbose=FALSE, ...){
       cat("* LibBi has not been run yet\n")
     }
   }
+}
+
+#' @export
+#' @name print_log
+#' @title Print the log file a \code{\link{libbi}} object
+#' @description
+#' This is useful for diagnosis after a \code{\link{libbi}} run
+#' @param x a \code{\link{libbi}} object
+#' @rdname print_log
+print_log <- function(x){
+  if (!("libbi" %in% class(x))) stop("'x' must be a 'libbi' object")
+  if (!("log_file_name" %in% names(x))) stop("'x' does not contain a log file")
+  if (!file.exists(x$log_file_name)) stop("Log file '", x$log_file_name, " does not seem to exist.")
+
+  lines <- readLines(x$log_file_name)
+  for (i in seq_along(lines)) message(lines[i])
 }
 
 #' @name summary
