@@ -10,14 +10,14 @@
 \arguments{
 \item{x}{a \code{\link{libbi}} object}
 
+\item{name}{name of the RDS file(s) to save to. If \code{split=TRUE}, this will be taken as a base for the names of the files to be created, e.g. 'dir/name' to create files of the form name_....rds in directory 'dir'.}
+
 \item{supplement}{any supplementary data to save}
 
 \item{split}{Logical, defaults to \code{FALSE}. Should the objects from the
 \code{LibBi} run be saved seperately in a folder.}
 
 \item{...}{any options to \code{\link{saveRDS}}}
-
-\item{filename}{name of the RDS file(s) to save to. If \code{split=TRUE}, this will be taken as a base for the names of the files to be created, e.g. 'dir/name' to create files of the form name_....rds in directory 'dir'.}
 }
 \description{
 This saves all options, files and outputs of a \code{LibBi} run to an RDS file specified
