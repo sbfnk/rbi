@@ -6,9 +6,10 @@
 \title{Using the LibBi wrapper to launch LibBi}
 \usage{
 \method{run}{libbi}(x, client, proposal = c("model", "prior"), model,
-  fix, options, config, add_options, log_file_name, init, input, obs,
-  time_dim, coord_dims, working_folder, force_inputs = TRUE, output_all,
-  sample_obs, thin, output_every, chain = TRUE, seed = TRUE, ...)
+  fix, options, config, log_file_name, init, input, obs, time_dim,
+  coord_dims, working_folder, output_all = FALSE, sample_obs = FALSE,
+  thin, output_every, force_inputs = FALSE, chain = TRUE,
+  seed = TRUE, debug = FALSE, ...)
 }
 \arguments{
 \item{x}{a \code{\link{libbi}} object}
@@ -25,8 +26,6 @@
 
 \item{config}{path to a configuration file, containing multiple arguments}
 
-\item{add_options}{deprecated, replaced by \code{options}}
-
 \item{log_file_name}{path to a file to text file to report the output of \code{LibBi}}
 
 \item{init}{initialisation of the model, either supplied as a list of values and/or data frames, or a (netcdf) file name, or a \code{\link{libbi}} object which has been run (in which case the output of that run is used). If the object given as \code{x} has been run before, it will be used here with \code{init-np} set to the last iteration of the previous run, unless \code{init} is given explicitly.}
@@ -41,8 +40,6 @@
 
 \item{working_folder}{path to a folder from which to run \code{LibBi}; default to a temporary folder.}
 
-\item{force_inputs}{logical; if set to TRUE (default) any variables found in a given input file will be converted to input variables}
-
 \item{output_all}{logical; if set to TRUE, all parameters, states and observations will be saved; good for debugging}
 
 \item{sample_obs}{logical; if set to TRUE, will sample observations}
@@ -51,9 +48,13 @@
 
 \item{output_every}{real; if given, \code{noutputs} will be set so that there is output every \code{output_every} time steps.}
 
+\item{force_inputs}{logical; if set to TRUE any variables found in a given input file will be converted to input variables (default: FALSE)}
+
 \item{chain}{logical; if set to TRUE and \code{x} has been run before, the previous output file will be used as \code{init} file, and \code{init-np} will be set to the last iteration of the previous run (unless target=="prediction"). This is useful for running inference chains.}
 
 \item{seed}{Either a number (the seed to supply to \code{LibBi}), or a logical variable: TRUE if a seed is to be generated for \code{RBi}, FALSE if \code{LibBi} is to generate its own seed}
+
+\item{debug}{logical; if TRUE, print more verbose messages}
 
 \item{...}{any unrecognised options will be added to \code{options}}
 }

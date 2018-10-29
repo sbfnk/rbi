@@ -33,7 +33,7 @@ test_that("lines can be inserted",
 test_that("lines can be removed",
 {
   expect_true(length(remove_lines(PZ, "parameter", only="sigma")[]) > 0)
-  expect_true(length(remove_lines(PZ, 15)[]) > 0)
+  expect_true(length(remove_lines(PZ, 14)[]) > 0)
   expect_error(remove_lines(PZ))
   expect_error(remove_lines(PZ, list()))
 })
