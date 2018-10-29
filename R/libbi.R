@@ -486,6 +486,7 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
       stderr <- strsplit(p$stderr, "\n")[[1]]
       warning("LibBi terminated with error: ", last(stderr))
       x$error_flag <- TRUE
+      x$model <- save_model
       return(x)
     } else if (verbose) message("...LibBi has finished!")
     x$error_flag <- FALSE
