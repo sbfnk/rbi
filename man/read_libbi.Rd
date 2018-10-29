@@ -2,12 +2,15 @@
 % Please edit documentation in R/libbi.R
 \name{read_libbi}
 \alias{read_libbi}
-\title{Read results of a \code{LibBi} run from an RDS file. This completely reconstructs the saved \code{LibBi} object}
+\title{Read results of a \code{LibBi} run from an RDS file or from a folder. This completely reconstructs the saved \code{LibBi} object}
 \usage{
-read_libbi(file, ...)
+read_libbi(name, join, ...)
 }
 \arguments{
-\item{file}{name of the RDS file to read}
+\item{name}{name of the RDS file(s) to read; if \code{join} is set to \code{TRUE},  this will assume that files are to be read in beginning with \code{name}.
+with \code{file}.}
+
+\item{join}{if TRUE, will assume that a collection of files was saved with \code{split=TRUE} in \code{save_libbi}; default is FALSE if \code{name} ends on '.rds', and TRUE otherwise, unless set explicitly}
 
 \item{...}{any extra options to pass to \code{\link{read_libbi}} when creating the new object}
 }
@@ -15,5 +18,6 @@ read_libbi(file, ...)
 a \code{\link{libbi}} object
 }
 \description{
-This reads all options, files and outputs of a \code{LibBi} run to an RDS file specified
+This reads all options, files and outputs of a \code{LibBi} run from a specified RDS file or
+folder (if \code{split = TRUE} has been used with \code{save_libbi}).
 }

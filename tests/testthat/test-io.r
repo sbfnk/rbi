@@ -43,6 +43,19 @@ test_that("saved and re-read data frames are equal",
   expect_equal(df_read$value, test_values)
 })
 
+test_that("saved and re-read libbi object (from folder) functional",
+{
+  folder <- tempdir()
+  name <- file.path(folder, "test")
+  save_libbi(bi, split = TRUE, name)
+  bi <- read_libbi(name)
+  res <- bi_read(bi, clear_cache=TRUE, thin=10, missval.threshold=1e20)
+  expect_true(class(bi) == "libbi")
+  expect_true(bi$run_flag)
+  expect_true(length(bi$model[]) > 0)
+  expect_true(is.list(res))
+})
+
 test_that("basic I/O functions work", 
 {
   expect_true(length(bi_contents(example_output_file)) > 0)
