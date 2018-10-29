@@ -6,7 +6,7 @@
 \usage{
 bi_read(x, vars, dims, model, type, file, missval.threshold, coord_dims,
   vector, thin, verbose = FALSE, clear_cache = FALSE,
-  init.to.param = FALSE)
+  init.to.param = FALSE, flatten = FALSE)
 }
 \arguments{
 \item{x}{either a path to a NetCDF file, or a NetCDF connection created using \code{nc_open}, or a \code{\link{libbi}} object from which to read the output}
@@ -34,9 +34,11 @@ bi_read(x, vars, dims, model, type, file, missval.threshold, coord_dims,
 \item{clear_cache}{if TRUE, will clear the cache and re-read the file even if cached data exists}
 
 \item{init.to.param}{logical; if TRUE, convert states to initial values}
+
+\item{flatten}{logical; if TRUE, will return a flat (long) data frame with a 'var' column indicating the variable, instead of a list}
 }
 \value{
-list of results
+list of results, or a flat data frame (depending on the value of 'flattten')
 }
 \description{
 This function reads all variable from a NetCDF file or the output of a

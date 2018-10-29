@@ -11,7 +11,7 @@ Imports:
     ncdf4,
     data.table,
     reshape2,
-    stringr
+    processx
 Suggests:
     coda,
     R.rsp, 

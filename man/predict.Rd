@@ -10,7 +10,7 @@
 \arguments{
 \item{x}{a \code{\link{libbi}} object}
 
-\item{...}{ignored}
+\item{...}{any arguments to be passed to \code{\link{sample}}}
 }
 \description{
 The method \code{predict} is an alias for \code{sample(target="prediction")}. Usually, an \code{init} object or file should be given containing posterior samples.

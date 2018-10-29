@@ -24,7 +24,7 @@ extract_sample <- function(x, np, ...) {
   }
 
   max_np <- max(vapply(samples[setdiff(names(samples), "clock")], function (y) {
-    if (is.data.frame(y)) {
+    if (is.data.frame(y) && "np" %in% colnames(y)) {
       max(y$np)
     } else {
       0
@@ -38,7 +38,7 @@ extract_sample <- function(x, np, ...) {
   }
 
   ret <- lapply(samples[setdiff(names(samples), "clock")], function(y) {
-    if (is.data.frame(y)) {
+    if (is.data.frame(y) && "np" %in% colnames(y)) {
       df <- y[y[, "np"] == find_np, ]
       df$np <- NULL
       rownames(df) <- NULL
