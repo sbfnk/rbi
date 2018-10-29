@@ -900,7 +900,7 @@ sample_obs <- function(x, ...) {
   if (!("libbi" %in% class(x))) {
     stop("'x' must bee a 'libbi' object")
   }
-  if ("input-file" %in% x$options) {
+  if ("input-file" %in% names(x$options)) {
     input <- bi_read(x, file="input")
   } else {
     input <- list()
