@@ -405,7 +405,7 @@ For a general check of model syntax, the `rewrite` command is useful:
 rewrite(SIRmodel)
 ```
 
-This generates the internal representation of the model for LibBi. It doesn't matter so much what this looks like, but it will throw an error if there is a problem. If `libbi` throws an error, it is best to investigate with `verbose = TRUE`, and setting `working_folder` to a folder that one can then use for debugging. Output of the `libbi` call can be saved in a file using the `log_file_name` option (by default a temporary file).
+This generates the internal representation of the model for LibBi. It doesn't matter so much what this looks like, but it will throw an error if there is a problem. If `libbi` throws an error, it is best to investigate with `debug = TRUE`, and setting `working_folder` to a folder that one can then use for debugging. Output of the `libbi` call can be saved in a file using the `log_file_name` option (by default a temporary file).
 
 # Related packages
 
