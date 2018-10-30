@@ -41,15 +41,32 @@ option_list <- function(...){
       options[option_names] <- string_list
     } else if (is.list(string)) {
       names(string) <- gsub("_", "-", names(string))
+      ## identify within-option conflicts
+      conflicting <- intersect(string[["with"]], string[["without"]])
+      if (length(conflicting) > 0) {
+        stop("Option given as 'with' and 'without': ",
+             paste(conflicting, collapse=", "))
+      }
       if ("with" %in% names(string)) {
         with_list <- as.list(rep("", length(string[["with"]])))
         names(with_list) <- paste("with", string[["with"]], sep="-")
+        ## remove existing 'without' options of the same name
+        without_options <-
+          sub("^without-", "", grep("^without-", names(options), value=TRUE))
+        existing <- intersect(without_options, string[["with"]])
+        options[paste("without", existing, sep="-")] <- NULL
+        ## add as strings
         string[["with"]] <- NULL
         string <- c(string, with_list)
       }
       if ("without" %in% names(string)) {
         without_list <- as.list(rep("", length(string[["without"]])))
         names(without_list) <- paste("without", string[["without"]], sep="-")
+        ## remove existing 'with' options of the same name
+        with_options <- sub("^with-", "", grep("^with-", names(options), value=TRUE))
+        existing <- intersect(with_options, string[["without"]])
+        options[paste("with", existing, sep="-")] <- NULL
+        ## add as strings
         string[["without"]] <- NULL
         string <- c(string, without_list)
       }
