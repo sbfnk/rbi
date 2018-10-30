@@ -69,7 +69,7 @@ run <- function(x, ...) UseMethod("run")
 #' @param proposal proposal distribution to use; either "model" (default: proposal distribution in the model) or "prior" (propose from the prior distribution)
 #' @param model either a character vector giving the path to a model file (typically ending in ".bi"), or a \code{bi_model} object; by default, will use any model given in \code{x}
 #' @param fix any variable to fix, as a named vector
-#' @param options list of additional arguments to pass to the call to \code{LibBi}. Any arguments starting with `enable`/`disable` can be specified as boolean (e.g., `assert=TRUE`). Any `dry-` options can be specified with a `"dry"` argument, e.g., `dry="parse"`. Any options that would be specified with `with`/`without` can be specified as character vector to an option named `with`/`without`, respectively, e.g. with="transform-obs-to-state".
+#' @param options deprecated; pass options directly, see documentation for \code{...}
 #' @param config path to a configuration file, containing multiple arguments
 #' @param log_file_name path to a file to text file to report the output of \code{LibBi}
 #' @param init initialisation of the model, either supplied as a list of values and/or data frames, or a (netcdf) file name, or a \code{\link{libbi}} object which has been run (in which case the output of that run is used). If the object given as \code{x} has been run before, it will be used here with \code{init-np} set to the last iteration of the previous run, unless \code{init} is given explicitly.
@@ -86,13 +86,13 @@ run <- function(x, ...) UseMethod("run")
 #' @param chain logical; if set to TRUE and \code{x} has been run before, the previous output file will be used as \code{init} file, and \code{init-np} will be set to the last iteration of the previous run (unless target=="prediction"). This is useful for running inference chains.
 #' @param seed Either a number (the seed to supply to \code{LibBi}), or a logical variable: TRUE if a seed is to be generated for \code{RBi}, FALSE if \code{LibBi} is to generate its own seed
 #' @param debug logical; if TRUE, print more verbose messages
-#' @param ... any unrecognised options will be added to \code{options}
+#' @param ... list of additional arguments to pass to the call to \code{LibBi}. Any arguments starting with `enable`/`disable` can be specified as boolean (e.g., `assert=TRUE` or `cuda=TRUE`). Any `dry-` options can be specified with a `"dry"` argument, e.g., `dry="parse"`. Any options that would be specified with `with`/`without` can be specified as character vector to an option named `with`/`without`, respectively, e.g. with="transform-obs-to-state".
 #' @seealso \code{\link{libbi}}
 #' @examples
 #' bi_object <- libbi(model = system.file(package="rbi", "PZ.bi"))
-#' \dontrun{run(bi_object, options=list(client="sample", sample="smc2"))}
-#' if (bi_object$run_flag) {
-#'   bi_file_summary(bi_object$output_file_name)
+#' \dontrun{
+#'   run(bi_object, client="sample", target="prior")
+#'   bi_file_summary(bi_object)
 #' }
 #' @return a \code{\link{libbi}} object, except if \code{client} is 'rewrite',  in which case a \code{\link{bi_model}} object will be returned
 #' @importFrom ncdf4 nc_open nc_close ncvar_rename
@@ -131,6 +131,7 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
   if (missing(options)){
     new_options <- list()
   } else {
+    warning('argument `options` is deprecated; pass options as arguments directly, e.g. `sample(model, cuda=TRUE, nsamples=100, nparticles=15, with="transform-obs-to-state")`.')
     new_options <- option_list(options)
   }
 
@@ -798,13 +799,22 @@ read_libbi <- function(name, join, ...) {
 
   libbi_options <- list(...)
 
-  pass_options <- c("model", "dims", "time_dim", "coord_dims", "options",
+  pass_options <- c("model", "dims", "time_dim", "coord_dims",
                     "thin", "output-every", "init", "input", "obs")
 
   for (option in pass_options) {
     if (!(option %in% names(libbi_options)) &&
         option %in% names(read_obj)) {
       libbi_options[[option]] <- read_obj[[option]]
+    }
+  }
+
+  ## pass options directly
+  if ("options" %in% names(read_obj)) {
+    for (option in names(read_obj[["options"]])) {
+      if (!(option %in% names(libbi_options))) {
+        libbi_options[[option]] <- read_obj[["options"]][[option]]
+      }
     }
   }
 

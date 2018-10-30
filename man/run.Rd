@@ -22,7 +22,7 @@
 
 \item{fix}{any variable to fix, as a named vector}
 
-\item{options}{list of additional arguments to pass to the call to \code{LibBi}. Any arguments starting with `enable`/`disable` can be specified as boolean (e.g., `assert=TRUE`). Any `dry-` options can be specified with a `"dry"` argument, e.g., `dry="parse"`. Any options that would be specified with `with`/`without` can be specified as character vector to an option named `with`/`without`, respectively, e.g. with="transform-obs-to-state".}
+\item{options}{deprecated; pass options directly, see documentation for \code{...}}
 
 \item{config}{path to a configuration file, containing multiple arguments}
 
@@ -56,7 +56,7 @@
 
 \item{debug}{logical; if TRUE, print more verbose messages}
 
-\item{...}{any unrecognised options will be added to \code{options}}
+\item{...}{list of additional arguments to pass to the call to \code{LibBi}. Any arguments starting with `enable`/`disable` can be specified as boolean (e.g., `assert=TRUE` or `cuda=TRUE`). Any `dry-` options can be specified with a `"dry"` argument, e.g., `dry="parse"`. Any options that would be specified with `with`/`without` can be specified as character vector to an option named `with`/`without`, respectively, e.g. with="transform-obs-to-state".}
 }
 \value{
 a \code{\link{libbi}} object, except if \code{client} is 'rewrite',  in which case a \code{\link{bi_model}} object will be returned
@@ -66,9 +66,9 @@ The method \code{run} launches \code{LibBi} with a particular set of command lin
 }
 \examples{
 bi_object <- libbi(model = system.file(package="rbi", "PZ.bi"))
-\dontrun{run(bi_object, options=list(client="sample", sample="smc2"))}
-if (bi_object$run_flag) {
-  bi_file_summary(bi_object$output_file_name)
+\dontrun{
+  run(bi_object, client="sample", target="prior")
+  bi_file_summary(bi_object)
 }
 }
 \seealso{
