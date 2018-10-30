@@ -457,6 +457,7 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
       flush(con)
     }
     x$command <- paste(x$path_to_libbi, client, paste(run_args, collapse=" "))
+    if (debug) message(x$command)
     p <-
       tryCatch(processx::run(command=x$path_to_libbi, args=c(client, run_args),
                              error_on_status=FALSE, wd=x$working_folder,
