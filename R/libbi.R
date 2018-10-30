@@ -456,15 +456,8 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
     if (!file.exists(x$path_to_libbi)) {
       stop("Could not find libbi executable ", x$path_to_libbi)
     }
-    ## base_command_string <- paste(x$path_to_libbi, client)
-
-    ## cdcommand <- paste("cd", x$working_folder)
-    ## x$command <- paste(c(cdcommand, paste(base_command_string, opt_string)), collapse=";")
     if (verbose) message("Launching LibBi...")
-    ## if (debug)
-    ##   message(paste(c(x$command, log_redir_name)))
-    ## runcommand <- paste(x$command, log_redir_name)
-    con <- file(ifelse(length(x$log_file_name) == 0, "", x$log_file_name), open="w+t")
+    con <- file(ifelse(length(x$log_file_name) == 0, "", x$log_file_name), open="w+")
     cb_stdout <- function(line, proc) {
       if (debug) message(line)
       writeLines(line, con)
