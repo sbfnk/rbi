@@ -5,8 +5,9 @@ Authors@R: c(
         person("Pierre E.", "Jacob", email = "pierre.jacob.work@gmail.com", role = "aut"),
         person("Anthony", "Lee", email = "awllee@gmail.com", role = "ctb"),
         person("Lawrence M.", "Murray", email = "lawrence.murray@csiro.au", role = "ctb"),
-        person("Sebastian", "Funk", email = "sebastian.funk@lshtm.ac.uk", role = c("aut", "cre"))
-        )
+        person("Sebastian", "Funk", email = "sebastian.funk@lshtm.ac.uk", role = c("aut", "cre")),
+        person("Sam", "Abbott", email = "contact@samabbott.co.uk", role = c("ctb"))
+    )
 Imports:
     ncdf4,
     data.table,
