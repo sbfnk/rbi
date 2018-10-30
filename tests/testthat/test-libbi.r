@@ -44,14 +44,14 @@ test_that("we can print an empty libbi object",
 test_that("we can run libbi and analyse results",
 {
   skip_on_cran()
-  bi <- sample(bi, proposal="prior", options="--start-time 0", nsamples=10, dry="run")
+  bi <- sample(bi, proposal="prior", start_time=0, nsamples=10, dry="run")
   dataset <- bi_generate_dataset(model=model, end_time=50)
   expect_true(nrow(bi_read(dataset)[["N"]]) > 0)
-  dataset <- bi_generate_dataset(model=model, options=list(end_time=50),
+  dataset <- bi_generate_dataset(model=model, end_time=50,
                                  dims=list(a=c("first", "second")))
   dataset_r <- bi_read(dataset)
   expect_true(nrow(bi_read(dataset)[["N"]]) > 0)
-  bi <- sample(model, with="transform-obs-to-state", obs=dataset_r, output_all=TRUE, fix=c(e=0.5), nsamples=10, with="output-at-obs", without="gdb")
+  bi <- sample(model, obs=dataset_r, output_all=TRUE, fix=c(e=0.5), nsamples=10, with="output-at-obs", without="gdb")
   bi2 <- sample(bi, seed=1234, model_file=bi$model_file, obs=dataset, working_folder=bi$working_folder, with="transform-initial-to-param")
 
   bi <- join(a=bi, b=bi2)
@@ -87,5 +87,6 @@ test_that("errors are recognised",
 {
   skip_on_cran()
   expect_error(sample(bi, config="@dummy.conf"))
+  expect_error(sample(bi, with="x", without="x"))
 })
 
