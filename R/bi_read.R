@@ -24,7 +24,7 @@
 #' @return list of results, or a flat data frame (depending on the value of 'flattten')
 #' @inheritParams bi_open
 #' @importFrom ncdf4 nc_close ncvar_get
-#' @importFrom data.table setkeyv setnames setDF is.data.table
+#' @importFrom data.table setkeyv setnames setDF is.data.table :=
 #' @importFrom utils setTxtProgressBar txtProgressBar
 #' @examples
 #' example_output_file <- system.file(package="rbi", "example_output.nc")
