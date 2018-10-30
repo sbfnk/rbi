@@ -358,6 +358,12 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
   if (length(client) > 0)
   {
     ## re-read options
+    ## remove arguments of other clients
+    retain_options <-
+      setdiff(names(all_options),
+              setdiff(all_client_args, libbi_client_args[[client]]))
+    all_options <- all_options[retain_options]
+
     ## adjust options
     if (client != "rewrite") {
       ## clear cache
@@ -375,14 +381,9 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
         x$output_file_name <- absolute_path(all_options[["output-file"]], getwd())
       }
     }
-    x$options <- all_options
+    ## save options
+    save_options <- all_options
     all_options[["output-file"]] <- x$output_file_name
-
-    ## remove arguments of other clients
-    retain_options <-
-      setdiff(names(all_options),
-                    setdiff(all_client_args, libbi_client_args[[client]]))
-    all_options <- all_options[retain_options]
 
     save_model <- x$model
 
@@ -497,6 +498,8 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
       }
       ## get original model back if it has been modified
       x$model <- save_model
+      ## get saved options
+      x$options <- save_options
     }
   } else {
     ## if run from the constructor, just add all the options
