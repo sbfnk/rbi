@@ -284,6 +284,7 @@ netcdf_create_from_list <- function(filename, variables, time_dim, coord_dims, d
     {
       message(date(), " Writing ", name)
     }
+    values[[name]][!is.finite(values[[name]])] <- NA_real_
     ncvar_put(nc, vars[[name]], values[[name]])
   }
 
