@@ -12,7 +12,7 @@ with \code{file}.}
 
 \item{join}{if TRUE, will assume that a collection of files was saved with \code{split=TRUE} in \code{save_libbi}; default is FALSE if \code{name} ends on '.rds', and TRUE otherwise, unless set explicitly}
 
-\item{...}{any extra options to pass to \code{\link{read_libbi}} when creating the new object}
+\item{...}{any extra options to pass to \code{\link{libbi}} when creating the new object}
 }
 \value{
 a \code{\link{libbi}} object

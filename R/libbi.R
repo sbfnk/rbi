@@ -743,7 +743,7 @@ read_libbi <- function(x, ...) UseMethod("read_libbi")
 #' @param name name of the RDS file(s) to read; if \code{join} is set to \code{TRUE},  this will assume that files are to be read in beginning with \code{name}.
 #' with \code{file}.
 #' @param join if TRUE, will assume that a collection of files was saved with \code{split=TRUE} in \code{save_libbi}; default is FALSE if \code{name} ends on '.rds', and TRUE otherwise, unless set explicitly
-#' @param ... any extra options to pass to \code{\link{read_libbi}} when creating the new object
+#' @param ... any extra options to pass to \code{\link{libbi}} when creating the new object
 #' @return a \code{\link{libbi}} object
 read_libbi <- function(name, join, ...) {
   if (missing(name)) {
