@@ -374,9 +374,9 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
       }
 
       if (!("output-file" %in% names(all_options))) {
-        x$output_file_name <- tempfile(pattern=paste(get_name(x$model), "output", sep = "_"),
-                                       fileext=".nc",
-                                       tmpdir=absolute_path(x$working_folder))
+        x$output_file_name <-
+          tempfile(pattern=paste(get_name(x$model), "output", sep = "_"),
+                   fileext=".nc", tmpdir=absolute_path(x$working_folder))
       } else {
         x$output_file_name <- absolute_path(all_options[["output-file"]], getwd())
       }
@@ -426,18 +426,6 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
     } else if (!missing(log_file_name)) {
       x$log_file_name <- absolute_path(filename=log_file_name, dirname=getwd())
     }
-
-    ## log_redir_name <- "2>&1"
-    ## if (length(x$log_file_name) > 0) {
-    ##   log_redir_name <- paste(log_redir_name, paste("tee", x$log_file_name), sep=" | ")
-    ## }
-    ## if (verbose || length(x$log_file_name) == 0) {
-    ##   grep_str <- paste("grep", "-e '\\.\\.\\.$'")
-    ##   if (verbose) grep_str <- paste(grep_str, "-e '^[0-9][0-9]*:'")
-    ##   log_redir_name <- paste(log_redir_name, grep_str, sep=" | ")
-    ## } else {
-    ##   log_redir_name <- paste(log_redir_name, "> /dev/null")
-    ## }
 
     if (length(x$path_to_libbi) == 0) {
       if (is.null(getOption("path_to_libbi"))) {
