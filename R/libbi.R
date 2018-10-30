@@ -381,7 +381,7 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
       }
     }
     ## save options
-    save_options <- all_options
+    x$options <- all_options
     all_options[["output-file"]] <- x$output_file_name
 
     save_model <- x$model
@@ -461,11 +461,13 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
                              stderr_line_callback = cb_stderr),
                finally = close(con))
     if (p$status != 0) {
-      stderr <- strsplit(p$stderr, "\n")[[1]]
-      warning("LibBi terminated with error: ", stderr[length(stderr)])
-      x$error_flag <- TRUE
-      x$model <- save_model
-      return(x)
+      stop_msg <-
+        paste0("LibBi terminated with an error.")
+      if (length(x$log_file_name) > 0) {
+        stop_msg <- paste0(stop_msg, " You can view a log using 'print_log(\"",
+                         x$log_file_name, "\")'")
+      }
+      stop(stop_msg)
     } else if (verbose) message("...LibBi has finished!")
     x$error_flag <- FALSE
 
@@ -482,8 +484,6 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
       }
       ## get original model back if it has been modified
       x$model <- save_model
-      ## get saved options
-      x$options <- save_options
     }
   } else {
     ## if run from the constructor, just add all the options
@@ -850,11 +850,7 @@ print.libbi <- function(x, verbose=FALSE, ...){
     if (length(obs) > 0) cat("Observation trajectories recorded: ", paste(obs, sep=", "), "\n")
     if (length(params) > 0) cat("Parameters recorded: ", paste(params), "\n")
   } else {
-    if (x$error_flag) {
-      cat("* LibBi terminated with an error\n")
-    } else {
-      cat("* LibBi has not been run yet\n")
-    }
+    cat("* LibBi has not been run yet\n")
   }
 }
 
@@ -863,14 +859,25 @@ print.libbi <- function(x, verbose=FALSE, ...){
 #' @title Print the log file a \code{\link{libbi}} object
 #' @description
 #' This is useful for diagnosis after a \code{\link{libbi}} run
-#' @param x a \code{\link{libbi}} object
+#' @param x a \code{\link{libbi}} object, or the name of the log file of a \code{\link{libbi}} run.
 #' @rdname print_log
 print_log <- function(x){
-  if (!("libbi" %in% class(x))) stop("'x' must be a 'libbi' object")
-  if (!("log_file_name" %in% names(x))) stop("'x' does not contain a log file")
-  if (!file.exists(x$log_file_name)) stop("Log file '", x$log_file_name, " does not seem to exist.")
+  if ("libbi" %in% class(x)) {
+    if (!("log_file_name" %in% names(x))) stop("'x' does not contain a log file")
+    file_name <- x$log_file_name
+    if (!file.exists(file_name)) stop("Log file '", x$log_file_name, " does not seem to exist.")
+  } else if (is.character(x)) {
+    if (file.exists(x)) {
+      file_name <- x
+    } else {
+      stop("If 'x' is a character object, it must point to an existing file. ",
+           x, "does not exist.")
+    }
+  } else  {
+    stop("'x' must be a 'libbi' or 'character' object")
+  }
 
-  lines <- readLines(x$log_file_name)
+  lines <- readLines(file_name)
   for (i in seq_along(lines)) message(lines[i])
 }
 
