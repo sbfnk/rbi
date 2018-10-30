@@ -82,7 +82,6 @@ run <- function(x, ...) UseMethod("run")
 #' @param sample_obs logical; if set to TRUE, will sample observations
 #' @param thin any thinning of MCMC chains (1 means all will be kept, 2 skips every other sample etc.); note that \code{LibBi} itself will write all data to the disk. Only when the results are read in with \code{\link{bi_read}} will thinning be applied.
 #' @param output_every real; if given, \code{noutputs} will be set so that there is output every \code{output_every} time steps.
-#' @param force_inputs logical; if set to TRUE any variables found in a given input file will be converted to input variables (default: FALSE)
 #' @param chain logical; if set to TRUE and \code{x} has been run before, the previous output file will be used as \code{init} file, and \code{init-np} will be set to the last iteration of the previous run (unless target=="prediction"). This is useful for running inference chains.
 #' @param seed Either a number (the seed to supply to \code{LibBi}), or a logical variable: TRUE if a seed is to be generated for \code{RBi}, FALSE if \code{LibBi} is to generate its own seed
 #' @param debug logical; if TRUE, print more verbose messages
@@ -99,7 +98,7 @@ run <- function(x, ...) UseMethod("run")
 #' @importFrom stats runif
 #' @importFrom processx run
 #' @export
-run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, options, config, log_file_name, init, input, obs, time_dim, coord_dims, working_folder, output_all=FALSE, sample_obs=FALSE, thin, output_every, force_inputs=FALSE, chain=TRUE, seed=TRUE, debug=FALSE, ...){
+run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, options, config, log_file_name, init, input, obs, time_dim, coord_dims, working_folder, output_all=FALSE, sample_obs=FALSE, thin, output_every, chain=TRUE, seed=TRUE, debug=FALSE, ...){
 
   ## client options
   libbi_client_args <-
@@ -404,10 +403,6 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
 
     if (!missing(fix)) {
       x$model <- do.call(fix.bi_model, c(list(x=x$model), as.list(fix)))
-    }
-
-    if (force_inputs && "input-file" %in% names(all_options)) {
-      x$model <- to_input(x$model, bi_contents(all_options$`input-file`))
     }
 
     write_model(x)
@@ -958,9 +953,16 @@ sample_obs <- function(x, ...) {
   }
   ## transform output to input
   out <- bi_read(x)
+
+  ## remove transition
+  sample_model <- remove_lines(x$model, "transition")
+  ## convert input states to inputs
+  sample_model <- to_input(sample_model, names(out))
+
+  ## update inputs
   for (name in names(out)) input[[name]] <- out[[name]]
-  pr <- predict(x, model=remove_lines(x$model, "transition"), input=input,
-                force_inputs=TRUE, with="transform-obs-to-state", ...)
+
+  pr <- predict(x, model=sample_model, input=input, with="transform-obs-to-state", ...)
   return(pr)
 }
 
