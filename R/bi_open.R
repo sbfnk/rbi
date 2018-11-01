@@ -25,23 +25,12 @@ bi_open <- function(x, file = "output")
       if (file == "output") {
         assert_output(x)
         filename <- x$output_file_name
-      } else if (file == "obs") {
-        if (!("obs-file" %in% names(x$options))) {
-          stop("libbi object does not contain an 'obs' file")
-        }
-        filename <- x$options$`obs-file`
-      } else if (file == "init") {
-        if (!("init-file" %in% names(x$options))) {
-          stop("libbi object does not contain an 'init' file")
-        }
-        filename <- x$options$`init-file`
-      } else if (file == "input") {
-        if (!("input-file" %in% names(x$options))) {
-          stop("libbi object does not contain an 'input' file")
-        }
-        filename <- x$options$`input-file`
       } else {
-        stop("Unknown 'file' type: ", file)
+        opt_name <- paste(file, "file", sep="-")
+        if (!(opt_name %in% names(x$options))) {
+          stop("libbi object does not contain an '", file, "' file")
+        }
+        filename <- x$options[[opt_name]]
       }
     } else {
       assert_output(x)
