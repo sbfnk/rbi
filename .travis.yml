@@ -42,9 +42,6 @@ apt_packages:
   - autoconf
   - automake
 
-r_github_pacakges:
-  - r-lib/covr
-
 brew_packages:
   - libbi
 
