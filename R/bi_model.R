@@ -89,9 +89,10 @@ remove_vars <- function(x, vars) {
 #' @param x a \code{\link{bi_model}} object
 #' @param vars vector of variables to convert to inputs
 #' @return a bi model object of the new model
+#' @examples
 #' model_file_name <- system.file(package="rbi", "PZ.bi")
 #' PZ <- bi_model(filename = model_file_name)
-#' PZ <- to_inpug(PZ, P)
+#' PZ <- to_input(PZ, P)
 #' @seealso \code{\link{bi_model}}
 to_input <- function(x, vars) {
 
