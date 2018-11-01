@@ -43,14 +43,6 @@ bi_read <- function(x, vars, dims, model, type, file, missval.threshold, coord_d
     as.integer(ifelse(missing(thin),
                       ifelse("libbi" %in% class(x), x$thin, 1), thin))
 
-  legacy_coord_dims <- NA_character_
-  if (missing(coord_dims)) {
-    coord_dims <- NULL
-  } else if (is.character(coord_dims)) {
-    legacy_coord_dims <- coord_dims
-    coord_dims <- list()
-  }
-
   if ("libbi" %in% class(x) && !is.null(x$dims)) {
     if (missing(model)) {
       model <- x$model
@@ -62,11 +54,13 @@ bi_read <- function(x, vars, dims, model, type, file, missval.threshold, coord_d
     } else {
       warning("Given 'dims' will overwrite dimensions in passed libbi object")
     }
-    if (is.null(coord_dims)) {
+    if (missing(coord_dims)) {
       coord_dims <- x$coord_dims
     } else {
       warning("Given 'coord_dims' will overwrite dimensions in passed libbi object")
     }
+  } else if (missing(coord_dims)) {
+    coord_dims <- list()
   }
 
   all_nc_var_names <- unname(vapply(nc[["var"]], function(y) { y[["name"]] }, ""))

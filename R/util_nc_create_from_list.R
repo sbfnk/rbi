@@ -41,11 +41,7 @@ netcdf_create_from_list <- function(filename, variables, time_dim, coord_dims, d
     stop("'variables' must be named")
   }
 
-  legacy_coord_dims <- NA_character_
   if (missing(coord_dims) || length(coord_dims) == 0) {
-    coord_dims <- list()
-  } else if (is.character(coord_dims)) {
-    legacy_coord_dims <- coord_dims
     coord_dims <- list()
   } else if (guess_coord) {
     stop("'coord_dims' must not be given if guess_cord is TRUE")
@@ -69,10 +65,6 @@ netcdf_create_from_list <- function(filename, variables, time_dim, coord_dims, d
     }
     ## get list element
     element <- variables[[name]]
-    if (!is.na(legacy_coord_dims)) {
-      coord_dims[[name]] <- intersect(legacy_coord_dims, colnames(element))
-      if (length(coord_dims[[name]]) == 0) coord_dims[[name]] <- NULL
-    }
     index_cols <- list()
     ## reset time and coord dim if we're guessing
     if (guess_time) time_dim <- NULL
