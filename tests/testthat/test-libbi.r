@@ -51,7 +51,7 @@ test_that("we can run libbi and analyse results",
                                  dims=list(a=c("first", "second")))
   dataset_r <- bi_read(dataset)
   expect_true(nrow(bi_read(dataset)[["N"]]) > 0)
-  bi <- sample(model, obs=dataset_r, output_all=TRUE, fix=c(e=0.5), nsamples=10, with="output-at-obs", without="gdb")
+  bi <- sample(model, obs=dataset_r, debug=TRUE, fix=c(e=0.5), nsamples=10, with="output-at-obs", without="gdb")
   bi2 <- sample(bi, seed=1234, model_file=bi$model_file, obs=dataset, working_folder=bi$working_folder, with="transform-initial-to-param")
 
   bi <- join(a=bi, b=bi2)
