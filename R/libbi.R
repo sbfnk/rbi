@@ -84,7 +84,7 @@ run <- function(x, ...) UseMethod("run")
 #' @param output_every real; if given, \code{noutputs} will be set so that there is output every \code{output_every} time steps.
 #' @param chain logical; if set to TRUE and \code{x} has been run before, the previous output file will be used as \code{init} file, and \code{init-np} will be set to the last iteration of the previous run (unless target=="prediction"). This is useful for running inference chains.
 #' @param seed Either a number (the seed to supply to \code{LibBi}), or a logical variable: TRUE if a seed is to be generated for \code{RBi}, FALSE if \code{LibBi} is to generate its own seed
-#' @param debug logical; if TRUE, print more verbose messages
+#' @param debug logical; if TRUE, print more verbose messages and write all variables to the output file, irrespective of their setting of 'has_output'
 #' @param ... list of additional arguments to pass to the call to \code{LibBi}. Any arguments starting with `enable`/`disable` can be specified as boolean (e.g., `assert=TRUE` or `cuda=TRUE`). Any `dry-` options can be specified with a `"dry"` argument, e.g., `dry="parse"`. Any options that would be specified with `with`/`without` can be specified as character vector to an option named `with`/`without`, respectively, e.g. with="transform-obs-to-state".
 #' @seealso \code{\link{libbi}}
 #' @examples
@@ -121,7 +121,7 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
   libbi_client_args[["optimise"]] <-
     unique(c(libbi_client_args[["optimise"]], libbi_client_args[["filter"]]))
 
-  if (missing(output_all)) output_all <- FALSE
+  if (!missing(output_all)) warning("'output_all' is deprecated. Use 'debug=TRUE'.")
   proposal <- match.arg(proposal)
 
   if (!missing(thin)) x$thin <- thin
@@ -386,16 +386,7 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
 
     save_model <- x$model
 
-    if (output_all) {
-      no_output_pattern <- "[[:space:]]*has_output[[:space:]]*=[[:space:]]*0[[:space:]]*"
-      no_output <- grep(no_output_pattern, x$model)
-      updated_lines <- sub(no_output_pattern, "", x$model[no_output])
-      updated_lines <- gsub(",,", ",", updated_lines)
-      updated_lines <- gsub("\\(,", "(", updated_lines)
-      updated_lines <- gsub(",\\)", ")", updated_lines)
-      updated_lines <- sub("()", "", updated_lines)
-      x$model[no_output] <- updated_lines
-    }
+    if (debug) x$model <- enable_outputs(x$model)
 
     if (proposal == "prior") {
       x$model <- propose_prior(x$model)

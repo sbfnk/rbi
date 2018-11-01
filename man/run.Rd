@@ -51,7 +51,7 @@
 
 \item{seed}{Either a number (the seed to supply to \code{LibBi}), or a logical variable: TRUE if a seed is to be generated for \code{RBi}, FALSE if \code{LibBi} is to generate its own seed}
 
-\item{debug}{logical; if TRUE, print more verbose messages}
+\item{debug}{logical; if TRUE, print more verbose messages and write all variables to the output file, irrespective of their setting of 'has_output'}
 
 \item{...}{list of additional arguments to pass to the call to \code{LibBi}. Any arguments starting with `enable`/`disable` can be specified as boolean (e.g., `assert=TRUE` or `cuda=TRUE`). Any `dry-` options can be specified with a `"dry"` argument, e.g., `dry="parse"`. Any options that would be specified with `with`/`without` can be specified as character vector to an option named `with`/`without`, respectively, e.g. with="transform-obs-to-state".}
 }

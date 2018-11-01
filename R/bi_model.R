@@ -118,6 +118,45 @@ to_input <- function(x, vars) {
   return(clean_model(x))
 }
 
+#' @rdname enable_outputs
+#' @name enable_outputs
+#' @title Enable outputting variables in a \code{\link{bi_model}}
+#' @description
+#' Any variable type given will have any 'has_output=0' option removed in the given model..
+#'
+#' @param x a \code{\link{bi_model}} object
+#' @param type either "all" (default), or a vector of variable types that are to have outputs enabled
+#' @return a bi model object of the new model
+#' @examples
+#' model_file_name <- system.file(package="rbi", "PZ.bi")
+#' PZ <- bi_model(filename = model_file_name)
+#' PZ[6] <- "param mu (has_output=0)"
+#' PZ <- enable_outputs(PZ)
+#' @seealso \code{\link{bi_model}}
+#' @export
+enable_outputs <- function(x, type="all") {
+  if (!("bi_model") %in% class(x)) stop("'x' must be a 'bi_model' object.")
+  if (length(type) > 1 && "all" %in% type) stop("'type=\"all\"' only makes sense on its own")
+  no_output_pattern <- "[[:space:]]*has_output[[:space:]]*=[[:space:]]*0[[:space:]]*"
+  no_output <- grep(no_output_pattern, x)
+  if (length(no_output) > 0) {
+    no_output_lines <- x[no_output]
+    type_pattern <-
+      ifelse("all" %in% type, "", paste0("(", paste(type, collapse="|"),")"))
+    type_filtered <- grep(paste0("^[[:space:]]*", type_pattern), x[no_output])
+    if (length(type_filtered) > 0) {
+      no_output <- no_output[type_filtered]
+      updated_lines <- sub(no_output_pattern, "", x[no_output])
+      updated_lines <- gsub(",,", ",", updated_lines)
+      updated_lines <- gsub("\\(,", "(", updated_lines)
+      updated_lines <- gsub(",\\)", ")", updated_lines)
+      updated_lines <- sub("[[:space:]]*\\(\\)", "", updated_lines)
+      x[no_output] <- updated_lines
+    }
+  }
+  return(clean_model(x))
+}
+
 #' @export
 fix <- function(x, ...) UseMethod("fix")
 #' @rdname fix
