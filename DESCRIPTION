@@ -15,7 +15,8 @@ Imports:
     reshape2
 Suggests:
     coda,
-    R.rsp, 
+    covr (>= 3.2.0),
+    R.rsp,
     stringi,
     testthat
 Description: Provides a complete R interface to LibBi, a library for Bayesian inference (see <http://libbi.org> and <doi:10.18637/jss.v067.i10> for more information). This includes functions for manipulating LibBi models, for reading and writing LibBi input/output files, for converting LibBi output to provide traces for use with the coda package, and for running LibBi from R.
