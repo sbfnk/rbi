@@ -17,11 +17,7 @@ a bi model object of the new model
 \description{
 Used for predictions, if one doesn't want to re-simulate state/noise trajectories
 }
-\examples{
-model_file_name <- system.file(package="rbi", "PZ.bi")
-PZ <- bi_model(filename = model_file_name)
-PZ <- to_input(PZ, P)
-}
 \seealso{
 \code{\link{bi_model}}
 }
+\keyword{internal}
