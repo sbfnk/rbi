@@ -572,7 +572,7 @@ get_block.bi_model <- function(x, name, ...) {
     }
     return(lines)
   } else {
-    return(NA)
+    return(character(0))
   }
 }
 
