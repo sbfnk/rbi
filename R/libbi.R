@@ -858,23 +858,26 @@ print.libbi <- function(x, verbose=FALSE, ...){
   cat("======================\n")
   cat("Model: ", get_name(x$model), "\n")
   if (x$run_flag) {
-    assert_output(x)
-    contents <- bi_contents(x$output_file_name)
-
-    if ("clock" %in% contents) {
-      clock <- bi_read(x, "clock")[["clock"]]
-      cat("Run time: ", clock/1e6, " seconds\n")
+    if (length(x$output_file_name) > 0 && file.exists(x$output_file_name)) {
+      contents <- bi_contents(x$output_file_name)
+      
+      if ("clock" %in% contents) {
+        clock <- bi_read(x, "clock")[["clock"]]
+        cat("Run time: ", clock/1e6, " seconds\n")
+      }
+      states <- intersect(contents, var_names(x$model, type="state"))
+      noises <- intersect(contents, var_names(x$model, type="noise"))
+      params <- intersect(contents, var_names(x$model, type="param"))
+      obs <- intersect(contents, var_names(x$model, type="obs"))
+      niterations <- bi_dim_len(x$output_file_name, "np")
+      if (niterations > 0) cat("Number of samples: ", niterations, "\n")
+      if (length(states) > 0) cat("State trajectories recorded: ", paste(states, sep=", "), "\n")
+      if (length(noises) > 0) cat("Noise trajectories recorded: ", paste(noises, sep=", "), "\n")
+      if (length(obs) > 0) cat("Observation trajectories recorded: ", paste(obs, sep=", "), "\n")
+      if (length(params) > 0) cat("Parameters recorded: ", paste(params), "\n")
+    } else {
+      cat("* No output file\n")
     }
-    states <- intersect(contents, var_names(x$model, type="state"))
-    noises <- intersect(contents, var_names(x$model, type="noise"))
-    params <- intersect(contents, var_names(x$model, type="param"))
-    obs <- intersect(contents, var_names(x$model, type="obs"))
-    niterations <- bi_dim_len(x$output_file_name, "np")
-    if (niterations > 0) cat("Number of samples: ", niterations, "\n")
-    if (length(states) > 0) cat("State trajectories recorded: ", paste(states, sep=", "), "\n")
-    if (length(noises) > 0) cat("Noise trajectories recorded: ", paste(noises, sep=", "), "\n")
-    if (length(obs) > 0) cat("Observation trajectories recorded: ", paste(obs, sep=", "), "\n")
-    if (length(params) > 0) cat("Parameters recorded: ", paste(params), "\n")
   } else {
     cat("* LibBi has not been run yet\n")
   }
@@ -945,7 +948,7 @@ assert_output.libbi <- function(x, ...)
       stop("The libbi object must be run first (using sample, filter or optimise).")
     }
     if (length(x$output_file_name) == 0 || !file.exists(x$output_file_name)) {
-      stop("The libbi object for does not contain an output file.")
+      stop("The libbi object does not contain an output file.")
     }
     if (x$timestamp < file.mtime(x$output_file_name)) {
       stop("Output file ", x$output_file_name, " has been modified since LibBi was run.")
