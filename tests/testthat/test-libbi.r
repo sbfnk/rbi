@@ -23,7 +23,8 @@ model test {
 
   sub transition {
     e[a, b] ~ gaussian(mean = m[a,b])
-    N[a] <- N[a] + e[a, 0] + e[a, 1]
+    N[a] <- N[a] + e[a, 0] +
+       e[a, 1]
   }
 
   sub observation {
@@ -44,9 +45,10 @@ test_that("we can print an empty libbi object",
 test_that("we can run libbi and analyse results",
 {
   skip_on_cran()
-  bi <- sample(bi, proposal="prior", start_time=0, nsamples=10, verbose=TRUE)
-  dry <- sample(bi, dry="run")
-  dataset <- bi_generate_dataset(bi, end_time=50, output_every=2)
+  bi <- sample(bi, proposal="prior", start_time=0, nsamples=10, verbose=TRUE, thin=2,
+               output_every=2, end_time=10)
+  dry <- sample(model, dry=c("run", "gen", "parse", "build"))
+  dataset <- bi_generate_dataset(bi, end_time=50, noutputs=50)
   dataset <- bi_generate_dataset(bi, end_time=50)
   dataset_r <- bi_read(dataset)
   bi1 <- sample(bi, obs=dataset_r, debug=TRUE, fix=c(e=0.5), nsamples=10, with="output-at-obs", without="gdb")
@@ -83,7 +85,22 @@ test_that("we can run libbi and analyse results",
 test_that("we can rewrite a model",
 {
   skip_on_cran()
-  expect_match(rewrite(bi), ".")
+  expect_match(rewrite(model), ".")
+})
+
+test_that("deprecated options are reported",
+{
+  expect_warning(libbi(bi$model, sample_obs=TRUE), "sample_obs")
+  expect_warning(libbi(bi$model, output_all=TRUE), "output_all")
+  expect_warning(libbi(bi$model, options=list("--enable-cuda", "--nsamples=100")), "options")
+})
+
+test_that("warnings are given",
+{
+  skip_on_cran()
+  expect_warning(libbi(model=bi$model, model_file=bi$model_file_name), "model-file")
+  expect_warning(libbi(model=bi$model, model_file=bi$model_file_name), "model-file")
+  expect_warning(sample(bi, init=bi, chain=TRUE, dry=c("run", "gen", "parse", "build")), "chain")
 })
 
 test_that("errors are recognised",
@@ -91,13 +108,18 @@ test_that("errors are recognised",
   skip_on_cran()
   expect_error(sample(bi, config="@dummy.conf"))
   expect_error(sample(bi, with="x", without="x"))
+  expect_error(rewrite(model, model=model))
+  expect_error(sample(model, model=model))
+  expect_error(libbi(bi_model()))
+  expect_error(sample(bi, noutputs=100, output_every=1))
 })
 
 test_that("LibBi errors are caught",
 {
-    skip_on_cran()
-    erroneous_model <- bi$model
-    erroneous_model[2] <- "doodle"
-    expect_error(sample(bi, model=erroneous_model))
+  skip_on_cran()
+  erroneous_model <- bi$model
+  erroneous_model[2] <- "doodle"
+  expect_error(sample(bi, model=erroneous_model))
+  expect_error(rewrite(model, model=model))
 })
 
