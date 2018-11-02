@@ -241,11 +241,11 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
       }
     } else {
       start_time <-
-        ifelse("start-time" %in% names(all_options), all_options[["end-time"]],  0)
+        ifelse("start-time" %in% names(all_options), all_options[["start-time"]],  0)
       end_time <-
         ifelse("end-time" %in% names(all_options), all_options[["end-time"]],  0)
       new_options[["noutputs"]] <-
-        ifelse(output_every == 0, 0, (end_time-start_time)/output_every)
+        ifelse(x$output_every == 0, 0, (end_time-start_time)/x$output_every)
     }
   }
 
