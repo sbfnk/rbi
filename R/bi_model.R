@@ -348,7 +348,7 @@ insert_lines.bi_model <- function(x, lines, before, after, at_beginning_of, at_e
   if (length(arg_name) != 1) {
     stop("insert_lines needs exactly three arguments, 'x', 'lines' and one of 'before', 'after', 'at_beginning_of' or 'at_end_of'")
   }
-  arg <- get(arg_name)
+  arg <- args[[arg_name]]
   if (is.numeric(arg)) arg <- as.integer(arg)
 
   if (arg_name %in% c("before", "after") && is.integer(arg)) {
