@@ -18,6 +18,8 @@ test_that("outputs can be enabled",
     output_disabled <- PZ
     output_disabled[6] <- "param mu (has_output=0)"
     expect_false(any(grepl("has_output", enable_outputs(output_disabled))))
+    expect_error(enable_outputs("test"), "bi_model")
+    expect_error(enable_outputs(PZ, type=c("all", "param")), "all")
 })
 
 test_that("parameters can be fixed",
@@ -29,6 +31,7 @@ test_that("lines can be inserted",
 {
   expect_true(!is_empty(insert_lines(PZ, lines = "noise beta", after = 0)))
   expect_true(!is_empty(insert_lines(PZ, lines = "noise beta", after = 32)))
+  expect_true(!is_empty(insert_lines(PZ, lines = "noise beta", after = 34)))
   expect_true(!is_empty(insert_lines(PZ, lines = "noise beta", before = 9)))
   expect_true(!is_empty(insert_lines(PZ, lines = "beta ~ normal()", at_beginning_of = "transition")))
   expect_true(!is_empty(insert_lines(PZ, lines = "beta ~ normal()", at_end_of = "transition")))
@@ -36,6 +39,7 @@ test_that("lines can be inserted",
   expect_true(!is_empty(insert_lines(PZ, lines = "beta ~ normal()", after = "parameter")))
   expect_error(insert_lines(PZ, lines = "noise beta"))
   expect_error(insert_lines(PZ, lines = "noise beta", after=35))
+  expect_error(insert_lines(PZ, lines = "beta ~ normal()", by = "transition"), "by")
 })
 
 test_that("lines can be removed",
@@ -46,8 +50,8 @@ test_that("lines can be removed",
   expect_true(length(remove_lines(PZ, 13, type="sample")[]) > 0)
   expect_true(rem != PZ)
   expect_true(rem == PZ[-13])
-  expect_error(remove_lines(PZ))
-  expect_error(remove_lines(PZ, list()))
+  expect_error(remove_lines(PZ), "what")
+  expect_error(remove_lines(PZ, list()), "what")
 })
 
 test_that("strings can be replaced",
@@ -67,12 +71,13 @@ test_that("model names can be set",
 {
   expect_true(length(set_name(PZ, "new_PZ")[]) > 0)
   expect_true(length(set_name(bi_model(), "new_PZ")[]) > 0)
+  expect_error(set_name(bi_model(lines="{}"), "test"), "first line")
 })
 
 test_that("models can be printed",
 {
   expect_output(print(PZ), "model PZ")
-  expect_true(length(print(PZ, screen=FALSE)) > 0)
+  expect_output(print(bi_model()), "empty")
 })
 
 test_that("parts of a model can be extracted",
@@ -106,11 +111,9 @@ test_that("variables can be converted to inputs",
 
 test_that("simple errors are detected",
 {
-    expect_error(bi_model(filename=character(0)))
-    expect_error(bi_model(filename="test", lines="model x {}"))
-    expect_error(enable_outputs("test"))
-    expect_error(enable_outputs(PZ, type=c("all", "param")))
+    unbalanced <- suppressWarnings(PZ[-12])
+    expect_error(bi_model(filename=character(0)), "empty")
+    expect_error(bi_model(filename="test", lines="model x {}"), filename)
     expect_warning(PZ[-12], "unbalanced")
-    expect_error(insert_lines(PZ, lines = "beta ~ normal()", by = "transition"))
-    expect_error(set_name(bi_model(lines="{}"), "test"))
+    expect_warning(unbalanced, "unbalanced")
 })
