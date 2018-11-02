@@ -54,7 +54,13 @@ libbi <- function(model, path_to_libbi, dims, use_cache=TRUE, ...){
                    supplement=NULL,
                    .gc_env=emptyenv(),
                    .cache=new.env(parent = emptyenv())), class="libbi")
-  return(do.call(run, c(list(x=new_obj, client=character(0)), list(...))))
+
+  dot_options <- list(...)
+  if ("norun" %in% names(dot_options) && dot_options[["norun"]]) {
+    return(new_obj)
+  } else {
+    return(do.call(run.libbi, c(list(x=new_obj, client=character(0)), dot_options)))
+  }
 }
 
 #' @export
@@ -65,7 +71,7 @@ run <- function(x, ...) UseMethod("run")
 #' @description
 #' The method \code{run} launches \code{LibBi} with a particular set of command line #' arguments. Normally, this function would not be run by the user, but instead one of the client functions \code{\link{sample}}, \code{\link{filter}}, or \code{\link{optimise}}, or \code{\link{rewrite}}, which pass any options on to \code{run}. Note that any options specified here are stored in the \code{\link{libbi}} object and do not have to be specified again if another command is run on the object.
 #'
-#' @param x a \code{\link{libbi}} object
+#' @param x a \code{\link{libbi}} object; if this is not given, an empty \code{\link{libbi}} object will be created
 #' @param client client to pass to LibBi
 #' @param proposal proposal distribution to use; either "model" (default: proposal distribution in the model) or "prior" (propose from the prior distribution)
 #' @param model either a character vector giving the path to a model file (typically ending in ".bi"), or a \code{bi_model} object; by default, will use any model given in \code{x}
@@ -99,7 +105,7 @@ run <- function(x, ...) UseMethod("run")
 #' @importFrom stats runif
 #' @importFrom processx run
 #' @export
-run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, options, config, log_file_name, init, input, obs, time_dim, coord_dims, working_folder, output_all=FALSE, sample_obs=FALSE, thin, output_every, chain=TRUE, seed=TRUE, debug=FALSE, ...){
+run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, options, config, log_file_name=character(0), init, input, obs, time_dim, coord_dims, working_folder, output_all=FALSE, sample_obs=FALSE, thin, output_every, chain=TRUE, seed=TRUE, debug=FALSE, ...){
 
   ## client options
   libbi_client_args <-
@@ -116,11 +122,23 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
          rewrite = c())
 
   all_client_args <- unique(unname(unlist(libbi_client_args)))
+
   ## both sample and optimise inherit from filter
   libbi_client_args[["sample"]] <-
     unique(c(libbi_client_args[["sample"]], libbi_client_args[["filter"]]))
   libbi_client_args[["optimise"]] <-
     unique(c(libbi_client_args[["optimise"]], libbi_client_args[["filter"]]))
+
+  if (!missing(x) && "bi_model" %in% class(x)) {
+    if (missing(model)) {
+      model <- x
+    } else {
+      stop("Two 'bi_model' objects given as 'x' and 'model'.")
+    }
+  }
+  if (missing(x) || ("bi_model" %in% class(x))) {
+    x <- libbi(norun=TRUE)
+  }
 
   if (!missing(output_all)) warning("'output_all' is deprecated. Use 'debug=TRUE'.")
   proposal <- match.arg(proposal)
@@ -503,7 +521,7 @@ sample <- function(x, ...) UseMethod("sample")
 #'
 #' If \code{x} is given as a 'bi_model', a \code{\link{libbi}} object will be created from the model
 #' For the help page of the base R \code{sample} function, see \code{\link[base]{sample}}.
-#' @param x a \code{\link{libbi} or \link{bi_model}} object, or the name of a file containing the model
+#' @param x a \code{\link{libbi}} or \code{\link{bi_model}} object, or the name of a file containing the model
 #' @param ... options to be passed to \code{\link{run.libbi}}
 #' @return a \code{\link{libbi}} object
 #' @export
@@ -514,7 +532,7 @@ sample.libbi <- function(x, ...){
 #' @name sample
 #' @export
 sample.bi_model <- function(x, ...){
-  run.libbi(libbi(model=x), client="sample", ...)
+  run.libbi(x, client="sample", ...)
 }
 #' @export
 sample.default <- function(x, ...){
@@ -531,7 +549,7 @@ filter <- function(x, ...) UseMethod("filter")
 #'
 #' If \code{x} is given as a 'bi_model', a \code{\link{libbi}} object will be created from the model
 #' For the help page of the base R \code{filter} function, see \code{\link[stats]{filter}}.
-#' @param x a \code{\link{libbi} or \link{bi_model}} object, or the name of a file containing the model
+#' @param x a \code{\link{libbi}} or \code{\link{bi_model}} object, or the name of a file containing the model
 #' @param ... options to be passed to \code{\link{run.libbi}}
 #' @return a \code{\link{libbi}} object
 #' @export
@@ -542,7 +560,7 @@ filter.libbi <- function(x, ...){
 #' @name filter
 #' @export
 filter.bi_model <- function(x, ...){
-  run.libbi(libbi(x), client="filter", ...)
+  run.libbi(x, client="filter", ...)
 }
 #' @export
 filter.default <- function(x, ...){
@@ -559,7 +577,7 @@ optimise <- function(x, ...) UseMethod("optimise")
 #'
 #' If \code{x} is given as a 'bi_model', a \code{\link{libbi}} object will be created from the model
 #' For the help page of the base R \code{optimise} function, see \code{\link[stats]{optimise}}.
-#' @param x a \code{\link{libbi} or \link{bi_model}} object, or the name of a file containing the model
+#' @param x a \code{\link{libbi}} or \code{link{bi_model}} object, or the name of a file containing the model
 #' @param ... options to be passed to \code{\link{run.libbi}}
 #' @return a \code{\link{libbi}} object
 #' @export
@@ -570,7 +588,7 @@ optimise.libbi <- function(x, ...){
 #' @name optimise
 #' @export
 optimise.bi_model <- function(x, ...){
-  run.libbi(libbi(x), client="optimise", ...)
+  run.libbi(x, client="optimise", ...)
 }
 #' @export
 optimise.default <- function(x, ...){
@@ -586,7 +604,7 @@ rewrite <- function(x, ...) UseMethod("rewrite")
 #' The method \code{rewrite} launches \code{LibBi} to rewrite a model to inspect its internal representation in \code{LibBi}
 #'
 #' If \code{x} is given as a 'bi_model', a \code{\link{libbi}} object will be created from the model
-#' @param x a \code{\link{libbi} or \link{bi_model}} object, or the name of a file containing the model
+#' @param x a \code{\link{libbi}} or \code{\link{bi_model}} object, or the name of a file containing the model
 #' @param ... options to be passed to \code{\link{run.libbi}}
 #' @return a \code{\link{bi_model}} object
 #' @export
@@ -597,7 +615,7 @@ rewrite.libbi <- function(x, ...){
 #' @name rewrite
 #' @export
 rewrite.bi_model <- function(x, ...){
-  run.libbi(libbi(x), client="rewrite", ...)
+  run.libbi(x, client="rewrite", ...)
 }
 
 #' @export

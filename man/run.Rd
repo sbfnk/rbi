@@ -6,12 +6,13 @@
 \title{Using the LibBi wrapper to launch LibBi}
 \usage{
 \method{run}{libbi}(x, client, proposal = c("model", "prior"), model,
-  fix, options, config, log_file_name, init, input, obs, time_dim,
-  coord_dims, working_folder, output_all = FALSE, sample_obs = FALSE,
-  thin, output_every, chain = TRUE, seed = TRUE, debug = FALSE, ...)
+  fix, options, config, log_file_name = character(0), init, input, obs,
+  time_dim, coord_dims, working_folder, output_all = FALSE,
+  sample_obs = FALSE, thin, output_every, chain = TRUE, seed = TRUE,
+  debug = FALSE, ...)
 }
 \arguments{
-\item{x}{a \code{\link{libbi}} object}
+\item{x}{a \code{\link{libbi}} object; if this is not given, an empty \code{\link{libbi}} object will be created}
 
 \item{client}{client to pass to LibBi}
 
@@ -45,7 +46,7 @@
 
 \item{thin}{any thinning of MCMC chains (1 means all will be kept, 2 skips every other sample etc.); note that \code{LibBi} itself will write all data to the disk. Only when the results are read in with \code{\link{bi_read}} will thinning be applied.}
 
-\item{output_every}{real; if given, \code{noutputs} will be set so that there is output every \code{output_every} time steps.}
+\item{output_every}{real; if given, \code{noutputs} will be set so that there is output every \code{output_every} time steps; if set to 0, only generate an output at the final time}
 
 \item{chain}{logical; if set to TRUE and \code{x} has been run before, the previous output file will be used as \code{init} file, and \code{init-np} will be set to the last iteration of the previous run (unless target=="prediction"). This is useful for running inference chains.}
 
