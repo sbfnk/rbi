@@ -770,9 +770,9 @@ set_name <- function(x, ...) UseMethod("set_name")
 #' @export
 set_name.bi_model <- function(x, name, ...) {
   if (length(x) > 0) {
-    if (grepl("model [[:graph:]]+ \\{", x[1])) {
+    if (grepl("model [[:graph:]]+[[:space:]]*\\{", x[1])) {
       x[1] <-
-        sub("model [[:graph:]]+ \\{", paste0("model ", name, " {"),
+        sub("model [[:graph:]]+[[:space:]]*\\{", paste0("model ", name, " {"),
             x[1])
     } else {
       stop("could not identify model name in first line")
