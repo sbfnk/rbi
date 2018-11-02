@@ -213,9 +213,6 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
 
   if (!missing(working_folder)) {
     x$working_folder <- absolute_path(working_folder)
-    if (!dir.exists(x$working_folder)) {
-      dir.create(working_folder)
-    }
   } else if (length(x$working_folder) == 0) {
     x$working_folder <- tempfile(pattern=paste(get_name(x$model)))
     dir.create(x$working_folder)
