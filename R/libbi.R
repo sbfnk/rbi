@@ -194,7 +194,7 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
 
   if ("model-file" %in% names(all_options)) {
     if (missing(model)) {
-      x$model <- bi_model(x$model_file_name)
+      x$model <- bi_model(all_options[["model-file"]])
     } else {
       warning("'model-file' and 'model' options both provided. Will ignore 'model-file'.")
     }
