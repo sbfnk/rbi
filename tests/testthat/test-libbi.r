@@ -100,7 +100,7 @@ test_that("warnings are given",
   skip_on_cran()
   expect_warning(libbi(model=bi$model, model_file=bi$model_file_name), "model-file")
   expect_warning(libbi(model=bi$model, model_file=bi$model_file_name), "model-file")
-  expect_warning(sample(bi, init=bi, chain=TRUE, dry=c("run", "gen", "parse", "build")), "chain")
+  expect_warning(sample(bi, init=list(a=3), chain=TRUE, dry=c("run", "gen", "parse", "build")), "chain")
 })
 
 test_that("errors are recognised",
