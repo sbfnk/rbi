@@ -37,6 +37,10 @@ model test {
 model <- bi_model(lines = stringi::stri_split_lines(model_str)[[1]])
 bi <- libbi(model, dims=list(a=c("first", "second")))
 
+PZ <- libbi(model = system.file(package="rbi", "PZ.bi"))
+example_output_file <- system.file(package="rbi", "example_output.nc")
+PZ <- attach_file(PZ, "output", example_output_file)
+
 test_that("we can print an empty libbi object",
 {
   expect_output(print(bi), "LibBi has not been run")
@@ -98,9 +102,10 @@ test_that("deprecated options are reported",
 test_that("warnings are given",
 {
   skip_on_cran()
+
   expect_warning(libbi(model=bi$model, model_file=bi$model_file_name), "model-file")
   expect_warning(libbi(model=bi$model, model_file=bi$model_file_name), "model-file")
-  expect_warning(sample(bi, init=list(a=3), chain=TRUE, dry=c("run", "gen", "parse", "build")), "chain")
+  expect_warning(sample(PZ, init=list(a=3), chain=TRUE, dry=c("run", "gen", "parse", "build")), "chain")
 })
 
 test_that("errors are recognised",
