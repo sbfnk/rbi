@@ -128,11 +128,12 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
   if (!missing(thin)) x$thin <- thin
   if (!missing(output_every)) x$output_every <- output_every
 
-  if (missing(options)){
-    new_options <- list()
-  } else {
+  new_options <- list(...)
+  if (!missing(options)) {
     warning('argument `options` is deprecated; pass options as arguments directly, e.g. `sample(model, cuda=TRUE, nsamples=100, nparticles=15, with="transform-obs-to-state")`.')
-    new_options <- option_list(options)
+    legacy_opts <- option_list(options)
+    legacy_opts[names(new_options)] <- new_options
+    new_options <- legacy_opts
   }
 
   if (!missing(sample_obs)) {
@@ -176,8 +177,7 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
   if (length(libbi_seed) > 0) new_options[["seed"]] <- libbi_seed
 
   ## check if 'model-file' is contained in any options
-  all_options <- option_list(getOption("libbi_args"), config_file_options, x$options, new_options, list(...))
-  updated_options <- c(names(args), names(new_options), names(config_file_options))
+  all_options <- option_list(getOption("libbi_args"), config_file_options, x$options, new_options)
 
   if ("model-file" %in% names(all_options)) {
     if (missing(model)) {
@@ -249,7 +249,7 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
 
   if (x$run_flag && length(x$output_file_name) == 1 &&
       file.exists(x$output_file_name)) {
-    init_file_given <- "init" %in% file_args || "init-file" %in% updated_options
+    init_file_given <- "init" %in% file_args || "init-file" %in% names(new_options)
     init_np_given <- "init-np" %in% names(new_options)
     init_given <- init_file_given || init_np_given
     if (missing(chain)) { ## if chain not specified, only chain if no init
