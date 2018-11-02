@@ -35,7 +35,7 @@ libbi <- function(model, path_to_libbi, dims, use_cache=TRUE, ...){
   new_obj <-
     structure(list(options=list(),
                    path_to_libbi=path_to_libbi,
-                   model=model,
+                   model=NULL,
                    model_file_name=character(0),
                    working_folder=character(0),
                    dims=libbi_dims,
@@ -57,9 +57,10 @@ libbi <- function(model, path_to_libbi, dims, use_cache=TRUE, ...){
 
   dot_options <- list(...)
   if ("norun" %in% names(dot_options) && dot_options[["norun"]]) {
+    new_obj$model <- model
     return(new_obj)
   } else {
-    return(do.call(run.libbi, c(list(x=new_obj, client=character(0)), dot_options)))
+    return(do.call(run.libbi, c(list(x=new_obj, model=model, client=character(0)), dot_options)))
   }
 }
 
