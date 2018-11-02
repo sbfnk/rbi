@@ -150,7 +150,7 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
   new_options <- list(...)
   if (!missing(options)) {
     warning('argument `options` is deprecated; pass options as arguments directly, e.g. `sample(model, cuda=TRUE, nsamples=100, nparticles=15, with="transform-obs-to-state")`.')
-    legacy_opts <- option_list(options)
+    legacy_opts <- do.call(option_list, options)
     legacy_opts[names(new_options)] <- new_options
     new_options <- legacy_opts
   }
@@ -158,15 +158,9 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
   if (!missing(sample_obs)) {
     warning('argument `sample_obs` is deprecated; please use the `sample_obs` function instead.', call. = FALSE)
     if (sample_obs) {
-      if ("without-transform-obs-to-state" %in% names(new_options)) {
-        stop("`sample_obs==TRUE` and `without-transform-obs-to-state` is set. This is contradictory.")
-      }
       new_options[["with-transform-obs-to-state"]] <- ""
     }
     if (!sample_obs) {
-      if ("without-transform-obs-to-state" %in% names(new_options)) {
-        stop("`sample_obs==FALSE` and `with-transform-obs-to-state` is set. This is contradictory.")
-      }
       new_options[["without-transform-obs-to-state"]] <- ""
     }
   }
