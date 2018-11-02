@@ -6,32 +6,24 @@
 #' synthetic dataset from a model. Parameters can be passed via the 'init' option
 #' (see \code{\link{run.libbi}}, otherwise they are generated from the prior specified
 #' in the model. The end time should be specified using the "end_time" option. If this is not given,
-#' only a parameter set is sampled.
-#' @param ... arguments to be passed to \code{\link{libbi}} and \code{\link{sample}}, especially 'model' and 'end_time'.
-#' @param seed random seed; see the seed option of \code{\link{sample}} for details.
+#' only a parameter set is sampled. Use the 'noutputs' or 'output_every' options
+#' to control the number of data points being generated. By default,
+#' output_every is set to 1.
+#' @param ... arguments to be passed to \code{\link{libbi}} and \code{\link{sample}}, especially 'model', 'end_time' and 'seed'.
+#' @inheritParams run
 #' @return generated data set
 #' @export
-bi_generate_dataset <- function(..., seed){
-  dot_options <- list(...)
-  if ("options" %in% dot_options) {
-    options <- dot_options[["options"]]
-  } else {
-    options <- list()
-  }
+bi_generate_dataset <- function(..., output_every=1){
 
-  if (any(grepl("^end[-_]time$", names(dot_options))) &&
-            !("noutputs" %in% names(dot_options))) {
-    dot_options[["noutputs"]] <- dot_options[["end_time"]]
-  }
+  options <- list(...)
 
   options[["target"]] <- "joint"
   options[["nsamples"]] <- 1
 
-  sample_options <- list()
-  if (!missing(seed)) sample_options[["seed"]] <- seed
-
-  bi_object <- do.call(libbi, c(options, dot_options))
-  bi_object <- do.call(sample, c(list(x=bi_object), sample_options))
+  if (!("noutputs" %in% names(options) && missing(output_every))) {
+    options[["output_every"]] <- output_every
+  }
+  bi_object <- do.call(sample, options)
 
   return(bi_object)
 }

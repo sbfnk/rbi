@@ -4,12 +4,12 @@
 \alias{bi_generate_dataset}
 \title{Bi Generate Dataset}
 \usage{
-bi_generate_dataset(..., seed)
+bi_generate_dataset(..., output_every = 1)
 }
 \arguments{
-\item{...}{arguments to be passed to \code{\link{libbi}} and \code{\link{sample}}, especially 'model' and 'end_time'.}
+\item{...}{arguments to be passed to \code{\link{libbi}} and \code{\link{sample}}, especially 'model', 'end_time' and 'seed'.}
 
-\item{seed}{random seed; see the seed option of \code{\link{sample}} for details.}
+\item{output_every}{real; if given, \code{noutputs} will be set so that there is output every \code{output_every} time steps; if set to 0, only generate an output at the final time}
 }
 \value{
 generated data set
@@ -19,5 +19,7 @@ This is a wrapper around \code{libbi sample --target joint --nsamples 1}, to gen
 synthetic dataset from a model. Parameters can be passed via the 'init' option
 (see \code{\link{run.libbi}}, otherwise they are generated from the prior specified
 in the model. The end time should be specified using the "end_time" option. If this is not given,
-only a parameter set is sampled.
+only a parameter set is sampled. Use the 'noutputs' or 'output_every' options
+to control the number of data points being generated. By default,
+output_every is set to 1.
 }
