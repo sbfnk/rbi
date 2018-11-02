@@ -20,14 +20,17 @@ test_that("libbi object with added output is functional",
 
 test_that("saved and re-read libbi object functional",
 {
+  writeLines("test", bi$log_file_name)
   filename <- tempfile(fileext=".rds")
   save_libbi(bi, filename)
   bi <- read_libbi(filename)
   res <- bi_read(bi, clear_cache=TRUE, thin=10, missval.threshold=1e20)
+
   expect_true(class(bi) == "libbi")
   expect_true(bi$run_flag)
   expect_true(length(bi$model[]) > 0)
   expect_true(is.list(res))
+  expect_output(print_log(bi), "test")
 })
 
 test_that("saved and re-read data frames are equal",

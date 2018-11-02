@@ -25,7 +25,7 @@
 
 \item{config}{path to a configuration file, containing multiple arguments}
 
-\item{log_file_name}{path to a file to text file to report the output of \code{LibBi}}
+\item{log_file_name}{path to a file to text file to report the output of \code{LibBi}; if set to an empty vector (\code{character(0)}) or an empty string (""), which is the default, a temporary log file will be generated}
 
 \item{init}{initialisation of the model, either supplied as a list of values and/or data frames, or a (netcdf) file name, or a \code{\link{libbi}} object which has been run (in which case the output of that run is used). If the object given as \code{x} has been run before, it will be used here with \code{init-np} set to the last iteration of the previous run, unless \code{init} is given explicitly.}
 

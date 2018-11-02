@@ -16,7 +16,7 @@
 
 \item{force}{attach the file even if one like this already exists in the libbi object}
 
-\item{...}{ignored}
+\item{...}{any options to \code{\link{bi_write}} (e.g., 'time_dim')}
 }
 \description{
 Adds an (output, obs, etc.) file to a \code{\link{libbi}} object. This is useful to recreate a \code{\link{libbi}} object from the model and output files of a previous run

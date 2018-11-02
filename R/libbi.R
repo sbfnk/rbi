@@ -46,6 +46,7 @@ libbi <- function(model, path_to_libbi, dims, use_cache=TRUE, ...){
                    command=character(0),
                    output_file_name=character(0),
                    log_file_name=character(0),
+                   user_log_file=FALSE,
                    timestamp=.POSIXct(NA),
                    run_flag=FALSE,
                    error_flag=FALSE,
@@ -71,7 +72,7 @@ run <- function(x, ...) UseMethod("run")
 #' @param fix any variable to fix, as a named vector
 #' @param options deprecated; pass options directly, see documentation for \code{...}
 #' @param config path to a configuration file, containing multiple arguments
-#' @param log_file_name path to a file to text file to report the output of \code{LibBi}
+#' @param log_file_name path to a file to text file to report the output of \code{LibBi}; if set to an empty vector (\code{character(0)}) or an empty string (""), which is the default, a temporary log file will be generated
 #' @param init initialisation of the model, either supplied as a list of values and/or data frames, or a (netcdf) file name, or a \code{\link{libbi}} object which has been run (in which case the output of that run is used). If the object given as \code{x} has been run before, it will be used here with \code{init-np} set to the last iteration of the previous run, unless \code{init} is given explicitly.
 #' @param input input of the model, either supplied as a list of values and/or data frames, or a (netcdf) file name, or a \code{\link{libbi}} object which has been run (in which case the output of that run is used as input)
 #' @param obs observations of the model, either supplied as a list of values and/or data frames, or a (netcdf) file name, or a \code{\link{libbi}} object which has been run (in which case the output of that run is used as observations)
@@ -351,8 +352,30 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
     }
   }
 
-  all_options <- option_list(getOption("libbi_args"), config_file_options,
-                             x$options, new_options, file_options, list(...))
+  all_options <-
+    option_list(getOption("libbi_args"), config_file_options,
+                x$options, new_options, file_options)
+
+  if (!("output-file" %in% names(all_options))) {
+    x$output_file_name <-
+      tempfile(pattern=paste(get_name(x$model), "output", sep = "_"),
+               fileext=".nc", tmpdir=absolute_path(x$working_folder))
+  } else {
+    x$output_file_name <- absolute_path(all_options[["output-file"]], getwd())
+  }
+
+  if (length(log_file_name) == 1 && log_file_name == "") {
+    log_file_name <- character(0)
+  }
+
+  if (!x$user_log_file || length(log_file_name) == 0) {
+    x$log_file_name <- tempfile(pattern="output", fileext=".txt",
+                                tmpdir=absolute_path(x$working_folder))
+    x$user_log_file <- FALSE
+  } else if (length(log_file_name) > 0) {
+    x$log_file_name <- absolute_path(filename=log_file_name, dirname=getwd())
+    x$user_log_file <- TRUE
+  }
 
   if (length(client) > 0)
   {
@@ -371,15 +394,8 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
       if (is_empty(x$model)) {
         stop("No model given.")
       }
-
-      if (!("output-file" %in% names(all_options))) {
-        x$output_file_name <-
-          tempfile(pattern=paste(get_name(x$model), "output", sep = "_"),
-                   fileext=".nc", tmpdir=absolute_path(x$working_folder))
-      } else {
-        x$output_file_name <- absolute_path(all_options[["output-file"]], getwd())
-      }
     }
+
     ## save options
     x$options <- all_options
     all_options[["output-file"]] <- x$output_file_name
@@ -405,13 +421,6 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
     verbose <- ("verbose" %in% names(all_options) && all_options[["verbose"]] == TRUE)
 
     run_args <- option_string(all_options)
-
-    if (missing(log_file_name) && !debug) {
-      x$log_file_name <- tempfile(pattern="output", fileext=".txt",
-                                  tmpdir=absolute_path(x$working_folder))
-    } else if (!missing(log_file_name)) {
-      x$log_file_name <- absolute_path(filename=log_file_name, dirname=getwd())
-    }
 
     if (length(x$path_to_libbi) == 0) {
       if (is.null(getOption("path_to_libbi"))) {
@@ -443,7 +452,7 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
       flush(con)
     }
     x$command <- paste(x$path_to_libbi, client, paste(run_args, collapse=" "))
-    if (debug) message(x$command)
+    cb_stdout(x$command)
     p <-
       tryCatch(processx::run(command=x$path_to_libbi, args=c(client, run_args),
                              error_on_status=FALSE, wd=x$working_folder,
@@ -601,7 +610,7 @@ attach_file <- function(x, ...) UseMethod("attach_file")
 #' @param file the type of the file to attach, one of "output", "obs", "input" or "init"
 #' @param data name of the file to attach, or a list of data frames that contain the outputs
 #' @param force attach the file even if one like this already exists in the libbi object
-#' @param ... ignored
+#' @param ... any options to \code{\link{bi_write}} (e.g., 'time_dim')
 #' @inheritParams bi_open
 #' @examples
 #' bi <- libbi(model = system.file(package="rbi", "PZ.bi"))
@@ -616,6 +625,7 @@ attach_file.libbi <- function(x, file, data, force=FALSE, ...){
   }
   if (length(target_file_name) > 0 &&
       nchar(target_file_name) > 0 &&
+      file.exists(target_file_name) && 
       !force) {
     stop("libbi object already contains ", file, " file; if you want to overwrite this,  use `force=TRUE`'")
   }
@@ -631,6 +641,10 @@ attach_file.libbi <- function(x, file, data, force=FALSE, ...){
     }
     if ("time_dim" %in% names(x)) {
       write_opts[["time_dim"]] <- x$time_dim
+    }
+    added_options <- list(...)
+    for (option_name in names(added_options)) {
+      write_opts[[option_name]] <- added_options[[option_name]]
     }
     do.call(bi_write, write_opts)
   }
@@ -697,6 +711,13 @@ save_libbi.libbi <- function(x, name, supplement, split = FALSE, ...) {
   }
 
   save_obj[["options"]] <- options
+
+  save_obj[["log"]] <- character(0)
+  if (length(x$log_file_name) > 0) {
+    if (file.exists(x$log_file_name)) {
+      save_obj[["log"]] <- readLines(x$log_file_name)
+    }
+  }
 
   if (!missing(supplement)) save_obj[["supplement"]] <- supplement
 
@@ -788,14 +809,17 @@ read_libbi <- function(name, join, ...) {
     }
   }
 
-  output_file_name <-
-    tempfile(pattern=paste(get_name(read_obj$model), "output", sep = "_"),
-             fileext=".nc")
-  bi_write(output_file_name, read_obj$output,
-           time_dim=libbi_options$time_dim)
-
   new_obj <- do.call(libbi, libbi_options)
-  new_obj <- attach_file(new_obj, file="output", data=output_file_name)
+
+  ## write output file
+  new_obj <- attach_file(new_obj, file="output",
+                         data=read_obj$output, time_dim=libbi_options$time_dim)
+
+  ## write log file
+  if ("log" %in% names(read_obj)) {
+    writeLines(read_obj[["log"]], new_obj$log_file_name)
+  }
+
   new_obj$supplement <- read_obj$supplement
 
   return(new_obj)
@@ -854,9 +878,9 @@ print.libbi <- function(x, verbose=FALSE, ...){
 #' @rdname print_log
 print_log <- function(x){
   if ("libbi" %in% class(x)) {
-    if (!("log_file_name" %in% names(x))) stop("'x' does not contain a log file")
+    if (!("log_file_name" %in% names(x)) || length(x$log_file_name) == 0) stop("'x' does not contain a log file")
     file_name <- x$log_file_name
-    if (!file.exists(file_name)) stop("Log file '", x$log_file_name, " does not seem to exist.")
+    if (!file.exists(file_name)) stop("Log file '", x$log_file_name, " does not exist.")
   } else if (is.character(x)) {
     if (file.exists(x)) {
       file_name <- x
@@ -869,7 +893,7 @@ print_log <- function(x){
   }
 
   lines <- readLines(file_name)
-  for (i in seq_along(lines)) message(lines[i])
+  for (i in seq_along(lines)) cat(lines[i], "\n")
 }
 
 #' @name summary

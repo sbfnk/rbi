@@ -71,6 +71,7 @@ test_that("we can run libbi and analyse results",
   expect_true(is.list(res))
   expect_true(is.list(pred_res))
   expect_output(print(bi, verbose=TRUE), "path to working")
+  expect_output(print_log(bi), "libbi")
   expect_equal(nrow(summary(bi)), 1)
   expect_equal(ncol(res$N), 4)
   expect_true(nrow(traces) > 0)
