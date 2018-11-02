@@ -34,7 +34,7 @@ model test {
 "
 
 model <- bi_model(lines = stringi::stri_split_lines(model_str)[[1]])
-bi <- libbi(model)
+bi <- libbi(model, dims=list(a=c("first", "second")))
 
 test_that("we can print an empty libbi object",
 {
@@ -44,26 +44,27 @@ test_that("we can print an empty libbi object",
 test_that("we can run libbi and analyse results",
 {
   skip_on_cran()
-  bi <- sample(bi, proposal="prior", start_time=0, nsamples=10, dry="run")
-  dataset <- bi_generate_dataset(model=model, end_time=50)
-  expect_true(nrow(bi_read(dataset)[["N"]]) > 0)
-  dataset <- bi_generate_dataset(model=model, end_time=50,
-                                 dims=list(a=c("first", "second")))
+  bi <- sample(bi, proposal="prior", start_time=0, nsamples=10, verbose=TRUE)
+  dry <- sample(bi, dry="run")
+  dataset <- bi_generate_dataset(bi, end_time=50, output_every=2)
+  dataset <- bi_generate_dataset(bi, end_time=50)
   dataset_r <- bi_read(dataset)
-  expect_true(nrow(bi_read(dataset)[["N"]]) > 0)
-  bi <- sample(model, obs=dataset_r, debug=TRUE, fix=c(e=0.5), nsamples=10, with="output-at-obs", without="gdb")
+  bi1 <- sample(bi, obs=dataset_r, debug=TRUE, fix=c(e=0.5), nsamples=10, with="output-at-obs", without="gdb")
   bi2 <- sample(bi, seed=1234, model_file=bi$model_file, obs=dataset, working_folder=bi$working_folder, with="transform-initial-to-param")
 
-  bi <- join(a=bi, b=bi2)
+  joined <- join(a=bi1, b=bi2)
   pred <- predict(bi, end_time=100)
+  so <- sample_obs(bi)
 
   res <- bi_read(bi)
   pred_res <- bi_read(pred, thin=2)
-
+  flat <- bi_read(so, flatten=TRUE)
   traces <- get_traces(bi, burnin=2)
 
   ll <- logLik(bi)
 
+  expect_true(nrow(bi_read(dataset)[["N"]]) > 0)
+  expect_true(nrow(bi_read(dataset)[["N"]]) > 0)
   expect_equal(class(bi), "libbi")
   expect_equal(class(pred), "libbi")
   expect_true(bi$run_flag)
@@ -74,6 +75,7 @@ test_that("we can run libbi and analyse results",
   expect_output(print_log(bi), "libbi")
   expect_equal(nrow(summary(bi)), 1)
   expect_equal(ncol(res$N), 4)
+  expect_true(nrow(flat) > 0)
   expect_true(nrow(traces) > 0)
   expect_true(is.numeric(ll))
 })
@@ -89,5 +91,13 @@ test_that("errors are recognised",
   skip_on_cran()
   expect_error(sample(bi, config="@dummy.conf"))
   expect_error(sample(bi, with="x", without="x"))
+})
+
+test_that("LibBi errors are caught",
+{
+    skip_on_cran()
+    erroneous_model <- bi$model
+    erroneous_model[2] <- "doodle"
+    expect_error(sample(bi, model=erroneous_model))
 })
 

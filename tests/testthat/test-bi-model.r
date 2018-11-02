@@ -13,6 +13,13 @@ test_that("empty models can be created",
   expect_true(is_empty(bi_model()))
 })
 
+test_that("outputs can be enabled",
+{
+    output_disabled <- PZ
+    output_disabled[6] <- "param mu (has_output=0)"
+    expect_false(any(grepl("has_output", enable_outputs(PZ))))
+})
+
 test_that("parameters can be fixed",
 {
   expect_true(length(fix(PZ, alpha=0, dummy=1)) > 0)
