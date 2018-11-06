@@ -6,20 +6,18 @@ PZ <- bi_model(filename = model_file_name)
 test_that("models can be created",
 {
   expect_true(length(PZ[]) > 0)
-})
-
-test_that("empty models can be created",
-{
   expect_true(is_empty(bi_model()))
+  expect_error(bi_model(filename=character(0)), "empty")
+  expect_error(bi_model(filename="test", lines="model x {}"), filename)
 })
 
 test_that("outputs can be enabled",
 {
-    output_disabled <- PZ
-    output_disabled[6] <- "param mu (has_output=0)"
-    expect_false(any(grepl("has_output", enable_outputs(output_disabled))))
-    expect_error(enable_outputs("test"), "bi_model")
-    expect_error(enable_outputs(PZ, type=c("all", "param")), "all")
+  output_disabled <- PZ
+  output_disabled[6] <- "param mu (has_output=0)"
+  expect_false(any(grepl("has_output", enable_outputs(output_disabled))))
+  expect_error(enable_outputs("test"), "bi_model")
+  expect_error(enable_outputs(PZ, type=c("all", "param")), "all")
 })
 
 test_that("parameters can be fixed",
@@ -109,11 +107,9 @@ test_that("variables can be converted to inputs",
     expect_true(any(grepl("input Z", to_input(PZ))))
 })
 
-test_that("simple errors are detected",
+test_that("unbalanced braces are detected",
 {
     unbalanced <- suppressWarnings(PZ[-12])
-    expect_error(bi_model(filename=character(0)), "empty")
-    expect_error(bi_model(filename="test", lines="model x {}"), filename)
     expect_warning(PZ[-12], "unbalanced")
     expect_warning(unbalanced, "unbalanced")
 })
