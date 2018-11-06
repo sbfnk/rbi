@@ -21,24 +21,19 @@ bi_open <- function(x, file = "output")
   } else if (class(x) == "ncdf4") {
     nc <- x
   } else if (class(x) == "libbi"){
-    if (!missing(file)) {
-      if (file == "output") {
-        assert_output(x)
-        filename <- x$output_file_name
-      } else {
-        opt_name <- paste(file, "file", sep="-")
-        if (!(opt_name %in% names(x$options))) {
-          stop("libbi object does not contain an '", file, "' file")
-        }
-        filename <- x$options[[opt_name]]
+    if (!(missing(file) || file == "output")) {
+      opt_name <- paste(file, "file", sep="-")
+      if (!(opt_name %in% names(x$options))) {
+        stop("libbi object does not contain an '", file, "' file")
       }
+      filename <- x$options[[opt_name]]
     } else {
       assert_output(x)
       filename <- x$output_file_name
     }
     nc <- nc_open(filename)
   } else {
-    stop("'read' must be a string or ncdf4.")
+    stop("'x' must be a 'character', 'ncdf4' or 'libbi' object.")
   }
 
   return(nc)
