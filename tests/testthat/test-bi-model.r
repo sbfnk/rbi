@@ -8,7 +8,7 @@ test_that("models can be created",
   expect_true(length(PZ[]) > 0)
   expect_true(is_empty(bi_model()))
   expect_error(bi_model(filename=character(0)), "empty")
-  expect_error(bi_model(filename="test", lines="model x {}"), filename)
+  expect_error(bi_model(filename="test", lines="model x {}"), "filename")
 })
 
 test_that("outputs can be enabled",
@@ -111,5 +111,5 @@ test_that("unbalanced braces are detected",
 {
     unbalanced <- suppressWarnings(PZ[-12])
     expect_warning(PZ[-12], "unbalanced")
-    expect_warning(unbalanced, "unbalanced")
+    expect_warning(capture.output(print(unbalanced)), "unbalanced")
 })

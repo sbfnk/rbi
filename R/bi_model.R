@@ -94,7 +94,9 @@ remove_vars <- function(x, vars) {
 to_input <- function(x, vars) {
 
   ## only consider state or noise variables
-  sn_vars <- var_names(x, vars=vars, type=c("state", "noise"))
+  var_names_args <- list(x, type=c("state", "noise"))
+  if (!missing(vars)) var_names_args[["vars"]] <- vars
+  sn_vars <- do.call(var_names, var_names_args)
   ## get full variable names, with dimensions
   dim_vars <- var_names(x, vars=sn_vars, dim=TRUE)
   names(dim_vars) <- sn_vars
@@ -348,7 +350,7 @@ insert_lines.bi_model <- function(x, lines, before, after, at_beginning_of, at_e
   if (length(arg_name) != 1) {
     stop("insert_lines needs exactly three arguments, 'x', 'lines' and one of 'before', 'after', 'at_beginning_of' or 'at_end_of'")
   }
-  arg <- args[[arg_name]]
+  arg <- eval.parent(args[[arg_name]])
   if (is.numeric(arg)) arg <- as.integer(arg)
 
   if (arg_name %in% c("before", "after") && is.integer(arg)) {
