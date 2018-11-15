@@ -665,7 +665,7 @@ var_names <- function(x, vars, type, dim = FALSE, opt = FALSE, aux = FALSE) {
 #' @description
 #' Get dimensions contained in a LibBi model and their sizes
 #'
-#' @param x a \code{\link{bi_model}} object
+#' @param model a \code{\link{bi_model}} object
 #' @param vars a character vector of variable names; if given, only these variables names will be considered
 #' @param type a character vector of one or more types
 #' @return list of dimensions (as names) and their sizes

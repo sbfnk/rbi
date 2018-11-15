@@ -7,11 +7,11 @@
 get_dims(model, vars, type)
 }
 \arguments{
+\item{model}{a \code{\link{bi_model}} object}
+
 \item{vars}{a character vector of variable names; if given, only these variables names will be considered}
 
 \item{type}{a character vector of one or more types}
-
-\item{x}{a \code{\link{bi_model}} object}
 }
 \value{
 list of dimensions (as names) and their sizes
