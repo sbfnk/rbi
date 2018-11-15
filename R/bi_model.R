@@ -666,11 +666,10 @@ var_names <- function(x, vars, type, dim = FALSE, opt = FALSE, aux = FALSE) {
 #' Get dimensions contained in a LibBi model and their sizes
 #'
 #' @param model a \code{\link{bi_model}} object
-#' @param vars a character vector of variable names; if given, only these variables names will be considered
 #' @param type a character vector of one or more types
 #' @return list of dimensions (as names) and their sizes
 #' @export
-get_dims <- function(model, vars, type)
+get_dims <- function(model, type)
 {
   dim_lines <-
     grep(paste0("^[[:space:]]*dim[[:space:]]+[A-z0-9_]+[[:space:]]*",
