@@ -93,6 +93,11 @@ bi_write <- function(filename, variables, timed, append=FALSE, time_dim, coord_d
     if (is.data.frame(element)) {
       element <- data.table(element)
       cols <- colnames(element)
+      ## attach numbers to duplicated columnns
+      duplicated_cols <- unique(cols[duplicated(cols)])
+      for (col in duplicated_cols) {
+        cols[cols==col] <- paste(col, seq_along(cols[cols==col]), sep=".")
+      }
       ## check
       if (!(value_column %in% colnames(element))) {
         stop("any elements of 'variables' that are a data frame must have a '", value_column, "' column")
