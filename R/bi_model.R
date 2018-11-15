@@ -603,10 +603,8 @@ add_block.bi_model <- function(x, name, lines, options, ...) {
   clean_model(x)
 }
 
-#' @export
-var_names <- function(x, ...) UseMethod("var_names")
 #' @name var_names
-#' @title Get variables
+#' @title Get variable names in a LibBi model
 #' @description
 #' Get variable names of one or more type(s)
 #'
@@ -617,12 +615,10 @@ var_names <- function(x, ...) UseMethod("var_names")
 #' @param dim logical; if set to TRUE, names will contain dimensions in brackets
 #' @param opt logical; if set to TRUE, names will contain options (e.g., has_output)
 #' @param aux logical; if set to TRUE, auxiliary names will be returned
-#' @param ... ignored
 #' @return variable names
 #' @rdname var_names
 #' @export
-var_names.bi_model <- function(x, vars, type, dim = FALSE, opt = FALSE,
-                               aux = FALSE, ...) {
+var_names <- function(x, vars, type, dim = FALSE, opt = FALSE, aux = FALSE) {
   names_vec <- c()
   if (missing(type)) {
     type <- c("param", "state", "input", "const", "obs", "noise")
@@ -653,11 +649,83 @@ var_names.bi_model <- function(x, vars, type, dim = FALSE, opt = FALSE,
       clean_name <- gsub("[[:space:]]", "", clean_name)
 
       ## add to vector
-      if (missing(vars) || clean_name %in% vars) names_vec <- c(names_vec, name)
+      if (missing(vars)) {
+        names_vec <- c(names_vec, name)
+      } else {
+        names_vec <- c(names_vec, name[clean_name %in% vars])
+      }
     }
   }
   if (!aux) names_vec <- grep("^__.*_$", names_vec, invert=TRUE, value=TRUE)
   return(names_vec)
+}
+
+#' @name get_dims
+#' @title Get dimensions in a LibBi model
+#' @description
+#' Get dimensions contained in a LibBi model and their sizes
+#'
+#' @param x a \code{\link{bi_model}} object
+#' @param vars a character vector of variable names; if given, only these variables names will be considered
+#' @param type a character vector of one or more types
+#' @return list of dimensions (as names) and their sizes
+#' @export
+get_dims <- function(model, vars, type)
+{
+  dim_lines <-
+    grep(paste0("^[[:space:]]*dim[[:space:]]+[A-z0-9_]+[[:space:]]*",
+                "\\([A-z0-9_]+\\)[[:space:]]*$"), model, value = TRUE)
+  const <- get_const(model)
+
+  retval <- list()
+
+  for (dim_line in dim_lines) {
+    line <-
+      sub(paste0("^[[:space:]]*dim[[:space:]]+([A-z0-9_]+)[[:space:]]*",
+                 "\\(([A-z0-9_]+)\\)[[:space:]]*$"), "\\1|\\2", dim_line)
+    dim_def <- strsplit(line, "\\|")[[1]]
+    if (dim_def[2] %in% names(const)) {
+      retval[[dim_def[1]]] <- const[[dim_def[2]]]
+    } else {
+      try_numeric <- suppressWarnings(as.numeric(dim_def[2]))
+      if (is.na(try_numeric)) {
+        stop("Can't determine size of dimension '", dim_def[1], ": ", dim_def[2])
+      } else {
+        retval[[dim_def[1]]] <- try_numeric
+      }
+    }
+  }
+  return(retval)
+}
+
+#' @name get_const
+#' @title Get constants in a LibBi model
+#' @description
+#' Get constants contained in a LibBi model and their values. This will attempt to evaluate any calculation on the right hand side. Failing that, it will be returned verbatim.
+#'
+#' @param model a \code{\link{bi_model}} object
+#' @return list of constants (as names) and their values
+#' @export
+get_const <- function(model) {
+  const_lines <-
+    grep("^[[:space:]]*const[[:space:]].*=[[:space:]]*[A-z0-9_]+[[:space:]]*$",
+         model, value = TRUE)
+  retval <- list()
+  for (const_line in const_lines) {
+    line <-
+      gsub(" ", "", sub("^[[:space:]]*const[[:space:]]*", "", const_line))
+    assignment <- strsplit(line, "=")[[1]]
+    retval[assignment[1]] <- NA_character_
+    tryCatch(
+    {
+      retval[[assignment[1]]] <- eval(parse(text = assignment[2]))
+    },
+    error = function(cond)
+    {
+      retval[[assignment[1]]] <- assignment[2]
+    })
+  }
+  return(retval)
 }
 
 #' @title Print the lines of a LibBi model

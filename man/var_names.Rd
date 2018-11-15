@@ -2,11 +2,9 @@
 % Please edit documentation in R/bi_model.R
 \name{var_names}
 \alias{var_names}
-\alias{var_names.bi_model}
-\title{Get variables}
+\title{Get variable names in a LibBi model}
 \usage{
-\method{var_names}{bi_model}(x, vars, type, dim = FALSE, opt = FALSE,
-  aux = FALSE, ...)
+var_names(x, vars, type, dim = FALSE, opt = FALSE, aux = FALSE)
 }
 \arguments{
 \item{x}{a \code{\link{bi_model}} object}
@@ -20,8 +18,6 @@
 \item{opt}{logical; if set to TRUE, names will contain options (e.g., has_output)}
 
 \item{aux}{logical; if set to TRUE, auxiliary names will be returned}
-
-\item{...}{ignored}
 }
 \value{
 variable names
