@@ -458,7 +458,7 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
       flush(con)
     }
     cb_stderr <- function(line, proc) {
-      if (debug || (verbose && grepl("\\.\\.\\.$", line))) message(line)
+      if (debug || (verbose && grepl("(^[0-9]+:|\\.\\.\\.$)", line))) message(line)
       writeLines(line, con)
       flush(con)
     }
