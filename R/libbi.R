@@ -326,8 +326,7 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
                  fileext=".nc",
                  tmpdir=absolute_path(x$working_folder))
       write_opts <- list(filename = arg_file_name,
-                         variables = arg,
-                         timed = TRUE)
+                         variables = arg)
       if (!missing(time_dim)) {
         x$time_dim <- time_dim
       }

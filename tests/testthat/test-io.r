@@ -52,16 +52,16 @@ test_that("saved and re-read data frames are equal",
 {
   df <- data.frame(a=c(0, 0, 1, 1), time=c(0, 1, 0, 1), value=c(7, 5, 8, 0))
   tf <- tempfile()
-  bi_write(tf, list(test=df))
+  dims <- bi_write(tf, list(test=df))
   df_read <- bi_read(paste0(tf, ".nc"))$test
   expect_equal(df_read, df)
 
-  test_values <- c(0, 4, 5, 6)
-  bi_write(tf, list(test=test_values))
+  test_value <- c(1.23)
+  dims <- bi_write(tf, list(test=test_value))
   nc <- ncdf4::nc_open(paste0(tf, ".nc"))
-  df_read <- bi_read(nc)$test
+  vec_read <- bi_read(nc)$test
   ncdf4::nc_close(nc)
-  expect_equal(df_read$value, test_values)
+  expect_lt(abs(vec_read - test_value), 1e-7)
 })
 
 test_that("basic I/O functions work", 

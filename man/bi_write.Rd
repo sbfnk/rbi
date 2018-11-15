@@ -2,9 +2,11 @@
 % Please edit documentation in R/bi_write.R
 \name{bi_write}
 \alias{bi_write}
-\title{Create (init or observation) files for LibBi}
+\title{Create (e.g., init or observation) files for LibBi}
 \usage{
-bi_write(filename, variables, timed, ...)
+bi_write(filename, variables, timed, append = FALSE, time_dim,
+  coord_dims, dim_factors, value_column = "value", guess_time = FALSE,
+  guess_coord = FALSE, verbose)
 }
 \arguments{
 \item{filename}{a path to a NetCDF file to write the variables into, which
@@ -13,18 +15,45 @@ to the file name}
 
 \item{variables}{a \code{list} object, the names of which should be the variable names and values should be either single values or data frames}
 
-\item{timed}{if TRUE, any elements of \code{variables} that are vectors will be assumed to have a time dimension}
+\item{timed}{deprecated; timed variables should be given as data frames}
 
-\item{...}{arguments passed to \code{\link{netcdf_create_from_list}}}
+\item{append}{if TRUE, will append variables if file exists (default: FALSE)}
+
+\item{time_dim}{the name of the time dimension, if one exists; default: "time"}
+
+\item{coord_dims}{the names of the coordinate dimension, if any; should be a named list of character vectors, they are matched to variables names}
+
+\item{dim_factors}{factors that dimensions have; this corresponds to the \code{dims} element of a \code{\link{libbi}} object}
+
+\item{value_column}{if any \code{variables} are data frames, which column contains the values (default: "value")}
+
+\item{guess_time}{whether to guess time dimension; this would be a numerical column in the data frame given which is not the \code{value_column}; only one such column must exist}
+
+\item{guess_coord}{whether to guess the coordinate dimension; this would be a column with varying value which is not the time or value column}
+
+\item{verbose}{if TRUE, will print variables as they are read}
 }
 \value{
-None, but creates a NetCDF file at the specified path.
+A list of the time and coord dims, and factors in extra dimensions, if any
 }
 \description{
-This function creates a NetCDF file for LibBi from the given list of vectors
-  and/or data frames. Since any files can be passed to \code{\link{libbi}}
-  directly via the \code{init}, \code{input} and \code{obs} options, this is
-  mostly used internally, this is mostly used internally.
+This function creates (or appends to) a NetCDF file for LibBi from the given
+  list of vectors and/or data frames. Since any files can be passed to
+  \code{\link{libbi}} directly via the \code{init}, \code{input} and
+  \code{obs} options, this is mostly used internally, this is mostly used
+  internally.
+}
+\details{
+The list of variables must follow the following rules. Each element
+of the list must itself be one of:
+
+1) a data frame with a \code{value_column} column (see option 'value_column') and any number of other
+columns indicating one or more dimensions
+
+2) a numeric vector of length one, with no dimensions
+
+The name of the list elements itself is used to create the
+corresponding variable in the NetCDF file.
 }
 \examples{
 filename <- tempfile(pattern="dummy", fileext=".nc")
