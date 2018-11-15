@@ -34,7 +34,7 @@
 #' corresponding variable in the NetCDF file.
 #'
 #' @return A list of the time and coord dims, and factors in extra dimensions, if any
-#' @importFrom ncdf4 nc_close ncdim_def ncvar_def nc_create ncvar_put
+#' @importFrom ncdf4 nc_close ncdim_def ncvar_def nc_create ncvar_put ncvar_add
 #' @examples
 #' filename <- tempfile(pattern="dummy", fileext=".nc")
 #' a <- 3
