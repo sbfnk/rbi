@@ -366,14 +366,6 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
     option_list(getOption("libbi_args"), config_file_options,
                 x$options, new_options, file_options)
 
-  if (!("output-file" %in% names(all_options))) {
-    x$output_file_name <-
-      tempfile(pattern=paste(get_name(x$model), "output", sep = "_"),
-               fileext=".nc", tmpdir=absolute_path(x$working_folder))
-  } else {
-    x$output_file_name <- absolute_path(all_options[["output-file"]], getwd())
-  }
-
   if (length(log_file_name) == 1 && log_file_name == "") {
     log_file_name <- character(0)
   }
@@ -403,6 +395,14 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
       ## check that model is not empty
       if (is_empty(x$model)) {
         stop("No model given.")
+      }
+
+      if (!("output-file" %in% names(all_options))) {
+        x$output_file_name <-
+          tempfile(pattern=paste(get_name(x$model), "output", sep = "_"),
+                   fileext=".nc", tmpdir=absolute_path(x$working_folder))
+      } else {
+        x$output_file_name <- absolute_path(all_options[["output-file"]], getwd())
       }
     }
 
