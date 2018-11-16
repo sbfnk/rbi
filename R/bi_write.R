@@ -296,11 +296,11 @@ bi_write <- function(filename, variables, timed, append=FALSE, time_dim, coord_d
 
   if (append && file.exists(filename)) {
     nc <- nc_open(filename, write=TRUE)
-    for (name in names(vars)) nc <- ncvar_add(nc, vars[[name]])
+    existing_vars <- unname(vapply(nc[["var"]], function(y) { y[["name"]] }, ""))
+    for (name in setdiff(names(vars), existing_vars)) nc <- ncvar_add(nc, vars[[name]])
   } else {
     nc <- nc_create(filename, vars)
   }
-  existing_vars <- unname(vapply(nc[["var"]], function(y) { y[["name"]] }, ""))
 
   for (name in names(vars)) {
     if (!missing(verbose) && verbose)
