@@ -4,12 +4,10 @@
 \alias{get_dims}
 \title{Get dimensions in a LibBi model}
 \usage{
-get_dims(model, vars, type)
+get_dims(model, type)
 }
 \arguments{
 \item{model}{a \code{\link{bi_model}} object}
-
-\item{vars}{a character vector of variable names; if given, only these variables names will be considered}
 
 \item{type}{a character vector of one or more types}
 }
