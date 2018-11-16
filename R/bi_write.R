@@ -296,7 +296,7 @@ bi_write <- function(filename, variables, timed, append=FALSE, time_dim, coord_d
 
   if (append && file.exists(filename)) {
     nc <- nc_open(filename, write=TRUE)
-    for (name in names(vars)) ncvar_add(nc, vars[[name]])
+    for (name in names(vars)) nc <- ncvar_add(nc, vars[[name]])
   } else {
     nc <- nc_create(filename, vars)
   }
