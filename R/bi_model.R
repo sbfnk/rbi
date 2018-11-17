@@ -137,23 +137,22 @@ to_input <- function(x, vars) {
 enable_outputs <- function(x, type="all") {
   if (!("bi_model") %in% class(x)) stop("'x' must be a 'bi_model' object.")
   if (length(type) > 1 && "all" %in% type) stop("'type=\"all\"' only makes sense on its own")
-  no_output_pattern <- "[[:space:]]*has_output[[:space:]]*=[[:space:]]*0[[:space:]]*"
-  no_output <- grep(no_output_pattern, x)
-  if (length(no_output) > 0) {
-    no_output_lines <- x[no_output]
-    type_pattern <-
-      ifelse("all" %in% type, "", paste0("(", paste(type, collapse="|"),")"))
-    type_filtered <- grep(paste0("^[[:space:]]*", type_pattern), x[no_output])
-    if (length(type_filtered) > 0) {
-      no_output <- no_output[type_filtered]
-      updated_lines <- sub(no_output_pattern, "", x[no_output])
-      updated_lines <- gsub(",,", ",", updated_lines)
-      updated_lines <- gsub("\\(,", "(", updated_lines)
-      updated_lines <- gsub(",\\)", ")", updated_lines)
-      updated_lines <- sub("[[:space:]]*\\(\\)", "", updated_lines)
-      x[no_output] <- updated_lines
-    }
-  }
+  if ("all" %in% type) type <- c("param", "state", "noise")
+  opt_vars <- var_names(x, type=type, opt=TRUE)
+  no_output_pattern <-
+    "([[:space:](,])(has_output[[:space:]]*=[[:space:]]*0[[:space:]]*)([,)])"
+  no_output <- grep(no_output_pattern, opt_vars)
+  noopt_nooutput_vars <- var_names(x, type=type)[no_output]
+  var_lines <-
+    grep(paste0("^[[:space:]]*(", paste(type, collapse="|"),")[[:space:]]*(",
+                paste(noopt_nooutput_vars, collapse="|"), ")[[:space:]([]"), x)
+
+  updated_lines <- sub(no_output_pattern, "\\1\\3", x[var_lines])
+  updated_lines <- gsub(",,", ",", updated_lines)
+  updated_lines <- gsub("\\(,", "(", updated_lines)
+  updated_lines <- gsub(",\\)", ")", updated_lines)
+  updated_lines <- sub("[[:space:]]*\\(\\)", "", updated_lines)
+  x[var_lines] <- updated_lines
   return(clean_model(x))
 }
 
