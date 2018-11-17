@@ -473,7 +473,8 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
     if (p$status != 0) {
       error_lines <- strsplit(p$stderr,  "\n")[[1]]
       error_msg <-
-        sub("\\n$", "", grep("(Error |failed\\.$)", error_lines, value=TRUE))
+        sub("^[[:space:]]+", "", ## remove leading spaces
+	    sub("\\n$", "", grep("(Error |failed\\.$)", error_lines, value=TRUE)))
       stop_msg <-
         paste0("LibBi terminated with \"", error_msg[length(error_msg)], "\".")
       if (length(x$log_file_name) > 0) {
