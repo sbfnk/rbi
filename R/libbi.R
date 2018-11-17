@@ -43,6 +43,7 @@ libbi <- function(model, path_to_libbi, dims, use_cache=TRUE, ...){
                    coord_dims=NULL,
                    thin=1,
                    output_every=NA_real_,
+                   debug=FALSE,
                    command=character(0),
                    output_file_name=character(0),
                    log_file_name=character(0),
@@ -144,8 +145,10 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
   if (!missing(output_all)) warning("'output_all' is deprecated. Use 'debug=TRUE'.")
   proposal <- match.arg(proposal)
 
+  ## assign stored arguments
   if (!missing(thin)) x$thin <- thin
   if (!missing(output_every)) x$output_every <- output_every
+  if (!missing(debug)) x$debug <- debug
 
   new_options <- list(...)
   if (!missing(options)) {
@@ -412,7 +415,7 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
 
     save_model <- x$model
 
-    if (debug) x$model <- enable_outputs(x$model)
+    if (x$debug) x$model <- enable_outputs(x$model)
 
     if (proposal == "prior") {
       x$model <- propose_prior(x$model)
@@ -427,7 +430,7 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
 
     if (client == "rewrite") all_options <- all_options["model-file"]
 
-    if (debug) all_options[["verbose"]] <- TRUE
+    if (x$debug) all_options[["verbose"]] <- TRUE
     verbose <- ("verbose" %in% names(all_options) && all_options[["verbose"]] == TRUE)
 
     run_args <- option_string(all_options)
@@ -452,12 +455,12 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
     if (verbose) message("Launching LibBi...")
     con <- file(ifelse(length(x$log_file_name) == 0, "", x$log_file_name), open="w+")
     cb_stdout <- function(line, proc) {
-      if (debug) message(line)
+      if (x$debug) cat(line, "\n")
       writeLines(line, con)
       flush(con)
     }
     cb_stderr <- function(line, proc) {
-      if (debug || (verbose && grepl("(^[0-9]+:|\\.\\.\\.$)", line))) message(line)
+      if (x$debug || (verbose && grepl("(^[0-9]+:|\\.\\.\\.$)", line))) cat(line, "\n")
       writeLines(line, con)
       flush(con)
     }
@@ -710,7 +713,8 @@ save_libbi.libbi <- function(x, name, supplement, split = FALSE, ...) {
                    internals=list(dims=x$dims,
                              time_dim=x$time_dim,
                              coord_dims=x$coord_dims,
-                             output_every=x$output_every),
+                             output_every=x$output_every,
+			     debug=x$debug),
                    supplement=x$supplement,
                    output=bi_read(x))
 
