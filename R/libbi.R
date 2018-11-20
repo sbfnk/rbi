@@ -714,7 +714,7 @@ save_libbi.libbi <- function(x, name, supplement, split = FALSE, ...) {
                              time_dim=x$time_dim,
                              coord_dims=x$coord_dims,
                              output_every=x$output_every,
-			     debug=x$debug),
+                             debug=x$debug),
                    supplement=x$supplement,
                    output=bi_read(x))
 
