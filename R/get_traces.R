@@ -41,7 +41,12 @@ get_traces <- function(x, model, burnin, all = FALSE, ...) {
     if (missing(model)) {
       stop("Either 'all' must be set to TRUE, or a model given (implicitly via the 'x' or explicitly via 'model' options)")
     } else {
-      read_options <- c(read_options, list(type = "param"))
+      types <- "param"
+      if ("libbi" %in% class(x) &&
+            "with-transform-initial-to-param" %in% names(x$options)) {
+        types <- c(types, "state")
+      }
+      read_options <- c(read_options, list(type = types))
     }
   }
 
@@ -62,6 +67,10 @@ get_traces <- function(x, model, burnin, all = FALSE, ...) {
   }
 
   wide_list <- lapply(names(res), function(param) {
+    if ("time" %in% colnames(res[[param]])) {
+      res[[param]] <- res[[param]][res[[param]]$time == min(res[[param]]$time), ]
+      res[[param]][["time"]] <- NULL
+    }
     extra.dims <- setdiff(colnames(res[[param]]), c("np", "param", "value"))
     if (length(extra.dims) > 0) {
       df <-
