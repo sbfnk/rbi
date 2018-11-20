@@ -4,10 +4,12 @@
 \alias{bi_contents}
 \title{Bi contents}
 \usage{
-bi_contents(read)
+bi_contents(read, ...)
 }
 \arguments{
 \item{read}{either a path to a NetCDF file, or a NetCDF connection created using \code{nc_open}, or a \code{\link{libbi}} object from which to read the output}
+
+\item{...}{any parameters for \code{\link{bi_open}} (especially "file")}
 }
 \value{
 vector of variable names
