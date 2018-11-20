@@ -25,7 +25,7 @@ bi_read(x, vars, dims, model, type, file, missval.threshold, coord_dims,
 
 \item{coord_dims}{any \code{coord} dimensions, given as a named list of character vectors, where each element corresponds to the variable of the same name, and the character vector are the \code{coord} dimensions}
 
-\item{vector}{if TRUE, will return results as vectors, not data.frames}
+\item{vector}{deprecated; if TRUE, will return results as vectors, not data.frames}
 
 \item{thin}{thinning (keep only 1/thin of samples)}
 

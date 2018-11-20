@@ -15,7 +15,7 @@
 #' @param file which file to read (if \code{x} is given as a \code{\link{libbi}} object): one of "output" (default), "init", "input", "obs"
 #' @param missval.threshold upper threshold for the likelihood
 #' @param coord_dims any \code{coord} dimensions, given as a named list of character vectors, where each element corresponds to the variable of the same name, and the character vector are the \code{coord} dimensions
-#' @param vector if TRUE, will return results as vectors, not data.frames
+#' @param vector deprecated; if TRUE, will return results as vectors, not data.frames
 #' @param thin thinning (keep only 1/thin of samples)
 #' @param verbose if TRUE, will print variables as they are read
 #' @param clear_cache if TRUE, will clear the cache and re-read the file even if cached data exists
@@ -282,13 +282,13 @@ bi_read <- function(x, vars, dims, model, type, file, missval.threshold, coord_d
       }
 
       if (!missing(vector) && vector) {
-        res[[var_name]] <- mav$value
+        warning("'vector' is deprecated. Will return data frame")
+      }
+
+      if (data.table::is.data.table(mav)){
+        res[[var_name]] <- setDF(mav)
       } else {
-        if (data.table::is.data.table(mav)){
-          res[[var_name]] <- setDF(mav)
-        } else {
-          res[[var_name]] <- mav
-        }
+        res[[var_name]] <- mav
       }
     }
   }
