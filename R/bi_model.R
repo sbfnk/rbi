@@ -655,7 +655,7 @@ var_names <- function(x, vars, type, dim = FALSE, opt = FALSE, aux = FALSE) {
       }
     }
   }
-  if (!aux) names_vec <- grep("^__.*_$", names_vec, invert=TRUE, value=TRUE)
+  if (!aux) names_vec <- grep("^__", names_vec, invert=TRUE, value=TRUE)
   return(names_vec)
 }
 
