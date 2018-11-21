@@ -752,7 +752,7 @@ print.bi_model <- function(x, spaces=2, screen=TRUE, ...) {
     indent <- 0
     for (i in seq_along(x)) {
       if (grepl("\\}", x[i])) indent <- indent - 1
-      indent_spaces <- paste(rep(" ", indent * spaces), collapse = "")
+      indent_spaces <- paste(rep(" ", max(0, indent * spaces)), collapse = "")
       vec <- c(vec, paste0(indent_spaces, x[i]))
       if (grepl("\\{", x[i])) {
         indent <- indent + 1
