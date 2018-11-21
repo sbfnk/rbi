@@ -446,23 +446,23 @@ remove_lines.bi_model <- function(x, what, only, type=c("all", "assignment", "sa
 
   ## check if we don't want to remove everything
   if (length(to_remove) > 0 && (type != "all" || !missing(only))) {
-      if (type == "all") {
-          op_types <- unlist(operators)
-      } else {
-          op_types <- operators[[type]]
-      }
-      pattern <-
-        paste0("^(const)?[[:space:]]?([A-Za-z_0-9[\\]]*)[[:space:]]*(",
-               paste(op_types, collapse="|"), ")")
-      assign_lines <- grep(pattern, x[to_remove], perl=TRUE)
-      assign_vars <- sub(paste0(pattern, ".*$"), "\\2",
-                         x[to_remove][assign_lines], perl=TRUE)
-      assign_vars <- sub("\\[.*]", "", assign_vars)
-      if (!missing(only)) assign_lines <- assign_lines[which(!(assign_vars %in% only))]
-      if (length(assign_lines) > 0) {
-        assign_lines <- c(1, assign_lines, length(to_remove))
-        to_remove <- to_remove[-assign_lines]
-      }
+    if (type == "all") {
+      op_types <- unlist(operators)
+    } else {
+      op_types <- operators[[type]]
+    }
+    pattern <-
+      paste0("^(const)?[[:space:]]*([A-Za-z_0-9[\\]][[:space:]A-Za-z_0-9,[\\]]*)",
+             "(", paste(op_types, collapse="|"), ")")
+    assign_lines <- grep(pattern, x[to_remove], perl=TRUE)
+    assign_vars <- sub(paste0(pattern, ".*$"), "\\2",
+                       x[to_remove][assign_lines], perl=TRUE)
+    assign_vars <- sub("[[:space:]]", "", sub("\\[.*]", "", assign_vars))
+    if (!missing(only)) assign_lines <- assign_lines[assign_vars %in% only]
+    if (is.character(what) && length(assign_lines) == length(to_remove) - 2) {
+      assign_lines <- c(1, assign_lines, length(to_remove))
+    }
+    to_remove <- to_remove[assign_lines]
   }
 
   if (length(to_remove) > 0) {
