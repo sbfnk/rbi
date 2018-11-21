@@ -740,6 +740,7 @@ get_const <- function(model) {
 #' @keywords internal
 #' @export
 print.bi_model <- function(x, spaces=2, screen=TRUE, ...) {
+  x <- clean_model(x)
   if (screen) {
     cat("bi_model:\n")
     cat("=========\n")
@@ -750,13 +751,7 @@ print.bi_model <- function(x, spaces=2, screen=TRUE, ...) {
     vec <- c()
     indent <- 0
     for (i in seq_along(x)) {
-      if (grepl("\\}", x[i])) {
-        if (indent > 0) {
-          indent <- indent - 1
-        } else {
-          warning("There seems to be a pair of unbalanced braces")
-        }
-      }
+      if (grepl("\\}", x[i])) indent <- indent - 1
       indent_spaces <- paste(rep(" ", indent * spaces), collapse = "")
       vec <- c(vec, paste0(indent_spaces, x[i]))
       if (grepl("\\{", x[i])) {
