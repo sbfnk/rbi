@@ -102,7 +102,7 @@ bi_read <- function(x, vars, dims, model, type, file, missval.threshold, coord_d
         nc_var_names[["time"]] <- character(0)
         nc_var_names[["other"]] <- vars
       } else {
-        warning("Variable(s) ", missing_vars, " not found")
+        warning("Variable(s) ", paste(missing_vars, collapse=", "), " not found")
       }
     }
     nc_var_names[["other"]] <- intersect(vars, nc_var_names[["other"]])
