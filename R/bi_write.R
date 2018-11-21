@@ -158,6 +158,7 @@ bi_write <- function(filename, variables, timed, append=FALSE, time_dim, coord_d
           nr_table <- unique(nr_table[, setdiff(colnames(nr_table), "ns"), with = FALSE])
           var_dims <- c(list(ns_dim), var_dims)
           names(var_dims)[1] <- "ns"
+          present_index_cols <- setdiff(present_index_cols, "ns")
         }
         if (nrow(nr_table) > 0) {
           nr_index <- paste("nr", name, sep = "_")
