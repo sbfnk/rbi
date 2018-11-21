@@ -1063,13 +1063,15 @@ sample_obs <- function(x, ...) {
     stop("'x' must bee a 'libbi' object")
   }
 
+  out <- bi_read(x)
+
   ## remove transition
   sample_model <- remove_lines(x$model, "transition")
   ## convert input states to inputs
   sample_model <- to_input(sample_model, names(out))
 
   ## add outputs to inputs
-  x <- attach(x, file="input", bi_read(x), append=TRUE)
+  x <- attach_data(x, file="input", out, append=TRUE)
 
   pr <- predict(x, model=sample_model, with="transform-obs-to-state", ...)
   return(pr)
