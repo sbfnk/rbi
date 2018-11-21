@@ -2,10 +2,10 @@
 % Please edit documentation in R/libbi.R
 \name{attach}
 \alias{attach}
-\alias{attach.libbi}
+\alias{attach_data.libbi}
 \title{Attach a new file or data set to a \code{\link{libbi}} object}
 \usage{
-\method{attach}{libbi}(x, file, data, replace = FALSE, ...)
+\method{attach_data}{libbi}(x, file, data, replace = FALSE, ...)
 }
 \arguments{
 \item{x}{a \code{\link{libbi}} object}

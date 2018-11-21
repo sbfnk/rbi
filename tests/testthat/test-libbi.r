@@ -39,7 +39,7 @@ bi <- libbi(model, dims=list(a=c("first", "second")))
 
 PZ <- libbi(model = system.file(package="rbi", "PZ.bi"))
 example_output_file <- system.file(package="rbi", "example_output.nc")
-PZ <- attach_file(PZ, "output", example_output_file)
+PZ <- attach_data(PZ, "output", example_output_file)
 
 test_that("we can print an empty libbi object",
 {

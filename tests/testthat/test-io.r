@@ -2,15 +2,15 @@ context("Testing saving and retrieving libbi objects")
 
 bi <- libbi(model = system.file(package="rbi", "PZ.bi"))
 example_output_file <- system.file(package="rbi", "example_output.nc")
-bi <- attach_file(bi, "output", example_output_file)
-bi <- attach_file(bi, file="init", bi_read(bi, vars=c("mu", "sigma")))
+bi <- attach_data(bi, "output", example_output_file)
+bi <- attach_data(bi, file="init", bi_read(bi, vars=c("mu", "sigma")))
 
 nc <- nc_open(bi$output_file_name)
 
 test_that("we can't add output twice'",
 {
-  expect_error(attach_file(bi, "output", example_output_file))
-  expect_equal(class(attach_file(bi, "output", example_output_file, force=TRUE)), "libbi")
+  expect_error(attach_data(bi, "output", example_output_file))
+  expect_equal(class(attach_data(bi, "output", example_output_file, replace=TRUE)), "libbi")
 })
 
 test_that("libbi object with added output is functional",

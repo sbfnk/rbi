@@ -614,7 +614,7 @@ rewrite.bi_model <- function(x, ...){
 }
 
 #' @export
-attach <- function(x, ...) UseMethod("attach")
+attach_data <- function(x, ...) UseMethod("attach_data")
 #' @name attach
 #' @rdname attach
 #' @title Attach a new file or data set to a \code{\link{libbi}} object
@@ -631,7 +631,7 @@ attach <- function(x, ...) UseMethod("attach")
 #' example_output_file <- system.file(package="rbi", "example_output.nc")
 #' bi <- attach(bi, "output", example_output_file)
 #' @export
-attach.libbi <- function(x, file, data, replace=FALSE, ...){
+attach_data.libbi <- function(x, file, data, replace=FALSE, ...){
 
   if (file == "output") {
     target_file_name <- x[["output_file_name"]]
@@ -684,7 +684,7 @@ attach.libbi <- function(x, file, data, replace=FALSE, ...){
 }
 
 #' @export
-attach_file <- function(x, ...) UseMethod("attach")
+attach_file <- function(x, ...) UseMethod("attach_file")
 #' @name attach_file
 #' @rdname attach_file
 #' @title Deprecated (use 'attach' instead). Attach a new file or data set to a \code{\link{libbi}} object
@@ -700,6 +700,7 @@ attach_file <- function(x, ...) UseMethod("attach")
 #' bi <- libbi(model = system.file(package="rbi", "PZ.bi"))
 #' example_output_file <- system.file(package="rbi", "example_output.nc")
 #' bi <- attach_file(bi, "output", example_output_file)
+#' @keywords internal
 #' @export
 attach_file.libbi <- function(x, file, data, force=FALSE, ...){
 
@@ -901,8 +902,9 @@ read_libbi <- function(name, join, ...) {
   new_obj <- do.call(libbi, libbi_options)
 
   ## write output file
-  new_obj <- attach_file(new_obj, file="output",
-                         data=read_obj$output, time_dim=libbi_options$time_dim)
+  new_obj <-
+    attach_data(new_obj, file="output",
+                data=read_obj$output, time_dim=libbi_options$time_dim)
 
   ## write log file
   if ("log" %in% names(read_obj)) {
@@ -1106,7 +1108,7 @@ join.libbi <- function(x, ...) {
       output[[var]] <- NULL
     }
   }
-  attach(x, file="output", output, replace=TRUE)
+  attach_data(x, file="output", output, replace=TRUE)
 }
 
 #' @rdname logLik
