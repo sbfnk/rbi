@@ -435,23 +435,7 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
 
     run_args <- option_string(all_options)
 
-    if (length(x$path_to_libbi) == 0) {
-      if (is.null(getOption("path_to_libbi"))) {
-        # Maybe the system knows where libbi is
-        x$path_to_libbi <- Sys.which("libbi")
-      } else {
-        x$path_to_libbi <- getOption("path_to_libbi")
-      }
-      if (length(x$path_to_libbi) == 0){
-        stop("Could not locate LibBi, please either provide the path to the libbi binary via the 'path_to_libbi' option, or set the PATH to contain the directory that contains the binary in ~/.Renviron or set it in your R session via options(path_to_libbi = \"insert_path_here\"). For instructions on how to install libbi, look at the RBi github page on https://github.com/libbi/rbi.")
-      }
-    }
-    if (!grepl("libbi$", x$path_to_libbi)) {
-      x$path_to_libbi <- paste0(x$path_to_libbi, "/libbi")
-    }
-    if (!file.exists(x$path_to_libbi)) {
-      stop("Could not find libbi executable ", x$path_to_libbi)
-    }
+    x$path_to_libbi <- locate_libbi(x$path_to_libbi)
     if (verbose) message("Launching LibBi...")
     con <- file(ifelse(length(x$log_file_name) == 0, "", x$log_file_name), open="w+")
     cb_stdout <- function(line, proc) {
