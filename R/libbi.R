@@ -455,7 +455,7 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
     if (verbose) message("Launching LibBi...")
     con <- file(ifelse(length(x$log_file_name) == 0, "", x$log_file_name), open="w+")
     cb_stdout <- function(line, proc) {
-      if (x$debug) cat(line, "\n")
+      if (x$debug || client == "rewrite") cat(line, "\n")
       writeLines(line, con)
       flush(con)
     }
@@ -465,7 +465,7 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
       flush(con)
     }
     x$command <- paste(x$path_to_libbi, client, paste(run_args, collapse=" "))
-    cb_stdout(x$command)
+    if (client != "rewrite") cb_stdout(x$command)
     p <-
       tryCatch(processx::run(command=x$path_to_libbi, args=c(client, run_args),
                              error_on_status=FALSE, wd=x$working_folder,
@@ -489,11 +489,7 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
     x$error_flag <- FALSE
 
     if (client == "rewrite") {
-      model_lines <- readLines(x$model_file_name)
-      first_model_line <-
-        min(grep("^[[:space:]]*model[[:space:]]*", model_lines))
-      model_lines <- model_lines[first_model_line:length(model_lines)]
-      x <- bi_model(lines=model_lines)
+      invisible(NULL)
     } else {
       x$run_flag <- TRUE
       if (x$run_flag && file.exists(x$output_file_name)) {
@@ -501,12 +497,13 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
       }
       ## get original model back if it has been modified
       x$model <- save_model
+      return(x)
     }
   } else {
     ## if run from the constructor, just add all the options
     x$options <- all_options
+    return(x)
   }
-  return(x)
 }
 
 #' @export
