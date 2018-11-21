@@ -828,8 +828,6 @@ save_libbi.libbi <- function(x, name, supplement, split = FALSE, ...) {
   }
 }
 
-#' @export
-read_libbi <- function(x, ...) UseMethod("read_libbi")
 #' @rdname read_libbi
 #' @name read_libbi
 #' @title Read results of a \code{LibBi} run from an RDS file or from a folder. This completely reconstructs the saved \code{LibBi} object
@@ -842,6 +840,7 @@ read_libbi <- function(x, ...) UseMethod("read_libbi")
 #' @param join if TRUE, will assume that a collection of files was saved with \code{split=TRUE} in \code{save_libbi}; default is FALSE if \code{name} ends on '.rds', and TRUE otherwise, unless set explicitly
 #' @param ... any extra options to pass to \code{\link{libbi}} when creating the new object
 #' @return a \code{\link{libbi}} object
+#' @export
 read_libbi <- function(name, join, ...) {
   if (missing(name)) {
     stop("Need to specify a file or folder to read from")
