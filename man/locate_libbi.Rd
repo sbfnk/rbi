@@ -18,3 +18,4 @@ This tries to find the libbi executable; if this does not find libbi but it is i
 \author{
 Sebastian Funk
 }
+\keyword{internal}

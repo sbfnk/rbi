@@ -4,6 +4,7 @@
 ##' @param path_to_libbi path to libbi, as either the path where the libbi executable resides, or the full path to the executable
 ##' @return full path to the libbi executable; if it is not found, an error is thrown
 ##' @author Sebastian Funk
+##' @keywords internal
 ##' @export
 locate_libbi <- function(path_to_libbi) {
   if (missing(path_to_libbi) || length(path_to_libbi) == 0) {
