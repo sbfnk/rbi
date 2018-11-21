@@ -714,13 +714,13 @@ get_const <- function(model) {
       gsub(" ", "", sub("^[[:space:]]*const[[:space:]]*", "", const_line))
     assignment <- strsplit(line, "=")[[1]]
     retval[assignment[1]] <- NA_character_
-    tryCatch(
+    retval[[assignment[[1]]]] <- tryCatch(
     {
-      retval[[assignment[1]]] <- eval(parse(text = assignment[2]))
+      eval(parse(text = assignment[2]))
     },
     error = function(cond)
     {
-      retval[[assignment[1]]] <- assignment[2]
+      assignment[2]
     })
   }
   return(retval)
