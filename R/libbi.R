@@ -615,21 +615,21 @@ rewrite.bi_model <- function(x, ...){
 
 #' @export
 attach_data <- function(x, ...) UseMethod("attach_data")
-#' @name attach
-#' @rdname attach
+#' @name attach_data
+#' @rdname attach_data
 #' @title Attach a new file or data set to a \code{\link{libbi}} object
 #' @description
 #' Adds an (output, obs, etc.) file to a \code{\link{libbi}} object. This is useful to recreate a \code{\link{libbi}} object from the model and output files of a previous run
 #' @param x a \code{\link{libbi}} object
 #' @param file the type of the file to attach, one of "output", "obs", "input" or "init"
 #' @param data name of the file to attach, or a list of data frames that contain the outputs
-#' @param force attach the file even if one like this already exists in the libbi object
+#' @param replace if TRUE, replace the file if it already exists in the libbi object
 #' @param ... any options to \code{\link{bi_write}} (e.g., 'time_dim')
 #' @inheritParams bi_open
 #' @examples
 #' bi <- libbi(model = system.file(package="rbi", "PZ.bi"))
 #' example_output_file <- system.file(package="rbi", "example_output.nc")
-#' bi <- attach(bi, "output", example_output_file)
+#' bi <- attach_data(bi, "output", example_output_file)
 #' @export
 attach_data.libbi <- function(x, file, data, replace=FALSE, ...){
 
