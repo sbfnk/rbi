@@ -3,7 +3,7 @@
 \name{attach_file}
 \alias{attach_file}
 \alias{attach_file.libbi}
-\title{Attach a new file to a \code{\link{libbi}} object}
+\title{Deprecated (use 'attach' instead). Attach a new file or data set to a \code{\link{libbi}} object}
 \usage{
 \method{attach_file}{libbi}(x, file, data, force = FALSE, ...)
 }
@@ -19,7 +19,7 @@
 \item{...}{any options to \code{\link{bi_write}} (e.g., 'time_dim')}
 }
 \description{
-Adds an (output, obs, etc.) file to a \code{\link{libbi}} object. This is useful to recreate a \code{\link{libbi}} object from the model and output files of a previous run
+Deprecated (use 'attach' instead). Adds an (output, obs, etc.) file to a \code{\link{libbi}} object. This is useful to recreate a \code{\link{libbi}} object from the model and output files of a previous run
 }
 \examples{
 bi <- libbi(model = system.file(package="rbi", "PZ.bi"))

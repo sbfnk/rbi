@@ -614,12 +614,82 @@ rewrite.bi_model <- function(x, ...){
 }
 
 #' @export
-attach_file <- function(x, ...) UseMethod("attach_file")
-#' @name attach_file
-#' @rdname attach_file
-#' @title Attach a new file to a \code{\link{libbi}} object
+attach <- function(x, ...) UseMethod("attach")
+#' @name attach
+#' @rdname attach
+#' @title Attach a new file or data set to a \code{\link{libbi}} object
 #' @description
 #' Adds an (output, obs, etc.) file to a \code{\link{libbi}} object. This is useful to recreate a \code{\link{libbi}} object from the model and output files of a previous run
+#' @param x a \code{\link{libbi}} object
+#' @param file the type of the file to attach, one of "output", "obs", "input" or "init"
+#' @param data name of the file to attach, or a list of data frames that contain the outputs
+#' @param force attach the file even if one like this already exists in the libbi object
+#' @param ... any options to \code{\link{bi_write}} (e.g., 'time_dim')
+#' @inheritParams bi_open
+#' @examples
+#' bi <- libbi(model = system.file(package="rbi", "PZ.bi"))
+#' example_output_file <- system.file(package="rbi", "example_output.nc")
+#' bi <- attach(bi, "output", example_output_file)
+#' @export
+attach.libbi <- function(x, file, data, replace=FALSE, ...){
+
+  if (file == "output") {
+    target_file_name <- x[["output_file_name"]]
+  } else {
+    target_file_name <- x[["options"]][[paste0(file, "-name")]]
+  }
+
+  if (is.character(data)) {
+      if (length(target_file_name) == 1 && file.exists(target_file_name) && !replace) {
+      stop("libbi object already contains ", file, " file; if you want to overwrite this, use `replace=TRUE`.")
+    }
+    target_file_name <- data
+  } else {
+    if (length(target_file_name)==0) {
+      target_file_name <-
+        tempfile(pattern=paste(get_name(x$model), file, sep = "_"),
+                 fileext=".nc", tmpdir=absolute_path(x$working_folder))
+    }
+
+    write_opts <- list(filename = target_file_name, variables = data)
+    if (file == "obs" && "coord_dims" %in% names(x)) {
+      write_opts[["coord_dims"]] <- x$coord_dims
+    }
+    if ("time_dim" %in% names(x)) {
+      write_opts[["time_dim"]] <- x$time_dim
+    }
+    added_options <- list(...)
+    for (option_name in names(added_options)) {
+      write_opts[[option_name]] <- added_options[[option_name]]
+    }
+    if (replace && "append" %in% write_opts && write_opts[["append"]]) {
+      stop("'append' and 'replace' are both TRUE; this does not make sense.")
+    } else {
+      write_opts[["append"]] <- !replace
+    }
+    do.call(bi_write, write_opts)
+  }
+
+  if (file == "output") {
+    x$output_file_name <- target_file_name
+    x$run_flag <- TRUE
+    x$timestamp <- file.mtime(x$output_file_name)
+    x$.cache <- new.env(parent = emptyenv())
+    x$thin <- 1 ## output file will already be thinned
+  } else {
+    if (is.null(x$options)) x$options <- list()
+    x$options[[paste0(file, "-file")]] <- target_file_name
+  }
+  return(x)
+}
+
+#' @export
+attach_file <- function(x, ...) UseMethod("attach")
+#' @name attach_file
+#' @rdname attach_file
+#' @title Deprecated (use 'attach' instead). Attach a new file or data set to a \code{\link{libbi}} object
+#' @description
+#' Deprecated (use 'attach' instead). Adds an (output, obs, etc.) file to a \code{\link{libbi}} object. This is useful to recreate a \code{\link{libbi}} object from the model and output files of a previous run
 #' @param x a \code{\link{libbi}} object
 #' @param file the type of the file to attach, one of "output", "obs", "input" or "init"
 #' @param data name of the file to attach, or a list of data frames that contain the outputs
@@ -632,23 +702,27 @@ attach_file <- function(x, ...) UseMethod("attach_file")
 #' bi <- attach_file(bi, "output", example_output_file)
 #' @export
 attach_file.libbi <- function(x, file, data, force=FALSE, ...){
+
+  warning("'attach_file' is deprecated. Use 'attach' instead.")
+
   if (file == "output") {
     target_file_name <- x[["output_file_name"]]
   } else {
     target_file_name <- x[["options"]][[paste0(file, "-name")]]
   }
-  if (length(target_file_name) > 0 &&
-      nchar(target_file_name) > 0 &&
-      file.exists(target_file_name) && 
-      !force) {
-    stop("libbi object already contains ", file, " file; if you want to overwrite this,  use `force=TRUE`'")
-  }
+
   if (is.character(data)) {
+    if (!replace) {
+      stop("libbi object already contains ", file, " file; if you want to overwrite this,  use `force=TRUE`.")
+    }
     target_file_name <- data
   } else {
-    target_file_name <-
-      tempfile(pattern=paste(get_name(x$model), file, sep = "_"),
-               fileext=".nc", tmpdir=absolute_path(x$working_folder))
+    if (is.null(target_file_name)) {
+      target_file_name <-
+        tempfile(pattern=paste(get_name(x$model), file, sep = "_"),
+                 fileext=".nc", tmpdir=absolute_path(x$working_folder))
+    }
+
     write_opts <- list(filename = target_file_name, variables = data)
     if (file == "obs" && "coord_dims" %in% names(x)) {
       write_opts[["coord_dims"]] <- x$coord_dims
@@ -662,6 +736,7 @@ attach_file.libbi <- function(x, file, data, force=FALSE, ...){
     }
     do.call(bi_write, write_opts)
   }
+
   if (file == "output") {
     x$output_file_name <- target_file_name
     x$run_flag <- TRUE
@@ -1039,7 +1114,7 @@ join.libbi <- function(x, ...) {
       output[[var]] <- NULL
     }
   }
-  attach_file(x, file="output", output, force=TRUE)
+  attach(x, file="output", output, replace=TRUE)
 }
 
 #' @rdname logLik
