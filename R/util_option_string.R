@@ -11,10 +11,7 @@ option_string <- function(...){
   string <- ""
 
   for (option in list(...)) {
-    if (is.character(option)) {
-      string_options <- option_list(option)
-      list_options[names(string_options)] <- string_options
-    } else if (is.list(option)) {
+    if (is.list(option)) {
       list_options[names(option)] <- option
     } else {
       stop("arguments to 'option_string' must be lists or character vectors")
