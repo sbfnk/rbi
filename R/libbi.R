@@ -696,15 +696,11 @@ attach_file <- function(x, ...) UseMethod("attach_file")
 #' @param force attach the file even if one like this already exists in the libbi object
 #' @param ... any options to \code{\link{bi_write}} (e.g., 'time_dim')
 #' @inheritParams bi_open
-#' @examples
-#' bi <- libbi(model = system.file(package="rbi", "PZ.bi"))
-#' example_output_file <- system.file(package="rbi", "example_output.nc")
-#' bi <- attach_file(bi, "output", example_output_file)
 #' @keywords internal
 #' @export
 attach_file.libbi <- function(x, file, data, force=FALSE, ...){
 
-  warning("'attach_file' is deprecated. Use 'attach' instead.")
+  warning("'attach_file' is deprecated. Use 'attach_data' instead.")
 
   if (file == "output") {
     target_file_name <- x[["output_file_name"]]
@@ -713,7 +709,7 @@ attach_file.libbi <- function(x, file, data, force=FALSE, ...){
   }
 
   if (is.character(data)) {
-    if (!replace) {
+    if (!force) {
       stop("libbi object already contains ", file, " file; if you want to overwrite this,  use `force=TRUE`.")
     }
     target_file_name <- data

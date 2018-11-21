@@ -21,9 +21,4 @@
 \description{
 Deprecated (use 'attach' instead). Adds an (output, obs, etc.) file to a \code{\link{libbi}} object. This is useful to recreate a \code{\link{libbi}} object from the model and output files of a previous run
 }
-\examples{
-bi <- libbi(model = system.file(package="rbi", "PZ.bi"))
-example_output_file <- system.file(package="rbi", "example_output.nc")
-bi <- attach_file(bi, "output", example_output_file)
-}
 \keyword{internal}
