@@ -70,7 +70,7 @@ bi_write <- function(filename, variables, timed, append=FALSE, time_dim, coord_d
   if (missing(time_dim) || length(time_dim) == 0) {
     time_dim <- NULL
   } else if (guess_time) {
-    guess_time <- FALSE
+    stop("'time_dim' must not be given if guess_time is TRUE")
   }
 
   ## initialise variables
