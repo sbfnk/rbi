@@ -1060,23 +1060,16 @@ sample_obs <- function(x, ...) {
   if (!("libbi" %in% class(x))) {
     stop("'x' must bee a 'libbi' object")
   }
-  if ("input-file" %in% names(x$options)) {
-    input <- bi_read(x, file="input")
-  } else {
-    input <- list()
-  }
-  ## transform output to input
-  out <- bi_read(x)
 
   ## remove transition
   sample_model <- remove_lines(x$model, "transition")
   ## convert input states to inputs
   sample_model <- to_input(sample_model, names(out))
 
-  ## update inputs
-  for (name in names(out)) input[[name]] <- out[[name]]
+  ## add outputs to inputs
+  x <- attach(x, file="input", bi_read(x), append=TRUE)
 
-  pr <- predict(x, model=sample_model, input=input, with="transform-obs-to-state", ...)
+  pr <- predict(x, model=sample_model, with="transform-obs-to-state", ...)
   return(pr)
 }
 
