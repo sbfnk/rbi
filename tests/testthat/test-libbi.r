@@ -89,7 +89,7 @@ test_that("we can run libbi and analyse results",
 test_that("we can rewrite a model",
 {
   skip_on_cran()
-  expect_match(rewrite(model), ".")
+  expect_output(rewrite(model), "Action")
 })
 
 test_that("deprecated options are reported",
