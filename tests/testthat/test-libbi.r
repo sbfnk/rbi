@@ -38,8 +38,8 @@ model <- bi_model(lines = stringi::stri_split_lines(model_str)[[1]])
 bi <- libbi(model, dims=list(a=c("first", "second")))
 
 PZ <- libbi(model = system.file(package="rbi", "PZ.bi"))
-example_output_file <- system.file(package="rbi", "example_output.nc")
-PZ <- attach_data(PZ, "output", example_output_file)
+example_output <- bi_read(system.file(package="rbi", "example_output.nc"))
+PZ <- attach_data(PZ, "output", example_output)
 
 test_that("we can print an empty libbi object",
 {

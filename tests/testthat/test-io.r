@@ -1,17 +1,11 @@
 context("Testing saving and retrieving libbi objects")
 
 bi <- libbi(model = system.file(package="rbi", "PZ.bi"))
-example_output_file <- system.file(package="rbi", "example_output.nc")
-bi <- attach_data(bi, "output", example_output_file)
+example_output <- bi_read(system.file(package="rbi", "example_output.nc"))
+bi <- attach_data(bi, "output", example_output)
 bi <- attach_data(bi, file="init", bi_read(bi, vars=c("mu", "sigma")))
 
 nc <- nc_open(bi$output_file_name)
-
-test_that("we can't add output twice'",
-{
-  expect_error(attach_data(bi, "output", example_output_file))
-  expect_equal(class(attach_data(bi, "output", example_output_file, replace=TRUE)), "libbi")
-})
 
 test_that("libbi object with added output is functional",
 {
@@ -70,7 +64,7 @@ test_that("basic I/O functions work",
   expect_true(bi_dim_len(example_output_file, "np") > 0)
   expect_equal(bi_dim_len(example_output_file, "dummy"), 0)
   expect_true(length(capture.output(bi_file_summary(example_output_file))) > 0)
-  expect_true(nrow(bi_read(bi, "time")$time) > 0)
+  expect_true(nrow(bi_read(bi, "Z")$Z) > 0)
 })
 
 test_that("I/O errors/warnings are recognised", 

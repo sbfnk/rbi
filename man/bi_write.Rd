@@ -4,9 +4,9 @@
 \alias{bi_write}
 \title{Create (e.g., init or observation) files for LibBi}
 \usage{
-bi_write(filename, variables, timed, append = FALSE, time_dim,
-  coord_dims, dim_factors, value_column = "value", guess_time = FALSE,
-  guess_coord = FALSE, verbose)
+bi_write(filename, variables, timed, append = FALSE, overwrite = FALSE,
+  time_dim, coord_dims, dim_factors, value_column = "value",
+  guess_time = FALSE, guess_coord = FALSE, verbose)
 }
 \arguments{
 \item{filename}{a path to a NetCDF file to write the variables into, which
@@ -18,6 +18,8 @@ to the file name}
 \item{timed}{deprecated; timed variables should be given as data frames}
 
 \item{append}{if TRUE, will append variables if file exists (default: FALSE)}
+
+\item{overwrite}{if TRUE, will overwrite variables if file exists (default: FALSE)}
 
 \item{time_dim}{the name of the time dimension, if one exists; default: "time"}
 
