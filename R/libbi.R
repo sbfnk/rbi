@@ -633,20 +633,21 @@ attach_data.libbi <- function(x, file, data, in_place=FALSE, quiet=FALSE, ...){
         tempfile(pattern=paste(get_name(x$model), file, sep = "_"),
                  fileext=".nc", tmpdir=absolute_path(x$working_folder))
     }
-  }
 
-  write_opts <- list(filename = target_file_name, variables = data)
-  if (file == "obs" && "coord_dims" %in% names(x)) {
-    write_opts[["coord_dims"]] <- x$coord_dims
-  }
-  if (length(x$time_dim) > 0) {
-    write_opts[["time_dim"]] <- x$time_dim
-  }
+    write_opts <- list(filename = target_file_name, variables = data)
+    if (file == "obs" && "coord_dims" %in% names(x)) {
+      write_opts[["coord_dims"]] <- x$coord_dims
+    }
+    if (length(x$time_dim) > 0) {
+      write_opts[["time_dim"]] <- x$time_dim
+    }
     added_options <- list(...)
-  for (option_name in names(added_options)) {
-    write_opts[[option_name]] <- added_options[[option_name]]
+    for (option_name in names(added_options)) {
+      write_opts[[option_name]] <- added_options[[option_name]]
+    }
+    file_dims <- do.call(bi_write, write_opts)
+    x$dims[names(file_dims$dims)] <- file_dims$dims
   }
-  x$dims <- do.call(bi_write, write_opts)
 
   if (file == "output") {
     x$output_file_name <- target_file_name
