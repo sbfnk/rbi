@@ -607,7 +607,8 @@ attach_data <- function(x, ...) UseMethod("attach_data")
 #' @param x a \code{\link{libbi}} object
 #' @param file the type of the file to attach, one of "output", "obs", "input" or "init"
 #' @param data name of the file to attach, or a list of data frames that contain the outputs
-#' @param replace if TRUE, replace the file if it already exists in the libbi object
+#' @param in_place if TRUE, replace the file in place if it already exists in the libbi object; this can speed up the operation if append=TRUE as otherwise the file will have to be read and used again; it should be used with care, though, as it can render existing \code{\link{libbi}} objects invalid as the files they are pointing to are changed.
+#' @param quiet if TRUE, will suppress the warning message normally given if replace=TRUE and the file exists already
 #' @param ... any options to \code{\link{bi_write}} (e.g., 'time_dim')
 #' @inheritParams bi_open
 #' @examples
@@ -615,44 +616,39 @@ attach_data <- function(x, ...) UseMethod("attach_data")
 #' example_output_file <- system.file(package="rbi", "example_output.nc")
 #' bi <- attach_data(bi, "output", example_output_file)
 #' @export
-attach_data.libbi <- function(x, file, data, replace=FALSE, ...){
-
-  if (file == "output") {
-    target_file_name <- x[["output_file_name"]]
-  } else {
-    target_file_name <- x[["options"]][[paste0(file, "-name")]]
-  }
+attach_data.libbi <- function(x, file, data, in_place=FALSE, quiet=FALSE, ...){
 
   if (is.character(data)) {
-      if (length(target_file_name) == 1 && file.exists(target_file_name) && !replace) {
-      stop("libbi object already contains ", file, " file; if you want to overwrite this, use `replace=TRUE`.")
-    }
     target_file_name <- data
   } else {
-    if (length(target_file_name)==0) {
+    if (file == "output") {
+      existing_file_name <- x[["output_file_name"]]
+    } else {
+      existing_file_name <- x[["options"]][[paste0(file, "-name")]]
+    }
+
+    if (in_place && length(existing_file_name)==1) {
+      if (!quiet) warning("attaching data with 'in_place=TRUE'. This should be used carefully, as it may render an existing object pointing to the file invalid. To suppress this message, use quiet=TRUE.")
+      target_file_name <- existing_file_name
+    } else {
       target_file_name <-
         tempfile(pattern=paste(get_name(x$model), file, sep = "_"),
                  fileext=".nc", tmpdir=absolute_path(x$working_folder))
     }
-
-    write_opts <- list(filename = target_file_name, variables = data)
-    if (file == "obs" && "coord_dims" %in% names(x)) {
-      write_opts[["coord_dims"]] <- x$coord_dims
-    }
-    if ("time_dim" %in% names(x)) {
-      write_opts[["time_dim"]] <- x$time_dim
-    }
-    added_options <- list(...)
-    for (option_name in names(added_options)) {
-      write_opts[[option_name]] <- added_options[[option_name]]
-    }
-    if (replace && "append" %in% write_opts && write_opts[["append"]]) {
-      stop("'append' and 'replace' are both TRUE; this does not make sense.")
-    } else {
-      write_opts[["append"]] <- !replace
-    }
-    do.call(bi_write, write_opts)
   }
+
+  write_opts <- list(filename = target_file_name, variables = data)
+  if (file == "obs" && "coord_dims" %in% names(x)) {
+    write_opts[["coord_dims"]] <- x$coord_dims
+  }
+  if (length(x$time_dim) > 0) {
+    write_opts[["time_dim"]] <- x$time_dim
+  }
+    added_options <- list(...)
+  for (option_name in names(added_options)) {
+    write_opts[[option_name]] <- added_options[[option_name]]
+  }
+  x$dims <- do.call(bi_write, write_opts)
 
   if (file == "output") {
     x$output_file_name <- target_file_name
@@ -708,7 +704,7 @@ attach_file.libbi <- function(x, file, data, force=FALSE, ...){
     if (file == "obs" && "coord_dims" %in% names(x)) {
       write_opts[["coord_dims"]] <- x$coord_dims
     }
-    if ("time_dim" %in% names(x)) {
+    if (length(x$time_dim) > 0) {
       write_opts[["time_dim"]] <- x$time_dim
     }
     added_options <- list(...)

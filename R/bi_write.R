@@ -13,6 +13,7 @@
 #' @param variables a \code{list} object, the names of which should be the variable names and values should be either single values or data frames
 #' @param timed deprecated; timed variables should be given as data frames
 #' @param append if TRUE, will append variables if file exists (default: FALSE)
+#' @param overwrite if TRUE, will overwrite variables if file exists (default: FALSE)
 #' @param time_dim the name of the time dimension, if one exists; default: "time"
 #' @param coord_dims the names of the coordinate dimension, if any; should be a named list of character vectors, they are matched to variables names
 #' @param dim_factors factors that dimensions have; this corresponds to the \code{dims} element of a \code{\link{libbi}} object
@@ -43,7 +44,7 @@
 #' bi_write(filename, variables)
 #' bi_file_summary(filename)
 #' @export
-bi_write <- function(filename, variables, timed, append=FALSE, time_dim, coord_dims, dim_factors, value_column = "value", guess_time = FALSE, guess_coord = FALSE, verbose) {
+bi_write <- function(filename, variables, timed, append=FALSE, overwrite=FALSE, time_dim, coord_dims, dim_factors, value_column = "value", guess_time = FALSE, guess_coord = FALSE, verbose) {
 
   if (!grepl("\\.nc$", filename)) {
     filename <- paste(filename, "nc", sep = ".")
@@ -295,22 +296,31 @@ bi_write <- function(filename, variables, timed, append=FALSE, time_dim, coord_d
     }
   }
 
-  if (append && file.exists(filename)) {
+  if ((append || overwrite) && file.exists(filename)) {
     nc <- nc_open(filename, write=TRUE)
     existing_vars <- unname(vapply(nc[["var"]], function(y) { y[["name"]] }, ""))
-    for (name in setdiff(names(vars), existing_vars)) nc <- ncvar_add(nc, vars[[name]])
+    if (append) {
+      for (name in setdiff(names(vars), existing_vars)) {
+        nc <- ncvar_add(nc, vars[[name]])
+      }
+    }
   } else {
     nc <- nc_create(filename, vars)
+    existing_vars <- c()
   }
 
   for (name in names(vars)) {
-    if (!missing(verbose) && verbose)
-    {
-      message(date(), " Writing ", name)
+    if ((!(append || overwrite)) ||
+          (append && !(name %in% existing_vars)) ||
+          (overwrite && (name %in% existing_vars))) {
+      if (!missing(verbose) && verbose)
+      {
+        message(date(), " Writing ", name)
+      }
+      values[[name]][!is.finite(values[[name]])] <- NA_real_
+      ## create an additional variable if needed
+      ncvar_put(nc, name, values[[name]])
     }
-    values[[name]][!is.finite(values[[name]])] <- NA_real_
-    ## create an additional variable if needed
-    ncvar_put(nc, name, values[[name]])
   }
 
   nc_close(nc)
