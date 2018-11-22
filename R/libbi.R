@@ -1051,7 +1051,7 @@ predict.libbi <- function(x, ...) {
 ##' @return the original \code{\link{libbi}} object with added variables in the output file for sampled observations
 ##' @author Sebastian Funk
 ##' @export
-sample_obs <- function(x, ...) {
+sample_obs <- function(x) {
   if (!("libbi" %in% class(x))) {
     stop("'x' must bee a 'libbi' object")
   }
@@ -1067,7 +1067,7 @@ sample_obs <- function(x, ...) {
   pr <- predict(pr, model=sample_model, with="transform-obs-to-state")
   ## attach outputs back
   pr <- attach_data(pr, "output", data=out, append=TRUE)
-  pr$options[["input-file"]] <- bi$options[["input-file"]]
+  pr$options[["input-file"]] <- x$options[["input-file"]]
   pr$model <- x$model
 
   return(pr)
