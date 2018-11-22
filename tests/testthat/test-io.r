@@ -58,16 +58,16 @@ test_that("saved and re-read data frames are equal",
   expect_lt(abs(vec_read - test_value), 1e-7)
 })
 
-test_that("basic I/O functions work", 
+test_that("basic I/O functions work",
 {
-  expect_true(length(bi_contents(example_output_file)) > 0)
-  expect_true(bi_dim_len(example_output_file, "np") > 0)
-  expect_equal(bi_dim_len(example_output_file, "dummy"), 0)
-  expect_true(length(capture.output(bi_file_summary(example_output_file))) > 0)
+  expect_gt(length(bi_contents(bi)), 0)
+  expect_gt(bi_dim_len(bi$output_file_name, "np"), 0)
+  expect_equal(bi_dim_len(bi$output_file_name, "dummy"), 0)
+  expect_true(length(capture.output(bi_file_summary(bi$output_file_name))) > 0)
   expect_true(nrow(bi_read(bi, "Z")$Z) > 0)
 })
 
-test_that("I/O errors/warnings are recognised", 
+test_that("I/O errors/warnings are recognised",
 {
   expect_warning(bi_read(bi$output_file_name, file="output"), "file")
   expect_error(bi_read(bi, file="dummy"), "dummy")

@@ -611,8 +611,8 @@ attach_data <- function(x, ...) UseMethod("attach_data")
 #' @inheritParams bi_open
 #' @examples
 #' bi <- libbi(model = system.file(package="rbi", "PZ.bi"))
-#' example_output_file <- system.file(package="rbi", "example_output.nc")
-#' bi <- attach_data(bi, "output", example_output_file)
+#' example_output <- bi_read(system.file(package="rbi", "example_output.nc"))
+#' bi <- attach_data(bi, "output", example_output)
 #' @export
 attach_data.libbi <- function(x, file, data, in_place=FALSE, quiet=FALSE, ...){
 

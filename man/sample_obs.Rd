@@ -4,7 +4,7 @@
 \alias{sample_obs}
 \title{Sample observations from a LibBi model that has been run}
 \usage{
-sample_obs(x, ...)
+sample_obs(x)
 }
 \arguments{
 \item{x}{a \code{\link{libbi}} object}
