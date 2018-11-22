@@ -143,7 +143,6 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
   }
 
   if (!missing(output_all)) warning("'output_all' is deprecated. Use 'debug=TRUE'.")
-  proposal <- match.arg(proposal)
 
   ## assign stored arguments
   if (!missing(thin)) x$thin <- thin
@@ -417,6 +416,7 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
 
     if (x$debug) x$model <- enable_outputs(x$model)
 
+    proposal <- match.arg(proposal)
     if (proposal == "prior") {
       x$model <- propose_prior(x$model)
     }
@@ -1066,7 +1066,7 @@ sample_obs <- function(x, ...) {
   pr <- predict(pr, model=sample_model, with="transform-obs-to-state")
   ## attach outputs back
   pr <- attach_data(pr, "output", data=out, append=TRUE)
-  ## set thin to 1 - this is already taken into account when reading in the original file
+  pr$options[["input-file"]] <- bi$options[["input-file"]]
   pr$model <- x$model
 
   return(pr)
