@@ -5,18 +5,15 @@
 #'     results and extracts a data frame.
 #' @param x a \code{\link{libbi}} object which has been run, or a
 #'     list of data frames containing parameter traces (as returned by
-#'     from \code{bi_read}); if it is not a \code{\link{libbi}}
-#'     object, either 'all' must be TRUE or a model given
+#'     from \code{bi_read})
 #' @param np iteration to extract; if set to "last", the last sample will be extracted. If not given a random sample will be extracted
 #' @param ... parameters to \code{bi_read} (e.g., dimensions)
 #' @return list of parameters and trajectories
 #' @export
 extract_sample <- function(x, np, ...) {
 
-  read_options <- list(x=x, ...)
-
   if (("libbi" %in% class(x)) || ("character" %in% class(x))) {
-    samples <- do.call(bi_read, read_options)
+    samples <- do.call(bi_read, list(x=x, ...))
   } else if ("list" %in% class(x)) {
     samples <- x
   } else {

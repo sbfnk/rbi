@@ -6,7 +6,7 @@
 #'     traces.
 #' @param x a \code{\link{libbi}} object which has been run, or a
 #'     list of data frames containing parameter traces (as returned by
-#'     from \code{bi_read}); if it is not a \code{\link{libbi}}
+#'     \code{bi_read}); if it is not a \code{\link{libbi}}
 #'     object, either 'all' must be TRUE or a model given
 #' @param all whether all variables in the run file should be
 #'     considered (otherwise, just parameters)

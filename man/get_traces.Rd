@@ -9,7 +9,7 @@ get_traces(x, model, burnin, all = FALSE, ...)
 \arguments{
 \item{x}{a \code{\link{libbi}} object which has been run, or a
 list of data frames containing parameter traces (as returned by
-from \code{bi_read}); if it is not a \code{\link{libbi}}
+\code{bi_read}); if it is not a \code{\link{libbi}}
 object, either 'all' must be TRUE or a model given}
 
 \item{model}{a model to get the parameter names from; not needed if
