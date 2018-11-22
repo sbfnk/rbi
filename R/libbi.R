@@ -1180,14 +1180,15 @@ update <- function(x, ...) UseMethod("update")
 #(input, output, etc.) files have been changed outside the object itself.
 #'
 #' @param x a \code{\link{libbi}} object
+#' @param ... ignored
 #' @return a \code{\link{libbi}} object with updated timestamps
 #' @export
 update.libbi <- function(x, ...){
   if ("options" %in% names(x)) {
     for (file_option in grep("-file$", names(x$options), value=TRUE)) {
-      if (file.exists(x[[file_option]])) {
+      if (file.exists(x$options[[file_option]])) {
         file_type <- sub("-file$", "", file_option)
-        x$timestamp[[file_type]] <- file.mtime(x[[file_option]])
+        x$timestamp[[file_type]] <- file.mtime(x$options[[file_option]])
       }
     }
   }
