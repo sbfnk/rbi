@@ -476,12 +476,7 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
       invisible(NULL)
     } else {
       x$run_flag <- TRUE
-      for (file_option in grep("-file$", x$options, value=TRUE)) {
-        if (file.exists(x[[file_option]])) {
-          file_type <- sub("-file$", "", file_option)
-          x$timestamp[[file_type]] <- file.mtime(x[[file_option]])
-        }
-      }
+      x <- update(x)
       ## get original model back if it has been modified
       x$model <- save_model
       return(x)
@@ -656,12 +651,13 @@ attach_data.libbi <- function(x, file, data, in_place=FALSE, quiet=FALSE, ...){
   if (file == "output") {
     x$output_file_name <- target_file_name
     x$run_flag <- TRUE
-    x$timestamp <- file.mtime(x$output_file_name)
+    x$timestamp[["output"]] <- file.mtime(x$output_file_name)
     x$.cache <- new.env(parent = emptyenv())
     x$thin <- 1 ## output file will already be thinned
   } else {
     if (is.null(x$options)) x$options <- list()
     x$options[[paste0(file, "-file")]] <- target_file_name
+    x$timestamp[[file]] <- file.mtime(target_file_name)
   }
   return(x)
 }
@@ -720,12 +716,13 @@ attach_file.libbi <- function(x, file, data, force=FALSE, ...){
   if (file == "output") {
     x$output_file_name <- target_file_name
     x$run_flag <- TRUE
-    x$timestamp <- file.mtime(x$output_file_name)
+    x$timestamp[["output"]] <- file.mtime(x$output_file_name)
     x$.cache <- new.env(parent = emptyenv())
     x$thin <- 1 ## output file will already be thinned
   } else {
     if (is.null(x$options)) x$options <- list()
     x$options[[paste0(file, "-file")]] <- target_file_name
+    x$timestamp[[file]] <- file.mtime(target_file_name)
   }
   return(x)
 }
@@ -1009,7 +1006,8 @@ assert_output.libbi <- function(x, ...)
     if (length(x$output_file_name) == 0 || !file.exists(x$output_file_name)) {
       stop("The libbi object does not contain an output file.")
     } else {
-      if (x$timestamp < file.mtime(x$output_file_name)) {
+      if ("output" %in% names(x$timestamp) &&
+            x$timestamp[["output"]] < file.mtime(x$output_file_name)) {
         stop("Output file ", x$output_file_name,
              " has been modified since LibBi was run.")
       }
@@ -1018,9 +1016,11 @@ assert_output.libbi <- function(x, ...)
     for (file_option in grep("-file$", x$options, value=TRUE)) {
       file_type <- sub("-file$", "", file_option)
       if (file.exists(x[[file_option]])) {
-        if (x$timestamp[[file_type]] < file.mtime(x[[file_option]])) {
+        if (file_type %in% names(x$timestamp) ||
+              x$timestamp[[file_type]] < file.mtime(x[[file_option]])) {
           stop(file_type, " file ", x[[file_option]],
-               " has been modified since LibBi was run.")
+               " has been modified since LibBi was run. You can use ",
+               " the 'update' function to accept the changes.")
         }
       } else {
         stop(file_type, " '", x[[file_option]], " does not exist.")
@@ -1166,3 +1166,32 @@ clone.libbi <- function(x, ...) {
 
   return(new_obj)
 }
+
+#' @export
+update <- function(x, ...) UseMethod("update")
+#' @rdname update
+#' @name update
+#' @title Update a libbi object
+#' @description
+#' This updates all the time stamps in a libbi object; it is useful after
+#(input, output, etc.) files have been changed outside the object itself.
+#'
+#' @param x a \code{\link{libbi}} object
+#' @return a \code{\link{libbi}} object with updated timestamps
+#' @export
+update.libbi <- function(x, ...){
+  if ("options" %in% names(x)) {
+    for (file_option in grep("-file$", names(x$options), value=TRUE)) {
+      if (file.exists(x[[file_option]])) {
+        file_type <- sub("-file$", "", file_option)
+        x$timestamp[[file_type]] <- file.mtime(x[[file_option]])
+      }
+    }
+  }
+  return(x)
+}
+#' @export
+update.default <- function(x, ...){
+  stats::update(x, ...)
+}
+
