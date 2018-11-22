@@ -1106,7 +1106,7 @@ join.libbi <- function(x, ...) {
       output[[var]] <- NULL
     }
   }
-  attach_data(x, file="output", output, replace=TRUE)
+  attach_data(x, file="output", output)
 }
 
 #' @rdname logLik
