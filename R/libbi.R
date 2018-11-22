@@ -1047,26 +1047,28 @@ predict.libbi <- function(x, ...) {
 ##' Sample observations from a LibBi model that has been run
 ##'
 ##' @param x a \code{\link{libbi}} object
-##' @param ... any arguments to be passed to \code{\link{predict}}
-##' @return a \code{\link{libbi}} object with sampled observations
+##' @return the original \code{\link{libbi}} object with added variables in the output file for sampled observations
 ##' @author Sebastian Funk
 ##' @export
 sample_obs <- function(x, ...) {
   if (!("libbi" %in% class(x))) {
     stop("'x' must bee a 'libbi' object")
   }
-
   out <- bi_read(x)
-
+  out$clock <- NULL ## we don't want to overwrite the clock later
   ## remove transition
   sample_model <- remove_lines(x$model, "transition")
   ## convert input states to inputs
   sample_model <- to_input(sample_model, names(out))
+  ## turn outputs into inputs
+  pr <- attach_data(x, file="input", out, append=TRUE)
+  ## predict
+  pr <- predict(pr, model=sample_model, with="transform-obs-to-state")
+  ## attach outputs back
+  pr <- attach_data(pr, "output", data=out, append=TRUE)
+  ## set thin to 1 - this is already taken into account when reading in the original file
+  pr$model <- x$model
 
-  ## add outputs to inputs
-  x <- attach_data(x, file="input", out, append=TRUE)
-
-  pr <- predict(x, model=sample_model, with="transform-obs-to-state", ...)
   return(pr)
 }
 
