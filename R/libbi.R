@@ -48,7 +48,7 @@ libbi <- function(model, path_to_libbi, dims, use_cache=TRUE, ...){
                    output_file_name=character(0),
                    log_file_name=character(0),
                    user_log_file=FALSE,
-                   timestamp=.POSIXct(NA),
+                   timestamp=list(),
                    run_flag=FALSE,
                    error_flag=FALSE,
                    use_cache=use_cache,
@@ -476,8 +476,11 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
       invisible(NULL)
     } else {
       x$run_flag <- TRUE
-      if (x$run_flag && file.exists(x$output_file_name)) {
-        x$timestamp <- file.mtime(x$output_file_name)
+      for (file_option in grep("-file$", x$options, value=TRUE)) {
+        if (file.exists(x[[file_option]])) {
+          file_type <- sub("-file$", "", file_option)
+          x$timestamp[[file_type]] <- file.mtime(x[[file_option]])
+        }
       }
       ## get original model back if it has been modified
       x$model <- save_model
@@ -1005,9 +1008,23 @@ assert_output.libbi <- function(x, ...)
     }
     if (length(x$output_file_name) == 0 || !file.exists(x$output_file_name)) {
       stop("The libbi object does not contain an output file.")
+    } else {
+      if (x$timestamp < file.mtime(x$output_file_name)) {
+        stop("Output file ", x$output_file_name,
+             " has been modified since LibBi was run.")
+      }
     }
-    if (x$timestamp < file.mtime(x$output_file_name)) {
-      stop("Output file ", x$output_file_name, " has been modified since LibBi was run.")
+
+    for (file_option in grep("-file$", x$options, value=TRUE)) {
+      file_type <- sub("-file$", "", file_option)
+      if (file.exists(x[[file_option]])) {
+        if (x$timestamp[[file_type]] < file.mtime(x[[file_option]])) {
+          stop(file_type, " file ", x[[file_option]],
+               " has been modified since LibBi was run.")
+        }
+      } else {
+        stop(file_type, " '", x[[file_option]], " does not exist.")
+      }
     }
 }
 
