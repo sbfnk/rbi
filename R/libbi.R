@@ -622,7 +622,7 @@ attach_data.libbi <- function(x, file, data, in_place=FALSE, quiet=FALSE, ...){
     if (file == "output") {
       existing_file_name <- x[["output_file_name"]]
     } else {
-      existing_file_name <- x[["options"]][[paste0(file, "-name")]]
+      existing_file_name <- x[["options"]][[paste0(file, "-file")]]
     }
 
     if (in_place && length(existing_file_name)==1) {
@@ -685,7 +685,7 @@ attach_file.libbi <- function(x, file, data, force=FALSE, ...){
   if (file == "output") {
     target_file_name <- x[["output_file_name"]]
   } else {
-    target_file_name <- x[["options"]][[paste0(file, "-name")]]
+    target_file_name <- x[["options"]][[paste0(file, "-file")]]
   }
 
   if (is.character(data)) {
