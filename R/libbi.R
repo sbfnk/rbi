@@ -369,8 +369,6 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
     write_model(x)
     all_options[["model-file"]] <- x$model_file_name
 
-    if (client == "rewrite") all_options <- all_options["model-file"]
-
     if (x$debug) all_options[["verbose"]] <- TRUE
     verbose <- ("verbose" %in% names(all_options) && all_options[["verbose"]] == TRUE)
 
@@ -390,7 +388,7 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
       flush(con)
     }
     x$command <- paste(x$path_to_libbi, client, paste(run_args, collapse=" "))
-    if (client != "rewrite") cb_stdout(x$command)
+    cb_stdout(x$command)
     p <-
       tryCatch(processx::run(command=x$path_to_libbi, args=c(client, run_args),
                              error_on_status=FALSE, wd=x$working_folder,
