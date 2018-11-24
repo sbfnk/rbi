@@ -159,12 +159,6 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
 
   if (!missing(sample_obs)) {
     warning('argument `sample_obs` is deprecated; please use the `sample_obs` function instead.', call. = FALSE)
-    if (sample_obs) {
-      new_options[["with-transform-obs-to-state"]] <- ""
-    }
-    if (!sample_obs) {
-      new_options[["without-transform-obs-to-state"]] <- ""
-    }
   }
 
   if (missing(config) || config == ""){
