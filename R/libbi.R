@@ -246,7 +246,9 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
 
   if (x$run_flag && length(x$output_file_name) == 1 &&
       file.exists(x$output_file_name)) {
-    init_file_given <- "init" %in% file_args || "init-file" %in% names(new_options)
+    init_file_given <-
+      ("init" %in% file_args && !is.null(x$options[["init"]])) ||
+      "init-file" %in% names(new_options)
     init_np_given <- "init-np" %in% names(new_options)
     init_given <- init_file_given || init_np_given
     if (missing(chain)) { ## if chain not specified, only chain if no init
