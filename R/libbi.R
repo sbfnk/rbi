@@ -40,7 +40,7 @@ libbi <- function(model, path_to_libbi, dims, use_cache=TRUE, ...){
                    working_folder=character(0),
                    dims=libbi_dims,
                    time_dim=character(0),
-                   coord_dims=NULL,
+                   coord_dims=list(),
                    thin=1,
                    output_every=NA_real_,
                    debug=FALSE,
@@ -250,8 +250,6 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
   ## assign file args to global options
   for (arg in file_args) x$options[[arg]] <- get(arg)
 
-  file_options <- list()
-
   if (x$run_flag && length(x$output_file_name) == 1 &&
       file.exists(x$output_file_name)) {
     init_file_given <- "init" %in% file_args || "init-file" %in% names(new_options)
@@ -272,7 +270,7 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
           all_options[["target"]] == "prediction") {
         read_init <- bi_read(x, type=c("param", "state"))
         np_dims <- bi_dim_len(x$output_file_name, "np")
-        file_options[["nsamples"]] <- floor(np_dims / x$thin)
+        x$options[["nsamples"]] <- floor(np_dims / x$thin)
         if (x$thin > 1) {
           x$thin <- 1
         }
@@ -297,69 +295,25 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
     }
   }
 
+  if (!missing(time_dim)) {
+    x$time_dim <- time_dim
+  }
+  if (!missing(coord_dims)) {
+    x$coord_dims <- coord_dims
+  }
+
   ## loop over global options that are file args
   for (file in file_args) {
     arg <- x$options[[file]]
     ## unset global option (we set the file option instead later)
     x$options[[file]] <- NULL
-    if (class(arg) == "libbi") {
-      if (!arg$run_flag) {
-        stop("The libbi object for '", file, "' should be run first (using sample, filter or optimise).")
-      } else if (length(arg$output_file_name) == 0 || !file.exists(arg$output_file_name)) {
-        stop("The libbi object for '", arg, "' does not contain an output file.")
-      }
-      file_options[[paste(file, "file", sep = "-")]] <-
-        arg$output_file_name
-      if (length(arg$time_dim) > 0) {
-        x$time_dim <- arg$time_dim
-      } else if (length(x$time_dim) == 0){
-        x$time_dim <- "time"
-      }
-    } else if (is.list(arg)) {
-      arg_file_name <-
-        tempfile(pattern=paste(get_name(x$model), file, sep = "_"),
-                 fileext=".nc",
-                 tmpdir=absolute_path(x$working_folder))
-      write_opts <- list(filename = arg_file_name,
-                         variables = arg)
-      if (!missing(time_dim)) {
-        x$time_dim <- time_dim
-      }
-      if (!missing(coord_dims)) {
-        x$coord_dims <- coord_dims
-      }
-      if (file == "obs") ## guess coord for observation files
-      {
-        if (length(x$time_dim) == 0) {
-          write_opts[["guess_time"]] <- TRUE
-        }
-        if (length(x$coord_dims) == 0) {
-          write_opts[["guess_coord"]] <- TRUE
-        } else {
-          write_opts[["coord_dims"]] <- x$coord_dims
-        }
-      }
-      if (length(x$time_dim) > 0) {
-        write_opts[["time_dim"]] <- x$time_dim
-      }
-      write_opts[["dim_factors"]] <- x$dims
-      file_dims <- do.call(bi_write, write_opts)
-      x$dims[names(file_dims$dims)] <- file_dims$dims
-      if (!is.null(file_dims$time_dim)) x$time_dim <- file_dims$time_dim
-      if (file == "obs" && !is.null(file_dims$coord_dims)) x$coord_dims <- file_dims$coord_dims
-      file_options[[paste(file, "file", sep = "-")]] <- arg_file_name
-    } else if (is.character(arg)) {
-      file_options[[paste(file, "file", sep = "-")]] <- arg
-    } else if (is.null(arg)) {
-      x$options[[paste(file, "file", sep = "-")]] <- arg
-    } else {
-      stop("'", file, "' must be a list, string or 'libbi' object, or NULL.")
-    }
+    ## attach data here
+    x <- attach_data(x, file, arg, in_place=TRUE, quiet=TRUE)
   }
 
   all_options <-
     option_list(getOption("libbi_args"), config_file_options,
-                x$options, new_options, file_options)
+                x$options, new_options)
 
   if (length(log_file_name) == 1 && log_file_name == "") {
     log_file_name <- character(0)
@@ -595,51 +549,97 @@ attach_data <- function(x, ...) UseMethod("attach_data")
 #' @title Attach a new file or data set to a \code{\link{libbi}} object
 #' @description
 #' Adds an (output, obs, etc.) file to a \code{\link{libbi}} object. This is useful to recreate a \code{\link{libbi}} object from the model and output files of a previous run
+#'
+#' The \code{\link{bi_write}} options \code{append} and \code{overwrite} determine what exactly the file will contain at the end of this. If they are both FALSE, any existing file will be ignored. If \code{append} is TRUE, the existing data in the file will be preserved, and any data set passed as \code{data} and not already in the file will be added. If \code{overwrite} is TRUE, existing data in the file will be preserved except for variables that exist in the past \code{data}.
 #' @param x a \code{\link{libbi}} object
 #' @param file the type of the file to attach, one of "output", "obs", "input" or "init"
 #' @param data name of the file to attach, or a list of data frames that contain the outputs
 #' @param in_place if TRUE, replace the file in place if it already exists in the libbi object; this can speed up the operation if append=TRUE as otherwise the file will have to be read and used again; it should be used with care, though, as it can render existing \code{\link{libbi}} objects invalid as the files they are pointing to are changed.
 #' @param quiet if TRUE, will suppress the warning message normally given if replace=TRUE and the file exists already
 #' @param ... any options to \code{\link{bi_write}} (e.g., 'time_dim')
-#' @inheritParams bi_open
+#' @inheritParams bi_write
 #' @examples
 #' bi <- libbi(model = system.file(package="rbi", "PZ.bi"))
 #' example_output <- bi_read(system.file(package="rbi", "example_output.nc"))
 #' bi <- attach_data(bi, "output", example_output)
 #' @export
-attach_data.libbi <- function(x, file, data, in_place=FALSE, quiet=FALSE, ...){
+attach_data.libbi <- function(x, file, data, in_place=FALSE, append=FALSE, overwrite=FALSE, quiet=FALSE, ...){
+
+  if (file == "output") {
+    existing_file_name <- x[["output_file_name"]]
+  } else {
+    existing_file_name <- x[["options"]][[paste0(file, "-file")]]
+  }
+
+  if (in_place && length(existing_file_name) == 1) {
+    if (!quiet) warning("attaching data with 'in_place=TRUE'. This should be used carefully, as it may render an existing object pointing to the file invalid. To suppress this message, use quiet=TRUE.")
+    target_file_name <- existing_file_name
+  } else {
+    target_file_name <-
+      tempfile(pattern=paste(get_name(x$model), file, sep = "_"),
+               fileext=".nc", tmpdir=absolute_path(x$working_folder))
+    if (length(existing_file_name) == 1 && (append || overwrite)) {
+      file.copy(existing_file_name, target_file_name)
+    }
+  }
 
   if (is.character(data)) {
-    target_file_name <- data
-  } else {
-    if (file == "output") {
-      existing_file_name <- x[["output_file_name"]]
+    if (append || overwrite) {
+      vars <- bi_read(data)
     } else {
-      existing_file_name <- x[["options"]][[paste0(file, "-file")]]
+      file.copy(data, target_file_name)
     }
-
-    if (in_place && length(existing_file_name)==1) {
-      if (!quiet) warning("attaching data with 'in_place=TRUE'. This should be used carefully, as it may render an existing object pointing to the file invalid. To suppress this message, use quiet=TRUE.")
-      target_file_name <- existing_file_name
+  } else if (class(data) == "libbi") {
+    tryCatch(assert_output(data),
+             error=function(e) stop("Error adding ", file, " file\n",  e))
+    if (length(data$time_dim) > 0) {
+      if (length(x$time_dim) > 0 && x$time_dim != data$time_dim) {
+        warning("LibBi object passed as ", file, " file has a different ",
+                "time dimension to the object it is being added to.")
+      } else {
+        x$time_dim <- data$time_dim
+      }
+    }
+    if (append || overwrite) {
+      vars <- bi_read(data)
     } else {
-      target_file_name <-
-        tempfile(pattern=paste(get_name(x$model), file, sep = "_"),
-                 fileext=".nc", tmpdir=absolute_path(x$working_folder))
+      file.copy(data$output_file_name, target_file_name)
     }
+  } else if ("list" %in% class(data)) {
+    vars <- data
+  }
 
-    write_opts <- list(filename = target_file_name, variables = data)
-    if (file == "obs" && "coord_dims" %in% names(x)) {
-      write_opts[["coord_dims"]] <- x$coord_dims
+  if (append || overwrite || "list" %in% class(data)) {
+    write_opts <- list(filename=target_file_name, variables=vars)
+    if (file == "obs") ## guess coord for observation files
+    {
+      if (length(x$time_dim) == 0) {
+        write_opts[["guess_time"]] <- TRUE
+      }
+      if (length(x$coord_dims) == 0) {
+        write_opts[["guess_coord"]] <- TRUE
+      } else {
+        write_opts[["coord_dims"]] <- x$coord_dims
+      }
     }
     if (length(x$time_dim) > 0) {
       write_opts[["time_dim"]] <- x$time_dim
     }
+    write_opts[["dim_factors"]] <- x$dims
+    write_opts[["append"]] <- append
+    write_opts[["overwrite"]] <- overwrite
+    ## add any options passed
     added_options <- list(...)
-    for (option_name in names(added_options)) {
-      write_opts[[option_name]] <- added_options[[option_name]]
+    for (option in names(added_options)) {
+      write_opts[[option]] <- added_options[[option]]
     }
     file_dims <- do.call(bi_write, write_opts)
     x$dims[names(file_dims$dims)] <- file_dims$dims
+    if (!is.null(file_dims$time_dim)) x$time_dim <- file_dims$time_dim
+    if (file == "obs" && !is.null(file_dims$coord_dims)) {
+      x$coord_dims <- file_dims$coord_dims
+    }
+    x$options[[paste(file, "file", sep = "-")]] <- target_file_name
   }
 
   if (file == "output") {
