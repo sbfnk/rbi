@@ -13,14 +13,16 @@
 #' @param model model file or a \code{bi_model} object (if \code{x} is not a \code{libbi} object)
 #' @param type vector of types of variable to read (out of "param", "state", "noise", "obs"). This needs 'x' to be a \code{\link{libbi}} object or \code{model} to be specified
 #' @param file which file to read (if \code{x} is given as a \code{\link{libbi}} object): one of "output" (default), "init", "input", "obs"
-#' @param missval.threshold upper threshold for the likelihood
+#' @param missval_threshold upper threshold for the likelihood
 #' @param coord_dims any \code{coord} dimensions, given as a named list of character vectors, where each element corresponds to the variable of the same name, and the character vector are the \code{coord} dimensions
 #' @param vector deprecated; if TRUE, will return results as vectors, not data.frames
 #' @param thin thinning (keep only 1/thin of samples)
 #' @param verbose if TRUE, will print variables as they are read
 #' @param clear_cache if TRUE, will clear the cache and re-read the file even if cached data exists
-#' @param init.to.param logical; if TRUE, convert states to initial values
+#' @param init_to_param logical; if TRUE, convert states to initial values
 #' @param flatten logical; if TRUE, will return a flat (long) data frame with a 'var' column indicating the variable, instead of a list
+#' @param missval.threshold deprecated; use missval_threshold instead
+#' @param init.to.param deprecated; use init_to_param instead
 #' @return list of results, or a flat data frame (depending on the value of 'flattten')
 #' @inheritParams bi_open
 #' @importFrom ncdf4 nc_close ncvar_get
@@ -30,8 +32,30 @@
 #' example_output_file <- system.file(package="rbi", "example_output.nc")
 #' d <- bi_read(example_output_file)
 #' @export
-bi_read <- function(x, vars, dims, model, type, file, missval.threshold, coord_dims, vector, thin, verbose=FALSE, clear_cache=FALSE, init.to.param=FALSE, flatten=FALSE)
+bi_read <- function(x, vars, dims, model, type, file, missval_threshold, coord_dims, vector, thin, verbose=FALSE, clear_cache=FALSE, init_to_param=FALSE, flatten=FALSE, missval.threshold, init.to.param=FALSE)
 {
+  if (!missing(missval.threshold)) {
+    warning("missval.threshold is deprecated. Use 'missval_threshold' instead.")
+    if (missing(missval_threshold)) {
+      missval_threshold <- missval.threshold
+    } else {
+      stop("Can't give 'missval.threshold' and 'missval_threshold'.")
+    }
+  } else if (missing(missval_threshold)){
+    missval_threshold <- NULL
+  }
+
+  if (!missing(init.to.param)) {
+    warning("init.to.param is deprecated. Use 'init_to_param' instead.")
+    if (missing(init_to_param)) {
+      init_to_param <- init.to.param
+    } else {
+      stop("Can't give 'init.to.param' and 'init_to_param'.")
+    }
+  } else if (missing(init_to_param)){
+    init_to_param <- NULL
+  }
+
   if (missing(file)) {
     nc <- bi_open(x)
   } else {
