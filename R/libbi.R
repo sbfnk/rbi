@@ -216,14 +216,7 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
   if (!missing(working_folder)) {
     x$working_folder <- absolute_path(working_folder)
   } else if (length(x$working_folder) == 0) {
-    x$working_folder <- tempfile(pattern=paste(get_name(x$model)))
-    dir.create(x$working_folder)
-    ## make sure temporary folder gets deleted upon garbage collection
-    x$.gc_env <- new.env() ## dummy environment
-    x$.gc_env$folder <- x$working_folder
-    reg.finalizer(x$.gc_env, function(env) {
-      unlink(env$folder, recursive=TRUE)
-    }, onexit=TRUE)
+    x <- create_working_folder(x)
   }
 
   if (length(x$model_file_name) == 0) {
@@ -1199,3 +1192,21 @@ update.default <- function(x, ...){
   stats::update(x, ...)
 }
 
+
+#' @title Internal function to create a temporary working folder
+#' @description
+#' The folder will be removed when the object is destroyed
+#' @param x a \code{\link{libbi}} object
+#' @return a \code{\link{libbi}} object with updated working folder
+#' @keywords internal
+create_working_folder <- function(x) {
+  x$working_folder <- tempfile(pattern=paste(get_name(x$model)))
+  dir.create(x$working_folder)
+  ## make sure temporary folder gets deleted upon garbage collection
+  x$.gc_env <- new.env() ## dummy environment
+  x$.gc_env$folder <- x$working_folder
+  reg.finalizer(x$.gc_env, function(env) {
+    unlink(env$folder, recursive=TRUE)
+  }, onexit=TRUE)
+  return(x)
+}
