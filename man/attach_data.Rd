@@ -6,7 +6,7 @@
 \title{Attach a new file or data set to a \code{\link{libbi}} object}
 \usage{
 \method{attach_data}{libbi}(x, file, data, in_place = FALSE,
-  quiet = FALSE, ...)
+  append = FALSE, overwrite = FALSE, quiet = FALSE, ...)
 }
 \arguments{
 \item{x}{a \code{\link{libbi}} object}
@@ -17,12 +17,18 @@
 
 \item{in_place}{if TRUE, replace the file in place if it already exists in the libbi object; this can speed up the operation if append=TRUE as otherwise the file will have to be read and used again; it should be used with care, though, as it can render existing \code{\link{libbi}} objects invalid as the files they are pointing to are changed.}
 
+\item{append}{if TRUE, will append variables if file exists; default: FALSE}
+
+\item{overwrite}{if TRUE, will overwrite variables if file exists; default: FALSE}
+
 \item{quiet}{if TRUE, will suppress the warning message normally given if replace=TRUE and the file exists already}
 
 \item{...}{any options to \code{\link{bi_write}} (e.g., 'time_dim')}
 }
 \description{
 Adds an (output, obs, etc.) file to a \code{\link{libbi}} object. This is useful to recreate a \code{\link{libbi}} object from the model and output files of a previous run
+
+The \code{\link{bi_write}} options \code{append} and \code{overwrite} determine what exactly the file will contain at the end of this. If they are both FALSE, any existing file will be ignored. If \code{append} is TRUE, the existing data in the file will be preserved, and any data set passed as \code{data} and not already in the file will be added. If \code{overwrite} is TRUE, existing data in the file will be preserved except for variables that exist in the past \code{data}.
 }
 \examples{
 bi <- libbi(model = system.file(package="rbi", "PZ.bi"))

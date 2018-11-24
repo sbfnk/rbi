@@ -17,9 +17,9 @@ to the file name}
 
 \item{timed}{deprecated; timed variables should be given as data frames}
 
-\item{append}{if TRUE, will append variables if file exists (default: FALSE)}
+\item{append}{if TRUE, will append variables if file exists; default: FALSE}
 
-\item{overwrite}{if TRUE, will overwrite variables if file exists (default: FALSE)}
+\item{overwrite}{if TRUE, will overwrite variables if file exists; default: FALSE}
 
 \item{time_dim}{the name of the time dimension, if one exists; default: "time"}
 
