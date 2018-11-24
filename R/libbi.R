@@ -1181,12 +1181,19 @@ update <- function(x, ...) UseMethod("update")
 #' @return a \code{\link{libbi}} object with updated timestamps
 #' @export
 update.libbi <- function(x, ...){
+  x$timestamp <- list()
   if ("options" %in% names(x)) {
-    for (file_option in grep("-file$", names(x$options), value=TRUE)) {
+    file_options <- setdiff(grep("-file$", names(x$options), value=TRUE), "output-file")
+    for (file_option in file_options) {
       if (file.exists(x$options[[file_option]])) {
         file_type <- sub("-file$", "", file_option)
         x$timestamp[[file_type]] <- file.mtime(x$options[[file_option]])
       }
+    }
+  }
+  if (length(x$output_file_name) > 0) {
+    if (file.exists(x$output_file_name)) {
+      x$timestamp[["output"]] <- file.mtime(x$output_file_name)
     }
   }
   return(x)
