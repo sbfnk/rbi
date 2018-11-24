@@ -264,7 +264,7 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
       }
       if ("target" %in% names(all_options) &&
           all_options[["target"]] == "prediction") {
-        read_init <- bi_read(x, type=c("param", "state"))
+        read_init <- bi_read(x, type=c("param", "state", "obs"))
         np_dims <- bi_dim_len(x$output_file_name, "np")
         x$options[["nsamples"]] <- floor(np_dims / x$thin)
         if (x$thin > 1) {
