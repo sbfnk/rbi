@@ -13,7 +13,7 @@
 
 \item{file}{the type of the file to attach, one of "output", "obs", "input" or "init"}
 
-\item{data}{name of the file to attach, or a list of data frames that contain the outputs}
+\item{data}{name of the file to attach, or a list of data frames that contain the outputs; it will be assumed that this is already thinned}
 
 \item{in_place}{if TRUE, replace the file in place if it already exists in the libbi object; this can speed up the operation if append=TRUE as otherwise the file will have to be read and used again; it should be used with care, though, as it can render existing \code{\link{libbi}} objects invalid as the files they are pointing to are changed.}
 

@@ -545,7 +545,7 @@ attach_data <- function(x, ...) UseMethod("attach_data")
 #' The \code{\link{bi_write}} options \code{append} and \code{overwrite} determine what exactly the file will contain at the end of this. If they are both FALSE, any existing file will be ignored. If \code{append} is TRUE, the existing data in the file will be preserved, and any data set passed as \code{data} and not already in the file will be added. If \code{overwrite} is TRUE, existing data in the file will be preserved except for variables that exist in the past \code{data}.
 #' @param x a \code{\link{libbi}} object
 #' @param file the type of the file to attach, one of "output", "obs", "input" or "init"
-#' @param data name of the file to attach, or a list of data frames that contain the outputs
+#' @param data name of the file to attach, or a list of data frames that contain the outputs; it will be assumed that this is already thinned
 #' @param in_place if TRUE, replace the file in place if it already exists in the libbi object; this can speed up the operation if append=TRUE as otherwise the file will have to be read and used again; it should be used with care, though, as it can render existing \code{\link{libbi}} objects invalid as the files they are pointing to are changed.
 #' @param quiet if TRUE, will suppress the warning message normally given if replace=TRUE and the file exists already
 #' @param ... any options to \code{\link{bi_write}} (e.g., 'time_dim')
@@ -581,7 +581,7 @@ attach_data.libbi <- function(x, file, data, in_place=FALSE, append=FALSE, overw
     } else {
       file.copy(data, target_file_name)
     }
-  } else if (class(data) == "libbi") {
+  } else if ("libbi" %in% class(data)) {
     tryCatch(assert_output(data),
              error=function(e) stop("Error adding ", file, " file\n",  e))
     if (length(data$time_dim) > 0) {
@@ -599,6 +599,17 @@ attach_data.libbi <- function(x, file, data, in_place=FALSE, append=FALSE, overw
     }
   } else if ("list" %in% class(data)) {
     vars <- data
+  } else if (is.null(data)) {
+    if (file == "output") {
+      x$run_flag <- FALSE
+      x$output_file_name <- character(0)
+      x$timestamp[["output"]] <- NULL
+      x$.cache <- new.env(parent = emptyenv())
+    } else {
+      x$timestamp[[file]] <- NULL
+      x$options[[paste(file, "file", sep = "-")]] <- NULL
+    }
+    return(x)
   }
 
   if (append || overwrite || "list" %in% class(data)) {
@@ -639,7 +650,7 @@ attach_data.libbi <- function(x, file, data, in_place=FALSE, append=FALSE, overw
     x$run_flag <- TRUE
     x$timestamp[["output"]] <- file.mtime(x$output_file_name)
     x$.cache <- new.env(parent = emptyenv())
-    x$thin <- 1 ## output file will already be thinned
+    x$thin <- 1 ## output file assumed to be already be thinned
   } else {
     if (is.null(x$options)) x$options <- list()
     x$options[[paste0(file, "-file")]] <- target_file_name
