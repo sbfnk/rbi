@@ -52,12 +52,16 @@ bi_read <- function(x, vars, dims, model, type, file, missval.threshold, coord_d
     if (missing(dims) || is.null(dims)) {
       dims <- x$dims
     } else {
-      warning("Given 'dims' will overwrite dimensions in passed libbi object")
+      if (length(x$dims) > 0) {
+        warning("Given 'dims' will override dimensions in passed libbi object")
+      }
     }
     if (missing(coord_dims)) {
       coord_dims <- x$coord_dims
     } else {
-      warning("Given 'coord_dims' will overwrite dimensions in passed libbi object")
+      if (length(x$coord_dims) > 0) {
+        warning("Given 'coord_dims' will override dimensions in passed libbi object")
+      }
     }
   } else if (missing(coord_dims)) {
     coord_dims <- list()
