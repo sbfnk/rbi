@@ -644,7 +644,6 @@ attach_data.libbi <- function(x, file, data, in_place=FALSE, append=FALSE, overw
     if (file == "obs" && !is.null(file_dims$coord_dims)) {
       x$coord_dims <- file_dims$coord_dims
     }
-    x$options[[paste(file, "file", sep = "-")]] <- target_file_name
   }
 
   if (file == "output") {
