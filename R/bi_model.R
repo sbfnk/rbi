@@ -559,6 +559,7 @@ get_block <- function(x, ...) UseMethod("get_block")
 #' @rdname get_block
 #' @export
 get_block.bi_model <- function(x, name, ...) {
+  if (missing(name)) stop("The name of the block must be provided as 'name'")
   block <- find_block(x, name)
   if (length(block) > 0) {
     lines <- as.character(x[block])
