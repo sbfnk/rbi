@@ -353,7 +353,7 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
 
     ## save options
     x$options <- all_options
-    if (length(x$output_file_name) > 0 && nchar(output_file_name) > 0) {
+    if (length(x$output_file_name) > 0 && nchar(x$output_file_name) > 0) {
       all_options[["output-file"]] <- x$output_file_name
     } else {
       all_options[["output-file"]] <- NULL
