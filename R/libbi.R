@@ -353,7 +353,11 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
 
     ## save options
     x$options <- all_options
-    all_options[["output-file"]] <- x$output_file_name
+    if (length(x$output_file_name) > 0 && nchar(output_file_name) > 0) {
+      all_options[["output-file"]] <- x$output_file_name
+    } else {
+      all_options[["output-file"]] <- NULL
+    }
 
     save_model <- x$model
 
@@ -390,7 +394,7 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
       flush(con)
     }
     x$command <- paste(x$path_to_libbi, client, paste(run_args, collapse=" "))
-    cb_stdout(x$command)
+    if (!(client == "rewrite" && !debug)) cb_stdout(x$command)
     p <-
       tryCatch(processx::run(command=x$path_to_libbi, args=c(client, run_args),
                              error_on_status=FALSE, wd=x$working_folder,

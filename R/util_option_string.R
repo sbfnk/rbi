@@ -36,7 +36,7 @@ option_string <- function(...){
                        } else {
                            ret <- c(paste0("--", option))
                            value <- list_options[[option]]
-                           if (value != "") {
+                           if (length(value) == 0 || value != "") {
                                ret <- c(ret, format(list_options[[option]],
                                                     scientific = FALSE))
                            }
