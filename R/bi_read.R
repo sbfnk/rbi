@@ -325,10 +325,10 @@ bi_read <- function(x, vars, dims, model, type, file, missval_threshold, coord_d
 
   if ("libbi" %in% class(x) && x$use_cache &&
       (missing(file) || file == "output")) {
-    if (!("data" %in% names(x$.cache))) {
+    if (is.null(x$.cache[["data"]])) {
       x$.cache$data <- list()
     }
-    if (!("thin" %in% names(x$.cache))) {
+    if (is.null(x$.cache[["thin"]])) {
       x$.cache$thin <- list()
     }
     for (name in nc_var_names[["other"]][!cached_other]) {
