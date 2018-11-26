@@ -717,7 +717,7 @@ get_const <- function(model) {
     retval[assignment[1]] <- NA_character_
     retval[[assignment[[1]]]] <- tryCatch(
     {
-      eval(parse(text = assignment[2]))
+      eval(parse(text = assignment[2]), envir=NULL, enclos=NULL)
     },
     error = function(cond)
     {
