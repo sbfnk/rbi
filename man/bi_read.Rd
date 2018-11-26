@@ -4,9 +4,10 @@
 \alias{bi_read}
 \title{Bi Read}
 \usage{
-bi_read(x, vars, dims, model, type, file, missval.threshold, coord_dims,
+bi_read(x, vars, dims, model, type, file, missval_threshold, coord_dims,
   vector, thin, verbose = FALSE, clear_cache = FALSE,
-  init.to.param = FALSE, flatten = FALSE)
+  init_to_param = FALSE, flatten = FALSE, missval.threshold,
+  init.to.param = FALSE)
 }
 \arguments{
 \item{x}{either a path to a NetCDF file, or a NetCDF connection created using \code{nc_open}, or a \code{\link{libbi}} object from which to read the output}
@@ -21,7 +22,7 @@ bi_read(x, vars, dims, model, type, file, missval.threshold, coord_dims,
 
 \item{file}{which file to read (if \code{x} is given as a \code{\link{libbi}} object): one of "output" (default), "init", "input", "obs"}
 
-\item{missval.threshold}{upper threshold for the likelihood}
+\item{missval_threshold}{upper threshold for the likelihood}
 
 \item{coord_dims}{any \code{coord} dimensions, given as a named list of character vectors, where each element corresponds to the variable of the same name, and the character vector are the \code{coord} dimensions}
 
@@ -33,9 +34,13 @@ bi_read(x, vars, dims, model, type, file, missval.threshold, coord_dims,
 
 \item{clear_cache}{if TRUE, will clear the cache and re-read the file even if cached data exists}
 
-\item{init.to.param}{logical; if TRUE, convert states to initial values}
+\item{init_to_param}{logical; if TRUE, convert states to initial values}
 
 \item{flatten}{logical; if TRUE, will return a flat (long) data frame with a 'var' column indicating the variable, instead of a list}
+
+\item{missval.threshold}{deprecated; use missval_threshold instead}
+
+\item{init.to.param}{deprecated; use init_to_param instead}
 }
 \value{
 list of results, or a flat data frame (depending on the value of 'flattten')
