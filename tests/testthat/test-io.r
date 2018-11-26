@@ -20,7 +20,7 @@ test_that("saved and re-read libbi object functional",
   filename <- tempfile(fileext=".rds")
   save_libbi(bi, filename)
   bi <- read_libbi(filename)
-  res <- bi_read(bi, clear_cache=TRUE, thin=10, missval.threshold=1e20)
+  res <- bi_read(bi, clear_cache=TRUE, thin=10, missval_threshold=1e20)
 
   expect_true(class(bi) == "libbi")
   expect_true(bi$run_flag)
@@ -35,7 +35,7 @@ test_that("saved and re-read libbi object (from folder) functional",
   name <- file.path(folder, "test")
   save_libbi(bi, split = TRUE, name)
   bi <- read_libbi(name)
-  res <- bi_read(bi, clear_cache=TRUE, thin=10, missval.threshold=1e20)
+  res <- bi_read(bi, clear_cache=TRUE, thin=10, missval_threshold=1e20)
   expect_true(class(bi) == "libbi")
   expect_true(bi$run_flag)
   expect_true(length(bi$model[]) > 0)
