@@ -148,10 +148,10 @@ bi_write <- function(filename, variables, timed, append=FALSE, overwrite=FALSE, 
       var_dims <- list()
       ## list of dimensions
       ## first, check for time and coord columns
-      present_index_cols <- intersect(colnames(element), unlist(index_cols))
+      present_index_cols <- intersect(unlist(index_cols), colnames(element))
       index_table <- unique(element[, present_index_cols, with = FALSE])
       if (nrow(index_table) > 0) {
-        setkeyv(index_table, unlist(index_cols))
+        setkeyv(index_table, unlist(present_index_cols))
       }
       nr_table <- data.table::copy(index_table)
       if (nrow(nr_table) > 0) {
