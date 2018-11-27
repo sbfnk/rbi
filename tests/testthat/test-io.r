@@ -5,8 +5,6 @@ example_output <- bi_read(system.file(package="rbi", "example_output.nc"))
 bi <- attach_data(bi, "output", example_output)
 bi <- attach_data(bi, file="init", bi_read(bi, vars=c("mu", "sigma")))
 
-nc <- nc_open(bi$output_file_name)
-
 test_that("libbi object with added output is functional",
 {
   expect_true(class(bi) == "libbi")
@@ -24,7 +22,7 @@ test_that("saved and re-read libbi object functional",
 
   expect_true(class(bi) == "libbi")
   expect_true(bi$run_flag)
-  expect_true(length(bi$model[]) > 0)
+  expect_true(length(bi$model) > 0)
   expect_true(is.list(res))
   expect_output(print_log(bi), "test")
 })

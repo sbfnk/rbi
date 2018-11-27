@@ -55,8 +55,8 @@ test_that("we can run libbi and analyse results",
   dataset <- bi_generate_dataset(bi, end_time=50, noutputs=50)
   dataset <- bi_generate_dataset(bi, end_time=50)
   dataset_r <- bi_read(dataset)
-  bi1 <- sample(bi, obs=dataset_r, debug=TRUE, fix=c(e=0.5), nsamples=10, with="output-at-obs", without="gdb")
-  bi2 <- sample(bi, seed=1234, model_file=bi$model_file, obs=dataset, working_folder=bi$working_folder, with="transform-initial-to-param")
+  bi1 <- sample(bi, obs=dataset_r["N"], debug=TRUE, fix=c(e=0.5), nsamples=10, with="output-at-obs", without="gdb")
+  bi2 <- sample(bi, seed=1234, model_file=bi$model_file, obs=dataset, working_folder=bi$working_folder, with="transform-initial-to-param", without="output-at-obs")
 
   joined <- join(a=bi1, b=bi2)
   pred <- predict(bi, end_time=100)
