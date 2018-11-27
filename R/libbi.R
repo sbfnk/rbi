@@ -381,7 +381,6 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
     run_args <- option_string(all_options)
 
     x$path_to_libbi <- locate_libbi(x$path_to_libbi)
-    if (verbose) message("Launching LibBi...")
     con <- file(ifelse(length(x$log_file_name) == 0, "", x$log_file_name), open="w+")
     cb_stdout <- function(line, proc) {
       if (x$debug || client == "rewrite") cat(line, "\n")
@@ -394,6 +393,7 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
       flush(con)
     }
     x$command <- paste(x$path_to_libbi, client, paste(run_args, collapse=" "))
+    if (verbose) cat("Launching LibBi...", "\n")
     if (!(client == "rewrite" && !debug)) cb_stdout(x$command)
     p <-
       tryCatch(processx::run(command=x$path_to_libbi, args=c(client, run_args),
@@ -414,7 +414,7 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
                          x$log_file_name, "')\"")
       }
       stop(stop_msg)
-    } else if (verbose) message("...LibBi has finished!")
+    } else if (verbose) cat("...LibBi has finished!",  "\n")
     x$error_flag <- FALSE
 
     if (client == "rewrite") {
