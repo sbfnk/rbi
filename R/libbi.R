@@ -84,8 +84,8 @@ run <- function(x, ...) UseMethod("run")
 #' @param init initialisation of the model, either supplied as a list of values and/or data frames, or a (netcdf) file name, or a \code{\link{libbi}} object which has been run (in which case the output of that run is used). If the object given as \code{x} has been run before, it will be used here with \code{init-np} set to the last iteration of the previous run, unless \code{init} is given explicitly.
 #' @param input input of the model, either supplied as a list of values and/or data frames, or a (netcdf) file name, or a \code{\link{libbi}} object which has been run (in which case the output of that run is used as input)
 #' @param obs observations of the model, either supplied as a list of values and/or data frames, or a (netcdf) file name, or a \code{\link{libbi}} object which has been run (in which case the output of that run is used as observations)
-#' @param time_dim The time dimension in any R objects that have been passed (\code{init}, \code{input}) and \code{obs}); if not given, will be guessed
-#' @param coord_dims The coord dimension(s) in any \code{obs} R objects that have been passed; if not given, will be guessed
+#' @param time_dim The time dimension in any R objects that have been passed (\code{init}, \code{input}) and \code{obs}); if NULL (default), will be guessed from the given observation
+#' @param coord_dims The coord dimension(s) in any \code{obs} R objects that have been passed; if NULL (default), will be guessed from the given observation file given
 #' @param working_folder path to a folder from which to run \code{LibBi}; default to a temporary folder.
 #' @param output_all deprecated; if set to TRUE, all parameters, states and observations will be saved; good for debugging
 #' @param sample_obs deprecated; if set to TRUE, will sample observations
@@ -107,7 +107,7 @@ run <- function(x, ...) UseMethod("run")
 #' @importFrom stats runif
 #' @importFrom processx run
 #' @export
-run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, options, config, log_file_name=character(0), init, input, obs, time_dim, coord_dims, working_folder, output_all=FALSE, sample_obs=FALSE, thin, output_every, chain=TRUE, seed=TRUE, debug=FALSE, ...){
+run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, options, config, log_file_name=character(0), init, input, obs, time_dim = NULL, coord_dims = NULL, working_folder, output_all=FALSE, sample_obs=FALSE, thin, output_every, chain=TRUE, seed=TRUE, debug=FALSE, ...){
 
   ## client options
   libbi_client_args <-
@@ -304,7 +304,7 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
     ## unset global option (we set the file option instead later)
     x$options[[file]] <- NULL
     ## attach data here
-    x <- attach_data(x, file, arg, in_place=TRUE, quiet=TRUE)
+    x <- attach_data(x, file, arg, in_place=TRUE, quiet=TRUE, time_dim=time_dim, coord_dims=coord_dims)
   }
 
   all_options <-
@@ -561,7 +561,7 @@ attach_data <- function(x, ...) UseMethod("attach_data")
 #' example_output <- bi_read(system.file(package="rbi", "example_output.nc"))
 #' bi <- attach_data(bi, "output", example_output)
 #' @export
-attach_data.libbi <- function(x, file, data, in_place=FALSE, append=FALSE, overwrite=FALSE, quiet=FALSE, ...){
+attach_data.libbi <- function(x, file, data, in_place=FALSE, append=FALSE, overwrite=FALSE, quiet=FALSE, time_dim = NULL, coord_dims = NULL, ...){
 
   if (file == "output") {
     existing_file_name <- x[["output_file_name"]]
@@ -593,12 +593,33 @@ attach_data.libbi <- function(x, file, data, in_place=FALSE, append=FALSE, overw
     if (length(data$time_dim) > 0) {
       if (length(x$time_dim) > 0 && x$time_dim != data$time_dim) {
         warning("LibBi object passed as ", file, " file has a different ",
-                "time dimension to the object it is being added to.")
+                "time dimension to the object it is being added to. Will use the",
+                "time dimension of the added object.")
       } else {
         x$time_dim <- data$time_dim
       }
     }
-    if (append || overwrite) {
+    if (file == "obs") {
+      if (is.null(coord_dims) && is.null(data$coord_dims)) {
+        coord_dims <- x$coord_dims
+      } else {
+        if (is.null(coord_dims)) coord_dims <- data$coord_dims
+      }
+    } else {
+      coord_dims <- list()
+    }
+
+    for (coord_dim in names(coord_dims)) {
+      if (!is.null(x$coord_dims[[coord_dim]]) &&
+            x$coord_dims[[coord_dim]] != coord_dims[[coord_dim]]) {
+        warning("Given coord dimension ", coord_dim, " will override a coord dimension of the same name in passed libbi object")
+      }
+      x$coord_dims[[coord_dim]] <- coord_dims[[coord_dim]]
+    }
+
+    if (file == "obs") {
+      vars <- bi_read(data, vars = var_names(x$model, type = "obs"), coord_dims=coord_dims)
+    } else if (append || overwrite) {
       vars <- bi_read(data)
     } else {
       file.copy(data$output_file_name, target_file_name)
@@ -618,7 +639,7 @@ attach_data.libbi <- function(x, file, data, in_place=FALSE, append=FALSE, overw
     return(x)
   }
 
-  if (append || overwrite || "list" %in% class(data)) {
+  if (append || overwrite || "list" %in% class(data) || file == "obs") {
     write_opts <- list(filename=target_file_name, variables=vars)
     if (file == "obs") ## guess coord for observation files
     {
@@ -753,7 +774,7 @@ save_libbi.libbi <- function(x, name, supplement, split = FALSE, ...) {
 
   if (split) {
     folder <- dirname(name)
-    file_base <- basename(name)
+    file_base <- sub("\\.rds$", "", basename(name))
 
     if (!dir.exists(folder)) {
       stop("The folder specified for saving the Libbi object into does not exist.")
@@ -918,7 +939,6 @@ print.libbi <- function(x, verbose=FALSE, ...){
   if (x$run_flag) {
     if (length(x$output_file_name) > 0 && file.exists(x$output_file_name)) {
       contents <- bi_contents(x$output_file_name)
-      
       if ("clock" %in% contents) {
         clock <- bi_read(x, "clock")[["clock"]]
         cat("Run time: ", clock/1e6, " seconds\n")

@@ -117,6 +117,7 @@ bi_write <- function(filename, variables, timed, append=FALSE, overwrite=FALSE, 
         } else if (length(numeric_cols) > 1){
           if ("time" %in% numeric_cols) {
             time_dim <- "time"
+            guess_time <- FALSE
           } else {
             stop("Could not decide on time dimension between ", paste(numeric_cols, collapse=", "))
           }

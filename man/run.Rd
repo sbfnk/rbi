@@ -7,9 +7,9 @@
 \usage{
 \method{run}{libbi}(x, client, proposal = c("model", "prior"), model,
   fix, options, config, log_file_name = character(0), init, input, obs,
-  time_dim, coord_dims, working_folder, output_all = FALSE,
-  sample_obs = FALSE, thin, output_every, chain = TRUE, seed = TRUE,
-  debug = FALSE, ...)
+  time_dim = NULL, coord_dims = NULL, working_folder,
+  output_all = FALSE, sample_obs = FALSE, thin, output_every,
+  chain = TRUE, seed = TRUE, debug = FALSE, ...)
 }
 \arguments{
 \item{x}{a \code{\link{libbi}} object; if this is not given, an empty \code{\link{libbi}} object will be created}
@@ -34,9 +34,9 @@
 
 \item{obs}{observations of the model, either supplied as a list of values and/or data frames, or a (netcdf) file name, or a \code{\link{libbi}} object which has been run (in which case the output of that run is used as observations)}
 
-\item{time_dim}{The time dimension in any R objects that have been passed (\code{init}, \code{input}) and \code{obs}); if not given, will be guessed}
+\item{time_dim}{The time dimension in any R objects that have been passed (\code{init}, \code{input}) and \code{obs}); if NULL (default), will be guessed from the given observation}
 
-\item{coord_dims}{The coord dimension(s) in any \code{obs} R objects that have been passed; if not given, will be guessed}
+\item{coord_dims}{The coord dimension(s) in any \code{obs} R objects that have been passed; if NULL (default), will be guessed from the given observation file given}
 
 \item{working_folder}{path to a folder from which to run \code{LibBi}; default to a temporary folder.}
 

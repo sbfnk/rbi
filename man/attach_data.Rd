@@ -6,7 +6,8 @@
 \title{Attach a new file or data set to a \code{\link{libbi}} object}
 \usage{
 \method{attach_data}{libbi}(x, file, data, in_place = FALSE,
-  append = FALSE, overwrite = FALSE, quiet = FALSE, ...)
+  append = FALSE, overwrite = FALSE, quiet = FALSE,
+  time_dim = NULL, coord_dims = NULL, ...)
 }
 \arguments{
 \item{x}{a \code{\link{libbi}} object}
@@ -22,6 +23,10 @@
 \item{overwrite}{if TRUE, will overwrite variables if file exists; default: FALSE}
 
 \item{quiet}{if TRUE, will suppress the warning message normally given if replace=TRUE and the file exists already}
+
+\item{time_dim}{the name of the time dimension, if one exists; default: "time"}
+
+\item{coord_dims}{the names of the coordinate dimension, if any; should be a named list of character vectors, they are matched to variables names}
 
 \item{...}{any options to \code{\link{bi_write}} (e.g., 'time_dim')}
 }
