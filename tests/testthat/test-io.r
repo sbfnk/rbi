@@ -32,7 +32,7 @@ test_that("saved and re-read libbi object functional",
 test_that("saved and re-read libbi object (from folder) functional",
 {
   folder <- tempdir()
-  name <- file.path(folder, "test")
+  name <- file.path(folder, "test.rds")
   save_libbi(bi, split = TRUE, name)
   bi <- read_libbi(name)
   res <- bi_read(bi, clear_cache=TRUE, thin=10, missval_threshold=1e20)

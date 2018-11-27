@@ -759,7 +759,7 @@ save_libbi <- function(x, ...) UseMethod("save_libbi")
 #' This saves all options, files and outputs of a \code{LibBi} run to an RDS file specified
 #'
 #' @param x a \code{\link{libbi}} object
-#' @param name name of the RDS file(s) to save to. If \code{split=TRUE}, this will be taken as a base for the names of the files to be created, e.g. 'dir/name' to create files of the form name_....rds in directory 'dir'.
+#' @param name name of the RDS file(s) to save to. If \code{split=TRUE}, this will be taken as a base for the names of the files to be created, e.g. 'dir/name.rds' to create files of the form name_....rds in directory 'dir'.
 #' @param supplement any supplementary data to save
 #' @param split Logical, defaults to \code{FALSE}. Should the objects from the
 #'  \code{LibBi} run be saved seperately in a folder.
@@ -812,17 +812,20 @@ save_libbi.libbi <- function(x, name, supplement, split = FALSE, ...) {
   if (!missing(supplement)) save_obj[["supplement"]] <- supplement
 
   if (split) {
+    filenames <- list()
     for (i in names(save_obj)) {
       if (i == "output") {
+        filenames[[i]] <- list()
         for (j in names(save_obj[[i]])) {
-          filename <- paste(file_base, i, j, sep="_")
-          saveRDS(save_obj[[i]][[j]], file.path(folder, paste0(filename, ".rds")))
+          filenames[[i]][[j]] <- paste0(paste(file_base, i, j, sep="_"), ".rds")
+          saveRDS(save_obj[[i]][[j]], file.path(folder, filenames[[i]][[j]]), ...)
         }
       } else {
-        filename <- paste(file_base, i, sep="_")
-        saveRDS(save_obj[[i]], file.path(folder, paste0(filename, ".rds")))
+        filenames[[i]] <- paste0(paste(file_base, i, sep="_"), ".rds")
+        saveRDS(save_obj[[i]], file.path(folder, filenames[[i]]), ...)
       }
     }
+    saveRDS(list(filenames=filenames, split=c()), name, ...)
   } else{
     saveRDS(save_obj, name, ...)
   }
@@ -835,46 +838,43 @@ save_libbi.libbi <- function(x, name, supplement, split = FALSE, ...) {
 #' This reads all options, files and outputs of a \code{LibBi} run from a specified RDS file or
 #' folder (if \code{split = TRUE} has been used with \code{save_libbi}).
 #'
-#' @param name name of the RDS file(s) to read; if \code{join} is set to \code{TRUE},  this will assume that files are to be read in beginning with \code{name}.
-#' with \code{file}.
-#' @param join if TRUE, will assume that a collection of files was saved with \code{split=TRUE} in \code{save_libbi}; default is FALSE if \code{name} ends on '.rds', and TRUE otherwise, unless set explicitly
+#' @param name name of the RDS file(s) to read
 #' @param ... any extra options to pass to \code{\link{libbi}} when creating the new object
 #' @return a \code{\link{libbi}} object
 #' @export
-read_libbi <- function(name, join, ...) {
+read_libbi <- function(name, ...) {
   if (missing(name)) {
     stop("Need to specify a file or folder to read from")
   }
 
-  if (missing(join)) join <- !grepl("\\.rds$", name)
+  read_obj <- readRDS(name)
 
-  if (join) {
+  if ("split" %in% names(read_obj)) { ## object has been split
     folder <- dirname(name)
-    file_base <- basename(name)
 
     if (!dir.exists(folder)) {
       stop("Folder ", folder, "does not exist.")
     }
 
-    files <- list.files(folder, pattern=paste0("^", file_base, ".*\\.rds$"))
+    filenames <- read_obj[["filenames"]]
 
     read_obj <- list()
-    for (file in files) {
-      obj <- readRDS(file.path(folder, file))
-      obj_name <- sub(paste0("^", file_base, "_(.*)\\.rds$"), "\\1", file)
-      if (grepl("^output_", obj_name)) {
-        var_name <- sub("^output_", "", obj_name)
-        obj <- list(obj)
-        names(obj) <- var_name
-        read_obj[["output"]] <- c(read_obj[["output"]], obj)
-      } else if (obj_name == "internals") {
-        read_obj[names(obj)] <- obj
+    for (obj_name in names(filenames)) {
+      if (obj_name == "output") {
+        for (var_name in names(filenames[["output"]])) {
+          obj <- list(readRDS(file.path(folder, filenames[["output"]][[var_name]])))
+          names(obj) <- var_name
+          read_obj[["output"]] <- c(read_obj[["output"]], obj)
+        }
       } else {
-        read_obj[[obj_name]] <- obj
+        obj <- readRDS(file.path(folder, filenames[[obj_name]]))
+        if (obj_name == "internals") {
+          read_obj[names(obj)] <- obj
+        } else {
+          read_obj[[obj_name]] <- obj
+        }
       }
     }
-  } else {
-    read_obj <- readRDS(name)
   }
 
   libbi_options <- list(...)
