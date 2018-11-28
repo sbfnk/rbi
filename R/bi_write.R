@@ -97,7 +97,9 @@ bi_write <- function(filename, variables, timed, append=FALSE, overwrite=FALSE, 
       ## attach numbers to duplicated columnns
       duplicated_cols <- unique(cols[duplicated(cols)])
       for (col in duplicated_cols) {
-        cols[cols==col] <- paste(col, seq_along(cols[cols==col]), sep=".")
+        new_colnames <- paste(col, seq_along(cols[cols==col]), sep=".")
+        setnames(element, which(cols==col), new_colnames)
+        cols[cols==col] <- new_colnames
       }
       ## check
       if (!(value_column %in% colnames(element))) {
