@@ -246,10 +246,11 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
 
   if (x$run_flag && length(x$output_file_name) == 1 &&
       file.exists(x$output_file_name)) {
+    added_options <- option_list(new_options)
     init_file_given <-
       ("init" %in% file_args && !is.null(x$options[["init"]])) ||
-      "init-file" %in% names(new_options)
-    init_np_given <- "init-np" %in% names(new_options)
+      "init-file" %in% names(added_options)
+    init_np_given <- "init-np" %in% names(added_options)
     init_given <- init_file_given || init_np_given
     if (missing(chain)) { ## if chain not specified, only chain if no init
       ## option is given
@@ -270,22 +271,14 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
         if (x$thin > 1) {
           x$thin <- 1
         }
-        if (length(read_init) > 0) {
-          x$options[["init"]] <- read_init
-        } else {
-          x$options[["init"]] <- NULL
-        }
+        x$options[["init"]] <- read_init
       } else {
         types <- "param"
         chain_init <- ("with-transform-initial-to-param" %in% names(all_options))
         if (chain_init) types <- c(types, "state")
         read_init <- bi_read(x, type=types, init_to_param=chain_init)
         ## only take last sample
-        if (length(read_init) > 0) {
-          x$options[["init"]] <- extract_sample(read_init, "last")
-        } else {
-          x$options[["init"]] <- NULL
-        }
+        x$options[["init"]] <- extract_sample(read_init, "last")
       }
       if (!is.null(x$options)) file_args <- union(file_args, "init")
     }
