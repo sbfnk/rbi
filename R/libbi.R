@@ -571,7 +571,10 @@ attach_data.libbi <- function(x, file, data, in_place=FALSE, append=FALSE, overw
   }
 
   if (is.character(data)) {
-    if (append || overwrite) {
+    if (file == "obs") {
+      vars <-
+        bi_read(data, vars = var_names(x$model, type = "obs"), coord_dims=coord_dims)
+    } else if (append || overwrite) {
       vars <- bi_read(data)
     } else {
       file.copy(data, target_file_name)
@@ -582,7 +585,7 @@ attach_data.libbi <- function(x, file, data, in_place=FALSE, append=FALSE, overw
     if (length(data$time_dim) > 0) {
       if (length(x$time_dim) > 0 && x$time_dim != data$time_dim) {
         warning("LibBi object passed as ", file, " file has a different ",
-                "time dimension to the object it is being added to. Will use the",
+                "time dimension to the object it is being added to. Will use the ",
                 "time dimension of the added object.")
       } else {
         x$time_dim <- data$time_dim
@@ -668,7 +671,6 @@ attach_data.libbi <- function(x, file, data, in_place=FALSE, append=FALSE, overw
     x$.cache <- new.env(parent = emptyenv())
     x$thin <- 1 ## output file assumed to be already be thinned
   } else {
-    if (is.null(x$options)) x$options <- list()
     x$options[[paste0(file, "-file")]] <- target_file_name
     x$timestamp[[file]] <- file.mtime(target_file_name)
   }
