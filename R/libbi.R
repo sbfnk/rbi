@@ -330,10 +330,6 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
     if (client != "rewrite") {
       ## clear cache
       x$.cache <- new.env(parent = emptyenv())
-      ## check that model is not empty
-      if (is_empty(x$model)) {
-        stop("No model given.")
-      }
 
       if (!("output-file" %in% names(all_options))) {
         x$output_file_name <-
