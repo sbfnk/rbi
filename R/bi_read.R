@@ -266,6 +266,15 @@ bi_read <- function(x, vars, dims, model, type, file, missval_threshold, coord_d
         if (length(cols) > 0) setkeyv(mav, cols)
         rownames(mav) <- seq_len(nrow(mav))
 
+        if ("libbi" %in% class(x) && length(x$coord_dims) > 0 &&
+              var_name %in% names(x$coord_dims) && "coord" %in% colnames(mav)) {
+          setnames(mav, "coord", x$coord_dims[[var_name]])
+        } 
+        if ("libbi" %in% class(x) && length(x$time_dim) == 1 &&
+              "time" %in% colnames(mav)) {
+          setnames(mav, "time", x$time_dim)
+        }
+
         for (col in colnames(mav)) {
           ## strip trailing numbers, these indicate duplicate dimensions
           dim_col <- sub("\\.[0-9]+$", "", col)
