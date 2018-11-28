@@ -842,10 +842,6 @@ read_libbi <- function(name, ...) {
   if ("split" %in% names(read_obj)) { ## object has been split
     folder <- dirname(name)
 
-    if (!dir.exists(folder)) {
-      stop("Folder ", folder, "does not exist.")
-    }
-
     filenames <- read_obj[["filenames"]]
 
     read_obj <- list()
@@ -960,7 +956,6 @@ print.libbi <- function(x, verbose=FALSE, ...){
 #' @rdname print_log
 print_log <- function(x){
   if ("libbi" %in% class(x)) {
-    if (!("log_file_name" %in% names(x)) || length(x$log_file_name) == 0) stop("'x' does not contain a log file")
     file_name <- x$log_file_name
     if (!file.exists(file_name)) stop("Log file '", x$log_file_name, " does not exist.")
   } else if (is.character(x)) {
