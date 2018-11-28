@@ -165,13 +165,13 @@ bi_read <- function(x, vars, dims, model, type, file, missval_threshold, coord_d
   }
   for (var_name in nc_var_names[["other"]][cached_other]) {
     if (verbose) {
-      message(date(), " ", var_name, " (cached)")
+      message(date(), " Reading ", var_name, " (cached)")
     }
     res[[var_name]] <- x$.cache$data[[var_name]]
   }
   for (var_name in nc_var_names[["other"]][!cached_other]) {
     if (verbose) {
-      message(date(), " ", var_name)
+      message(date(), " Reading ", var_name)
     }
     if (missing(vars) || var_name %in% vars) {
 
