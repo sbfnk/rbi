@@ -28,7 +28,7 @@ bi_open <- function(x, file = "output")
       }
       filename <- x$options[[opt_name]]
     } else {
-      assert_output(x)
+      assert_files(x)
       filename <- x$output_file_name
     }
     nc <- nc_open(filename)

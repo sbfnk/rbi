@@ -580,13 +580,13 @@ attach_data.libbi <- function(x, file, data, in_place=FALSE, append=FALSE, overw
       file.copy(data, target_file_name)
     }
   } else if ("libbi" %in% class(data)) {
-    tryCatch(assert_output(data),
              error=function(e) stop("Error adding ", file, " file\n",  e))
     if (length(data$time_dim) > 0) {
       if (length(x$time_dim) > 0 && x$time_dim != data$time_dim) {
         warning("LibBi object passed as ", file, " file has a different ",
                 "time dimension to the object it is being added to. Will use the ",
                 "time dimension of the added object.")
+      tryCatch(assert_files(data),
       } else {
         x$time_dim <- data$time_dim
       }
@@ -761,7 +761,7 @@ save_libbi.libbi <- function(x, name, supplement, split = FALSE, ...) {
     stop("Need to specify a name")
   }
 
-  assert_output(x)
+  assert_files(x)
 
   if (split) {
     folder <- dirname(name)
@@ -997,16 +997,16 @@ summary.libbi <- function(object, ...){
 }
 
 #' @export
-assert_output <- function(x, ...) UseMethod("assert_output")
-#' @name assert_output
-#' @rdname assert_output
+assert_files <- function(x, ...) UseMethod("assert_files")
+#' @name assert_files
+#' @rdname assert_files
 #' @title Check that a LibBi wrapper has valid output
 #' @description
 #' This checks that the \code{\link{libbi}} object given has been run (via \code{\link{sample}}, \code{\link{filter}} or \code{\link{optimize}})) and the output file has not been modified since.
 #' @param x a \code{\link{libbi}} object
 #' @param ... ignored
 #' @keywords internal
-assert_output.libbi <- function(x, ...)
+assert_files.libbi <- function(x, ...)
 {
     if (!x$run_flag) {
       stop("The libbi object must be run first (using sample, filter or optimise).")
@@ -1128,7 +1128,7 @@ join.libbi <- function(x, ...) {
 #' @return a vector of log-likelihood
 #' @export
 logLik.libbi <- function(object, ...){
-  assert_output(object)
+  assert_files(object)
   res <- bi_read(object)
   return(res$loglikelihood$value)
 }
