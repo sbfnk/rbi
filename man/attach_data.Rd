@@ -7,7 +7,7 @@
 \usage{
 \method{attach_data}{libbi}(x, file, data, in_place = FALSE,
   append = FALSE, overwrite = FALSE, quiet = FALSE,
-  time_dim = NULL, coord_dims = NULL, ...)
+  time_dim = character(0), coord_dims = list(), ...)
 }
 \arguments{
 \item{x}{a \code{\link{libbi}} object}

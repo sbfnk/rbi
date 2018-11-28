@@ -5,7 +5,7 @@
 \title{Bi Read}
 \usage{
 bi_read(x, vars, dims, model, type, file, missval_threshold,
-  coord_dims = NULL, vector, thin, verbose = FALSE,
+  coord_dims = list(), vector, thin, verbose = FALSE,
   clear_cache = FALSE, init_to_param = FALSE, flatten = FALSE,
   missval.threshold, init.to.param = FALSE)
 }

@@ -550,7 +550,7 @@ attach_data <- function(x, ...) UseMethod("attach_data")
 #' example_output <- bi_read(system.file(package="rbi", "example_output.nc"))
 #' bi <- attach_data(bi, "output", example_output)
 #' @export
-attach_data.libbi <- function(x, file, data, in_place=FALSE, append=FALSE, overwrite=FALSE, quiet=FALSE, time_dim = NULL, coord_dims = NULL, ...){
+attach_data.libbi <- function(x, file, data, in_place=FALSE, append=FALSE, overwrite=FALSE, quiet=FALSE, time_dim = character(0), coord_dims = list(), ...){
 
   if (file == "output") {
     existing_file_name <- x[["output_file_name"]]
@@ -570,51 +570,55 @@ attach_data.libbi <- function(x, file, data, in_place=FALSE, append=FALSE, overw
     }
   }
 
-  if (is.character(data)) {
+  if (is.character(data) || ("libbi" %in% class(data))) {
+    if (is.character(data)) {
+      source_file_name <- "data"
+    } else {
+      tryCatch(assert_files(data),
+               error=function(e) stop("Error adding ", file, " file\n",  e))
+      if (length(data$time_dim) == 0 && length(time_dim) == 0) {
+        time_dim <- x$time_dim
+      } else {
+        if (length(time_dim) == 0) time_dim <- data$time_dim
+      }
+
+      if (length(time_dim) > 0) {
+        if (length(x$time_dim) > 0 && x$time_dim != time_dim) {
+          warning("Given time dimension will override the time dimension ",
+                  "of the object it is being added to.")
+        }
+        x$time_dim <- data$time_dim
+      }
+
+      if (file == "obs") {
+        if (length(coord_dims) == 0 && length(data$coord_dims) == 0) {
+          coord_dims <- x$coord_dims
+        } else {
+          if (length(coord_dims) == 0) coord_dims <- data$coord_dims
+        }
+      }
+
+      if (length(coord_dims) > 0) {
+        for (coord_dim in names(coord_dims)) {
+          if (!is.null(x$coord_dims[[coord_dim]]) &&
+                x$coord_dims[[coord_dim]] != coord_dims[[coord_dim]]) {
+            warning("Given coord dimension ", coord_dim,
+                    " will override a coord dimension of the same name in",
+                    " passed libbi object")
+          }
+        }
+        x$coord_dims <- coord_dims
+      }
+      source_file_name <- data$output_file_name
+    }
+
     if (file == "obs") {
       vars <-
         bi_read(data, vars = var_names(x$model, type = "obs"), coord_dims=coord_dims)
     } else if (append || overwrite) {
       vars <- bi_read(data)
     } else {
-      file.copy(data, target_file_name)
-    }
-  } else if ("libbi" %in% class(data)) {
-             error=function(e) stop("Error adding ", file, " file\n",  e))
-    if (length(data$time_dim) > 0) {
-      if (length(x$time_dim) > 0 && x$time_dim != data$time_dim) {
-        warning("LibBi object passed as ", file, " file has a different ",
-                "time dimension to the object it is being added to. Will use the ",
-                "time dimension of the added object.")
-      tryCatch(assert_files(data),
-      } else {
-        x$time_dim <- data$time_dim
-      }
-    }
-    if (file == "obs") {
-      if (is.null(coord_dims) && is.null(data$coord_dims)) {
-        coord_dims <- x$coord_dims
-      } else {
-        if (is.null(coord_dims)) coord_dims <- data$coord_dims
-      }
-    } else {
-      coord_dims <- list()
-    }
-
-    for (coord_dim in names(coord_dims)) {
-      if (!is.null(x$coord_dims[[coord_dim]]) &&
-            x$coord_dims[[coord_dim]] != coord_dims[[coord_dim]]) {
-        warning("Given coord dimension ", coord_dim, " will override a coord dimension of the same name in passed libbi object")
-      }
-      x$coord_dims[[coord_dim]] <- coord_dims[[coord_dim]]
-    }
-
-    if (file == "obs") {
-      vars <- bi_read(data, vars = var_names(x$model, type = "obs"), coord_dims=coord_dims)
-    } else if (append || overwrite) {
-      vars <- bi_read(data)
-    } else {
-      file.copy(data$output_file_name, target_file_name)
+      file.copy(source_file_name, target_file_name)
     }
   } else if ("list" %in% class(data)) {
     vars <- data

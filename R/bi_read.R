@@ -32,7 +32,7 @@
 #' example_output_file <- system.file(package="rbi", "example_output.nc")
 #' d <- bi_read(example_output_file)
 #' @export
-bi_read <- function(x, vars, dims, model, type, file, missval_threshold, coord_dims = NULL, vector, thin, verbose=FALSE, clear_cache=FALSE, init_to_param=FALSE, flatten=FALSE, missval.threshold, init.to.param=FALSE)
+bi_read <- function(x, vars, dims, model, type, file, missval_threshold, coord_dims = list(), vector, thin, verbose=FALSE, clear_cache=FALSE, init_to_param=FALSE, flatten=FALSE, missval.threshold, init.to.param=FALSE)
 {
   if (!missing(missval.threshold)) {
     warning("missval.threshold is deprecated. Use 'missval_threshold' instead.")
@@ -83,20 +83,13 @@ bi_read <- function(x, vars, dims, model, type, file, missval_threshold, coord_d
         clear_cache=TRUE ## need to clear cache if reading with different dimensions
       }
     }
-    if (is.null(coord_dims)) {
-      coord_dims <- x$coord_dims
-    } else {
-      for (coord_dim in names(coord_dims)) {
-        if (!is.null(x$coord_dims[[coord_dim]]) &&
-              x$coord_dims[[coord_dim]] != coord_dims[[coord_dim]]) {
-          warning("Given coord dimension ", coord_dim, " will override a coord dimension of the same name in passed libbi object")
-          clear_cache=TRUE ## need to clear cache if reading with different dimensions
-        }
-        x$coord_dims[[coord_dim]] <- coord_dims[[coord_dim]]
+    for (coord_dim in names(coord_dims)) {
+      if (!is.null(x$coord_dims[[coord_dim]]) &&
+            x$coord_dims[[coord_dim]] != coord_dims[[coord_dim]]) {
+        warning("Given coord dimension ", coord_dim, " will override a coord dimension of the same name in passed libbi object")
+        clear_cache=TRUE ## need to clear cache if reading with different dimensions
       }
     }
-  } else if (is.null(coord_dims)) {
-    coord_dims <- list()
   }
 
   all_nc_var_names <- unname(vapply(nc[["var"]], function(y) { y[["name"]] }, ""))
