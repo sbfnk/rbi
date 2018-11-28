@@ -805,7 +805,7 @@ get_name <- function(x, ...) UseMethod("get_name")
 #' @export
 get_name.bi_model <- function(x, ...) {
   if (length(x) > 0) {
-    name <- gsub("model ", "", gsub("\\{", "", x[1]))
+    name <- gsub("^model[[:space:]]*", "", gsub("\\{", "", x[1]))
     name <- gsub("[[:space:]]*$", "", name)
     name <- gsub("^[[:space:]]*", "", name)
   } else {
