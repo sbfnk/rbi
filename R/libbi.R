@@ -628,7 +628,8 @@ attach_data.libbi <- function(x, file, data, in_place=FALSE, append=FALSE, overw
     return(x)
   }
 
-  if (append || overwrite || "list" %in% class(data) || file == "obs") {
+  if ((append || overwrite || "list" %in% class(data) || file == "obs") &&
+        length(vars) > 0) {
     write_opts <- list(filename=target_file_name, variables=vars)
     if (file == "obs") ## guess coord for observation files
     {
