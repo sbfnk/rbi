@@ -1035,17 +1035,17 @@ assert_output.libbi <- function(x, ...)
       }
     }
 
-    for (file_option in grep("-file$", x$options, value=TRUE)) {
+    for (file_option in grep("-file$", names(x$options), value=TRUE)) {
       file_type <- sub("-file$", "", file_option)
-      if (file.exists(x[[file_option]])) {
-        if (file_type %in% names(x$timestamp) ||
-              x$timestamp[[file_type]] < file.mtime(x[[file_option]])) {
-          stop(file_type, " file ", x[[file_option]],
+      if (file.exists(x$options[[file_option]])) {
+        if (file_type %in% names(x$timestamp) &&
+              x$timestamp[[file_type]] < file.mtime(x$options[[file_option]])) {
+          stop(file_type, " file ", x$options[[file_option]],
                " has been modified since LibBi was run. You can use ",
                " the 'update' function to accept the changes.")
         }
       } else {
-        stop(file_type, " '", x[[file_option]], " does not exist.")
+        stop(file_type, " '", x$options[[file_option]], " does not exist.")
       }
     }
 }
