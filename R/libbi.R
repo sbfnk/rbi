@@ -107,7 +107,7 @@ run <- function(x, ...) UseMethod("run")
 #' @importFrom stats runif
 #' @importFrom processx run
 #' @export
-run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, options, config, log_file_name=character(0), init, input, obs, time_dim = NULL, coord_dims = NULL, working_folder, output_all=FALSE, sample_obs=FALSE, thin, output_every, chain=TRUE, seed=TRUE, debug=FALSE, ...){
+run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, options, config, log_file_name=character(0), init, input, obs, time_dim = character(0), coord_dims = list(), working_folder, output_all=FALSE, sample_obs=FALSE, thin, output_every, chain=TRUE, seed=TRUE, debug=FALSE, ...){
 
   ## client options
   libbi_client_args <-
