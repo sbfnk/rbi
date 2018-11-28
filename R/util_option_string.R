@@ -8,7 +8,6 @@
 #
 option_string <- function(...){
   list_options <- list()
-  string <- ""
 
   for (option in list(...)) list_options[names(option)] <- option
 
