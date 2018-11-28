@@ -271,14 +271,14 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
         if (x$thin > 1) {
           x$thin <- 1
         }
-        x$options[["init"]] <- read_init
+        x <- attach_data(x, "init", read_init)
       } else {
         types <- "param"
         chain_init <- ("with-transform-initial-to-param" %in% names(all_options))
         if (chain_init) types <- c(types, "state")
         read_init <- bi_read(x, type=types, init_to_param=chain_init)
         ## only take last sample
-        x$options[["init"]] <- extract_sample(read_init, "last")
+        x <- attach_data(x, "init", extract_sample(read_init, "last"))
       }
       if (!is.null(x$options)) file_args <- union(file_args, "init")
     }
@@ -731,14 +731,13 @@ attach_file.libbi <- function(x, file, data, force=FALSE, ...){
   if (file == "output") {
     x$output_file_name <- target_file_name
     x$run_flag <- TRUE
-    x$timestamp[["output"]] <- file.mtime(x$output_file_name)
     x$.cache <- new.env(parent = emptyenv())
     x$thin <- 1 ## output file will already be thinned
   } else {
     if (is.null(x$options)) x$options <- list()
     x$options[[paste0(file, "-file")]] <- target_file_name
-    x$timestamp[[file]] <- file.mtime(target_file_name)
   }
+  x <- update(x)
   return(x)
 }
 
@@ -1028,8 +1027,8 @@ assert_output.libbi <- function(x, ...)
         if (file_type %in% names(x$timestamp) &&
               x$timestamp[[file_type]] < file.mtime(x$options[[file_option]])) {
           stop(file_type, " file ", x$options[[file_option]],
-               " has been modified since LibBi was run. You can use ",
-               " the 'update' function to accept the changes.")
+               " has been modified since LibBi was run. You can use",
+               " the 'update' function to accept this change.")
         }
       } else {
         stop(file_type, " '", x$options[[file_option]], " does not exist.")
