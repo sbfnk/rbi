@@ -305,7 +305,7 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
     log_file_name <- character(0)
   }
 
-  if (!x$user_log_file || length(log_file_name) == 0) {
+  if (!x$user_log_file && length(log_file_name) == 0) {
     x$log_file_name <- tempfile(pattern="output", fileext=".txt",
                                 tmpdir=absolute_path(x$working_folder))
     x$user_log_file <- FALSE
