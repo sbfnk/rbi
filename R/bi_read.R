@@ -54,6 +54,10 @@ bi_read <- function(x, vars, dims, model, type, file, missval_threshold, coord_d
     }
   }
 
+  if (!missing(vector) && vector) {
+    warning("'vector' is deprecated. Will return data frame")
+  }
+
   if (missing(file)) {
     nc <- bi_open(x)
   } else {
@@ -302,10 +306,6 @@ bi_read <- function(x, vars, dims, model, type, file, missval_threshold, coord_d
         } else {
           mav[mav > missval_threshold] <- NA_real_
         }
-      }
-
-      if (!missing(vector) && vector) {
-        warning("'vector' is deprecated. Will return data frame")
       }
 
       if (data.table::is.data.table(mav)){
