@@ -10,13 +10,7 @@ option_string <- function(...){
   list_options <- list()
   string <- ""
 
-  for (option in list(...)) {
-    if (is.list(option)) {
-      list_options[names(option)] <- option
-    } else {
-      stop("arguments to 'option_string' must be lists or character vectors")
-    }
-  }
+  for (option in list(...)) list_options[names(option)] <- option
 
   string <- lapply(names(list_options),
                    function(option) {
@@ -29,10 +23,6 @@ option_string <- function(...){
                                else
                                    return(paste0("--disable-", option))
                            }
-                       } else if (option == "dry") {
-                           return(paste0("--dry-", list_options[[option]]))
-                       } else if (option %in% c("with", "without")) {
-                           return(paste0("--", option, "-", list_options[[option]]))
                        } else {
                            ret <- c(paste0("--", option))
                            value <- list_options[[option]]
