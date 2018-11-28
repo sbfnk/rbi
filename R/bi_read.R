@@ -78,6 +78,7 @@ bi_read <- function(x, vars, dims, model, type, file, missval_threshold, coord_d
     } else {
       if (length(x$dims) > 0) {
         warning("Given 'dims' will override dimensions in passed libbi object")
+        clear_cache=TRUE ## need to clear cache if reading with different dimensions
       }
     }
     if (is.null(coord_dims)) {
@@ -87,6 +88,7 @@ bi_read <- function(x, vars, dims, model, type, file, missval_threshold, coord_d
         if (!is.null(x$coord_dims[[coord_dim]]) &&
               x$coord_dims[[coord_dim]] != coord_dims[[coord_dim]]) {
           warning("Given coord dimension ", coord_dim, " will override a coord dimension of the same name in passed libbi object")
+          clear_cache=TRUE ## need to clear cache if reading with different dimensions
         }
         x$coord_dims[[coord_dim]] <- coord_dims[[coord_dim]]
       }
