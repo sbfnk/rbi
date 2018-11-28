@@ -7,7 +7,7 @@
 bi_generate_dataset(..., output_every = 1)
 }
 \arguments{
-\item{...}{arguments to be passed to \code{\link{libbi}} and \code{\link{sample}}, especially 'model', 'end_time' and 'seed'.}
+\item{...}{arguments to be passed to \code{\link{sample.libbi}}, especially 'model', 'end_time' and 'seed'.}
 
 \item{output_every}{real; if given, \code{noutputs} will be set so that there is output every \code{output_every} time steps; if set to 0, only generate an output at the final time}
 }
