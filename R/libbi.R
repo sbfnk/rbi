@@ -1032,7 +1032,7 @@ assert_files.libbi <- function(x, ...)
                " the 'update' function to accept this change.")
         }
       } else {
-        stop(file_type, " '", x$options[[file_option]], " does not exist.")
+        stop(file_type, " file '", x$options[[file_option]], " does not exist.")
       }
     }
 }
