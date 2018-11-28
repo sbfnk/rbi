@@ -256,7 +256,7 @@ bi_read <- function(x, vars, dims, model, type, file, missval_threshold, coord_d
               mav <- merge(mav_merge, mav, by = unname(matching_dims))
             }
           } else if (length(matching_vars) > 1) {
-            stop(paste0("Found multiple matching", var_type, " variables for ", var_name, ": ", matching_vars))
+            stop("Found multiple matching ", var_type, " variables for ", var_name, ": ", matching_vars)
           }
         }
 
