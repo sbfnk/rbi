@@ -1061,7 +1061,7 @@ predict.libbi <- function(x, ...) {
 ##' @export
 sample_obs <- function(x) {
   if (!("libbi" %in% class(x))) {
-    stop("'x' must bee a 'libbi' object")
+    stop("'x' must be a 'libbi' object")
   }
   out <- bi_read(x)
   out$clock <- NULL ## we don't want to overwrite the clock later
