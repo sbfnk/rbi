@@ -52,8 +52,6 @@ bi_read <- function(x, vars, dims, model, type, file, missval_threshold, coord_d
     } else {
       stop("Can't give 'init.to.param' and 'init_to_param'.")
     }
-  } else if (missing(init_to_param)){
-    init_to_param <- NULL
   }
 
   if (missing(file)) {
@@ -295,14 +293,14 @@ bi_read <- function(x, vars, dims, model, type, file, missval_threshold, coord_d
         mav <- all_values
       }
 
-      if (!missing(missval.threshold)) {
+      if (!missing(missval_threshold)) {
         if (data.table::is.data.table(mav)) {
-          missing.values <- which(mav$value > missval.threshold)
+          missing.values <- which(mav$value > missval_threshold)
           if (length(missing.values) > 0) {
             mav[missing.values, ]$value <- NA_real_
           }
         } else {
-          mav[mav > missval.threshold] <- NA_real_
+          mav[mav > missval_threshold] <- NA_real_
         }
       }
 
@@ -334,7 +332,7 @@ bi_read <- function(x, vars, dims, model, type, file, missval_threshold, coord_d
     }
   }
 
-  if (init.to.param) {
+  if (init_to_param) {
     res <- lapply(res, function(x) {
       if (is.data.frame(x) && "time" %in% colnames(x)) {
         min_time <- min(x$time)
