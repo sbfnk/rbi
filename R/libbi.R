@@ -213,11 +213,8 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
     x <- create_working_folder(x)
   }
 
-  if (length(x$model_file_name) == 0) {
-    x$model_file_name <-
-      file.path(absolute_path(x$working_folder),
-                paste0(paste(get_name(x$model), "model", sep = "_"), ".bi"))
-  }
+  x$model_file_name <-
+    file.path(absolute_path(x$working_folder), paste0(get_name(x$model), ".bi"))
 
   args <- match.call()
 
