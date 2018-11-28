@@ -1148,50 +1148,6 @@ logLik.libbi <- function(object, ...){
 }
 
 #' @export
-clone <- function(x, ...) UseMethod("clone")
-#' @rdname clone
-#' @name clone
-#' @title Create a clone of a \code{\link{libbi}} object
-#' @description
-#' This creates new versions of all the (input, output, etc.) files and creates a new object that is a copy of the given object.
-#' @param x the object to clone
-#' @param ... any additional arguments for \code{\link{run.libbi}}
-#' @return copy of the given object 
-#' @author Sebastian Funk
-#' @export
-clone.libbi <- function(x, ...) {
-
-  new_obj <- x
-
-  new_obj[[".gc_env"]] <- emptyenv()
-  new_obj[[".cache"]] <- new.env(parent = emptyenv())
-
-  new_obj$options$seed <- NULL
-  new_obj$working_folder <- NULL
-  new_obj$model_file_name <- NULL
-  new_obj$log_file_name <- NULL
-  new_obj$output_file_name <- NULL
-  file_options <- grep("-file$", names(new_obj$options))
-  for (file_option in file_options) new_obj$options[[file_option]] <- NULL
-
-  if ("client" %in% names(list(...))) stop("'client' cannot be passed to copy. Copy first,  then run a client.")
-  new_obj <- run.libbi(new_obj, client=character(0), ...)
-
-  ## re-add files
-  for (file_option in file_options) {
-    file_type <- sub("-file$", "", file_option)
-    temp_obj <- bi_read(x, file=file_type, thin=1) ## don't thin for copying
-    new_obj <- attach_data(new_obj, file=file_type, temp_obj)
-  }
-  if (length(x$output_file_name) > 0 && file.exists(x$output_file_name)) {
-    temp_obj <- bi_read(x, thin=1)
-    new_obj <- attach_data(new_obj, file="output", temp_obj)
-  }
-
-  return(new_obj)
-}
-
-#' @export
 update <- function(x, ...) UseMethod("update")
 #' @rdname update
 #' @name update
