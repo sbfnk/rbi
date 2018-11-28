@@ -97,19 +97,11 @@ bi_read <- function(x, vars, dims, model, type, file, missval_threshold, coord_d
 
   all_nc_var_names <- unname(vapply(nc[["var"]], function(y) { y[["name"]] }, ""))
 
-  time_coord_names <- c()
   nc_var_names <- list()
   ## special variables
   arg_names <- names(as.list(match.call()[-1]))
   for (var_type in c("coord", "time")) {
-    time_coord_names[var_type] <- ifelse(paste(var_type, "name", sep = "_") %in% arg_names, get(paste(var_type, "name", sep = "_")), var_type)
     nc_var_names[[var_type]] <- grep(paste0("^", var_type), all_nc_var_names, value = TRUE)
-  }
-  forbidden_names <-
-    intersect(vapply(nc[["dim"]], function(y) {y[["name"]]}, ""),
-              time_coord_names)
-  if (length(forbidden_names) > 0) {
-    stop("Can't have a dimension called ", paste(forbidden_names, sep = ", "), ".")
   }
   nc_var_names[["other"]] <- setdiff(all_nc_var_names, unlist(nc_var_names))
 
@@ -242,7 +234,7 @@ bi_read <- function(x, vars, dims, model, type, file, missval_threshold, coord_d
 
         ## find matching time and coord variables
         all_matching_dims <- c()
-        for (var_type in names(time_coord_names)) {
+        for (var_type in c("time", "coord")) {
           matching_dims <- unname(unlist(var_dims[[var_type]])[unlist(var_dims[[var_type]]) %in% dim_var_names])
           matching_vars <- names(var_dims[[var_type]])[vapply(var_dims[[var_type]], function(x) {any(x %in% dim_var_names)}, TRUE)]
           all_matching_dims <- union(all_matching_dims, matching_dims)
@@ -256,7 +248,7 @@ bi_read <- function(x, vars, dims, model, type, file, missval_threshold, coord_d
               merge_values <- apply(merge_values, 2, as.integer)
               mav <- cbind(merge_values, mav)
             } else {
-              mav_merge <- data.table::data.table(data.table::melt(merge_values, varnames = matching_dims, value.name = time_coord_names[var_type]))
+              mav_merge <- data.table::data.table(data.table::melt(merge_values, varnames = matching_dims, value.name = var_type))
               mav <- merge(mav_merge, mav, by = unname(matching_dims))
             }
           } else if (length(matching_vars) > 1) {
@@ -267,9 +259,8 @@ bi_read <- function(x, vars, dims, model, type, file, missval_threshold, coord_d
         for (var in setdiff(all_matching_dims, "ns")) {
           mav[[var]] <- NULL
         }
-        table_order <- c(setdiff(colnames(mav), c(time_coord_names, "value")),
-                         intersect(colnames(mav), time_coord_names),
-                         "value")
+        table_order <- c(setdiff(colnames(mav), c("time", "coord", "value")),
+                         intersect(colnames(mav), c("time", "coord")), "value")
 
         mav <- mav[, table_order, with = FALSE]
 
