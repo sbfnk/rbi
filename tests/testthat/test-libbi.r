@@ -41,7 +41,7 @@ test_output <-
     function(x) { if (is.data.frame(x)) x$value <- abs(rnorm(nrow(x))); x },
     list(e=data.frame(expand.grid(time=0:1, a=c("first", "second"), b=0:1, np=0:1)),
          N=data.frame(expand.grid(time=0:1, a=c("first", "second"), np=0:1)),
-         m=data.frame(expand.grid(time=0:1, a=c("first", "second"), b=0:1, np=0:1)),
+         m=data.frame(expand.grid(a=c("first", "second"), b=0:1, np=0:1)),
          close=0,
          loglikelihood=data.frame(np=0:1),
          logprior=data.frame(np=0:1)))
@@ -113,7 +113,7 @@ test_that("we can run libbi and analyse results",
   expect_output(print(so, verbose=TRUE), "path to working")
   expect_output(print_log(bi_run), "libbi")
   expect_output(print_log(bi_run$log_file_name), "libbi")
-  expect_equal(nrow(summary(bi_run)), 1)
+  expect_equal(nrow(summary(bi_run)), 4)
   expect_equal(ncol(res$N), 4)
   expect_true(nrow(flat) > 0)
   expect_true(nrow(traces) > 0)

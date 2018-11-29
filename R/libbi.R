@@ -983,19 +983,29 @@ print_log <- function(x){
 #' @description
 #' This reads in the output file of the \code{\link{libbi}} object (which has been run before) and prints summary information of parameters
 #' @param object a \code{\link{libbi}} object
+#' @param type one of "param" (default), "state", "noise" or "obs", the variable type to summarise
 #' @param ... ignored
+#' @importFrom data.table data.table setDF
 #' @export
-summary.libbi <- function(object, ...){
-  params <- c(bi_read(object, type="param"))
-  summary_table <- t(vapply(params, function(object) {
-    if (is.data.frame(object))
-    {
-      summary(object$value)
-    } else
-    {
-      summary(object)
-    }
-  }, rep(0, 6)))
+summary.libbi <- function(object, type=c("param", "state", "noise", "obs"), ...){
+  type <- match.arg(type)
+  vars <- c(bi_read(object, type=type))
+
+  summary_table <- rbindlist(lapply(names(vars), function(var) {
+    object <- vars[[var]]
+    summarise_columns <- setdiff(colnames(object), c("np", "value"))
+    dt <- data.table(object)[, list(var=var,
+                                    `Min.`=min(value),
+                                    `1st Qu.`=quantile(value, 0.25),
+                                    `Median`=median(value),
+                                    `Mean`=mean(value),
+                                    `3rd Qu.`=quantile(value, 0.75),
+                                    `Max.`=max(value)), by=summarise_columns]
+    dt <- dt[, c("var", setdiff(colnames(dt), "var")), with=F]
+    setnames(dt, "var", type)
+    dt
+  }))
+  setDF(summary_table)
   return(summary_table)
 }
 
