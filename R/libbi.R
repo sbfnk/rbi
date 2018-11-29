@@ -985,11 +985,14 @@ print_log <- function(x){
 #' @param object a \code{\link{libbi}} object
 #' @param type one of "param" (default), "state", "noise" or "obs", the variable type to summarise
 #' @param ... ignored
-#' @importFrom data.table data.table setDF
+#' @importFrom data.table data.table setDF rbindlist
+#' @importFrom stats median quantile
 #' @export
 summary.libbi <- function(object, type=c("param", "state", "noise", "obs"), ...){
   type <- match.arg(type)
   vars <- c(bi_read(object, type=type))
+
+  value <- NULL ## to prevent data.table errors
 
   summary_table <- rbindlist(lapply(names(vars), function(var) {
     object <- vars[[var]]
