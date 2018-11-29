@@ -269,16 +269,16 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
         if (x$thin > 1) {
           x$thin <- 1
         }
-        x <- attach_data(x, "init", read_init)
+        x[["init"]] <- read_init
       } else {
         types <- "param"
         chain_init <- ("with-transform-initial-to-param" %in% names(all_options))
         if (chain_init) types <- c(types, "state")
         read_init <- bi_read(x, type=types, init_to_param=chain_init)
         ## only take last sample
-        x <- attach_data(x, "init", extract_sample(read_init, "last"))
+        x[["init"]] <- extract_sample(read_init, "last")
       }
-      if (!is.null(x$options)) file_args <- union(file_args, "init")
+      file_args <- union(file_args, "init")
     }
   }
 
@@ -295,7 +295,7 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
     ## unset global option (we set the file option instead later)
     x$options[[file]] <- NULL
     ## attach data here
-    x <- attach_data(x, file, arg, in_place=TRUE, quiet=TRUE, time_dim=time_dim, coord_dims=coord_dims)
+    x <- attach_data(x, file, arg, time_dim=time_dim, coord_dims=coord_dims)
   }
 
   all_options <-
