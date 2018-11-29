@@ -189,8 +189,9 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
   all_options <- option_list(getOption("libbi_args"), config_file_options, x$options, new_options)
 
   if ("model-file" %in% names(all_options)) {
-    if (missing(model)) {
-      x$model <- bi_model(all_options[["model-file"]])
+    if (is_empty(model)) {
+      model <- bi_model(all_options[["model-file"]])
+      warning("A model has been passed via 'model-file'. It will be stored in the libbi object internally. If the file passed as 'model-file' is changed, 'model-file' needs to be passed again.")
     } else {
       warning("'model-file' and 'model' options both provided. Will ignore 'model-file'.")
     }
@@ -413,7 +414,8 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
       return(x)
     }
   } else {
-    ## if run from the constructor, just add all the options
+    ## if run from the constructor, just write the model and add all the options
+    write_model(x)
     x$options <- all_options
     return(x)
   }

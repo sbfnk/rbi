@@ -5,10 +5,13 @@
 \alias{summary.libbi}
 \title{Print summary information about a \code{\link{libbi}} object}
 \usage{
-\method{summary}{libbi}(object, ...)
+\method{summary}{libbi}(object, type = c("param", "state", "noise",
+  "obs"), ...)
 }
 \arguments{
 \item{object}{a \code{\link{libbi}} object}
+
+\item{type}{one of "param" (default), "state", "noise" or "obs", the variable type to summarise}
 
 \item{...}{ignored}
 }

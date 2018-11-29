@@ -86,7 +86,7 @@ test_that("we can run libbi and analyse results",
   invisible(
     capture.output(
       bi2 <-
-        sample(bi_run, seed=1234, model_file=model_tmp_file, obs=dataset,
+        sample(bi_run, seed=1234, obs=dataset,
                working_folder=bi_run$working_folder, with="transform-initial-to-param",
                noutputs=10, assert=FALSE, log_file_name="")
     )
@@ -139,7 +139,7 @@ test_that("warnings are given",
   skip_on_cran()
 
   expect_warning(libbi(model=bi$model, model_file=bi$model_file_name), "model-file")
-  expect_warning(libbi(model=bi$model, model_file=bi$model_file_name), "model-file")
+  expect_warning(libbi(model_file=bi$model_file_name), "model-file")
   expect_warning(run(bi, init_np=0, chain=TRUE, client=character(0)), "init-np")
   expect_warning(sample(bi, init=list(a=3), chain=TRUE, dry=c("run", "gen", "parse", "build")), "chain")
 })
