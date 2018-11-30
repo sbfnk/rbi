@@ -1108,11 +1108,6 @@ join <- function(x, ...) UseMethod("join")
 #' @param ... ignored
 join.libbi <- function(x, ...) {
   files_to_join <- list(...)
-  if (missing(x) && length(files_to_join) > 0)
-  {
-    x <- files_to_join[[1]]
-    files_to_join[[1]] <- NULL
-  }
   output <- bi_read(x)
   for (to_join in files_to_join) {
     join_output <- bi_read(to_join)
