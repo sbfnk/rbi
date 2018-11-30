@@ -164,6 +164,9 @@ test_that("LibBi objects are asserted correctly",
   bi_no_run_flag <- bi
   bi_no_run_flag$run_flag <- FALSE
   expect_error(assert_files(bi_no_run_flag), "must be run first")
+  bi_no_output_file <- bi
+  bi_no_output_file$output_file_name <- character(0)
+  expect_error(assert_files(bi_no_output_file), "does not contain")
   bi_output_modified <- bi
   bi_output_modified$timestamp$output <- bi_output_modified$timestamp$output - 1
   expect_error(assert_files(bi_output_modified), "has been modified")
