@@ -330,16 +330,5 @@ bi_read <- function(x, vars, dims, model, type, file, missval_threshold, coord_d
     })
   }
 
-  if (flatten) {
-    res <- lapply(names(res), function(x) {
-      if (is.data.frame(res[[x]])) {
-        data.table::data.table(res[[x]])[, var := x]
-      } else {
-        data.table::data.table(value=res[[x]])[, var := x]
-      }
-    })
-    res <- data.table::setDF(data.table::rbindlist(res, fill=TRUE))
-  }
-
   return(res)
 }
