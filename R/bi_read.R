@@ -27,7 +27,6 @@
 #' @inheritParams bi_open
 #' @importFrom ncdf4 nc_close ncvar_get
 #' @importFrom data.table setkeyv setnames setDF is.data.table :=
-#' @importFrom utils setTxtProgressBar txtProgressBar
 #' @examples
 #' example_output_file <- system.file(package="rbi", "example_output.nc")
 #' d <- bi_read(example_output_file)
@@ -180,8 +179,6 @@ bi_read <- function(x, vars, dims, model, type, file, missval_threshold, coord_d
 
         all_values <- array(dim = dim_lengths)
 
-        if (verbose) pb <- txtProgressBar(min = 0, max = length(np_indices), char = ".", style = 1)
-
         for (i in seq_along(np_indices))
         {
           dim_list <- lapply(dim_lengths, seq_len)
@@ -198,9 +195,7 @@ bi_read <- function(x, vars, dims, model, type, file, missval_threshold, coord_d
                       list(ncvar_get(nc, var_name,
                                      start = start_vec,
                                      count = count_vec))))
-          if (verbose) setTxtProgressBar(pb, i)
         }
-        if (verbose) close(pb)
       } else {
         all_values <- ncvar_get(nc, var_name)
       }
