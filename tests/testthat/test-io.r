@@ -178,6 +178,12 @@ test_that("data can be attached to libbi objects",
   expect_equal(class(attach_data(bi, "input", NULL)), "libbi")
 })
 
+test_that("absolute paths can be generated",
+{
+  expect_gt(nchar(absolute_path("test")), 0)
+  expect_gt(nchar(absolute_path("test", "..")), 0)
+})
+
 test_that("I/O errors/warnings are recognised",
 {
   bi_in_place <- attach_data(bi, "output", test_output)
