@@ -21,6 +21,7 @@
 #' @param clear_cache if TRUE, will clear the cache and re-read the file even if cached data exists
 #' @param init_to_param logical; if TRUE, convert states to initial values
 #' @param flatten logical; if TRUE, will return a flat (long) data frame with a 'var' column indicating the variable, instead of a list
+#' @param burn number of initial samples to discard; default: 0
 #' @param missval.threshold deprecated; use missval_threshold instead
 #' @param init.to.param deprecated; use init_to_param instead
 #' @return list of results, or a flat data frame (depending on the value of 'flattten')
@@ -31,7 +32,7 @@
 #' example_output_file <- system.file(package="rbi", "example_output.nc")
 #' d <- bi_read(example_output_file)
 #' @export
-bi_read <- function(x, vars, dims, model, type, file, missval_threshold, coord_dims = list(), vector, thin, verbose=FALSE, clear_cache=FALSE, init_to_param=FALSE, flatten=FALSE, missval.threshold, init.to.param=FALSE)
+bi_read <- function(x, vars, dims, model, type, file, missval_threshold, coord_dims = list(), vector, thin, verbose=FALSE, clear_cache=FALSE, init_to_param=FALSE, flatten=FALSE, burn=0, missval.threshold, init.to.param=FALSE)
 {
   if (!missing(missval.threshold)) {
     warning("missval.threshold is deprecated. Use 'missval_threshold' instead.")
@@ -327,6 +328,14 @@ bi_read <- function(x, vars, dims, model, type, file, missval_threshold, coord_d
         x$time <- NULL
       }
       x
+    })
+  }
+
+  if (burn > 0) {
+    burn <- lapply(res, function(x) {
+      if ("np" %in% colnames(x)) {
+        x <- x[x$np >= burn, ]
+      }
     })
   }
 

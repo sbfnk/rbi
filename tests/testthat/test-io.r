@@ -109,7 +109,7 @@ test_that("basic I/O functions work",
   expect_gt(bi_dim_len(bi$output_file_name, "np"), 0)
   expect_equal(bi_dim_len(bi$output_file_name, "dummy"), 0)
   expect_gt(length(capture.output(bi_file_summary(bi))), 0)
-  expect_gt(nrow(bi_read(bi, "N")$N), 0)
+  expect_gt(nrow(bi_read(bi, "N", burn=10)$N), 0)
   expect_gt(nrow(bi_read(bi, file="obs")$M), 0)
   expect_gt(nrow(bi_read(bi, "N", verbose=TRUE, clear_cache=TRUE)$N), 0)
   expect_gt(suppressMessages(nrow(bi_read(bi, "N", verbose=TRUE)$N)), 0)
