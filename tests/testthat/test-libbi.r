@@ -98,7 +98,7 @@ test_that("we can run libbi and analyse results",
 
   res <- bi_read(bi_run)
   pred_res <- bi_read(pred, thin=2)
-  flat <- bi_read(so, flatten=TRUE)
+  flat <- flatten(bi_read(so))
   traces <- get_traces(bi_run, burnin=2)
 
   ll <- logLik(bi_run)
