@@ -1,5 +1,5 @@
 Package: rbi
-Version: 0.9.1
+Version: 0.10.0
 Title: R Interface to LibBi
 Authors@R: c(
         person("Pierre E.", "Jacob", email = "pierre.jacob.work@gmail.com", role = "aut"),
@@ -8,22 +8,21 @@ Authors@R: c(
         person("Sebastian", "Funk", email = "sebastian.funk@lshtm.ac.uk", role = c("aut", "cre")),
         person("Sam", "Abbott", email = "contact@samabbott.co.uk", role = c("ctb"))
     )
-Imports:
-    data.table,
-    ncdf4,
-    processx,
-    reshape2
-Suggests:
-    coda,
-    covr (>= 3.2.0),
-    R.rsp,
-    stringi,
-    testthat
+Imports: data.table, ncdf4, processx, reshape2
+Suggests: coda, covr (>= 3.2.0), R.rsp, stringi, testthat, ggplot2
 Description: Provides a complete R interface to LibBi, a library for Bayesian inference (see <http://libbi.org> and <doi:10.18637/jss.v067.i10> for more information). This includes functions for manipulating LibBi models, for reading and writing LibBi input/output files, for converting LibBi output to provide traces for use with the coda package, and for running LibBi from R.
 License: GPL-3
 URL: https://github.com/libbi/RBi
 BugReports: https://github.com/libbi/RBi/issues
-SystemRequirements: LibBi (>= 1.2.0)
+SystemRequirements: LibBi (>= 1.4.2)
 LazyLoad: no
 RoxygenNote: 6.1.1
 VignetteBuilder: R.rsp
+NeedsCompilation: no
+Packaged: 2018-12-11 20:08:26 UTC; seb
+Author: Pierre E. Jacob [aut],
+  Anthony Lee [ctb],
+  Lawrence M. Murray [ctb],
+  Sebastian Funk [aut, cre],
+  Sam Abbott [ctb]
+Maintainer: Sebastian Funk <sebastian.funk@lshtm.ac.uk>

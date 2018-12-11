@@ -1,3 +1,18 @@
+# rbi 0.10.0
+
+* Replaced the `sample_obs` argument with a `sample_obs` function
+* `output_every` argument for outputs at every n-th time step
+* Better handling of the external libbi call via the processx package
+* Improved error/output handling
+* `print_log` function to inspect the LibBi log
+* Speed up re-running libbi objects by writing to the same model file
+* Big clean-up of code and arguments, deprecating a few obsolete arguments
+* `get_traces` now also reports initial states if they are treated as parameters
+* `read_libbi` and `save_libbi` now have an option to split the files up
+* improved `summary` function that can now also print summaries of time-varying variables
+* new `attach_data`, replacing `attach_file` but offering vastly improved functionality
+* improved `rewrite` function to provide correct output
+
 # rbi 0.9.1
 
 * Fixed a bug in `bi_generate_dataset`
