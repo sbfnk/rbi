@@ -404,6 +404,9 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
     } else if (verbose) cat("...LibBi has finished!",  "\n")
     x$error_flag <- FALSE
 
+    ## don't store target
+    x$options$target <- NULL
+
     if (client == "rewrite") {
       invisible(NULL)
     } else {
