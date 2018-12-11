@@ -571,7 +571,7 @@ attach_data.libbi <- function(x, file, data, in_place=FALSE, append=FALSE, overw
 
   if (is.character(data) || ("libbi" %in% class(data))) {
     if (is.character(data)) {
-      source_file_name <- "data"
+      source_file_name <- data
     } else {
       tryCatch(assert_files(data),
                error=function(e) stop("Error adding ", file, " file\n",  e))
