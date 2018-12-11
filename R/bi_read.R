@@ -28,6 +28,7 @@
 #' @inheritParams bi_open
 #' @importFrom ncdf4 nc_close ncvar_get
 #' @importFrom data.table setkeyv setnames setDF is.data.table :=
+#' @importFrom reshape2 melt
 #' @examples
 #' example_output_file <- system.file(package="rbi", "example_output.nc")
 #' d <- bi_read(example_output_file)
@@ -221,7 +222,7 @@ bi_read <- function(x, vars, dims, model, type, file, missval_threshold, coord_d
 
       if (!is.null(dim(all_values))) {
 
-        mav <- data.table::data.table(data.table::melt(all_values, varnames = dim_var_names))
+        mav <- data.table::data.table(reshape2::melt(all_values, varnames = dim_var_names))
         ## remove any extraneous dimensions from melting
         mav <- mav[, c(dim_var_names, "value"), with=F]
 
