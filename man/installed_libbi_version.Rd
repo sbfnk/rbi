@@ -10,7 +10,7 @@ installed_libbi_version(...)
 \item{...}{any arguments for \code{\link{locate_libbi}} (esp. \code{path_to_libbi})}
 }
 \value{
-charachter string with the installed version
+character string with the installed version
 }
 \description{
 This tries to find the libbi executable to determine the installed version of LibBi

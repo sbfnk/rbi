@@ -15,7 +15,7 @@
 \item{supplement}{any supplementary data to save}
 
 \item{split}{Logical, defaults to \code{FALSE}. Should the objects from the
-\code{LibBi} run be saved seperately in a folder.}
+\code{LibBi} run be saved separately in a folder.}
 
 \item{...}{any options to \code{\link{saveRDS}}}
 }

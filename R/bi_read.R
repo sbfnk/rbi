@@ -20,11 +20,10 @@
 #' @param verbose if TRUE, will print variables as they are read
 #' @param clear_cache if TRUE, will clear the cache and re-read the file even if cached data exists
 #' @param init_to_param logical; if TRUE, convert states to initial values
-#' @param flatten logical; if TRUE, will return a flat (long) data frame with a 'var' column indicating the variable, instead of a list
 #' @param burn number of initial samples to discard; default: 0
 #' @param missval.threshold deprecated; use missval_threshold instead
 #' @param init.to.param deprecated; use init_to_param instead
-#' @return list of results, or a flat data frame (depending on the value of 'flattten')
+#' @return list of data frames and/or numbers
 #' @inheritParams bi_open
 #' @importFrom ncdf4 nc_close ncvar_get
 #' @importFrom data.table setkeyv setnames setDF is.data.table :=
@@ -33,7 +32,7 @@
 #' example_output_file <- system.file(package="rbi", "example_output.nc")
 #' d <- bi_read(example_output_file)
 #' @export
-bi_read <- function(x, vars, dims, model, type, file, missval_threshold, coord_dims = list(), vector, thin, verbose=FALSE, clear_cache=FALSE, init_to_param=FALSE, flatten=FALSE, burn=0, missval.threshold, init.to.param=FALSE)
+bi_read <- function(x, vars, dims, model, type, file, missval_threshold, coord_dims = list(), vector, thin, verbose=FALSE, clear_cache=FALSE, init_to_param=FALSE, burn=0, missval.threshold, init.to.param=FALSE)
 {
   if (!missing(missval.threshold)) {
     warning("missval.threshold is deprecated. Use 'missval_threshold' instead.")

@@ -759,7 +759,7 @@ save_libbi <- function(x, ...) UseMethod("save_libbi")
 #' @param name name of the RDS file(s) to save to. If \code{split=TRUE}, this will be taken as a base for the names of the files to be created, e.g. 'dir/name.rds' to create files of the form name_....rds in directory 'dir'.
 #' @param supplement any supplementary data to save
 #' @param split Logical, defaults to \code{FALSE}. Should the objects from the
-#'  \code{LibBi} run be saved seperately in a folder.
+#'  \code{LibBi} run be saved separately in a folder.
 #' @param ... any options to \code{\link{saveRDS}}
 #' @export
 save_libbi.libbi <- function(x, name, supplement, split = FALSE, ...) {

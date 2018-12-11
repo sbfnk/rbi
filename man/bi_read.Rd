@@ -6,8 +6,8 @@
 \usage{
 bi_read(x, vars, dims, model, type, file, missval_threshold,
   coord_dims = list(), vector, thin, verbose = FALSE,
-  clear_cache = FALSE, init_to_param = FALSE, flatten = FALSE,
-  burn = 0, missval.threshold, init.to.param = FALSE)
+  clear_cache = FALSE, init_to_param = FALSE, burn = 0,
+  missval.threshold, init.to.param = FALSE)
 }
 \arguments{
 \item{x}{either a path to a NetCDF file, or a NetCDF connection created using \code{nc_open}, or a \code{\link{libbi}} object from which to read the output}
@@ -36,8 +36,6 @@ bi_read(x, vars, dims, model, type, file, missval_threshold,
 
 \item{init_to_param}{logical; if TRUE, convert states to initial values}
 
-\item{flatten}{logical; if TRUE, will return a flat (long) data frame with a 'var' column indicating the variable, instead of a list}
-
 \item{burn}{number of initial samples to discard; default: 0}
 
 \item{missval.threshold}{deprecated; use missval_threshold instead}
@@ -45,7 +43,7 @@ bi_read(x, vars, dims, model, type, file, missval_threshold,
 \item{init.to.param}{deprecated; use init_to_param instead}
 }
 \value{
-list of results, or a flat data frame (depending on the value of 'flattten')
+list of data frames and/or numbers
 }
 \description{
 This function reads all variable from a NetCDF file or the output of a
