@@ -336,7 +336,7 @@ dataset[var_names(bi$model, type="param")]
 
 For more details on using **coda** to further analyse the chains, see the website of the [coda package](https://cran.r-project.org/package=coda). For more plotting functionality, the [ggmcmc package](https://cran.r-project.org/package=ggmcmc) is also worth considering.
 
-``{R echo=FALSE}
+```{R echo=FALSE}
 obs_bi <- rbi::sample_obs(bi)
 ```
 
