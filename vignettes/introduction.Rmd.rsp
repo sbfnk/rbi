@@ -265,7 +265,7 @@ This samples from the posterior distribution. Remember that options are preserve
 You can also pass a list of data frames (each element of the list corresponding to one observed variable as the `obs` argument, for example
 
 ```{R eval=FALSE}
-df <- data.frame(value = c(1,6,2,26,99,57,78,57,15,9,4,1,1,1,0,2,0)
+df <- data.frame(value = c(1,6,2,26,99,57,78,57,15,9,4,1,1,1,0,2,0),
                  time = c(0,7,14,21,28,35,42,49,56,63,70,77,84,91,98,105,112))
 bi_df <- sample(bi,target="posterior", nparticles=16, obs=list(Incidence=df), nsamples=10000)
 ```
