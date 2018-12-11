@@ -191,52 +191,52 @@ class(bi)
 Let's sample from the prior of the SIR model:
 
 ```{R eval=FALSE}
-bi <- sample(bi, target="prior", nsamples=1000, end_time=16*7, noutputs=16)
+bi_prior <- sample(bi, target="prior", nsamples=1000, end_time=16*7, noutputs=16)
 ```
 ```{R echo=FALSE}
-bi <- rbi::sample(bi, target="prior", nsamples=1000, end_time=16*7, noutputs=16, seed=14)
+bi_prior <- rbi::sample(bi, target="prior", nsamples=1000, end_time=16*7, noutputs=16, seed=14)
 ```
 
 This step calls **LibBi** to sample from the prior distribution of the previously specified model, generating 1,000 samples and each time running the model for 16 * 7 = 112 time steps and writing 16 outputs (i.e., every 7 time steps). **LibBi** parses the model, creates C++ code, compiles it and run the model. If the model is run again, it should do so much quicker because it will use the already compiled C++ code to run the model:
 
 ```{R eval=FALSE}
-bi <- sample(bi)
+bi_prior <- sample(bi_prior)
 ```
 
 The `sample` command returns an updated `libbi` object which, in this case, we just assign again to the `bi` object. Any call of `sample` preserves options passed to the previous call of `sample` and `libbi`, unless they are overwritten by arguments passed to `sample` (e.g., passing a new `nsamples` argument). Let's have a closer look at the `bi` object:
 
 ```{R}
-bi
+bi_prior
 ```
 
 To see even more detail, try
 
 ```{R}
-str(bi)
+str(bi_prior)
 ```
 
 We can see the object contains 14 fields, including the model, the path to the `libbi` script, and the command used to run libbi (`bi$command`); the `options` field contains all the options that **LibBi** was called with. This includes the ones we passed to `bi$run`
 
 ```{R}
-bi$options
+bi_prior$options
 ```
 
 The other fields contain various bits of information about the object, including the model used, the command used to run **LibBi** (`bi$command`) and the output file name:
 
 ```{R}
-bi$output_file_name
+bi_prior$output_file_name
 ```
 
 We can get the results of the sampling run using `bi_read`
 
 ```{R}
-prior <- bi_read(bi$output_file_name)
+prior <- bi_read(bi_prior$output_file_name)
 ```
 
 or with the shorthand
 
 ```{R}
-prior <- bi_read(bi)
+prior <- bi_read(bi_prior)
 ```
 
 which looks at the `output_file_name` field to read in the data. Let's look at the returned object
@@ -254,29 +254,21 @@ We can see that the time-varying variables are represented as data frames with t
 Let's perform inference using Particle Markov-chain Metropolis Hastings (PMMH). The following command will generate 16 * 10,000 = 160,000 simulations and therefore may take a little while to run (if you want to see the samples progress, use `verbose=TRUE` in the `bi$run` call).
 
 ```{R eval=FALSE}
-bi <- sample(bi, target="posterior", nparticles=16, obs=SIRdata, nsamples=10000)
+bi <- sample(bi_prior, target="posterior", nparticles=32, obs=SIRdata)
 ```
 ```{R echo=FALSE}
-bi <- rbi::sample(bi,target="posterior", nparticles=16, obs=SIRdata, nsamples=10000, seed=743747902)
+bi <- rbi::sample(bi_prior,target="posterior", nparticles=32, obs=SIRdata, seed=23)
 ```
 
-This samples from the posterior distribution. Remember that options are preserved from previous runs, so we don't need to specify `nsamples`, `end_time` and `noutputs` again, unless we want to change them. The `nparticles` option specifies the number of particles. 
+This samples from the posterior distribution. Remember that options are preserved from previous runs (because we passed the `bi`) as first argument, so we don't need to specify `nsamples`, `end_time` and `noutputs` again, unless we want to change them. The `nparticles` option specifies the number of particles. 
 
 You can also pass a list of data frames (each element of the list corresponding to one observed variable as the `obs` argument, for example
 
 ```{R eval=FALSE}
-df <- data.frame(value = c(1,6,2,26,99,57,78,57,15,9,4,1,1,1,0,2,0),
-                 time = c(0,7,14,21,28,35,42,49,56,63,70,77,84,91,98,105,112))
-bi_df <- sample(bi,target="posterior", nparticles=16, obs=list(Incidence=df), nsamples=10000)
+df <- data.frame(time = c(0,7,14,21,28,35,42,49,56,63,70,77,84,91,98,105,112),
+                 value = c(1,6,2,26,99,57,78,57,15,9,4,1,1,1,0,2,0))
+bi_df <- sample(bi_prior, target="posterior", nparticles=32, obs=list(Incidence=df))
 ```
-
-The random seed used for the libbi run is saved as an option to the `libbi` object:
-
-```{R}
-bi$options$seed
-```
-
-If you run the command above with an argument `seed` set to this value, you will get exactly the same results in the rest of this vignette.
 
 Input, init and observation files (see the [LibBi manual](http://libbi.org/docs/LibBi-Manual.pdf) for details) can be specified using the `init`, `input`, `obs` options, respectively. They can each be specified either as the name of a NetCDF file containing the data, or a `libbi` object (in which case the output file will be taken) or directly via an appropriate `R` object containing the data (e.g., a character vector of length one, or a list of data frames or numeric vectors). In the case of the command above, `init` is specified as a list, and `obs` as a `libbi` object. The `Incidence` variable of the `SIRdata` object will be taken as observations. 
 
@@ -302,10 +294,16 @@ To get a summary of the parameters sampled, use
 summary(bi)
 ```
 
+A summary of sampled trajectories can be obtained using
+
+```{R eval=FALSE}
+summary(bi, type="state")
+```
+
 Any particular posterior sample can be viewed with `extract_sample` (with indices running from 0 to (`nsamples`-1)):
 
 ```{R eval=FALSE}
-extract_sample(bi,314)
+extract_sample(bi, 314)
 ```
 
 To analyse MCMC outputs, we can use the **coda** package and the `get_traces` function of **RBi**. Note that, to get exactly the same traces, you would have to use the seed randomly generated above.
@@ -315,14 +313,7 @@ library(coda)
 traces <- mcmc(get_traces(bi))
 ```
 
-We can study, for example, the acceptance rate
-
-```{R}
-accRate <- 1 - rejectionRate(traces)
-accRate
-```
-
-and visualise parameter traces and densities with
+We can, for example, visualise parameter traces and densities with
 
 ```{R fig.width=8, fig.height=8}
 plot(traces)
@@ -331,7 +322,7 @@ plot(traces)
 Compare this to the marginal posterior distributions to the "correct" parameters used to generate the data set:
 
 ```{R}
-dataset[var_names(bi$model, type="param")]
+bi_read(SIRdata, type="param")
 ```
 
 For more details on using **coda** to further analyse the chains, see the website of the [coda package](https://cran.r-project.org/package=coda). For more plotting functionality, the [ggmcmc package](https://cran.r-project.org/package=ggmcmc) is also worth considering.
@@ -365,16 +356,18 @@ obs_bi <- sample_obs(bi)
 Compare this to the data:
 
 ```{R eval=FALSE}
+summary(obs_bi, type="obs")
 dataset$Incidence
 ```
 
 # Filtering
 
-The other so-called clients of **LibBi** (besides `sample`) are supported through commands of the same name: `filter`, `optimise` and `rewrite`. For example, to run a particle filter on the last posterior sample generated above, you can use:
+The other so-called clients of LibBi (besides sample`) are supported through commands of the same name: `filter, optimise and rewrite. For example, to run a particle filter on the last posterior sample generated above, you can use:
 
 ```{R eval=FALSE}
 bi_filtered <- filter(bi)
 ```
+
 ```{R echo=FALSE}
 bi_filtered <- rbi::filter(bi)
 ```
@@ -386,13 +379,13 @@ Output form LibBi runs can be visualised using standard R plotting routines or p
 ```{R}
 
 ps <- summary(pred_bi, type="obs")
-inc_obs <- bi_read(pred_bi, file="obs")$Incidence
 
 library(ggplot2)
 ggplot(ps, aes(x=time))+
     geom_line(aes(y=Median)) +
     geom_ribbon(aes(ymin=`1st Qu.`, ymax=`3rd Qu.`), alpha=0.5) +
-    geom_point(aes(y=value), inc_obs, color="darkred")
+    geom_point(aes(y=value), dataset$Incidence, color="darkred") +
+    ylab("cases")
 ```
 
 where we have plotted the median fit as a black line, the interquartile range as a grey ribbon, and the data points as dark red dots. Compare this to observations randomly generated from the posterior distribution of trajectories:
@@ -404,7 +397,8 @@ os <- summary(obs_bi, type="obs")
 ggplot(os, aes(x=time))+
     geom_line(aes(y=Median)) +
     geom_ribbon(aes(ymin=`1st Qu.`, ymax=`3rd Qu.`), alpha=0.5) +
-    geom_point(aes(y=value), inc_obs, color="darkred")
+    geom_point(aes(y=value), dataset$Incidence, color="darkred") +
+    ylab("cases")
 ```
 
 
@@ -424,9 +418,9 @@ To recreate a `libbi` object from a previous R session, use `attach_data`.
 For example, one could use the following code to get the acceptance rate for a *LibBi* run with a given output and model file:
 
 ```{R}
-PZ_run_file <- system.file(package="rbi", "example_output.nc")
+PZ_run_output <- bi_read(system.file(package="rbi", "example_output.nc"))
 PZ_model_file <- system.file(package="rbi", "PZ.bi")
-PZ_posterior <- attach_data(libbi(PZ_model_file), "output", PZ_run_file)
+PZ_posterior <- attach_data(libbi(PZ_model_file), "output", PZ_run_output)
 traces <- mcmc(get_traces(PZ_posterior))
 a <- 1 - rejectionRate(traces) 
 a
