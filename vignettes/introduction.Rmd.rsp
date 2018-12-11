@@ -336,7 +336,7 @@ dataset[var_names(bi$model, type="param")]
 
 For more details on using **coda** to further analyse the chains, see the website of the [coda package](https://cran.r-project.org/package=coda). For more plotting functionality, the [ggmcmc package](https://cran.r-project.org/package=ggmcmc) is also worth considering.
 
-``{R echo=FALSE}
+```{R echo=FALSE}
 obs_bi <- rbi::sample_obs(bi)
 ```
 
@@ -420,13 +420,13 @@ bi
 
 # Creating `libbi` objects from previous runs
 
-To recreate a `libbi` object from a previous R session, use `attach_file`.
-For example, one could use the following code to get the acceptance rate and plots for a *LibBi* run with a given output and model file:
+To recreate a `libbi` object from a previous R session, use `attach_data`.
+For example, one could use the following code to get the acceptance rate for a *LibBi* run with a given output and model file:
 
 ```{R}
 PZ_run_file <- system.file(package="rbi", "example_output.nc")
 PZ_model_file <- system.file(package="rbi", "PZ.bi")
-PZ_posterior <- attach_file(libbi(PZ_model_file), "output", PZ_run_file)
+PZ_posterior <- attach_data(libbi(PZ_model_file), "output", PZ_run_file)
 traces <- mcmc(get_traces(PZ_posterior))
 a <- 1 - rejectionRate(traces) 
 a
