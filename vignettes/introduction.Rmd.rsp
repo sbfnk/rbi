@@ -26,7 +26,7 @@ pre code {
 
 [RBi](https://github.com/libbi/RBi) is an `R` interface to [LibBi](http://libbi.org), a library for Bayesian inference with state-space models using high-performance computer hardware.
 
-### Latest Version: _0.9.1_
+### Latest Version: _0.10.0_
 
 The package has been tested on macOS/OSX and Linux. It requires a working installation of **LibBi**. One macOS, this is easiest done using the the `brew` command: Install [Homebrew](https://brew.sh), then issue the following command (using a command shell, i.e. Terminal or similar):
 
@@ -194,7 +194,7 @@ Let's sample from the prior of the SIR model:
 bi <- sample(bi, target="prior", nsamples=1000, end_time=16*7, noutputs=16)
 ```
 ```{R echo=FALSE}
-bi <- rbi::sample(bi, target="prior", nsamples=1000, end_time=16*7, noutputs=16)
+bi <- rbi::sample(bi, target="prior", nsamples=1000, end_time=16*7, noutputs=16, seed=14)
 ```
 
 This step calls **LibBi** to sample from the prior distribution of the previously specified model, generating 1,000 samples and each time running the model for 16 * 7 = 112 time steps and writing 16 outputs (i.e., every 7 time steps). **LibBi** parses the model, creates C++ code, compiles it and run the model. If the model is run again, it should do so much quicker because it will use the already compiled C++ code to run the model:
@@ -267,7 +267,7 @@ You can also pass a list of data frames (each element of the list corresponding 
 ```{R eval=FALSE}
 df <- data.frame(value = c(1,6,2,26,99,57,78,57,15,9,4,1,1,1,0,2,0)
                  time = c(0,7,14,21,28,35,42,49,56,63,70,77,84,91,98,105,112))
-bi <- sample(bi,target="posterior", nparticles=16, obs=list(Incidence=df), nsamples=10000)
+bi_df <- sample(bi,target="posterior", nparticles=16, obs=list(Incidence=df), nsamples=10000)
 ```
 
 The random seed used for the libbi run is saved as an option to the `libbi` object:
@@ -334,33 +334,39 @@ Compare this to the marginal posterior distributions to the "correct" parameters
 dataset[var_names(bi$model, type="param")]
 ```
 
-For more details on using **coda** to further analyse the chains, see the website of the [coda package](https://cran.r-project.org/package=coda). For more plotting functionality, see the `plot_libbi` function in [RBi.helpers](https://github.com/sbfnk/rbi.helpers).
+For more details on using **coda** to further analyse the chains, see the website of the [coda package](https://cran.r-project.org/package=coda). For more plotting functionality, the [ggmcmc package](https://cran.r-project.org/package=ggmcmc) is also worth considering.
 
-# Sample observations
-
-To sample observations from sampled state trajectories, use
-
-```{R eval=FALSE}
-obs_bi <- sample_obs(bi)
-```
-
-```{R echo=FALSE}
+``{R echo=FALSE}
 obs_bi <- rbi::sample_obs(bi)
 ```
 
 # Predictions
 
-We can use the `predict` function to re-simulate the fitted model. This can be useful, for example, to simulate the model forward from the last data point. For example, use
+We can use the `predict` function to re-simulate the fitted model using the estimated parameters, that is to generate samples from $p(x_t|\theta)$ where the $\theta$ are distributed according to the marginal posterior distribution $p(\theta|y^*_t)$ (here: $\theta$ are fixed parameters, $x_t$ are state trajectories and $y^*_t$ observed data points, as in the [LibBi manual](http://libbi.org/docs/LibBi-Manual.pdf)). This can be useful, for example, for comparing typical model trajectories to the data, or for running the model beyond the last data point.
 
 ```{R eval=FALSE}
-pred <- predict(bi, start_time=16*7, end_time=20*7, output_every=7, with=c("transform-obs-to-state"))
+pred_bi <- predict(bi, start_time=0, end_time=20*7, output_every=7, with=c("transform-obs-to-state")
 ```
 
 ```{R echo=FALSE}
-pred <- rbi::predict(bi, start_time=16*7, end_time=20*7, output_every=7, with=c("transform-obs-to-state"))
+pred_bi <- rbi::predict(bi, start_time=0, end_time=20*7, output_every=7, with=c("transform-obs-to-state"))
 ```
 
-where `with=c("transform-obs-to-state")` tells LibBi to treat observations as a state variable, that is to randomly generate observations (see the `with-transform-obs-to-state` option in the [LibBi manual](http://libbi.org/docs/LibBi-Manual.pdf)).
+where `with=c("transform-obs-to-state")` tells LibBi to treat observations as a state variable, that is to randomly generate observations, i.e. samples from $p(y_t|\theta)$ where, again, $theta$ are distributed according to the posterior distribution $p(\theta|y^*_t)$ (see the `with-transform-obs-to-state` option in the [LibBi manual](http://libbi.org/docs/LibBi-Manual.pdf)).
+
+# Sample observations
+
+To sample observations from sampled posterior state trajectories, that is samples from $p(y_t|x_t)$ where the $x_t$ are distributed according to the posterior distribution $p(x_t | y_t)$, you can use.
+
+```{R eval=FALSE}
+obs_bi <- sample_obs(bi)
+```
+
+Compare this to the data:
+
+```{R eval=FALSE}
+dataset$Incidence
+```
 
 # Filtering
 
@@ -372,6 +378,35 @@ bi_filtered <- filter(bi)
 ```{R echo=FALSE}
 bi_filtered <- rbi::filter(bi)
 ```
+
+# Plotting
+
+Output form LibBi runs can be visualised using standard R plotting routines or plotting packages such as `ggplot2`. The `summary` function can help with this. For example, to plot observations randomly generated from the posterior distribution of the parameters and compare them to the data we can use
+
+```{R}
+
+ps <- summary(pred_bi, type="obs")
+inc_obs <- bi_read(pred_bi, file="obs")$Incidence
+
+library(ggplot2)
+ggplot(ps, aes(x=time))+
+    geom_line(aes(y=Median)) +
+    geom_ribbon(aes(ymin=`1st Qu.`, ymax=`3rd Qu.`), alpha=0.5) +
+    geom_point(aes(y=value), inc_obs, color="darkred")
+```
+
+where we have plotted the median fit as a black line, the interquartile range as a grey ribbon, and the data points as dark red dots. Compare this to observations randomly generated from the posterior distribution of trajectories:
+
+```{R}
+
+os <- summary(obs_bi, type="obs")
+
+ggplot(os, aes(x=time))+
+    geom_line(aes(y=Median)) +
+    geom_ribbon(aes(ymin=`1st Qu.`, ymax=`3rd Qu.`), alpha=0.5) +
+    geom_point(aes(y=value), inc_obs, color="darkred")
+```
+
 
 # Saving and loading `libbi` objects
 
