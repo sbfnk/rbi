@@ -17,9 +17,7 @@ model test {
     m[a,b] ~ truncated_gaussian(lower=0)
   }
 
-  sub initial {
-    N[a] <- 1
-  }
+  sub initial {N[a] <- 1}
 
   sub transition {
     e[a, b] ~ gaussian(mean = m[a,b])
@@ -82,6 +80,7 @@ test_that("lines can be removed",
   expect_equal(length(get_block(remove_lines(model, 17, type="sample"), "transition")), 1)
   expect_equal(length(get_block(remove_lines(model, 17, type="assignment"), "transition")), 2)
   expect_equal(length(get_block(remove_lines(model, "initial", type="assignment"), "initial")), 0)
+  expect_equal(length(get_block(remove_lines(model, "parameter", preserve_shell = TRUE), "parameter", shell=TRUE)), 2)
   expect_true(rem != model)
   expect_true(rem == model[-11])
   expect_error(remove_lines(model), "what")
