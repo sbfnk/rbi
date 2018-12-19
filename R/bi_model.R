@@ -706,8 +706,7 @@ get_dims <- function(model, type)
 #' @export
 get_const <- function(model) {
   const_lines <-
-    grep("^[[:space:]]*const[[:space:]].*=[[:space:]]*[A-z0-9_]+[[:space:]]*$",
-         model, value = TRUE)
+    grep("^[[:space:]]*const[[:space:]].*=.*[^[:space:]]", model, value = TRUE)
   retval <- list()
   for (const_line in const_lines) {
     line <-
