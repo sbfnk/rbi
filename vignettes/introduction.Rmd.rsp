@@ -135,10 +135,11 @@ To get documentation for any of these methods, use the links in the documentatio
 First, let's create a data set from the SIR model.
 
 ```{R}
-SIRdata <- bi_generate_dataset(SIRmodel, end_time=16*7, noutputs=16, seed=1234567)
+set.seed(1001912)
+SIRdata <- bi_generate_dataset(SIRmodel, end_time=16*7, noutputs=16)
 ```
 
-This simulates the model a single time from time 0 until time 16\*7 (say, 16 weeks with a daily time step), producing 16 outputs (one a week). Note that we have specified a seed to make this document reproducible. Remove the `seed` argument or specify a different seed to simulate your own data set. Also note that *LibBi* compiles the model code only the first time it is run. If you run the command above a second time, it should run much faster.
+This simulates the model a single time from time 0 until time 16\*7 (say, 16 weeks with a daily time step), producing 16 outputs (one a week). Note that we have specified a random seed to make this document reproducible. If you omit the `set.seed` command or set it to a different number, the results will be different even when run with the same set of commands. Also note that *LibBi* compiles the model code only the first time it is run. If you run the command above a second time, it should run much faster.
 
 The `bi_generate_dataset` function returns a `libbi` object:
 
@@ -194,7 +195,7 @@ Let's sample from the prior of the SIR model:
 bi_prior <- sample(bi, target="prior", nsamples=1000, end_time=16*7, noutputs=16)
 ```
 ```{R echo=FALSE}
-bi_prior <- rbi::sample(bi, target="prior", nsamples=1000, end_time=16*7, noutputs=16, seed=14)
+bi_prior <- rbi::sample(bi, target="prior", nsamples=1000, end_time=16*7, noutputs=16)
 ```
 
 This step calls **LibBi** to sample from the prior distribution of the previously specified model, generating 1,000 samples and each time running the model for 16 * 7 = 112 time steps and writing 16 outputs (i.e., every 7 time steps). **LibBi** parses the model, creates C++ code, compiles it and run the model. If the model is run again, it should do so much quicker because it will use the already compiled C++ code to run the model:
@@ -257,7 +258,7 @@ Let's perform inference using Particle Markov-chain Metropolis Hastings (PMMH). 
 bi <- sample(bi_prior, target="posterior", nparticles=32, obs=SIRdata)
 ```
 ```{R echo=FALSE}
-bi <- rbi::sample(bi_prior,target="posterior", nparticles=32, obs=SIRdata, seed=23)
+bi <- rbi::sample(bi_prior,target="posterior", nparticles=32, obs=SIRdata)
 ```
 
 This samples from the posterior distribution. Remember that options are preserved from previous runs (because we passed the `bi`) as first argument, so we don't need to specify `nsamples`, `end_time` and `noutputs` again, unless we want to change them. The `nparticles` option specifies the number of particles. 
@@ -306,10 +307,10 @@ Any particular posterior sample can be viewed with `extract_sample` (with indice
 extract_sample(bi, 314)
 ```
 
-To analyse MCMC outputs, we can use the **coda** package and the `get_traces` function of **RBi**. Note that, to get exactly the same traces, you would have to use the seed randomly generated above.
+To analyse MCMC outputs, we can use the **coda** package and the `get_traces` function of **RBi**. Note that, to get exactly the same traces, you would have to set the seed as above.
 
 ```{R}
-library(coda)
+library('coda')
 traces <- mcmc(get_traces(bi))
 ```
 
@@ -380,7 +381,7 @@ Output form LibBi runs can be visualised using standard R plotting routines or p
 
 ps <- summary(pred_bi, type="obs")
 
-library(ggplot2)
+library('ggplot2')
 ggplot(ps, aes(x=time))+
     geom_line(aes(y=Median)) +
     geom_ribbon(aes(ymin=`1st Qu.`, ymax=`3rd Qu.`), alpha=0.5) +
