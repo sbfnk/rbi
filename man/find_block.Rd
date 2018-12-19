@@ -5,12 +5,14 @@
 \alias{find_block.bi_model}
 \title{Find a block in a LibBi model}
 \usage{
-\method{find_block}{bi_model}(x, name)
+\method{find_block}{bi_model}(x, name, inner = FALSE)
 }
 \arguments{
 \item{x}{a \code{\link{bi_model}} object}
 
 \item{name}{of the block to find}
+
+\item{inner}{only return the inner part of the block (not the block definition)}
 }
 \value{
 range of line numbers

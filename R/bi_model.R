@@ -437,7 +437,7 @@ remove_lines.bi_model <- function(x, what, only, type=c("all", "assignment", "sa
   if (is.numeric(what)) {
     to_remove <- what
   } else if (is.character(what)) {
-    to_remove <- find_block(x, what)
+    to_remove <- find_block(x, what, inner=TRUE)
   } else {
     stop("'what' must be a numeric or character vector.")
   }
@@ -459,9 +459,6 @@ remove_lines.bi_model <- function(x, what, only, type=c("all", "assignment", "sa
                        x[to_remove][assign_lines], perl=TRUE)
     assign_vars <- sub("[[:space:]]", "", sub("\\[.*]", "", assign_vars))
     if (!missing(only)) assign_lines <- assign_lines[assign_vars %in% only]
-    if (is.character(what) && length(assign_lines) == length(to_remove) - 2) {
-      assign_lines <- c(1, assign_lines, length(to_remove))
-    }
     to_remove <- to_remove[assign_lines]
   }
 
@@ -524,8 +521,9 @@ find_block <- function(x, ...) UseMethod("find_block")
 #' @keywords internal
 #' @param x a \code{\link{bi_model}} object
 #' @param name of the block to find
+#' @param inner only return the inner part of the block (not the block definition)
 #' @rdname find_block
-find_block.bi_model <- function(x, name) {
+find_block.bi_model <- function(x, name, inner=FALSE) {
   lines <- as.character(x)
   sub_regexp <- paste0("^[[:space:]]*(sub[[:space:]]+)?[[:space:]]*", name, "([[:space:]][a-zA-Z0-9_\\.]+)?[[:space:]]*(\\(.*\\))?[[:space:]]*\\{")
   sub_line <- grep(sub_regexp, lines)
@@ -538,6 +536,7 @@ find_block.bi_model <- function(x, name) {
       braces <- grep("[\\{\\}]", lines[line], value = TRUE)
       open_braces <- open_braces + nchar(gsub("\\}", "", lines[line])) - nchar(gsub("\\{", "", lines[line]))
     }
+    if (inner) return((sub_line+1):(line-1))
     return(sub_line:line)
   } else {
     return(integer(0))
