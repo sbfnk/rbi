@@ -5,12 +5,14 @@
 \alias{get_block.bi_model}
 \title{Get the contents of a block in a LibBi model}
 \usage{
-\method{get_block}{bi_model}(x, name, ...)
+\method{get_block}{bi_model}(x, name, shell = FALSE, ...)
 }
 \arguments{
 \item{x}{a \code{\link{bi_model}} object}
 
 \item{name}{name of the block}
+
+\item{shell}{if TRUE (default:FALSE), will return the shell (i.e., the definition of the block) as well as content; this is useful, e.g., to see options passed to a \code{transition} or \code{ode} block}
 
 \item{...}{ignored}
 }

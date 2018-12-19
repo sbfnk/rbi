@@ -6,7 +6,7 @@
 \title{Remove line(s) and/or block(s) in a libbi model}
 \usage{
 \method{remove_lines}{bi_model}(x, what, only, type = c("all",
-  "assignment", "sample"), ...)
+  "assignment", "sample"), preserve_shell = FALSE, ...)
 }
 \arguments{
 \item{x}{a \code{\link{bi_model}} object}
@@ -16,6 +16,8 @@
 \item{only}{only remove lines assigning given names (as a vector of character strings)}
 
 \item{type}{which types of lines to remove, either "all", "sample" (i.e., lines with a "~") or "assignment" (lines with a "<-" or "=") (default: "all")}
+
+\item{preserve_shell}{if TRUE (default: FALSE), preserve the definition of a block even if all lines are removed; this is useful to preserve options passed to a \code{transition} or \code{ode} block}
 
 \item{...}{ignored}
 }
