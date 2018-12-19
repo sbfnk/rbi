@@ -532,6 +532,29 @@ rewrite.bi_model <- function(x, ...){
 }
 
 #' @export
+simulate <- function(x, ...) UseMethod("simulate")
+#' @rdname simulate
+#' @name simulate
+#' @title Using the LibBi wrapper to simulate
+#' @description
+#' The method \code{simulate} launches \code{LibBi} to simulate a model by passing `target="joint"` to \code{LibBi}
+#'
+#' If \code{x} is given as a 'bi_model', a \code{\link{libbi}} object will be created from the model
+#' @param x a \code{\link{libbi}} or \code{\link{bi_model}} object, or the name of a file containing the model
+#' @param ... options to be passed to \code{\link{run.libbi}}
+#' @return a \code{\link{bi_model}} object
+#' @export
+simulate.libbi <- function(x, ...){
+    run.libbi(x, client="sample", target="joint", ...)
+}
+#' @rdname simulate
+#' @name simulate
+#' @export
+simulate.bi_model <- function(x, ...){
+    run.libbi(x, client="sample", target="joint", ...)
+}
+
+#' @export
 attach_data <- function(x, ...) UseMethod("attach_data")
 #' @name attach_data
 #' @rdname attach_data
