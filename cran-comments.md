@@ -1,6 +1,6 @@
 ## Test environments
-* local macOS install (10.14.1), R 3.5.1
-* local linux install (Ubuntu 18.04), R 3.5.1
+* local macOS install (10.14.1), R 3.5.2
+* local linux install (Ubuntu 18.04), R 3.5.2
 * macOS and Linux on travis-ci
 
 ## R CMD check results

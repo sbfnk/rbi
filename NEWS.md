@@ -1,3 +1,8 @@
+# rbi 0.10.1
+
+* `preserve_shell` option in `remove_lines` to keep block options
+* new `simulate` function
+
 # rbi 0.10.0
 
 * Replaced the `sample_obs` argument with a `sample_obs` function
