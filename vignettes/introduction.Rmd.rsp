@@ -26,7 +26,7 @@ pre code {
 
 [RBi](https://github.com/libbi/RBi) is an `R` interface to [LibBi](http://libbi.org), a library for Bayesian inference with state-space models using high-performance computer hardware.
 
-### Latest Version: _0.10.0_
+### Latest Version: _0.10.1_
 
 The package has been tested on macOS/OSX and Linux. It requires a working installation of **LibBi**. One macOS, this is easiest done using the the `brew` command: Install [Homebrew](https://brew.sh), then issue the following command (using a command shell, i.e. Terminal or similar):
 
@@ -216,7 +216,7 @@ To see even more detail, try
 str(bi_prior)
 ```
 
-We can see the object contains 14 fields, including the model, the path to the `libbi` script, and the command used to run libbi (`bi$command`); the `options` field contains all the options that **LibBi** was called with. This includes the ones we passed to `bi$run`
+We can see the object contains 14 fields, including the model, the path to the `libbi` script, and the command used to run libbi (`bi$command`); the `options` field contains all the options that **LibBi** was called with. This includes the ones we passed to `sample`
 
 ```{R}
 bi_prior$options
@@ -252,7 +252,7 @@ We can see that the time-varying variables are represented as data frames with t
 
 # Fitting a model to data using PMCMC
 
-Let's perform inference using Particle Markov-chain Metropolis Hastings (PMMH). The following command will generate 16 * 10,000 = 160,000 simulations and therefore may take a little while to run (if you want to see the samples progress, use `verbose=TRUE` in the `bi$run` call).
+Let's perform inference using Particle Markov-chain Metropolis Hastings (PMMH). The following command will generate 16 * 10,000 = 160,000 simulations and therefore may take a little while to run (if you want to see the samples progress, use `verbose=TRUE` in the `sample` call).
 
 ```{R eval=FALSE}
 bi <- sample(bi_prior, target="posterior", nparticles=32, obs=SIRdata)
