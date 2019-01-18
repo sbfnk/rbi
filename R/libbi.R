@@ -562,7 +562,7 @@ attach_data <- function(x, ...) UseMethod("attach_data")
 #' @description
 #' Adds an (output, obs, etc.) file to a \code{\link{libbi}} object. This is useful to recreate a \code{\link{libbi}} object from the model and output files of a previous run
 #'
-#' The \code{\link{bi_write}} options \code{append} and \code{overwrite} determine what exactly the file will contain at the end of this. If they are both FALSE, any existing file will be ignored. If \code{append} is TRUE, the existing data in the file will be preserved, and any data set passed as \code{data} and not already in the file will be added. If \code{overwrite} is TRUE, existing data in the file will be preserved except for variables that exist in the past \code{data}.
+#' The \code{\link{bi_write}} options \code{append} and \code{overwrite} determine what exactly the file will contain at the end of this. If they are both FALSE (the default), any existing file will be ignored. If \code{append} is TRUE, the existing data in the file will be preserved, and any data set passed as \code{data} and not already in the file will be added. If \code{overwrite} is TRUE, existing data in the file will be preserved except for variables that exist in the passed \code{data}.
 #' @param x a \code{\link{libbi}} object
 #' @param file the type of the file to attach, one of "output", "obs", "input" or "init"
 #' @param data name of the file to attach, or a list of data frames that contain the outputs; it will be assumed that this is already thinned

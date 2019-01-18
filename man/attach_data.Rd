@@ -33,7 +33,7 @@
 \description{
 Adds an (output, obs, etc.) file to a \code{\link{libbi}} object. This is useful to recreate a \code{\link{libbi}} object from the model and output files of a previous run
 
-The \code{\link{bi_write}} options \code{append} and \code{overwrite} determine what exactly the file will contain at the end of this. If they are both FALSE, any existing file will be ignored. If \code{append} is TRUE, the existing data in the file will be preserved, and any data set passed as \code{data} and not already in the file will be added. If \code{overwrite} is TRUE, existing data in the file will be preserved except for variables that exist in the past \code{data}.
+The \code{\link{bi_write}} options \code{append} and \code{overwrite} determine what exactly the file will contain at the end of this. If they are both FALSE (the default), any existing file will be ignored. If \code{append} is TRUE, the existing data in the file will be preserved, and any data set passed as \code{data} and not already in the file will be added. If \code{overwrite} is TRUE, existing data in the file will be preserved except for variables that exist in the passed \code{data}.
 }
 \examples{
 bi <- libbi(model = system.file(package="rbi", "PZ.bi"))
