@@ -1024,12 +1024,13 @@ summary.libbi <- function(object, type=c("param", "state", "noise", "obs"), ...)
     object <- vars[[var]]
     summarise_columns <- setdiff(colnames(object), c("np", "value"))
     dt <- data.table(object)[, list(var=var,
-                                    `Min.`=min(value),
-                                    `1st Qu.`=quantile(value, 0.25),
-                                    `Median`=median(value),
-                                    `Mean`=mean(value),
-                                    `3rd Qu.`=quantile(value, 0.75),
-                                    `Max.`=max(value)), by=summarise_columns]
+                                    `Min.`=min(value, na.rm=TRUE),
+                                    `1st Qu.`=quantile(value, 0.25, na.rm=TRUE),
+                                    `Median`=median(value, na.rm=TRUE),
+                                    `Mean`=mean(value, na.rm=TRUE),
+                                    `3rd Qu.`=quantile(value, 0.75, na.rm=TRUE),
+                                    `Max.`=max(value, na.rm=TRUE)),
+                             by=summarise_columns]
     dt <- dt[, c("var", setdiff(colnames(dt), "var")), with=F]
     setnames(dt, "var", type)
     dt
