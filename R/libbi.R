@@ -1087,10 +1087,10 @@ assert_files.libbi <- function(x, ...)
 #'
 #' For the help page of the base R \code{optimise} function, see \code{\link[stats]{optimise}}.
 #' @export
-#' @param x a \code{\link{libbi}} object
+#' @param object a \code{\link{libbi}} object
 #' @param ... any arguments to be passed to \code{\link{sample}}
-predict.libbi <- function(x, ...) {
-  sample(x, target="prediction", ...)
+predict.libbi <- function(object, ...) {
+  sample(object, target="prediction", ...)
 }
 
 ##' Sample observations from a LibBi model that has been run
