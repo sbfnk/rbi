@@ -1096,26 +1096,36 @@ predict.libbi <- function(x, ...) {
 ##' Sample observations from a LibBi model that has been run
 ##'
 ##' @param x a \code{\link{libbi}} object
+##' @param ... any options to pass to LibBi
 ##' @return the original \code{\link{libbi}} object with added variables in the output file for sampled observations
 ##' @author Sebastian Funk
 ##' @export
-sample_obs <- function(x) {
+sample_obs <- function(x, ...) {
   if (!("libbi" %in% class(x))) {
     stop("'x' must be a 'libbi' object")
   }
   out <- bi_read(x)
   out$clock <- NULL ## we don't want to overwrite the clock later
   ## remove transition
-  sample_model <- remove_lines(x$model, "transition")
+  sample_model <- remove_lines(x$model, "transition", preserve_shell=TRUE)
   ## convert input states to inputs
   sample_model <- to_input(sample_model, names(out))
   ## turn outputs into inputs
   pr <- attach_data(x, file="input", out, append=TRUE)
   ## predict
-  pr <- predict(pr, model=sample_model, with="transform-obs-to-state")
+  pr$options[["noutputs"]] <- NULL
+  pr <- predict(pr, model=sample_model,
+                with=c("output-at-obs", "transform-obs-to-state"), ...)
   ## attach outputs back
   pr <- attach_data(pr, "output", data=out, append=TRUE)
   pr$options[["input-file"]] <- x$options[["input-file"]]
+  pr$options[["noutputs"]] <- x$options[["noutputs"]]
+  pr$options[["with-output-at-obs"]] <- x$options[["with-output-at-obs"]]
+  pr$options[["without-output-at-obs"]] <- x$options[["without-output-at-obs"]]
+  pr$options[["with-transform-obs-to-state"]] <-
+      x$options[["with-transform-obs-to-state"]]
+  pr$options[["without-transform-obs-to-state"]] <-
+      x$options[["without-transform-obs-to-state"]]
   pr$model <- x$model
 
   return(pr)
