@@ -6,12 +6,16 @@
 \title{Print summary information about a \code{\link{libbi}} object}
 \usage{
 \method{summary}{libbi}(object, type = c("param", "state", "noise",
-  "obs"), ...)
+  "obs"), quantiles = c(0.25, 0.75), na.rm = FALSE, ...)
 }
 \arguments{
 \item{object}{a \code{\link{libbi}} object}
 
 \item{type}{one of "param" (default), "state", "noise" or "obs", the variable type to summarise}
+
+\item{quantiles}{quantiles to calculate (default: quartiles); minimum, median, mean and maximum are always calculated}
+
+\item{na.rm}{logical; if true, any \code{na} and \code{NaN}'s are removed before calculations are performed}
 
 \item{...}{ignored}
 }
