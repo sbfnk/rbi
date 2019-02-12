@@ -1034,7 +1034,7 @@ summary.libbi <- function(object, type=c("param", "state", "noise", "obs"), ...)
     dt <- dt[, c("var", setdiff(colnames(dt), "var")), with=F]
     setnames(dt, "var", type)
     dt
-  }))
+  }), fill=TRUE)
   setDF(summary_table)
   return(summary_table)
 }
