@@ -39,10 +39,12 @@ apt_packages:
   - libboost-all-dev
   - libgsl0-dev
   - libnetcdf-dev
+  - libgit2-dev
   - autoconf
   - automake
 
 brew_packages:
+  - libgit2
   - libbi
 
 after_success:
