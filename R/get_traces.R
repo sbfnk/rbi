@@ -22,7 +22,7 @@
 #' @export
 get_traces <- function(x, model, burnin, all = FALSE, ...) {
 
-  read_options <- list(x = x, ...)
+  read_options <- list(x = x)
 
   if ("libbi" %in% class(x)) {
     if (missing(model)) {
@@ -51,6 +51,10 @@ get_traces <- function(x, model, burnin, all = FALSE, ...) {
   }
 
   if (("libbi" %in% class(x)) || ("character" %in% class(x))) {
+      dot_options <- list(...)
+      for (dot_option in names(dot_options)) {
+          read_options[[dot_option]] <- dot_options[[dot_option]]
+      }
       res <- do.call(bi_read, read_options)
   } else if ("list" %in% class(x)) {
       if (all) {
