@@ -1194,7 +1194,11 @@ join.libbi <- function(x, ...) {
 logLik.libbi <- function(object, ...){
   assert_files(object)
   res <- bi_read(object)
-  return(res$loglikelihood$value)
+  if (is.vector(res$loglikelihood)) {
+      return(res$loglikelihood)
+  } else {
+      return(res$loglikelihood$value)
+  }
 }
 
 #' @export
