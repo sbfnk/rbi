@@ -390,10 +390,10 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
                              stderr_line_callback = cb_stderr),
                finally = close(con))
     if (p$status != 0) {
-      error_lines <- strsplit(p$stderr,  "\n")[[1]]
+      error_lines <- strsplit(p$stderr, "\n")[[1]]
       error_msg <-
         sub("^[[:space:]]+", "", ## remove leading spaces
-            sub("\\n$", "", grep("(Error|failed\\.$)", error_lines, value=TRUE)))
+            sub("\\n$", "", grep("(configure: error|Error| failed\\.$)", error_lines, value=TRUE)))
       stop_msg <-
         paste0("LibBi terminated with \"", error_msg[1], "\".")
       if (length(x$log_file_name) > 0) {
