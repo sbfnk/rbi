@@ -26,7 +26,7 @@ pre code {
 
 [RBi](https://github.com/libbi/RBi) is an `R` interface to [LibBi](http://libbi.org), a library for Bayesian inference with state-space models using high-performance computer hardware.
 
-### Latest Version: _0.10.1_
+### Latest Version: _0.10.2_
 
 The package has been tested on macOS/OSX and Linux. It requires a working installation of **LibBi**. One macOS, this is easiest done using the the `brew` command: Install [Homebrew](https://brew.sh), then issue the following command (using a command shell, i.e. Terminal or similar):
 

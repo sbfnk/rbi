@@ -1,3 +1,9 @@
+# rbi 0.10.2
+
+* better error handling
+* expanded `summary` function
+* fix in dealing with observation times in `sample_obs`
+
 # rbi 0.10.1
 
 * `preserve_shell` option in `remove_lines` to keep block options
