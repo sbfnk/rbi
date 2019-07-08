@@ -246,7 +246,7 @@ which looks at the `output_file_name` field to read in the data. Let's look at t
 str(prior)
 ```
 
-This is a list of 9 objects, 8 representing each of the (noise/state) variables and parameters in the file, and one number `clock`, representing the time spent running the model in milliseconds.
+This is a list of 9 objects, 8 representing each of the (noise/state) variables and parameters in the file, and one number `clock`, representing the time spent running the model in microseconds.
 
 We can see that the time-varying variables are represented as data frames with three columns: `np` (enumerating individual simulations), `time` and `value`. Parameters don't vary in time and just have `np` and `value` columns.
 
