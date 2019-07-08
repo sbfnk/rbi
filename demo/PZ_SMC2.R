@@ -10,9 +10,8 @@ T <- 50
 
 init_parameters <- list(P = 2, Z = 2, mu = 0.5, sigma = 0.3)
 # First let's generate a dataset from the model
-synthetic_dataset <- bi_generate_dataset(end_time=T, noutputs=T,
-                                         model=PZ,
-                                         init = init_parameters)
+synthetic_dataset <- bi_generate_dataset(model=PZ, end_time=T, noutputs=T,
+                                         init=init_parameters)
 
 # Settings
 bi_object <- libbi(model=PZ, sampler = "smc2")
