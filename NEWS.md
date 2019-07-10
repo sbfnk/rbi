@@ -49,7 +49,7 @@
 * Fixed add_output when passed a list
 * Fixed a bug in writing observation files; extra dimensions are now written in the correct order
 * Improved writing of observation files with `ns` or other dimensions
-* Improved error handling: `libbi` calls now finish and yield a warning if the call to the libbi executable fails; this makes it possible to inspect the object to diagnoise the problem
+* Improved error handling: `libbi` calls now finish and yield a warning if the call to the libbi executable fails; this makes it possible to inspect the object to diagnose the problem
 
 # rbi 0.7.0
 
