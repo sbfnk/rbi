@@ -1097,6 +1097,8 @@ assert_files.libbi <- function(x, ...)
     }
 }
 
+#' @export
+predict <- function(x, ...) UseMethod("predict")
 #' @name predict
 #' @rdname predict
 #' @title Using the LibBi wrapper to predict
@@ -1105,10 +1107,10 @@ assert_files.libbi <- function(x, ...)
 #'
 #' For the help page of the base R \code{optimise} function, see \code{\link[stats]{optimise}}.
 #' @export
-#' @param object a \code{\link{libbi}} object
+#' @param x a \code{\link{libbi}} object
 #' @param ... any arguments to be passed to \code{\link{sample}}
-predict.libbi <- function(object, ...) {
-  sample(object, target="prediction", ...)
+predict.libbi <- function(x, ...) {
+  sample(x, target="prediction", ...)
 }
 
 ##' Sample observations from a LibBi model that has been run
