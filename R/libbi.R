@@ -645,9 +645,9 @@ attach_data.libbi <- function(x, file, data, in_place=FALSE, append=FALSE, overw
     } else {
       file.copy(source_file_name, target_file_name)
     }
-  } else if ("list" %in% class(data)) {
+  } else if ("list" %in% class(data) && length(data) > 0) {
     vars <- data
-  } else if (is.null(data)) {
+  } else { ## can't do anything with given 'data'
     if (file == "output") {
       x$run_flag <- FALSE
       x$output_file_name <- character(0)

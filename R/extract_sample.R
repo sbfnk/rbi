@@ -20,18 +20,20 @@ extract_sample <- function(x, np, ...) {
     stop("'x' must be a 'libbi' object or a file name or a list of data frames.")
   }
 
-  max_np <- max(vapply(samples[setdiff(names(samples), "clock")], function (y) {
-    if (is.data.frame(y) && "np" %in% colnames(y)) {
-      max(y$np)
-    } else {
-      0
-    }
-  }, 0))
+  if (length(samples) > 0) {
+    max_np <- max(vapply(samples[setdiff(names(samples), "clock")], function (y) {
+      if (is.data.frame(y) && "np" %in% colnames(y)) {
+        max(y$np)
+      } else {
+        0
+      }
+    }, 0))
 
-  if (missing(np)) np <- sample(seq_len(max_np), 1)
-  find_np <- ifelse(tolower(np) == "last", max_np, np)
-  if (find_np > max_np) {
-    stop("np requested greater than the maximum ", max_np)
+    if (missing(np)) np <- sample(seq_len(max_np), 1)
+    find_np <- ifelse(tolower(np) == "last", max_np, np)
+    if (find_np > max_np) {
+      stop("np requested greater than the maximum ", max_np)
+    }
   }
 
   ret <- lapply(samples[setdiff(names(samples), "clock")], function(y) {
