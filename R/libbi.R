@@ -1128,8 +1128,6 @@ sample_obs <- function(x, ...) {
   out$clock <- NULL ## we don't want to overwrite the clock later
   ## remove transition
   sample_model <- remove_lines(x$model, "transition", preserve_shell=TRUE)
-  ## convert input states to inputs
-  sample_model <- to_input(sample_model, names(out))
   ## turn outputs into inputs
   pr <- attach_data(x, file="input", out, append=TRUE)
   ## predict
