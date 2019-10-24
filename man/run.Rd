@@ -38,7 +38,7 @@
 
 \item{coord_dims}{The coord dimension(s) in any \code{obs} R objects that have been passed; if NULL (default), will be guessed from the given observation file given}
 
-\item{working_folder}{path to a folder from which to run \code{LibBi}; default to a temporary folder.}
+\item{working_folder}{deprecated; path to a folder from which to run \code{LibBi}; default to a temporary folder. Use the \code{build_dir} option instead, which will be translated into the \code{--build-dir} option of LibBi instead}
 
 \item{output_all}{deprecated; if set to TRUE, all parameters, states and observations will be saved; good for debugging}
 

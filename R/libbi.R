@@ -37,7 +37,6 @@ libbi <- function(model, path_to_libbi, dims, use_cache=TRUE, ...){
                    path_to_libbi=path_to_libbi,
                    model=NULL,
                    model_file_name=character(0),
-                   working_folder=character(0),
                    dims=libbi_dims,
                    time_dim=character(0),
                    coord_dims=list(),
@@ -86,7 +85,7 @@ run <- function(x, ...) UseMethod("run")
 #' @param obs observations of the model, either supplied as a list of values and/or data frames, or a (netcdf) file name, or a \code{\link{libbi}} object which has been run (in which case the output of that run is used as observations)
 #' @param time_dim The time dimension in any R objects that have been passed (\code{init}, \code{input}) and \code{obs}); if NULL (default), will be guessed from the given observation
 #' @param coord_dims The coord dimension(s) in any \code{obs} R objects that have been passed; if NULL (default), will be guessed from the given observation file given
-#' @param working_folder path to a folder from which to run \code{LibBi}; default to a temporary folder.
+#' @param working_folder deprecated; path to a folder from which to run \code{LibBi}; default to a temporary folder. Use the \code{build_dir} option instead, which will be translated into the \code{--build-dir} option of LibBi instead
 #' @param output_all deprecated; if set to TRUE, all parameters, states and observations will be saved; good for debugging
 #' @param sample_obs deprecated; if set to TRUE, will sample observations
 #' @param thin any thinning of MCMC chains (1 means all will be kept, 2 skips every other sample etc.); note that \code{LibBi} itself will write all data to the disk. Only when the results are read in with \code{\link{bi_read}} will thinning be applied.
@@ -185,10 +184,19 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
   }
   if (length(libbi_seed) > 0) new_options[["seed"]] <- libbi_seed
 
-  ## check if 'model-file' is contained in any options
+  if (!missing(working_folder)) {
+    warning("'working_folder' is deprecated. Use 'build_dir'.")
+    if ("build-dir" %in% names(new_options)) {
+      stop("Can't specify working folder and build_dir")
+    } else {
+      new_options[["build-dir"]] <- absolute_path(working_folder)
+    }
+  }
+
   all_options <- option_list(getOption("libbi_args"), config_file_options, x$options, new_options)
 
-  if ("model-file" %in% names(all_options)) {
+   ## check if 'model-file' is contained in any options
+   if ("model-file" %in% names(all_options)) {
     if (is_empty(model)) {
       model <- bi_model(all_options[["model-file"]])
       warning("A model has been passed via 'model-file'. It will be stored in the libbi object internally. If the file passed as 'model-file' is changed, 'model-file' needs to be passed again.")
@@ -208,14 +216,13 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
     stop("No model specified")
   }
 
-  if (!missing(working_folder)) {
-    x$working_folder <- absolute_path(working_folder)
-  } else if (length(x$working_folder) == 0) {
+  if (!("build-dir") %in% names(all_options)) {
     x <- create_working_folder(x)
   }
 
   x$model_file_name <-
-    file.path(absolute_path(x$working_folder), paste0(get_name(x$model), ".bi"))
+    file.path(absolute_path(x$options[["build-dir"]]),
+              paste0(get_name(x$model), ".bi"))
 
   args <- match.call()
 
@@ -308,7 +315,7 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
 
   if (!x$user_log_file && length(log_file_name) == 0) {
     x$log_file_name <- tempfile(pattern="output", fileext=".txt",
-                                tmpdir=absolute_path(x$working_folder))
+                                tmpdir=absolute_path(all_options[["build-dir"]]))
     x$user_log_file <- FALSE
   } else if (length(log_file_name) > 0) {
     x$log_file_name <- absolute_path(filename=log_file_name, dirname=getwd())
@@ -332,7 +339,7 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
       if (!("output-file" %in% names(all_options))) {
         x$output_file_name <-
           tempfile(pattern=paste(get_name(x$model), "output", sep = "_"),
-                   fileext=".nc", tmpdir=absolute_path(x$working_folder))
+                   fileext=".nc", tmpdir=absolute_path(all_options[["build-dir"]]))
       } else {
         x$output_file_name <- absolute_path(all_options[["output-file"]], getwd())
       }
@@ -384,7 +391,7 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
     if (!(client == "rewrite" && !debug)) cb_stdout(x$command)
     p <-
       tryCatch(processx::run(command=x$path_to_libbi, args=c(client, run_args),
-                             error_on_status=FALSE, wd=x$working_folder,
+                             error_on_status=FALSE, wd=all_options[["build-dir"]],
                              spinner=verbose,
                              stdout_line_callback = cb_stdout,
                              stderr_line_callback = cb_stderr),
@@ -589,7 +596,7 @@ attach_data.libbi <- function(x, file, data, in_place=FALSE, append=FALSE, overw
   } else {
     target_file_name <-
       tempfile(pattern=paste(get_name(x$model), file, sep = "_"),
-               fileext=".nc", tmpdir=absolute_path(x$working_folder))
+               fileext=".nc", tmpdir=absolute_path(x$options[["build-dir"]]))
     if (length(existing_file_name) == 1 && (append || overwrite)) {
       file.copy(existing_file_name, target_file_name)
     }
@@ -740,7 +747,7 @@ attach_file.libbi <- function(x, file, data, force=FALSE, ...){
     if (is.null(target_file_name)) {
       target_file_name <-
         tempfile(pattern=paste(get_name(x$model), file, sep = "_"),
-                 fileext=".nc", tmpdir=absolute_path(x$working_folder))
+                 fileext=".nc", tmpdir=absolute_path(x$options[["build-dir"]]))
     }
 
     write_opts <- list(filename = target_file_name, variables = data)
@@ -944,7 +951,7 @@ read_libbi <- function(name, ...) {
 print.libbi <- function(x, verbose=FALSE, ...){
   cat("Wrapper around LibBi\n")
   if (verbose) {
-    cat("* path to working folder:", x$working_folder, "\n")
+    cat("* path to working folder:", x$options[["build-dir"]], "\n")
     cat("* path to model file:", x$model_file_name, "\n")
     if (length(x$output_file_name) > 0) {
       cat("* path to output_file:", x$output_file_name, "\n")
@@ -1245,11 +1252,11 @@ update.default <- function(x, ...){
 #' @return a \code{\link{libbi}} object with updated working folder
 #' @keywords internal
 create_working_folder <- function(x) {
-  x$working_folder <- tempfile(pattern=paste(get_name(x$model)))
-  dir.create(x$working_folder)
+  x$options[["build-dir"]] <- tempfile(pattern=paste(get_name(x$model)))
+  dir.create(x$options[["build-dir"]])
   ## make sure temporary folder gets deleted upon garbage collection
   x$.gc_env <- new.env() ## dummy environment
-  x$.gc_env$folder <- x$working_folder
+  x$.gc_env$folder <- x$options[["build-dir"]]
   reg.finalizer(x$.gc_env, function(env) {
     unlink(env$folder, recursive=TRUE)
   }, onexit=TRUE)
