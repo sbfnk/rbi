@@ -1119,6 +1119,11 @@ predict <- function(x, ...) UseMethod("predict")
 predict.libbi <- function(x, ...) {
   sample(x, target="prediction", ...)
 }
+#' @export
+predict.default <- function(x, ...){
+  stats::predict(x, ...)
+}
+
 
 ##' Sample observations from a LibBi model that has been run
 ##'
