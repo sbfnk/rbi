@@ -241,7 +241,7 @@ bi_read <- function(x, vars, dims, model, type, file, missval_threshold, coord_d
               merge_values <- apply(merge_values, 2, as.integer)
               mav <- cbind(merge_values, mav)
             } else {
-              mav_merge <- data.table::data.table(data.table::melt(merge_values, varnames = matching_dims, value.name = var_type))
+              mav_merge <- data.table::data.table(reshape2::melt(merge_values, varnames = matching_dims, value.name = var_type))
               mav <- merge(mav_merge, mav, by = unname(matching_dims))
             }
           } else if (length(matching_vars) > 1) {
