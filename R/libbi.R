@@ -87,7 +87,7 @@ run <- function(x, ...) UseMethod("run")
 #' @param coord_dims The coord dimension(s) in any \code{obs} R objects that have been passed; if NULL (default), will be guessed from the given observation file given
 #' @param working_folder deprecated; path to a folder from which to run \code{LibBi}; default to a temporary folder. Use the \code{build_dir} option instead, which will be translated into the \code{--build-dir} option of LibBi instead
 #' @param output_all deprecated; if set to TRUE, all parameters, states and observations will be saved; good for debugging
-#' @param sample_obs deprecated; if set to TRUE, will sample observations
+#' @param sample_obs deprecated; if set to TRUE, will sample observations. Use the \code{sample_obs} function instead.
 #' @param thin any thinning of MCMC chains (1 means all will be kept, 2 skips every other sample etc.); note that \code{LibBi} itself will write all data to the disk. Only when the results are read in with \code{\link{bi_read}} will thinning be applied.
 #' @param output_every real; if given, \code{noutputs} will be set so that there is output every \code{output_every} time steps; if set to 0, only generate an output at the final time
 #' @param chain logical; if set to TRUE and \code{x} has been run before, the previous output file will be used as \code{init} file, and \code{init-np} will be set to the last iteration of the previous run (unless target=="prediction"). This is useful for running inference chains.

@@ -42,7 +42,7 @@
 
 \item{output_all}{deprecated; if set to TRUE, all parameters, states and observations will be saved; good for debugging}
 
-\item{sample_obs}{deprecated; if set to TRUE, will sample observations}
+\item{sample_obs}{deprecated; if set to TRUE, will sample observations. Use the \code{sample_obs} function instead.}
 
 \item{thin}{any thinning of MCMC chains (1 means all will be kept, 2 skips every other sample etc.); note that \code{LibBi} itself will write all data to the disk. Only when the results are read in with \code{\link{bi_read}} will thinning be applied.}
 
