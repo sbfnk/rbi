@@ -87,7 +87,8 @@ test_that("we can run libbi and analyse results",
     capture.output(
       bi2 <-
         sample(bi_run, seed=1234, obs=dataset,
-               working_folder=bi_run$working_folder, with="transform-initial-to-param",
+               build_dir=bi_run$options[["build-dir"]],
+               with="transform-initial-to-param",
                noutputs=10, assert=FALSE, log_file_name="")
     )
   )

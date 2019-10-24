@@ -216,7 +216,9 @@ run.libbi <-  function(x, client, proposal=c("model", "prior"), model, fix, opti
     stop("No model specified")
   }
 
-  if (!("build-dir") %in% names(all_options)) {
+  if ("build-dir" %in% names(all_options)) {
+    x$options[["build-dir"]] <- all_options[["build-dir"]]
+  } else {
     x <- create_working_folder(x)
   }
 
