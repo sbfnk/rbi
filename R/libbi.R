@@ -1145,13 +1145,11 @@ sample_obs <- function(x, ...) {
   ## turn outputs into inputs
   pr <- attach_data(x, file="input", out, append=TRUE)
   ## predict
-  pr$options[["noutputs"]] <- NULL
   pr <- predict(pr, model=sample_model,
                 with=c("output-at-obs", "transform-obs-to-state"), ...)
   ## attach outputs back
   pr <- attach_data(pr, "output", data=out, append=TRUE)
   pr$options[["input-file"]] <- x$options[["input-file"]]
-  pr$options[["noutputs"]] <- x$options[["noutputs"]]
   pr$options[["with-output-at-obs"]] <- x$options[["with-output-at-obs"]]
   pr$options[["without-output-at-obs"]] <- x$options[["without-output-at-obs"]]
   pr$options[["with-transform-obs-to-state"]] <-
