@@ -829,6 +829,7 @@ save_libbi.libbi <- function(x, name, supplement, split = FALSE, ...) {
     }
   }
 
+  options[["build-dir"]] <- NULL
   save_obj[["options"]] <- options
 
   save_obj[["log"]] <- character(0)
@@ -923,6 +924,7 @@ read_libbi <- function(name, ...) {
     }
   }
 
+  libbi_options[["build-dir"]] <- NULL
   new_obj <- do.call(libbi, libbi_options)
 
   ## write output file
