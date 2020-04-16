@@ -11,7 +11,7 @@
 #' output_every is set to 1.
 #' @param ... arguments to be passed to \code{\link{sample.libbi}}, especially 'model', 'end_time' and 'seed'.
 #' @inheritParams run
-#' @return generated data set
+#' @return a \code{libbi} object, the generated data set
 #' @export
 bi_generate_dataset <- function(..., output_every=1){
 

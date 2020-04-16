@@ -8,7 +8,8 @@
 #'     from \code{bi_read})
 #' @param np iteration to extract; if set to "last", the last sample will be extracted. If not given a random sample will be extracted
 #' @param ... parameters to \code{bi_read} (e.g., dimensions)
-#' @return list of parameters and trajectories
+#' @return a list of data frames or numeric vectors containing parameters and
+#' trajectories  
 #' @export
 extract_sample <- function(x, np, ...) {
 

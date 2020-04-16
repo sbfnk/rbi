@@ -6,7 +6,7 @@
 #'
 #' @param read either a path to a NetCDF file, or a NetCDF connection created using \code{nc_open}, or a \code{\link{libbi}} object from which to read the output
 #' @param ... any parameters for \code{\link{bi_open}} (especially "file")
-#' @return vector of variable names
+#' @return character vector of variable names
 #' @importFrom ncdf4 nc_close
 #' @examples
 #' example_output_file <- system.file(package="rbi", "example_output.nc")

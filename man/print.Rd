@@ -11,7 +11,7 @@
 \method{print}{libbi}(x, verbose = FALSE, ...)
 }
 \arguments{
-\item{x}{a \code{\link{bi_model}} object}
+\item{x}{a \code{\link{libbi}} object}
 
 \item{spaces}{number of spaces for indentation}
 
@@ -20,13 +20,11 @@
 \item{...}{ignored}
 
 \item{verbose}{logical; if TRUE, locations of files and working folder should be printed}
-
-\item{x}{a \code{\link{libbi}} object}
-
-\item{...}{ignored}
 }
 \value{
 if \code{screen} is \code{FALSE}, a character vector of model lines
+
+nothing (invisible NULL)
 }
 \description{
 Prints all lines in a LibBi model

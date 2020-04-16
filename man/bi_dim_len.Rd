@@ -12,7 +12,7 @@ bi_dim_len(filename, dim)
 \item{dim}{name of the dimension to check}
 }
 \value{
-dimension length
+a number, the dimension length
 }
 \description{
 This function returns the length of a dimension in a NetCDF file.

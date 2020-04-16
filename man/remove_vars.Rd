@@ -10,11 +10,11 @@ remove_vars(x, vars)
 \item{x}{a \code{\link{bi_model}} object}
 
 \item{vars}{vector of variables to remove}
-
-\item{...}{values to be assigned to the (named) variables}
 }
 \value{
 a bi model object of the new model
+
+the updated \code{bi_model} object
 }
 \description{
 Removes variables from the left-hand side of a model

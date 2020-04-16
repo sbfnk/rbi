@@ -16,7 +16,7 @@
 \item{...}{options to be passed to \code{\link{run.libbi}}}
 }
 \value{
-a \code{\link{bi_model}} object
+a re-written \code{\link{bi_model}} object
 }
 \description{
 The method \code{rewrite} launches \code{LibBi} to rewrite a model to inspect its internal representation in \code{LibBi}

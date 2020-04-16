@@ -12,7 +12,7 @@ bi_generate_dataset(..., output_every = 1)
 \item{output_every}{real; if given, \code{noutputs} will be set so that there is output every \code{output_every} time steps; if set to 0, only generate an output at the final time}
 }
 \value{
-generated data set
+a \code{libbi} object, the generated data set
 }
 \description{
 This is a wrapper around \code{libbi sample --target joint --nsamples 1}, to generate a

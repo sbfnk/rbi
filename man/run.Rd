@@ -5,11 +5,30 @@
 \alias{run.libbi}
 \title{Using the LibBi wrapper to launch LibBi}
 \usage{
-\method{run}{libbi}(x, client, proposal = c("model", "prior"), model,
-  fix, options, config, log_file_name = character(0), init, input, obs,
-  time_dim = character(0), coord_dims = list(), working_folder,
-  output_all = FALSE, sample_obs = FALSE, thin, output_every,
-  chain = TRUE, seed = TRUE, debug = FALSE, ...)
+\method{run}{libbi}(
+  x,
+  client,
+  proposal = c("model", "prior"),
+  model,
+  fix,
+  options,
+  config,
+  log_file_name = character(0),
+  init,
+  input,
+  obs,
+  time_dim = character(0),
+  coord_dims = list(),
+  working_folder,
+  output_all = FALSE,
+  sample_obs = FALSE,
+  thin,
+  output_every,
+  chain = TRUE,
+  seed = TRUE,
+  debug = FALSE,
+  ...
+)
 }
 \arguments{
 \item{x}{a \code{\link{libbi}} object; if this is not given, an empty \code{\link{libbi}} object will be created}
@@ -57,14 +76,14 @@
 \item{...}{list of additional arguments to pass to the call to \code{LibBi}. Any arguments starting with `enable`/`disable` can be specified as boolean (e.g., `assert=TRUE` or `cuda=TRUE`). Any `dry-` options can be specified with a `"dry"` argument, e.g., `dry="parse"`. Any options that would be specified with `with`/`without` can be specified as character vector to an option named `with`/`without`, respectively, e.g. with="transform-obs-to-state".}
 }
 \value{
-a \code{\link{libbi}} object, except if \code{client} is 'rewrite',  in which case a \code{\link{bi_model}} object will be returned
+an updated \code{\link{libbi}} object, except if \code{client} is 'rewrite', in which case invisible NULL will be returned but the rewritten model code printed
 }
 \description{
 The method \code{run} launches \code{LibBi} with a particular set of command line #' arguments. Normally, this function would not be run by the user, but instead one of the client functions \code{\link{sample}}, \code{\link{filter}}, or \code{\link{optimise}}, or \code{\link{rewrite}}, which pass any options on to \code{run}. Note that any options specified here are stored in the \code{\link{libbi}} object and do not have to be specified again if another command is run on the object.
 }
 \examples{
 bi_object <- libbi(model = system.file(package="rbi", "PZ.bi"))
-\dontrun{
+\donttest{
   run(bi_object, client="sample", target="prior")
   bi_file_summary(bi_object)
 }

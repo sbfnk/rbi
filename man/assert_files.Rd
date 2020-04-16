@@ -12,6 +12,9 @@
 
 \item{...}{ignored}
 }
+\value{
+nothing (invisible NULL); an error will be thrown if there is a problem
+}
 \description{
 This checks that the \code{\link{libbi}} object given has been run (via \code{\link{sample}}, \code{\link{filter}} or \code{\link{optimize}})) and the output file has not been modified since.
 }

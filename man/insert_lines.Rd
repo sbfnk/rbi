@@ -5,8 +5,7 @@
 \alias{insert_lines.bi_model}
 \title{Insert lines in a LibBi model}
 \usage{
-\method{insert_lines}{bi_model}(x, lines, before, after, at_beginning_of,
-  at_end_of, ...)
+\method{insert_lines}{bi_model}(x, lines, before, after, at_beginning_of, at_end_of, ...)
 }
 \arguments{
 \item{x}{a \code{\link{bi_model}} object}
@@ -24,7 +23,7 @@
 \item{...}{ignored}
 }
 \value{
-the updated bi model
+the updated \code{bi_model} object
 }
 \description{
 Inserts one or more lines into a libbi model. If one of \code{before} or \code{after} is given, the line(s) will be inserted before or after a given line number or block name, respectively. If one of \code{at_beginning of} or \code{at_end_of} is given, the lines will be inserted at the beginning/end of the block, respectively.

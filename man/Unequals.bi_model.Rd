@@ -6,7 +6,7 @@
 \alias{`!=.bi_model`}
 \title{Check if two models are unequal}
 \usage{
-\method{!=}{bi_model}(e1, e2)
+\method{!=}{bi_model}(e1, e2, ...)
 }
 \arguments{
 \item{e1}{a \code{\link{bi_model}}}
@@ -16,7 +16,7 @@
 \item{...}{ignored}
 }
 \value{
-TRUE or FALSE
+TRUE or FALSE, depending on whether the models are equal or not
 }
 \description{
 Ignores differences in the model name.

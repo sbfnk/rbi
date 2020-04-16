@@ -17,7 +17,7 @@
 \item{...}{ignored}
 }
 \value{
-the updated bi model
+the updated \code{bi_model} object
 }
 \description{
 Takes every occurrence of one string and replaces it with another

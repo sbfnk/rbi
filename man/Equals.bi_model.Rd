@@ -16,7 +16,7 @@
 \item{...}{ignored}
 }
 \value{
-value TRUE or FALSE
+TRUE or FALSE, depending on whether the models are equal or not
 }
 \description{
 Ignores differences in the model name.

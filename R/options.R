@@ -5,7 +5,7 @@
 #' This function is used to convert an option string into a list of options. If a list is given, it will be kept as is
 #'
 #' @param ... any number of strings to convert
-#' @return option list
+#' @return a list of options and values
 option_list <- function(...){
 
   options <- list()

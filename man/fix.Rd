@@ -13,7 +13,7 @@
 \item{...}{values to be assigned to the (named) variables}
 }
 \value{
-a bi model object of the new model
+the updated \code{bi_model} object
 }
 \description{
 Replaces all variables with fixed values as given ; note that this will not replace differential equations and lead to an error if applied to states that are changed inside an "ode" block

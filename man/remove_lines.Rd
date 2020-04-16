@@ -5,8 +5,14 @@
 \alias{remove_lines.bi_model}
 \title{Remove line(s) and/or block(s) in a libbi model}
 \usage{
-\method{remove_lines}{bi_model}(x, what, only, type = c("all",
-  "assignment", "sample"), preserve_shell = FALSE, ...)
+\method{remove_lines}{bi_model}(
+  x,
+  what,
+  only,
+  type = c("all", "assignment", "sample"),
+  preserve_shell = FALSE,
+  ...
+)
 }
 \arguments{
 \item{x}{a \code{\link{bi_model}} object}
@@ -22,7 +28,7 @@
 \item{...}{ignored}
 }
 \value{
-the updated bi model
+the updated \code{bi_model} object
 }
 \description{
 Removes one or more lines in a libbi model.

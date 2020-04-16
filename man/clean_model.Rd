@@ -10,7 +10,7 @@ clean_model(x)
 \item{x}{a \code{\link{bi_model}} object}
 }
 \value{
-a \code{\link{bi_model}}
+the updated \code{bi_model} object
 }
 \description{
 Cleans the model by working out correct indents, removing long comments and

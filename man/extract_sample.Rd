@@ -16,7 +16,8 @@ from \code{bi_read})}
 \item{...}{parameters to \code{bi_read} (e.g., dimensions)}
 }
 \value{
-list of parameters and trajectories
+a list of data frames or numeric vectors containing parameters and
+trajectories
 }
 \description{
 This function takes the provided \code{\link{libbi}}

@@ -20,7 +20,7 @@ var_names(x, vars, type, dim = FALSE, opt = FALSE, aux = FALSE)
 \item{aux}{logical; if set to TRUE, auxiliary names will be returned}
 }
 \value{
-variable names
+a character vector ofvariable names
 }
 \description{
 Get variable names of one or more type(s)

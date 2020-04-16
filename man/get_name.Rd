@@ -13,7 +13,7 @@
 \item{...}{ignored}
 }
 \value{
-the name of the model
+a character string, the name of the model
 }
 \description{
 Extracts the name of a bi model (first line of the .bi file).

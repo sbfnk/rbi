@@ -20,7 +20,7 @@ if unsuccessful it tries "~/PathToBiBin/libbi"; if unsuccessful again it fails.}
 \item{...}{options passed to \code{\link{run.libbi}}}
 }
 \value{
-a \code{\link{libbi}} object
+a new \code{\link{libbi}} object
 }
 \description{
 \code{libbi} allows to call \code{LibBi}.

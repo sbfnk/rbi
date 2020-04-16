@@ -8,7 +8,7 @@
 #'
 #' @param x either a path to a NetCDF file, or a NetCDF connection created using \code{nc_open}, or a \code{\link{libbi}} object from which to read the output
 #' @param file file to open (out of "input", "init", "obs", "output"), if \code{x} is given as a \code{libbi} object; by default, will read output file
-#' @return open NetCDF connection
+#' @return an open NetCDF connection
 #' @importFrom ncdf4 nc_open
 bi_open <- function(x, file = "output")
 {

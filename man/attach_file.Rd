@@ -18,6 +18,9 @@
 
 \item{...}{any options to \code{\link{bi_write}} (e.g., 'time_dim')}
 }
+\value{
+an updated \code{\link{libbi}} object
+}
 \description{
 Deprecated (use 'attach' instead). Adds an (output, obs, etc.) file to a \code{\link{libbi}} object. This is useful to recreate a \code{\link{libbi}} object from the model and output files of a previous run
 }

@@ -15,7 +15,7 @@
 #'     to TRUE
 #' @param burnin proportion of iterations to discard as burn-in (if between 0 and 1), or number of samples to discard (if >1)
 #' @param ... parameters to \code{bi_read} (e.g., dimensions)
-#' @return data frame with parameter traces; this can be fed to
+#' @return a ata frame with parameter traces; this can be fed to
 #'     \code{coda} routines
 #' @importFrom data.table data.table dcast
 #' @importFrom stats as.formula

@@ -5,9 +5,18 @@
 \alias{attach_data.libbi}
 \title{Attach a new file or data set to a \code{\link{libbi}} object}
 \usage{
-\method{attach_data}{libbi}(x, file, data, in_place = FALSE,
-  append = FALSE, overwrite = FALSE, quiet = FALSE,
-  time_dim = character(0), coord_dims = list(), ...)
+\method{attach_data}{libbi}(
+  x,
+  file,
+  data,
+  in_place = FALSE,
+  append = FALSE,
+  overwrite = FALSE,
+  quiet = FALSE,
+  time_dim = character(0),
+  coord_dims = list(),
+  ...
+)
 }
 \arguments{
 \item{x}{a \code{\link{libbi}} object}
@@ -29,6 +38,9 @@
 \item{coord_dims}{the names of the coordinate dimension, if any; should be a named list of character vectors, they are matched to variables names}
 
 \item{...}{any options to \code{\link{bi_write}} (e.g., 'time_dim')}
+}
+\value{
+an updated \code{\link{libbi}} object
 }
 \description{
 Adds an (output, obs, etc.) file to a \code{\link{libbi}} object. This is useful to recreate a \code{\link{libbi}} object from the model and output files of a previous run

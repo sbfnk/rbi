@@ -10,7 +10,7 @@ bi_file_summary(...)
 \item{...}{Any extra parameters to \code{\link{bi_open}}, especially \code{x} and \code{file}}
 }
 \value{
-None
+No return value
 }
 \description{
 This function prints a little summary of the content

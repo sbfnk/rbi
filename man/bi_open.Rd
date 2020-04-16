@@ -12,7 +12,7 @@ bi_open(x, file = "output")
 \item{file}{file to open (out of "input", "init", "obs", "output"), if \code{x} is given as a \code{libbi} object; by default, will read output file}
 }
 \value{
-open NetCDF connection
+an open NetCDF connection
 }
 \description{
 This function opens an NetCDF file

@@ -16,7 +16,7 @@
 \item{...}{options to be passed to \code{\link{run.libbi}}}
 }
 \value{
-a \code{\link{libbi}} object
+an updated \code{\link{libbi}} object
 }
 \description{
 The method \code{filter} launches \code{libbi} to filter state trajectories. See the options to \code{\link{run.libbi}} for how to specify the various components of sampling with LibBi, and the LibBi manual for all options that can be passed when the client is \code{filter}.

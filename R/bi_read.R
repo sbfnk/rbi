@@ -23,8 +23,7 @@
 #' @param burn number of initial samples to discard; default: 0
 #' @param missval.threshold deprecated; use missval_threshold instead
 #' @param init.to.param deprecated; use init_to_param instead
-#' @return list of data frames and/or numbers
-#' @inheritParams bi_open
+#' @return a list of data frames and/or numbers that have been read
 #' @importFrom ncdf4 nc_close ncvar_get
 #' @importFrom data.table setkeyv setnames setDF is.data.table :=
 #' @importFrom reshape2 melt

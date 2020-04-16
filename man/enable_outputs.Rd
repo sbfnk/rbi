@@ -12,7 +12,7 @@ enable_outputs(x, type = "all")
 \item{type}{either "all" (default), or a vector of variable types that are to have outputs enabled}
 }
 \value{
-a bi model object of the new model
+the updated \code{bi_model} object
 }
 \description{
 Any variable type given will have any 'has_output=0' option removed in the given model..

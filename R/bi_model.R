@@ -8,6 +8,7 @@
 #' @param filename the file name of the model file
 #' @param lines lines of the model (if no \code{filename} is given), a character vector
 #' @param ... ignored
+#' @return a \code{{bi_model}} object containing the newly created model
 #' @examples
 #' model_file_name <- system.file(package="rbi", "PZ.bi")
 #' PZ <- bi_model(filename = model_file_name)
@@ -43,8 +44,8 @@ bi_model <- function(filename, lines, ...) {
 #' Used by \code{\link{fix}} and \code{\link{to_input}}
 #' @param x a \code{\link{bi_model}} object
 #' @param vars vector of variables to remove
-#' @param ... values to be assigned to the (named) variables
 #' @return a bi model object of the new model
+#' @return the updated \code{bi_model} object
 #' @seealso \code{\link{bi_model}}
 remove_vars <- function(x, vars) {
 
@@ -88,7 +89,7 @@ remove_vars <- function(x, vars) {
 #'
 #' @param x a \code{\link{bi_model}} object
 #' @param vars vector of variables to convert to inputs
-#' @return a bi model object of the new model
+#' @return the updated \code{bi_model} object
 #' @seealso \code{\link{bi_model}}
 #' @keywords internal
 to_input <- function(x, vars) {
@@ -126,7 +127,7 @@ to_input <- function(x, vars) {
 #'
 #' @param x a \code{\link{bi_model}} object
 #' @param type either "all" (default), or a vector of variable types that are to have outputs enabled
-#' @return a bi model object of the new model
+#' @return the updated \code{bi_model} object
 #' @examples
 #' model_file_name <- system.file(package="rbi", "PZ.bi")
 #' PZ <- bi_model(filename = model_file_name)
@@ -167,7 +168,7 @@ fix <- function(x, ...) UseMethod("fix")
 #' For the help page of the base R \code{fix} function, see \code{\link[utils]{fix}}.
 #' @param x a \code{\link{bi_model}} object
 #' @param ... values to be assigned to the (named) variables
-#' @return a bi model object of the new model
+#' @return the updated \code{bi_model} object
 #' @seealso \code{\link{bi_model}}
 #' @examples
 #' model_file_name <- system.file(package="rbi", "PZ.bi")
@@ -206,7 +207,7 @@ fix.default <- function(x, ...) {
 #' Generates a version of the model where the proposal blocks are replaced by the prior blocks. This is useful for exploration of the likelihood surface.
 #'
 #' @param x a \code{\link{bi_model}} object
-#' @return a bi model object of the new model
+#' @return the updated \code{bi_model} object
 #' @seealso \code{\link{bi_model}}
 #' @keywords internal
 #' @rdname propose_prior
@@ -230,7 +231,7 @@ propose_prior <- function(x) {
 #' Cleans the model by working out correct indents, removing long comments and
 #'   merging lines
 #' @param x a \code{\link{bi_model}} object
-#' @return a \code{\link{bi_model}}
+#' @return the updated \code{bi_model} object
 #' @seealso \code{\link{bi_model}}
 #' @keywords internal
 clean_model <- function(x) {
@@ -335,7 +336,7 @@ insert_lines <- function(x, ...) UseMethod("insert_lines")
 #' @param at_beginning_of block at the beginning of which to insert lines(s)
 #' @param at_end_of block at the end of which to insert lines(s)
 #' @param ... ignored
-#' @return the updated bi model
+#' @return the updated \code{bi_model} object
 #' @seealso \code{\link{bi_model}}
 #' @examples
 #' model_file_name <- system.file(package="rbi", "PZ.bi")
@@ -399,7 +400,7 @@ replace_all <- function(x, ...) UseMethod("replace_all")
 #' @param from string to be replaced (a regular expression)
 #' @param to new string (which can refer to the regular expression given as \code{from})
 #' @param ... ignored
-#' @return the updated bi model
+#' @return the updated \code{bi_model} object
 #' @seealso \code{\link{bi_model}}
 #' @rdname replace_all
 #' @export
@@ -421,7 +422,7 @@ remove_lines <- function(x, ...) UseMethod("remove_lines")
 #' @param type which types of lines to remove, either "all", "sample" (i.e., lines with a "~") or "assignment" (lines with a "<-" or "=") (default: "all")
 #' @param preserve_shell if TRUE (default: FALSE), preserve the definition of a block even if all lines are removed; this is useful to preserve options passed to a \code{transition} or \code{ode} block
 #' @param ... ignored
-#' @return the updated bi model
+#' @return the updated \code{bi_model} object
 #' @seealso \code{\link{bi_model}}
 #' @examples
 #' model_file_name <- system.file(package="rbi", "PZ.bi")
@@ -521,7 +522,7 @@ find_block <- function(x, ...) UseMethod("find_block")
 #'
 #' @description
 #' Finds a block and returns the range of line numbers encompassed by that block.
-#' @return range of line numbers
+#' @return an integerr vector, the range of line numbers
 #' @seealso \code{\link{bi_model}}
 #' @keywords internal
 #' @param x a \code{\link{bi_model}} object
@@ -614,7 +615,7 @@ add_block.bi_model <- function(x, name, lines, options, ...) {
 #' @param dim logical; if set to TRUE, names will contain dimensions in brackets
 #' @param opt logical; if set to TRUE, names will contain options (e.g., has_output)
 #' @param aux logical; if set to TRUE, auxiliary names will be returned
-#' @return variable names
+#' @return a character vector ofvariable names
 #' @rdname var_names
 #' @export
 var_names <- function(x, vars, type, dim = FALSE, opt = FALSE, aux = FALSE) {
@@ -666,7 +667,7 @@ var_names <- function(x, vars, type, dim = FALSE, opt = FALSE, aux = FALSE) {
 #'
 #' @param model a \code{\link{bi_model}} object
 #' @param type a character vector of one or more types
-#' @return list of dimensions (as names) and their sizes
+#' @return a list of dimensions (as names) and their sizes
 #' @export
 get_dims <- function(model, type)
 {
@@ -702,7 +703,7 @@ get_dims <- function(model, type)
 #' Get constants contained in a LibBi model and their values. This will attempt to evaluate any calculation on the right hand side. Failing that, it will be returned verbatim.
 #'
 #' @param model a \code{\link{bi_model}} object
-#' @return list of constants (as names) and their values
+#' @return a list of constants (as names) and their values
 #' @export
 get_const <- function(model) {
   const_lines <-
@@ -776,7 +777,7 @@ print.bi_model <- function(x, spaces=2, screen=TRUE, ...) {
 #' Checks if a model is empty (i.e., has been initialised without any content)
 #'
 #' @param x a \code{\link{bi_model}} object
-#' @return the updated bi model
+#' @return TRUE or FALSE, depending on whether the model is empty
 #' @seealso \code{\link{bi_model}}
 #' @keywords internal
 #' @rdname is_empty
@@ -793,7 +794,7 @@ get_name <- function(x, ...) UseMethod("get_name")
 #'
 #' @param x a \code{\link{bi_model}} object
 #' @param ... ignored
-#' @return the name of the model
+#' @return a character string, the name of the model
 #' @seealso \code{\link{bi_model}}
 #' @examples
 #' model_file_name <- system.file(package="rbi", "PZ.bi")
@@ -822,7 +823,7 @@ set_name <- function(x, ...) UseMethod("set_name")
 #' @param name Name of the model
 #' @param x a \code{\link{bi_model}} object
 #' @param ... ignored
-#' @return the updated bi model
+#' @return the updated \code{bi_model} object
 #' @seealso \code{\link{bi_model}}
 #' @examples
 #' model_file_name <- system.file(package="rbi", "PZ.bi")
@@ -854,6 +855,7 @@ set_name.bi_model <- function(x, name, ...) {
 #' @param x A bi_model
 #' @param i A vector of line numbers
 #' @param ... ignored
+#' @return the updated \code{bi_model} object
 #' @examples
 #' model_file_name <- system.file(package="rbi", "PZ.bi")
 #' PZ <- bi_model(filename = model_file_name)
@@ -877,6 +879,7 @@ set_name.bi_model <- function(x, name, ...) {
 #' @param x A bi_model
 #' @param i A vector of line numbers
 #' @param ... ignored
+#' @return a character string of the extracted model lines(s)
 #' @examples
 #' model_file_name <- system.file(package="rbi", "PZ.bi")
 #' PZ <- bi_model(filename = model_file_name)
@@ -907,7 +910,7 @@ set_name.bi_model <- function(x, name, ...) {
 #' PZ <- bi_model(filename = model_file_name)
 #' PZ == PZ # TRUE
 #' @export
-#' @return value TRUE or FALSE
+#' @return TRUE or FALSE, depending on whether the models are equal or not
 `==.bi_model` <- function(e1, e2, ...) {
   return(length(e1) == length(e2) &&
            all(get_block(e1, "model")==get_block(e2, "model")))
@@ -927,7 +930,7 @@ set_name.bi_model <- function(x, name, ...) {
 #' PZ <- bi_model(filename = model_file_name)
 #' PZ != PZ # FALSE
 #' @export
-#' @return TRUE or FALSE
-`!=.bi_model` <- function(e1, e2) {
+#' @return TRUE or FALSE, depending on whether the models are equal or not
+`!=.bi_model` <- function(e1, e2, ...) {
   return(!(e1 == e2))
 }

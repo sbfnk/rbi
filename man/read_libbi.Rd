@@ -12,7 +12,7 @@ read_libbi(name, ...)
 \item{...}{any extra options to pass to \code{\link{libbi}} when creating the new object}
 }
 \value{
-a \code{\link{libbi}} object
+a new \code{\link{libbi}} object
 }
 \description{
 This reads all options, files and outputs of a \code{LibBi} run from a specified RDS file or

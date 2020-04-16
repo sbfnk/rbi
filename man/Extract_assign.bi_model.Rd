@@ -18,6 +18,9 @@
 \item{value}{A vector of the same length as \code{i}, containing the
 replacement strings}
 }
+\value{
+the updated \code{bi_model} object
+}
 \description{
 Extracts a subset of lines from the model and assigns new character strings.
 }

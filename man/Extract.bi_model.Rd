@@ -15,6 +15,9 @@
 
 \item{...}{ignored}
 }
+\value{
+a character string of the extracted model lines(s)
+}
 \description{
 Extracts a subset of lines from the model.
 }

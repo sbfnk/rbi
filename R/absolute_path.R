@@ -7,6 +7,7 @@
 #'
 #' @param filename name of a file, absolute or relative to a folder
 #' @param dirname name of a folder where the file is supposed to be
+#' @return a character string containing the absolute path
 #' @keywords internal
 absolute_path <- function(filename, dirname){
   if (missing(dirname)){

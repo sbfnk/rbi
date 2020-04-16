@@ -12,7 +12,7 @@ bi_contents(read, ...)
 \item{...}{any parameters for \code{\link{bi_open}} (especially "file")}
 }
 \value{
-vector of variable names
+character vector of variable names
 }
 \description{
 This function gets the name of all the variables in the passed file, list or \code{\link{libbi}} object

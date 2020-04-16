@@ -10,7 +10,7 @@ option_list(...)
 \item{...}{any number of strings to convert}
 }
 \value{
-option list
+a list of options and values
 }
 \description{
 This function is used to convert an option string into a list of options. If a list is given, it will be kept as is

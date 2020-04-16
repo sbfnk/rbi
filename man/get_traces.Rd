@@ -24,7 +24,7 @@ considered (otherwise, just parameters)}
 \item{...}{parameters to \code{bi_read} (e.g., dimensions)}
 }
 \value{
-data frame with parameter traces; this can be fed to
+a ata frame with parameter traces; this can be fed to
     \code{coda} routines
 }
 \description{

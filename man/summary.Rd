@@ -5,8 +5,13 @@
 \alias{summary.libbi}
 \title{Print summary information about a \code{\link{libbi}} object}
 \usage{
-\method{summary}{libbi}(object, type = c("param", "state", "noise",
-  "obs"), quantiles = c(0.25, 0.75), na.rm = FALSE, ...)
+\method{summary}{libbi}(
+  object,
+  type = c("param", "state", "noise", "obs"),
+  quantiles = c(0.25, 0.75),
+  na.rm = FALSE,
+  ...
+)
 }
 \arguments{
 \item{object}{a \code{\link{libbi}} object}
@@ -18,6 +23,9 @@
 \item{na.rm}{logical; if true, any \code{na} and \code{NaN}'s are removed before calculations are performed}
 
 \item{...}{ignored}
+}
+\value{
+nothing (invisible NULL)
 }
 \description{
 This reads in the output file of the \code{\link{libbi}} object (which has been run before) and prints summary information of parameters

@@ -10,7 +10,7 @@ is_empty(x)
 \item{x}{a \code{\link{bi_model}} object}
 }
 \value{
-the updated bi model
+TRUE or FALSE, depending on whether the model is empty
 }
 \description{
 Checks if a model is empty (i.e., has been initialised without any content)

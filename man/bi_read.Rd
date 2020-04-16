@@ -4,10 +4,24 @@
 \alias{bi_read}
 \title{Bi Read}
 \usage{
-bi_read(x, vars, dims, model, type, file, missval_threshold,
-  coord_dims = list(), vector, thin, verbose = FALSE,
-  clear_cache = FALSE, init_to_param = FALSE, burn = 0,
-  missval.threshold, init.to.param = FALSE)
+bi_read(
+  x,
+  vars,
+  dims,
+  model,
+  type,
+  file,
+  missval_threshold,
+  coord_dims = list(),
+  vector,
+  thin,
+  verbose = FALSE,
+  clear_cache = FALSE,
+  init_to_param = FALSE,
+  burn = 0,
+  missval.threshold,
+  init.to.param = FALSE
+)
 }
 \arguments{
 \item{x}{either a path to a NetCDF file, or a NetCDF connection created using \code{nc_open}, or a \code{\link{libbi}} object from which to read the output}
@@ -43,7 +57,7 @@ bi_read(x, vars, dims, model, type, file, missval_threshold,
 \item{init.to.param}{deprecated; use init_to_param instead}
 }
 \value{
-list of data frames and/or numbers
+a list of data frames and/or numbers that have been read
 }
 \description{
 This function reads all variable from a NetCDF file or the output of a

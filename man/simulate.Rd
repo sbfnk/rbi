@@ -16,7 +16,7 @@
 \item{...}{options to be passed to \code{\link{run.libbi}}}
 }
 \value{
-a \code{\link{bi_model}} object
+an updated \code{\link{bi_model}} object
 }
 \description{
 The method \code{simulate} launches \code{LibBi} to simulate a model by passing `target="joint"` to \code{LibBi}

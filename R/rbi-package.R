@@ -31,10 +31,10 @@
 #' bi_write("mu_sigma.nc", mu_sigma)
 #'
 #' ## examples for running libbi from rbi (will take a few minutes)
-#' \dontrun{demo(PZ_generate_dataset)}
-#' \dontrun{demo(PZ_PMMH)}
-#' \dontrun{demo(PZ_SMC2)}
-#' \dontrun{demo(PZ_filtering)}
+#' \donttest{demo(PZ_generate_dataset)}
+#' \donttest{demo(PZ_PMMH)}
+#' \donttest{demo(PZ_SMC2)}
+#' \donttest{demo(PZ_filtering)}
 #'
 NULL
 

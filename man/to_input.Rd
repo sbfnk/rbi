@@ -12,7 +12,7 @@ to_input(x, vars)
 \item{vars}{vector of variables to convert to inputs}
 }
 \value{
-a bi model object of the new model
+the updated \code{bi_model} object
 }
 \description{
 Used for predictions, if one doesn't want to re-simulate state/noise trajectories

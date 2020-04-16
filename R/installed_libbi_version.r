@@ -2,7 +2,7 @@
 ##'
 ##' This tries to find the libbi executable to determine the installed version of LibBi
 ##' @param ... any arguments for \code{\link{locate_libbi}} (esp. \code{path_to_libbi})
-##' @return character string with the installed version
+##' @return a character string with the installed version
 ##' @author Sebastian Funk
 ##' @importFrom processx run
 ##' @keywords internal

@@ -13,6 +13,9 @@ bi_model(filename, lines, ...)
 
 \item{...}{ignored}
 }
+\value{
+a \code{{bi_model}} object containing the newly created model
+}
 \description{
 \code{bi_model} creates a model object for \code{Rbi} from a libbi file, URL or character vector.
 Once the instance is created, the model can be fed to a \code{\link{libbi}} object.

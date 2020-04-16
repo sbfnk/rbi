@@ -15,7 +15,7 @@
 \item{inner}{only return the inner part of the block (not the block definition)}
 }
 \value{
-range of line numbers
+an integerr vector, the range of line numbers
 }
 \description{
 Finds a block and returns the range of line numbers encompassed by that block.

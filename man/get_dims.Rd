@@ -12,7 +12,7 @@ get_dims(model, type)
 \item{type}{a character vector of one or more types}
 }
 \value{
-list of dimensions (as names) and their sizes
+a list of dimensions (as names) and their sizes
 }
 \description{
 Get dimensions contained in a LibBi model and their sizes

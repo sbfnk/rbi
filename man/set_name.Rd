@@ -15,7 +15,7 @@
 \item{...}{ignored}
 }
 \value{
-the updated bi model
+the updated \code{bi_model} object
 }
 \description{
 Changes the name of a bi model (first line of the .bi file) to the specified name.

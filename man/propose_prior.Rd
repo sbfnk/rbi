@@ -10,7 +10,7 @@ propose_prior(x)
 \item{x}{a \code{\link{bi_model}} object}
 }
 \value{
-a bi model object of the new model
+the updated \code{bi_model} object
 }
 \description{
 Generates a version of the model where the proposal blocks are replaced by the prior blocks. This is useful for exploration of the likelihood surface.

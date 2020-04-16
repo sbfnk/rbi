@@ -6,7 +6,7 @@
 #' of a NetCDF file, as well as its creation time. You can
 #' then retrieve variables of interest using \code{\link{bi_read}}.
 #' @param ... Any extra parameters to \code{\link{bi_open}}, especially \code{x} and \code{file}
-#' @return None
+#' @return No return value
 #' @export
 #' @importFrom ncdf4 nc_close
 #' @examples
