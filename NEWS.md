@@ -1,3 +1,9 @@
+# rbi 0.10.3
+
+* updates to work with the latest version of LibBi
+* errors fixed in `sample_obs` and chaining
+* errors fixed in reading and saving `libbi` object
+
 # rbi 0.10.2
 
 * better error handling
