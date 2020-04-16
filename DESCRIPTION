@@ -1,6 +1,6 @@
 Package: rbi
-Version: 0.10.2
-Title: R Interface to LibBi
+Version: 0.10.3
+Title: Interface to 'LibBi'
 Authors@R: c(
         person("Pierre E.", "Jacob", email = "pierre.jacob.work@gmail.com", role = "aut"),
         person("Anthony", "Lee", email = "awllee@gmail.com", role = "ctb"),
@@ -10,16 +10,16 @@ Authors@R: c(
     )
 Imports: data.table, ncdf4, processx, reshape2
 Suggests: coda, covr (>= 3.2.0), R.rsp, stringi, testthat, ggplot2
-Description: Provides a complete R interface to LibBi, a library for Bayesian inference (see <http://libbi.org> and <doi:10.18637/jss.v067.i10> for more information). This includes functions for manipulating LibBi models, for reading and writing LibBi input/output files, for converting LibBi output to provide traces for use with the coda package, and for running LibBi from R.
+Description: Provides a complete interface to 'LibBi', a library for Bayesian inference (see <http://libbi.org> and <doi:10.18637/jss.v067.i10> for more information). This includes functions for manipulating 'LibBi' models, for reading and writing 'LibBi' input/output files, for converting 'LibBi' output to provide traces for use with the coda package, and for running 'LibBi' to conduct inference.
 License: GPL-3
 URL: https://github.com/sbfnk/RBi
 BugReports: https://github.com/sbfnk/RBi/issues
 SystemRequirements: LibBi (>= 1.4.2)
 LazyLoad: no
-RoxygenNote: 6.1.1
+RoxygenNote: 7.1.0
 VignetteBuilder: R.rsp
 NeedsCompilation: no
-Packaged: 2018-12-11 20:08:26 UTC; seb
+Packaged: 2020-04-02 22:35:31 UTC; seb
 Author: Pierre E. Jacob [aut],
   Anthony Lee [ctb],
   Lawrence M. Murray [ctb],
