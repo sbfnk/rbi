@@ -20,10 +20,11 @@ A vignette is included, built locally using R.rsp as it depends on external soft
 
 ## Responses to CRAN comments
 
-* Redundant R in title removed
-* package names now in quotation marks
-* return values added to the documentation of all functions
-* \dontrun replaced by \donttest
-* nothing is printed directly to the console unless explicitly requested
-* nothing is written to user filespace
-* no user option are set
+Thank you for the review. We have:
+* removed redundant R in title
+* put package names in quotation marks
+* added return values to the documentation of all functions
+* replaced \dontrun by \donttest
+* reviewed the code to check nothing is printed directly to the console unless explicitly requested
+* reviewed the code to check nothing is written to user filespace
+* changed the code so no user option are set
