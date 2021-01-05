@@ -1,5 +1,7 @@
 context("Testing saving and retrieving libbi objects")
 
+library("data.table")
+
 model_str <- "
 model test {
   const no_a = 2
@@ -47,7 +49,7 @@ test_output <-
         expand.grid(time = 0:1, b = 0:1, a = c("first", "second"), np = 0:1)
       ),
       N = data.frame(
-        expand.grid(time = 0:1, a = c("first", "second"), np = 0:1)
+        expand.grid(time = 0:1, b = 0:1, np = 0:1)
       ),
       m = 9,
       M = data.frame(
@@ -57,11 +59,26 @@ test_output <-
       logprior = data.frame(np = 0:1)
     )
   )
+## have some sparse data
 bi <- attach_data(bi, "output", test_output)
-bi <- attach_data(bi, "obs", test_output["M"])
+test_output_sparse <- test_output
+test_output_sparse <- list(
+  M = data.table(test_output$M)[!(time == 1 & a == "second")],
+  e = data.table(test_output$e)[!(time == 1 & b == 0 & a == "second")]
+)
+test_output_sparse$M <- rbind(
+  copy(test_output_sparse$M)[, ns := 0],
+  copy(test_output_sparse$M)[, ns := 1]
+)
+
+bi <- attach_data(bi, "obs", test_output_sparse[c("M", "e")])
 bi <- attach_data(bi, file = "init", test_output[c("e", "m")])
 
-df <- data.frame(a = c(0, 0, 1, 1), time = c(0, 1, 0, 1), value = c(7, 5, 8, 0))
+df <- data.frame(
+  a = c(0L, 0L, 1L, 1L),
+  time = c(0, 1, 0, 1),
+  value = c(7, 5, 8, 0)
+)
 
 tmpfile <- tempfile(fileext = ".nc")
 
@@ -111,6 +128,30 @@ test_that("saved and re-read data frames are equal", {
   expect_lt(abs(vec_read - test_value), 1e-7)
 })
 
+test_that("saved and re-loaded objects are the same", {
+  filename <- tempfile(fileext = ".nc")
+  out <- bi_write(filename, test_output, guess_time = TRUE)
+  test_output2 <- bi_read(
+    filename, coord_dims = out$coord_dims, dims = out$dims
+  )
+  lists <- vapply(test_output, is.list, logical(1))
+  list_names <- names(lists[lists])
+  list_cols <- lapply(list_names, function(x) {
+    setdiff(colnames(test_output[[x]]), "value")
+  })
+  names(list_cols) <- list_names
+
+  for (name in list_names) {
+    setorderv(test_output[[name]], list_cols[[name]])
+    setorderv(test_output2[[name]], list_cols[[name]])
+  }
+
+  values1 <- lapply(test_output[list_names], function(x) x[["value"]])
+  values2 <- lapply(test_output2[list_names], function(x) x[["value"]])
+
+  expect_true(all(unlist(values1) - unlist(values2) < 1e-5))
+})
+
 test_that("basic I/O functions work", {
   expect_gt(length(bi_contents(bi)), 0)
   expect_gt(bi_dim_len(bi$output_file_name, "np"), 0)
@@ -120,7 +161,10 @@ test_that("basic I/O functions work", {
   expect_gt(nrow(bi_read(bi, file = "obs")$M), 0)
   expect_gt(nrow(bi_read(bi, "N", verbose = TRUE, clear_cache = TRUE)$N), 0)
   expect_gt(suppressMessages(nrow(bi_read(bi, "N", verbose = TRUE)$N)), 0)
-  expect_gt(nrow(bi_read(bi, file = "obs", coord_dims = list(M = "a"))$M), 0)
+  suppressWarnings(expect_gt(
+    nrow(bi_read(bi, file = "obs", coord_dims = list(M = "a"))$M),
+    0
+  ))
   expect_message(bi_write(tmpfile, list(test = df), verbose = TRUE), "Writing")
   expect_message(
     bi_read(bi, "N", verbose = TRUE, clear_cache = TRUE, thin = 2), "Reading"
@@ -151,7 +195,7 @@ test_that("duplicate columns are read/written correctly", {
   bi_write(tmpfile, list(test = df_dup))
   expect_equal(unname(df_dup), unname(bi_read(tmpfile)$test))
   expect_error(
-    bi_write(tmpfile, list(test = df_dup_error)), "different lengths"
+    bi_write(tmpfile, list(test = df_dup_error)), "duplicated"
   )
   expect_error(
     bi_write(tmpfile, list(test = df_dup, vec = c(2, 3))), "length 1"
@@ -166,12 +210,17 @@ test_that("data with ns column are read/written correctly", {
   )
   bi_write(tmpfile, list(test = df_ns))
   expect_equal(df_ns, bi_read(tmpfile)$test)
+
+  df_ns2 <- data.frame(
+    ns = c(0, 1),
+    value = c(7, 5)
+  )
+  bi_write(tmpfile, list(test = df_ns2))
+  expect_equal(df_ns2, bi_read(tmpfile)$test)
 })
 
 test_that("guessing time and coordinate dimensions works", {
-  dims <- bi_write(
-    tmpfile, list(test = df), guess_time = TRUE, guess_coord = TRUE
-  )
+  dims <- bi_write(tmpfile, list(test = df), guess_time = TRUE)
   df_time <- data.frame(
     time = c(0, 1, 2, 3),
     value = c(7, 5, 8, 0)
@@ -199,10 +248,7 @@ test_that("guessing time and coordinate dimensions works", {
     bi_write(tmpfile, list(test = df_time), guess_time = TRUE)$time_dim, "time"
   )
   expect_equal(
-    bi_write(
-      tmpfile,
-      list(test = df_twocoord), guess_coord = TRUE
-    )$coord_dims$test,
+    bi_write(tmpfile, list(test = df_twocoord))$coord_dims$test,
     c("a", "b")
   )
   expect_error(
@@ -235,9 +281,9 @@ test_that("data can be attached to libbi objects", {
   bi_no_time_dim <- bi
   bi_no_time_dim$time_dim <- character(0)
   expect_equal(class(attach_data(bi, "obs", bi_no_time_dim)), "libbi")
-  expect_equal(
+  suppressWarnings(expect_equal(
     class(attach_data(bi, "obs", bi, coord_dims = list(a = "a"))), "libbi"
-  )
+  ))
   expect_equal(class(attach_data(bi, "output", NULL)), "libbi")
   expect_equal(class(attach_data(bi, "input", NULL)), "libbi")
 })
@@ -269,12 +315,6 @@ test_that("I/O errors/warnings are recognised", {
   expect_error(bi_write(tmpfile, list()), "non-empty")
   expect_error(bi_write(tmpfile, list(df)), "named")
   expect_error(bi_write(tmpfile, list(test = df[, c("a", "time")])), "value")
-  expect_error(
-    bi_write(
-      tmpfile, list(test = df), coord_dims = list(test = "a"),
-      guess_coord = TRUE
-    ), "not be given"
-  )
   expect_error(
     bi_write(tmpfile, list(test = df), time_dim = "time", guess_time = TRUE),
     "not be given"

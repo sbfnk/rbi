@@ -27,8 +27,6 @@
 #' @param guess_time whether to guess time dimension; this would be a numerical
 #'   column in the data frame given which is not the \code{value_column}; only
 #'   one such column must exist
-#' @param guess_coord whether to guess the coordinate dimension; this would be a
-#'   column with varying value which is not the time or value column
 #' @param verbose if TRUE, will print variables as they are read
 #' @details
 #'
@@ -46,6 +44,8 @@
 #' @return A list of the time and coord dims, and factors in extra dimensions,
 #'   if any
 #' @importFrom ncdf4 nc_close ncdim_def ncvar_def nc_create ncvar_put ncvar_add
+#' @importFrom data.table data.table copy
+#' @importFrom reshape2 melt
 #' @examples
 #' filename <- tempfile(pattern = "dummy", fileext = ".nc")
 #' a <- 3
@@ -58,8 +58,7 @@
 #' @export
 bi_write <- function(filename, variables, timed, append = FALSE,
                      overwrite = FALSE, time_dim, coord_dims, dim_factors,
-                     value_column = "value", guess_time = FALSE,
-                     guess_coord = FALSE, verbose) {
+                     value_column = "value", guess_time = FALSE, verbose) {
   if (!grepl("\\.nc$", filename)) {
     filename <- paste(filename, "nc", sep = ".")
   }
@@ -81,8 +80,6 @@ bi_write <- function(filename, variables, timed, append = FALSE,
 
   if (missing(coord_dims) || length(coord_dims) == 0) {
     coord_dims <- list()
-  } else if (guess_coord) {
-    stop("'coord_dims' must not be given if guess_cord is TRUE")
   }
 
   if (missing(time_dim) || length(time_dim) == 0) {
@@ -130,6 +127,8 @@ bi_write <- function(filename, variables, timed, append = FALSE,
       if ("ns" %in% cols) {
         ns_values <- unique(element[["ns"]])
         ns_dim <- ncdim_def("ns", "", ns_values)
+      } else {
+        ns_dim <- NULL
       }
       ## guess time dimension: numeric/integer column that isn't the value
       ## column
@@ -154,15 +153,14 @@ bi_write <- function(filename, variables, timed, append = FALSE,
       }
       if (is.null(time_dim) && "time" %in% colnames(element)) time_dim <- "time"
       ## guess coord dimension(s): a column that is not the time or value
-      ## column, and not np or ns
-      if (guess_coord) {
-        exclude <- c("np", "ns", value_column)
-        if (!is.null(time_dim)) {
-          exclude <- c(exclude, time_dim)
-        }
-        guessed_coord <- setdiff(colnames(element), exclude)
-        if (length(guessed_coord) > 0) coord_dims[[name]] <- guessed_coord
+      ## column, and not np or ns; this is only used later if the data is
+      ## sparse
+      exclude <- c("np", "ns", value_column)
+      if (!is.null(time_dim)) {
+        exclude <- c(exclude, time_dim)
       }
+      guessed_coord <- setdiff(colnames(element), exclude)
+      if (length(guessed_coord) > 0) coord_dims[[name]] <- guessed_coord
 
       ## add time and coord dimensions to vector of index columns
       if ("ns" %in% colnames(element)) {
@@ -172,7 +170,18 @@ bi_write <- function(filename, variables, timed, append = FALSE,
         index_cols <- c(index_cols, list(time = time_dim))
       }
       if (!is.null(coord_dims[[name]])) {
-        index_cols <- c(index_cols, list(coord = coord_dims[[name]]))
+        sparse <- check_sparse_var(element, coord_dims[[name]], value_column)
+        if (sparse) {
+          index_cols <- c(index_cols, list(coord = coord_dims[[name]]))
+          ## strip trailing numbers, these indicate duplicate dimensions
+          check_coord_dims <- sub("\\.[0-9]+$", "", coord_dims[[name]])
+          if (any(duplicated(check_coord_dims))) {
+            stop("Sparse duplicated dimensions are not supported.")
+          }
+        }
+
+      } else {
+        sparse <- FALSE
       }
 
       var_dims <- list()
@@ -183,8 +192,8 @@ bi_write <- function(filename, variables, timed, append = FALSE,
       if (nrow(index_table) > 0) {
         setkeyv(index_table, unlist(present_index_cols))
       }
-      nr_table <- data.table::copy(index_table)
-      if (nrow(nr_table) > 0) {
+      nr_table <- copy(index_table)
+      if (nrow(index_table) > 0) {
         if ("ns" %in% cols) {
           nr_table <- unique(
             nr_table[, setdiff(colnames(nr_table), "ns"), with = FALSE]
@@ -203,77 +212,24 @@ bi_write <- function(filename, variables, timed, append = FALSE,
           var_dims <- c(var_dims, list(nr_dim))
           names(var_dims)[length(var_dims)] <- nr_index
         }
+        if (sparse) {
+          coord <- create_coord_var(
+            name, dims, dim_factors, coord_dims[[name]], index_table, ns_dim,
+            time_dim, nr_index, value_column
+          )
+          values[[coord[["name"]]]] <- coord[["values"]]
+          vars[[coord[["name"]]]] <- coord[["var"]]
+          dims <- c(dims, coord[["dim"]])
+          for (dim in names(coord[["dim_factors"]])) {
+            dim_factors[[dim]] <- coord[["dim_factors"]][[dim]]
+          }
+        }
         if (!is.null(time_dim) && time_dim %in% cols) {
           time_var <- paste("time", name, sep = "_")
           time_dims <- list(nr_dim)
           if ("ns" %in% cols) time_dims <- c(list(ns_dim), time_dims)
           vars[[time_var]] <- ncvar_def(time_var, "", time_dims)
           values[[time_var]] <- index_table[[time_dim]]
-        }
-        if (!is.null(coord_dims[[name]]) &&
-          length(intersect(coord_dims[[name]], cols)) > 0) {
-          coord_var <- paste("coord", name, sep = "_")
-          if (length(coord_dims[[name]]) > 1) {
-            coord_index <- paste("index", coord_var, sep = "_")
-            coord_index_values <- seq_along(coord_dims[[name]]) - 1
-            coord_index_dim <- ncdim_def(coord_index, "", coord_index_values)
-            dims[[coord_index]] <- coord_index_dim
-          }
-          for (coord_dim in coord_dims[[name]]) {
-            if (!any(class(index_table[[coord_dim]]) %in%
-                     c("numeric", "integer") &&
-                     length(setdiff(
-                       as.integer(index_table[[coord_dim]]),
-                       index_table[[coord_dim]]
-                     )) == 0 &&
-                     length(setdiff(
-                       seq_len(max(index_table[[coord_dim]])),
-                       unique(index_table[[coord_dim]])
-                     )) == 0)) {
-              if (any(class(index_table[[coord_dim]]) == "factor")) {
-                dim_factors[[coord_dim]] <- union(
-                  dim_factors[[coord_dim]], levels(index_table[[coord_dim]])
-                )
-              } else {
-                dim_factors[[coord_dim]] <- union(
-                  dim_factors[[coord_dim]], unique(index_table[[coord_dim]])
-                )
-              }
-              index_table[[coord_dim]] <- as.integer(
-                factor(
-                  index_table[[coord_dim]], levels = dim_factors[[coord_dim]]
-                )
-              ) - 1
-            }
-          }
-
-          coord_var_dims <- dims[sub("^coord", "nr", coord_var)]
-          if (length(coord_dims[[name]]) > 1) {
-            sort_keys <- c(coord_dims[[name]])
-            index_cols <- colnames(index_table)
-            if (nr_index %in% index_cols) sort_keys <- c(nr_index, sort_keys)
-            if ("ns" %in% index_cols) sort_keys <- c(sort_keys, "ns")
-            setkeyv(index_table, sort_keys)
-            id_columns <- c()
-            if (nr_index %in% index_cols) id_columns <- c(nr_index, id_columns)
-            if ("ns" %in% index_cols) id_columns <- c("ns", id_columns)
-            if (length(id_columns) > 0) {
-              coord_table <- data.table::melt(
-                index_table[, c(id_columns, coord_dims[[name]]), with = FALSE],
-                id.vars = id_columns
-              )
-            }
-            sort_keys <- rev(setdiff(colnames(coord_table), "value"))
-            setkeyv(coord_table, sort_keys)
-            values[[coord_var]] <- coord_table[[value_column]]
-            coord_var_dims <- c(coord_var_dims, list(coord_index_dim))
-          } else {
-            values[[coord_var]] <- index_table[[coord_dims[[name]]]]
-          }
-          if ("ns" %in% cols) {
-            coord_var_dims <- c(list(ns_dim), coord_var_dims)
-          }
-          vars[[coord_var]] <- ncvar_def(coord_var, "", coord_var_dims)
         }
       }
       data_cols <- setdiff(cols, c(unlist(index_cols), value_column))
@@ -386,4 +342,122 @@ bi_write <- function(filename, variables, timed, append = FALSE,
   nc_close(nc)
 
   return(list(time_dim = time_dim, coord_dims = coord_dims, dims = dim_factors))
+}
+
+##' Check if a variable is sparse
+##'
+##' Takes a data.table with given coordinate columns and a value column and
+##' checks if all combinations of the coordinate columns are present for each
+##' combination of the other columns.
+##' @title Check if a variable is sparse
+##' @param x data.table
+##' @param coord_cols character vector of coordinate columns
+##' @param value_column the name of the value column
+##' @return TRUE if the variable is sparse, FALSE otherwise
+##' @importFrom data.table copy CJ setorderv .SD
+##' @keywords internal
+##' @author Sebastian Funk
+check_sparse_var <- function(x, coord_cols, value_column) {
+  ## for each combination of coord_cols check if all combinations of values
+  ## in other columns except value_column are present
+  check <- copy(x)
+  other_cols <- setdiff(names(check), c(coord_cols, value_column))
+  setorderv(check, coord_cols)
+
+  all_values <- lapply(coord_cols, function(x) unique(check[[x]]))
+  all_combinations <- do.call(CJ, all_values)
+
+  ## check if for all combinations of other calls the values of coord_cols
+  ## are all available combinations
+  all <- check[, list(
+    all_equal = nrow(.SD) == nrow(all_combinations) &&
+      all(.SD[, coord_cols, with = FALSE] == all_combinations)
+  ), by = other_cols]
+
+  return(any(!all[["all_equal"]]))
+}
+
+##' Create a coordinate variable
+##'
+##' Creates a coordinate variable with associated dimensions
+##' @title Create a coordinate variable
+##' @param name Name of the variable
+##' @param dims Dimensions of all variables
+##' @param dim_factors Factors of all dimensions
+##' @param index_table data.table with index columns
+##' @param coord_dim Coordinate dimension
+##' @param ns_dim ns dimension
+##' @param time_dim time dimension
+##' @param nr_column nr column
+##' @param value_column value column
+##' @importFrom data.table data.table
+##' @importFrom reshape2 melt
+##' @return a list with information on the coordinate variable
+##' @keywords internal
+##' @author Sebastian Funk
+create_coord_var <- function(name, dims, dim_factors, coord_dim, index_table,
+                             ns_dim, time_dim, nr_column, value_column) {
+  coord_var <- paste("coord", name, sep = "_")
+  if (length(coord_dim) > 1) {
+    coord_index <- paste("index", coord_var, sep = "_")
+    coord_index_values <- seq_along(coord_dim) - 1
+    coord_index_dim <- list(ncdim_def(coord_index, "", coord_index_values))
+    names(coord_index_dim) <- coord_index
+  } else {
+    coord_index_dim <- list()
+  }
+  for (loop_coord_dim in coord_dim) {
+    dim_index <- index_table[[loop_coord_dim]]
+    if (!((is.integer(dim_index) || is.numeric(dim_index)) &&
+          length(setdiff(as.integer(dim_index), dim_index)) == 0 &&
+          length(setdiff(seq_len(max(dim_index)), unique(dim_index))) == 0)) {
+      if (any(class(dim_index) == "factor")) {
+        dim_factors[[loop_coord_dim]] <- union(
+          dim_factors[[loop_coord_dim]], levels(dim_index)
+        )
+      } else {
+        dim_factors[[loop_coord_dim]] <- union(
+          dim_factors[[loop_coord_dim]], unique(dim_index)
+        )
+      }
+      index_table[[loop_coord_dim]] <- as.integer(factor(
+        dim_index, levels = dim_factors[[loop_coord_dim]]
+      )) - 1L
+    } else {
+      index_table[[loop_coord_dim]] <- as.integer(dim_index)
+    }
+  }
+
+  coord_var_dims <- dims[sub("^coord", "nr", coord_var)]
+  if (length(coord_dim) > 1) {
+    sort_keys <- c(coord_dim)
+    index_table_cols <- colnames(index_table)
+    if (nr_column %in% index_table_cols) sort_keys <- c(nr_column, sort_keys)
+    if ("ns" %in% index_table_cols) sort_keys <- c(sort_keys, "ns")
+    setkeyv(index_table, sort_keys)
+    id_columns <- c()
+    if (nr_column %in% index_table_cols) id_columns <- c(nr_column, id_columns)
+    if ("ns" %in% index_table_cols) id_columns <- c("ns", id_columns)
+    if (!is.null(time_dim) && time_dim %in% colnames(index_table)) {
+      id_columns <- c(time_dim, id_columns)
+    }
+    coord_table <- data.table(melt(
+      index_table[, c(id_columns, coord_dim), with = FALSE],
+      id.vars = id_columns
+    ))
+    sort_keys <- rev(setdiff(colnames(coord_table), "value"))
+    setkeyv(coord_table, sort_keys)
+    values <- coord_table[[value_column]]
+    coord_var_dims <- c(coord_var_dims, list(coord_index_dim[[coord_index]]))
+  } else {
+    values <- index_table[[coord_dim]]
+  }
+  if (!is.null(ns_dim)) {
+    coord_var_dims <- c(list(ns_dim), coord_var_dims)
+  }
+  var <- ncvar_def(coord_var, "", coord_var_dims)
+  return(list(
+    name = coord_var, values = values, var = var,
+    dim = coord_index_dim, dim_factors = dim_factors
+  ))
 }

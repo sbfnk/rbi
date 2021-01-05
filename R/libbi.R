@@ -830,7 +830,7 @@ attach_data.libbi <- function(x, file, data, in_place = FALSE, append = FALSE,
         x$time_dim <- data$time_dim
       }
 
-      if (file == "obs") {
+      if (file %in% c("obs", "input")) {
         if (length(coord_dims) == 0 && length(data$coord_dims) == 0) {
           coord_dims <- x$coord_dims
         } else {
@@ -843,7 +843,7 @@ attach_data.libbi <- function(x, file, data, in_place = FALSE, append = FALSE,
       if (length(coord_dims) > 0) {
         for (coord_dim in names(coord_dims)) {
           if (!is.null(x$coord_dims[[coord_dim]]) &&
-            x$coord_dims[[coord_dim]] != coord_dims[[coord_dim]]) {
+            any(x$coord_dims[[coord_dim]] != coord_dims[[coord_dim]])) {
             warning(
               "Given coord dimension ", coord_dim,
               " will override a coord dimension of the same name in",
@@ -856,7 +856,7 @@ attach_data.libbi <- function(x, file, data, in_place = FALSE, append = FALSE,
       source_file_name <- data$output_file_name
     }
 
-    if (file == "obs") {
+    if (file %in% c("obs", "input")) {
       vars <- bi_read(
         data, vars = var_names(x$model, type = "obs"), coord_dims = coord_dims
       )
@@ -880,21 +880,19 @@ attach_data.libbi <- function(x, file, data, in_place = FALSE, append = FALSE,
     return(x)
   }
 
-  if ((append || overwrite || "list" %in% class(data) || file == "obs") &&
+  if ((append || overwrite || "list" %in% class(data) ||
+       file %in% c("obs", "input")) &&
     length(vars) > 0) {
     write_opts <- list(filename = target_file_name, variables = vars)
-    if (file == "obs") { ## guess coord for observation files
-      if (length(x$time_dim) == 0) {
-        write_opts[["guess_time"]] <- TRUE
-      }
-      if (length(x$coord_dims) == 0) {
-        write_opts[["guess_coord"]] <- TRUE
-      } else {
-        write_opts[["coord_dims"]] <- x$coord_dims
-      }
-    }
-    if (length(x$time_dim) > 0) {
+    if (length(x$time_dim) == 0) {
+      write_opts[["guess_time"]] <- TRUE
+    } else {
       write_opts[["time_dim"]] <- x$time_dim
+    }
+    if (file %in% c("obs", "input")) {
+      if (length(x$coord_dim) > 0) {
+        write_opts[["coord_dim"]] <- x$coord_dim
+      }
     }
     write_opts[["dim_factors"]] <- x$dims
     write_opts[["append"]] <- append
@@ -907,8 +905,8 @@ attach_data.libbi <- function(x, file, data, in_place = FALSE, append = FALSE,
     file_dims <- do.call(bi_write, write_opts)
     x$dims[names(file_dims$dims)] <- file_dims$dims
     if (!is.null(file_dims$time_dim)) x$time_dim <- file_dims$time_dim
-    if (file == "obs" && !is.null(file_dims$coord_dims)) {
-      x$coord_dims <- file_dims$coord_dims
+    if (!is.null(file_dims$coord_dims)) {
+      x$coord_dims[names(file_dims$coord_dims)] <- file_dims$coord_dims
     }
   }
 
