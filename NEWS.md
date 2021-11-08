@@ -1,3 +1,7 @@
+# rbi 0.10.4
+
+* add `markdown` Suggests to pass CRAN check
+
 # rbi 0.10.3
 
 * updates to work with the latest version of LibBi

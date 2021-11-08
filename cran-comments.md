@@ -1,6 +1,5 @@
 ## Test environments
-* local macOS install (10.14.5), R 3.6.3
-* local linux install (Ubuntu 18.04), R 3.6.3
+* local macOS install (12.0.1), R 4.1.2
 * macOS and Linux on travis-ci
 * checked with devtools::check_rhub()
 * checked with devtools::check_win_oldrelease()
@@ -8,9 +7,7 @@
 * checked with devtools::check_win_devel()
 
 ## R CMD check results
-There were no ERRORs or WARNINGs.
-
-There was a NOTE that this is a new submission as a previous version was removed from CRAN. All problems with that version should be fixed now.
+There were no ERRORs or WARNINGs, or NOTEs.
 
 ## Downstream dependencies
 0 packages with problems.

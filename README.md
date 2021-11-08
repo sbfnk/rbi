@@ -3,7 +3,7 @@ Bayesian inference for state-space models with R
 
 [![Build Status](https://travis-ci.org/sbfnk/RBi.svg?branch=master)](https://travis-ci.org/sbfnk/RBi) [![codecov](https://codecov.io/github/sbfnk/RBi/branch/master/graphs/badge.svg)](https://codecov.io/github/sbfnk/RBi) 
 
-[RBi](https://github.com/libbi/rbi) is an `R` interface to [libbi](http://libbi.org), a library for Bayesian inference.
+[RBi](https://github.com/sbfnk/RBi) is an `R` interface to [libbi](http://libbi.org), a library for Bayesian inference.
 
 It mainly contains:
 - various functions to retrieve and process the results from libbi (which are in NetCDF format)
@@ -29,16 +29,18 @@ Alternatively, the current development version can be installed using the `devto
 ```r
 # install.packages("devtools")
 library('devtools')
-install_github("libbi/rbi")
+install_github("sbfnk/RBi")
 ```
 
 The **RBi** package has only been tested on GNU/Linux and OS X, but it should mostly work everywhere `R` works.
 
-If you want to use **RBi** as a wrapper to **LibBi** then you need a working version of [LibBi](https://github.com/libbi/LibBi). To install **LibBi** on a Mac or Unix, the easiest way is to install [Homebrew](http://brew.sh) (on OS X) or [Linuxbrew](http://linuxbrew.sh) (on linux), followed by (using a command shell, i.e. Terminal or similar):
+If you want to use **RBi** as a wrapper to **LibBi** then you need a working version of [LibBi](https://github.com/lawmurray/LibBi). To install **LibBi** on a Mac, the easiest way is to install [Homebrew](https://brew.sh), followed by (using a command shell, i.e. Terminal or similar):
 
 ```sh
 brew install libbi
 ``` 
+
+On linux, follow the [instructions](https://github.com/lawmurray/LibBi/blob/master/INSTALL_LINUX.md) provided with LibBi.
 
 The path to `libbi` script can be passed as an argument to **RBi**, otherwise the package tries to find it automatically using the `which` linux/unix command.
 
@@ -66,4 +68,4 @@ Using coda
 Other packages
 ==============
 
-For higher-level methods to interact with [LibBi](https://github.com/libbi/LibBi), have a look at [RBi.helpers](https://github.com/sbfnk/rbi.helpers).
+For higher-level methods to interact with [LibBi](https://github.com/lawmurray/LibBi), have a look at [RBi.helpers](https://github.com/sbfnk/RBi.helpers).

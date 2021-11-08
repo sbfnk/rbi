@@ -24,17 +24,17 @@ pre code {
 
 <%@meta name="author"%> on <%=format(as.Date(Sys.Date()), format="%B %d, %Y")%>
 
-[RBi](https://github.com/libbi/RBi) is an `R` interface to [LibBi](http://libbi.org), a library for Bayesian inference with state-space models using high-performance computer hardware.
+[RBi](https://github.com/sbfnk/RBi) is an `R` interface to [LibBi](http://libbi.org), a library for Bayesian inference with state-space models using high-performance computer hardware.
 
-### Latest Version: _0.10.2_
+### Latest Version: _0.10.4_
 
-The package has been tested on macOS/OSX and Linux. It requires a working installation of **LibBi**. One macOS, this is easiest done using the the `brew` command: Install [Homebrew](https://brew.sh), then issue the following command (using a command shell, i.e. Terminal or similar):
+The package has been tested on macOS/OSX and Linux. It requires a working installation of **LibBi**. On macOS, this is easiest done using the the `brew` command: Install [Homebrew](https://brew.sh), then issue the following command (using a command shell, i.e. Terminal or similar):
 
 ```{sh eval=FALSE}
 brew install libbi
 ```
 
-On linux, follow the [instructions](https://github.com/lawmurray/LibBi/blob/master/INSTALL_LINUX.md) provided with LibBii.
+On linux, follow the [instructions](https://github.com/lawmurray/LibBi/blob/master/INSTALL_LINUX.md) provided with LibBi.
 
 If you have any trouble installing **LibBi** you can get help on the [LibBi Users](https://groups.google.com/forum/#!forum/libbi-users) mailing list.
 
@@ -61,7 +61,7 @@ Alternatively, the current development version can be installed using the `devto
 ```{r eval=FALSE}
 # install.packages("devtools")
 library('devtools')
-install_github("sbfnk/rbi")
+install_github("sbfnk/RBi")
 ```
 
 # Loading the package
@@ -83,7 +83,7 @@ The main computational engine and model grammar behind **RBi** is provided by **
 
 The **RBi** package mainly provides two classes: `bi_model` and `libbi`. The `bi_model` class is used to load, view and manipulate **LibBi** model files. The `libbi` class is used to run LibBi and perform inference.
 
-The package also provides two methods for interacting with the [NetCDF](http://www.unidata.ucar.edu/software/netcdf/) files used by **LibBi**, `bi_read` and `bi_write`. Lastly, it provides a `get_traces` function to analyse Markov-chain Monte Carlo (MCMC) traces using the [coda](https://cran.r-project.org/package=coda) package.
+The package also provides two methods for interacting with the [NetCDF](https://www.unidata.ucar.edu/software/netcdf/) files used by **LibBi**, `bi_read` and `bi_write`. Lastly, it provides a `get_traces` function to analyse Markov-chain Monte Carlo (MCMC) traces using the [coda](https://cran.r-project.org/package=coda) package.
 
 # The `bi_model` class
 
@@ -439,7 +439,7 @@ This generates the internal representation of the model for LibBi. It doesn't ma
 
 # Related packages
 
-[RBi.helpers](https://github.com/sbfnk/rbi.helpers) contains higher-level methods to interact with **LibBi**, including methods for plotting the results of libbi runs and for adapting the proposal distribution and number of particles. For more information, see the [RBi.helpers vignette](http://sbfnk.github.io/rbi/rbi_helpers.html).
+[RBi.helpers](https://github.com/sbfnk/RBi.helpers) contains higher-level methods to interact with **LibBi**, including methods for plotting the results of libbi runs and for adapting the proposal distribution and number of particles. For more information, see the [RBi.helpers vignette](http://sbfnk.github.io/rbi/rbi_helpers.html).
 
 # References
  * Murray, L.M. (2013). [Bayesian state-space modelling on high-performance hardware using LibBi](https://arxiv.org/abs/1306.3277).

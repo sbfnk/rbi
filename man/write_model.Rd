@@ -28,7 +28,8 @@ Writes a bi model to a file given by \code{filename}. The extension '.bi' will b
 \examples{
 model_file_name <- system.file(package="rbi", "PZ.bi")
 PZ <- bi_model(filename = model_file_name)
-write_model(PZ, "PZ.bi")
+new_file_name <- tempfile("PZ", fileext = ".bi")
+write_model(PZ, new_file_name)
 }
 \seealso{
 \code{\link{bi_model}}
