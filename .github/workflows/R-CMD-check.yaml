@@ -36,6 +36,7 @@ jobs:
       - name: Install libbi (linux/windows)
         if: runner.os != 'macOS'
         run: |
+          sudo apt-get update
           sudo apt-get install build-essential libblas-dev liblapack-dev \
             libqrupdate-dev libboost-all-dev libgsl0-dev libnetcdf-dev \
             autoconf automake libthrust-dev cpanminus \
