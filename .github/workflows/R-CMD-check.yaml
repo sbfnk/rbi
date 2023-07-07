@@ -19,7 +19,6 @@ jobs:
       matrix:
         config:
           - {os: macos-latest,   r: 'release'}
-          - {os: windows-latest, r: 'release'}
           - {os: ubuntu-latest,   r: 'devel', http-user-agent: 'release'}
           - {os: ubuntu-latest,   r: 'release'}
           - {os: ubuntu-latest,   r: 'oldrel-1'}
@@ -34,7 +33,7 @@ jobs:
       - uses: r-lib/actions/setup-pandoc@v2
 
       - name: Install libbi (linux/windows)
-        if: runner.os != 'macOS'
+        if: runner.os == 'linux'
         run: |
           sudo apt-get install build-essential libblas-dev liblapack-dev \
             libqrupdate-dev libboost-all-dev libgsl0-dev libnetcdf-dev \
@@ -43,8 +42,8 @@ jobs:
           curl -fLo /tmp/LibBi.tar.gz "https://github.com/lawmurray/LibBi/archive/stable.tar.gz"
           tar xzf /tmp/LibBi.tar.gz -C ~
           cd ~/LibBi-stable
-          cpanm --quiet --installdeps --notest .
-          cpanm --quiet .
+          sudo cpanm --quiet --installdeps --notest .
+          sudo cpanm --quiet .
           cd ..
 
       - name: Install libbi (mac)
