@@ -5,7 +5,7 @@ output: github_document
 
 <!-- badges: start -->
 ![GitHub R package version](https://img.shields.io/github/r-package/v/epiverse-trace/bpmodels)
-![codecov](https://codecov.io/github/sbfnk/RBi/branch/master/graphs/badge.svg)](https://codecov.io/github/sbfnk/RBi) 
+[![codecov](https://codecov.io/github/sbfnk/RBi/branch/master/graphs/badge.svg)](https://codecov.io/github/sbfnk/RBi) 
 ![GitHub contributors](https://img.shields.io/github/contributors/sbfnk/RBi)
  [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 <!-- badges: end -->
