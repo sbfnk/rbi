@@ -12,8 +12,8 @@
 #' @importFrom ncdf4 nc_open
 bi_open <- function(x, file = "output")
 {
-    warning("'file' given to 'bi_open' although 'x' is not a 'libbi' object; will be ignored")
   if (!missing(file) && !inherits(x, "libbi")) {
+    warning("'file' given to 'bi_open' although 'x' is not a 'libbi' object; will be ignored")
   }
 
   if (typeof(x) == "character"){
