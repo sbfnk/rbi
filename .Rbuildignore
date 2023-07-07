@@ -5,3 +5,6 @@ cran-comments.md
 docker
 ^.*\.Rproj$
 ^\.Rproj\.user$
+.github
+README.Rmd
+_pkgdown.yml
