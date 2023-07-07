@@ -1,9 +1,16 @@
-Bayesian inference for state-space models with R
-=============
+---
+title: Bayesian inference for state-space models with R
+output: github_document
+---
 
-[![Build Status](https://travis-ci.org/sbfnk/RBi.svg?branch=master)](https://travis-ci.org/sbfnk/RBi) [![codecov](https://codecov.io/github/sbfnk/RBi/branch/master/graphs/badge.svg)](https://codecov.io/github/sbfnk/RBi) 
+<!-- badges: start -->
+![GitHub R package version](https://img.shields.io/github/r-package/v/epiverse-trace/bpmodels)
+![codecov](https://codecov.io/github/sbfnk/RBi/branch/master/graphs/badge.svg)](https://codecov.io/github/sbfnk/RBi) 
+![GitHub contributors](https://img.shields.io/github/contributors/sbfnk/RBi)
+ [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+<!-- badges: end -->
 
-[RBi](https://github.com/sbfnk/RBi) is an `R` interface to [libbi](http://libbi.org), a library for Bayesian inference.
+`RBi` is an `R` interface to [libbi](http://libbi.org), a library for Bayesian inference.
 
 It mainly contains:
 - various functions to retrieve and process the results from libbi (which are in NetCDF format)
