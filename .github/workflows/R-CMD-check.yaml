@@ -34,6 +34,7 @@ jobs:
       - uses: r-lib/actions/setup-pandoc@v2
 
       - name: Install libbi
+        shell: bash
         run:  |
          if [ "$RUNNER_OS" == "Linux" ]; then
            sudo apt-get install build-essential libblas-dev liblapack-dev \
