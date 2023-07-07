@@ -33,28 +33,25 @@ jobs:
 
       - uses: r-lib/actions/setup-pandoc@v2
 
-      - name: Install libbi
-        shell: bash
-        run:  |
-         if [ "$RUNNER_OS" == "Linux" ]; then
-           sudo apt-get install build-essential libblas-dev liblapack-dev \
-             libqrupdate-dev libboost-all-dev libgsl0-dev libnetcdf-dev \
-             autoconf automake libthrust-dev cpanminus \
-             libmodule-install-perl curl
-           curl -fLo /tmp/LibBi.tar.gz https://github.com/lawmurray/LibBi/archive/stable.tar.gz
-           tar xzf /tmp/LibBi.tar.gz -C ~
-           cd ~/LibBi-stable
-           cpanm --quiet --installdeps --notest .
-           cpanm --quiet .
-           cd ..
-         else [ "$RUNNER_OS" == "macOs" ]; then
-           brew install libbi
-         else
-           echo "$RUNNER_OS not supported"
-           exit 1
-         fi
+      - name: Install libbi (linux/windows)
+        if: runner.os != 'macOS'
+        run: |
+          sudo apt-get install build-essential libblas-dev liblapack-dev \
+            libqrupdate-dev libboost-all-dev libgsl0-dev libnetcdf-dev \
+            autoconf automake libthrust-dev cpanminus \
+            libmodule-install-perl curl
+          curl -fLo /tmp/LibBi.tar.gz https://github.com/lawmurray/LibBi/archive/stable.tar.gz
+          tar xzf /tmp/LibBi.tar.gz -C ~
+          cd ~/LibBi-stable
+          cpanm --quiet --installdeps --notest .
+          cpanm --quiet .
+          cd ..
 
-      - uses: r-lib/actions/setup-r@v2
+      - name: Install libbi (mac)
+        if: runner.os == 'macOS'
+        run: brew install libbi
+
+       - uses: r-lib/actions/setup-r@v2
         with:
           r-version: ${{ matrix.config.r }}
           http-user-agent: ${{ matrix.config.http-user-agent }}
