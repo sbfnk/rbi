@@ -42,8 +42,8 @@ jobs:
           curl -fLo /tmp/LibBi.tar.gz "https://github.com/lawmurray/LibBi/archive/stable.tar.gz"
           tar xzf /tmp/LibBi.tar.gz -C ~
           cd ~/LibBi-stable
-          sudo cpanm --quiet --installdeps --notest .
-          sudo cpanm --quiet .
+          sudo cpanm --installdeps --notest .
+          sudo cpanm --force .
           cd ..
 
       - name: Install libbi (mac)
