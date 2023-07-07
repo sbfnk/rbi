@@ -1,0 +1,5 @@
+url: https://sbfnk.github.io/rbi
+
+template:
+  params:
+    bootswatch: cerulean
