@@ -16,7 +16,7 @@ synthetic_dataset <- bi_generate_dataset(
   pz, end_time = tf, noutputs = tf, init = init_parameters
 )
 # Settings
-bi_object <- libbi(model = PZ)
+bi_object <- libbi(model = pz)
 # look at the object
 bi_object
 
