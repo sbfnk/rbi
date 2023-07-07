@@ -84,7 +84,7 @@ The method \code{run} launches \code{LibBi} with a particular set of command lin
 \examples{
 bi_object <- libbi(model = system.file(package="rbi", "PZ.bi"))
 \donttest{
-  run(bi_object, client="sample", target="prior")
+  bi_object <- run(bi_object, client = "sample", target = "prior")
   bi_file_summary(bi_object)
 }
 }
