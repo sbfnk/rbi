@@ -65,7 +65,56 @@
 
       </header><div class="row">
   <div class="contents col-md-9">
-Provides a complete interface to 'LibBi', a library for Bayesian inference (see &lt;<a href="http://libbi.org" class="external-link">http://libbi.org</a>&gt; and Murray, 2015 &lt;<a href="https://doi.org/10.18637/jss.v067.i10" class="external-link">doi:10.18637/jss.v067.i10</a>&gt; for more information). This includes functions for manipulating 'LibBi' models, for reading and writing 'LibBi' input/output files, for converting 'LibBi' output to provide traces for use with the coda package, and for running 'LibBi' to conduct inference.
+
+<div class="section level1">
+<div class="page-header"><h1 id="bayesian-inference-for-state-space-models-with-r">Bayesian inference for state-space models with R<a class="anchor" aria-label="anchor" href="#bayesian-inference-for-state-space-models-with-r"></a>
+</h1></div>
+<!-- badges: start -->
+
+<p><code>RBi</code> is an <code>R</code> interface to <a href="http://libbi.org" class="external-link">libbi</a>, a library for Bayesian inference.</p>
+<p>It mainly contains: - various functions to retrieve and process the results from libbi (which are in NetCDF format) - a <code>bi_model</code> class, to manipulate libbi models - a <code>libbi</code> wrapper class, to perform Bayesian using libbi inference from within R,</p>
+</div>
+<div class="section level1">
+<h1 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+</h1>
+<p><strong>RBi</strong> requires <strong>R</strong> (&gt;= 2.12.1) as well as the packages: - <code>reshape2</code> - <code>ncdf4</code> - <code>data.table</code></p>
+<p>The easiest way to install the latest stable version of <strong>RBi</strong> is via CRAN. The package is called <code>rbi</code> (all lower case):</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">'rbi'</span><span class="op">)</span></span></code></pre></div>
+<p>Alternatively, the current development version can be installed using the <code>devtools</code> package</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># install.packages("remotes")</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://remotes.r-lib.org" class="external-link">"remotes"</a></span><span class="op">)</span></span>
+<span><span class="fu">install_github</span><span class="op">(</span><span class="st">"sbfnk/RBi"</span><span class="op">)</span></span></code></pre></div>
+<p>The <strong>RBi</strong> package has only been tested on GNU/Linux and OS X, but it should mostly work everywhere <code>R</code> works.</p>
+<p>If you want to use <strong>RBi</strong> as a wrapper to <strong>LibBi</strong> then you need a working version of <a href="https://github.com/lawmurray/LibBi" class="external-link">LibBi</a>. To install <strong>LibBi</strong> on a Mac, the easiest way is to install <a href="https://brew.sh" class="external-link">Homebrew</a>, followed by (using a command shell, i.e. Terminal or similar):</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">brew</span> install libbi</span></code></pre></div>
+<p>On linux, follow the <a href="https://github.com/lawmurray/LibBi/blob/master/INSTALL_LINUX.md" class="external-link">instructions</a> provided with LibBi.</p>
+<p>The path to <code>libbi</code> script can be passed as an argument to <strong>RBi</strong>, otherwise the package tries to find it automatically using the <code>which</code> linux/unix command.</p>
+<p>If you just want to process the output from <strong>LibBi</strong>, then you do not need to have <strong>LibBi</strong> installed.</p>
+</div>
+<div class="section level1">
+<h1 id="getting-started">Getting started<a class="anchor" aria-label="anchor" href="#getting-started"></a>
+</h1>
+<p>A good starting point is to look at the included demos:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span> <span class="fu"><a href="https://rdrr.io/r/utils/demo.html" class="external-link">demo</a></span><span class="op">(</span><span class="va">PZ_generate_dataset</span><span class="op">)</span> <span class="co">## generating a data set from a model</span></span>
+<span> <span class="fu"><a href="https://rdrr.io/r/utils/demo.html" class="external-link">demo</a></span><span class="op">(</span><span class="va">PZ_PMMH</span><span class="op">)</span>             <span class="co">## particle Markov-chain Metropolis-Hastings</span></span>
+<span> <span class="fu"><a href="https://rdrr.io/r/utils/demo.html" class="external-link">demo</a></span><span class="op">(</span><span class="va">PZ_SMC2</span><span class="op">)</span>             <span class="co">## SMC^2</span></span>
+<span> <span class="fu"><a href="https://rdrr.io/r/utils/demo.html" class="external-link">demo</a></span><span class="op">(</span><span class="va">PZ_filtering</span><span class="op">)</span>        <span class="co">## filtering</span></span></code></pre></div>
+<p>For further information, have a look at the introductory vignette from the link from the <a href="https://CRAN.R-project.org/package=rbi" class="external-link">rbi CRAN package</a>.</p>
+</div>
+<div class="section level1">
+<h1 id="using-coda">Using coda<a class="anchor" aria-label="anchor" href="#using-coda"></a>
+</h1>
+<p><strong>LibBi</strong> contains the <code>get_traces</code> method which provides an interface to <a href="https://cran.r-project.org/package=coda" class="external-link">coda</a>.</p>
+</div>
+<div class="section level1">
+<h1 id="other-packages">Other packages<a class="anchor" aria-label="anchor" href="#other-packages"></a>
+</h1>
+<p>For higher-level methods to interact with <a href="https://github.com/lawmurray/LibBi" class="external-link">LibBi</a>, have a look at <a href="https://github.com/sbfnk/RBi.helpers" class="external-link">RBi.helpers</a>.</p>
+</div>
+
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -102,7 +151,12 @@ Provides a complete interface to 'LibBi', a library for Bayesian inference (see 
 </ul>
 </div>
 
-
+<div class="dev-status">
+<h2 data-toc-skip>Dev status</h2>
+<ul class="list-unstyled">
+<li><a href="https://www.gnu.org/licenses/gpl-3.0" class="external-link"><img src="https://img.shields.io/badge/License-GPLv3-blue.svg" alt="License: GPL v3"></a></li>
+</ul>
+</div>
 
   </div>
 </div>
