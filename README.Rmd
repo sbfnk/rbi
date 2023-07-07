@@ -20,18 +20,13 @@ It mainly contains:
 Installation
 ==============
 
-**rbi** requires **R** (>= 2.12.1) as well as the packages:
-* `reshape2`
-* `ncdf4`
-* `data.table`
-
-The easiest way to install the latest stable version of **rbi** is via CRAN. The package is called `rbi` (all lower case):
+The easiest way to install the latest stable version of **rbi** is via [CRAN](https://cran.r-project.org/package=rbi):
 
 ```{r eval = FALSE}
-install.packages('rbi')
+install.packages("rbi")
 ```
 
-Alternatively, the current development version can be installed using the `devtools` package
+Alternatively, the current development version can be installed using the `remotes` package
 
 ```{r eval = FALSE}
 # install.packages("remotes")
