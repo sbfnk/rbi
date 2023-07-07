@@ -32,22 +32,11 @@ jobs:
 
       - uses: r-lib/actions/setup-pandoc@v2
 
-      - name: Install libbi (linux/windows)
+      - name: Set path (linux)
         if: runner.os == 'linux'
-        run: |
-          sudo apt-get install build-essential libblas-dev liblapack-dev \
-            libqrupdate-dev libboost-all-dev libgsl0-dev libnetcdf-dev \
-            autoconf automake libthrust-dev cpanminus \
-            libmodule-install-perl curl
-          curl -fLo /tmp/LibBi.tar.gz "https://github.com/lawmurray/LibBi/archive/stable.tar.gz"
-          tar xzf /tmp/LibBi.tar.gz -C ~
-          cd ~/LibBi-stable
-          sudo cpanm --quiet --installdeps --notest .
-          sudo cpanm --quiet .
-          cd ..
+        run: echo "/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin" >> $GITHUB_PATH
 
-      - name: Install libbi (mac)
-        if: runner.os == 'macOS'
+      - name: Install libbi
         run: brew install libbi
 
       - uses: r-lib/actions/setup-r@v2
