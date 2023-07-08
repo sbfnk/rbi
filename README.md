@@ -5,47 +5,44 @@ Bayesian inference for state-space models with R
 
 ![GitHub R package
 version](https://img.shields.io/github/r-package/v/epiverse-trace/bpmodels)
-[[![R-CMD-check](https://github.com/sbfnk/rbi/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/sbfnk/rbi/actions/workflows/R-CMD-check.yaml)
-[![codecov](https://codecov.io/github/sbfnk/RBi/branch/master/graphs/badge.svg)](https://codecov.io/github/sbfnk/RBi)
+[![R-CMD-check](https://github.com/sbfnk/rbi/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/sbfnk/rbi/actions/workflows/R-CMD-check.yaml)
+[![codecov](https://codecov.io/github/sbfnk/rbi/branch/master/graphs/badge.svg)](https://codecov.io/github/sbfnk/rbi)
 ![GitHub
-contributors](https://img.shields.io/github/contributors/sbfnk/RBi)
+contributors](https://img.shields.io/github/contributors/sbfnk/rbi)
 [![License: GPL
 v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 <!-- badges: end -->
 
-`RBi` is an `R` interface to [libbi](http://libbi.org), a library for
-Bayesian inference.
+[rbi](https://github.com/sbfnk/rbi) is an `R` interface to
+[libbi](http://libbi.org), a library for Bayesian inference.
 
-It mainly contains: - various functions to retrieve and process the
-results from libbi (which are in NetCDF format) - a `bi_model` class, to
-manipulate libbi models - a `libbi` wrapper class, to perform Bayesian
-using libbi inference from within R,
+It mainly contains: \* various functions to retrieve and process the
+results from libbi (which are in NetCDF format) \* a `bi_model` class,
+to manipulate libbi models \* a `libbi` wrapper class, to perform
+Bayesian using libbi inference from within R,
 
 # Installation
 
-**RBi** requires **R** (\>= 2.12.1) as well as the packages: -
-`reshape2` - `ncdf4` - `data.table`
-
-The easiest way to install the latest stable version of **RBi** is via
-CRAN. The package is called `rbi` (all lower case):
+The easiest way to install the latest stable version of **rbi** is via
+[CRAN](https://cran.r-project.org/package=rbi):
 
 ``` r
-install.packages('rbi')
+install.packages("rbi")
 ```
 
 Alternatively, the current development version can be installed using
-the `devtools` package
+the `remotes` package
 
 ``` r
 # install.packages("remotes")
 library("remotes")
-install_github("sbfnk/RBi")
+install_github("sbfnk/rbi")
 ```
 
-The **RBi** package has only been tested on GNU/Linux and OS X, but it
+The **rbi** package has only been tested on GNU/Linux and OS X, but it
 should mostly work everywhere `R` works.
 
-If you want to use **RBi** as a wrapper to **LibBi** then you need a
+If you want to use **rbi** as a wrapper to **LibBi** then you need a
 working version of [LibBi](https://github.com/lawmurray/LibBi). To
 install **LibBi** on a Mac, the easiest way is to install
 [Homebrew](https://brew.sh), followed by (using a command shell,
@@ -59,7 +56,7 @@ On linux, follow the
 [instructions](https://github.com/lawmurray/LibBi/blob/master/INSTALL_LINUX.md)
 provided with LibBi.
 
-The path to `libbi` script can be passed as an argument to **RBi**,
+The path to `libbi` script can be passed as an argument to **rbi**,
 otherwise the package tries to find it automatically using the `which`
 linux/unix command.
 
@@ -90,4 +87,4 @@ to [coda](https://cran.r-project.org/package=coda).
 
 For higher-level methods to interact with
 [LibBi](https://github.com/lawmurray/LibBi), have a look at
-[RBi.helpers](https://github.com/sbfnk/RBi.helpers).
+[rbi.helpers](https://github.com/sbfnk/RBi.helpers).
