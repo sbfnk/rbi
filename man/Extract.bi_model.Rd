@@ -22,7 +22,7 @@ a character string of the extracted model lines(s)
 Extracts a subset of lines from the model.
 }
 \examples{
-model_file_name <- system.file(package="rbi", "PZ.bi")
+model_file_name <- system.file(package = "rbi", "PZ.bi")
 PZ <- bi_model(filename = model_file_name)
 PZ[3:4]
 }

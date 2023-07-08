@@ -18,10 +18,11 @@
 the updated \code{bi_model} object
 }
 \description{
-Changes the name of a bi model (first line of the .bi file) to the specified name.
+Changes the name of a bi model (first line of the .bi file) to the specified
+  name.
 }
 \examples{
-model_file_name <- system.file(package="rbi", "PZ.bi")
+model_file_name <- system.file(package = "rbi", "PZ.bi")
 PZ <- bi_model(filename = model_file_name)
 PZ <- set_name(PZ, "new_PZ")
 }

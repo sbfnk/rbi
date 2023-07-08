@@ -12,7 +12,8 @@
 
 \item{from}{string to be replaced (a regular expression)}
 
-\item{to}{new string (which can refer to the regular expression given as \code{from})}
+\item{to}{new string (which can refer to the regular expression given as
+\code{from})}
 
 \item{...}{ignored}
 }

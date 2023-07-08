@@ -16,5 +16,6 @@
 an joined \code{\link{libbi}} object
 }
 \description{
-This function can be used to join multiple \code{\link{libbi}} objects into one (e.g., parallel MCMC runs into one long change)
+This function can be used to join multiple \code{\link{libbi}} objects into
+  one (e.g., parallel MCMC runs into one long change)
 }

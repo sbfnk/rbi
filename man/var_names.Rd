@@ -9,13 +9,15 @@ var_names(x, vars, type, dim = FALSE, opt = FALSE, aux = FALSE)
 \arguments{
 \item{x}{a \code{\link{bi_model}} object}
 
-\item{vars}{a character vector of variable names; if given, only these variables names will be considered}
+\item{vars}{a character vector of variable names; if given, only these
+variables names will be considered}
 
 \item{type}{a character vector of one or more types}
 
 \item{dim}{logical; if set to TRUE, names will contain dimensions in brackets}
 
-\item{opt}{logical; if set to TRUE, names will contain options (e.g., has_output)}
+\item{opt}{logical; if set to TRUE, names will contain options (e.g.,
+has_output)}
 
 \item{aux}{logical; if set to TRUE, auxiliary names will be returned}
 }
@@ -25,5 +27,6 @@ a character vector ofvariable names
 \description{
 Get variable names of one or more type(s)
 
-This returns all variable names of a certain type ("param", "state", "obs", "noise", "const") contained in the model of a \code{\link{libbi}} object
+This returns all variable names of a certain type ("param", "state", "obs",
+  "noise", "const") contained in the model of a \code{\link{libbi}} object
 }

@@ -16,11 +16,14 @@
 \arguments{
 \item{object}{a \code{\link{libbi}} object}
 
-\item{type}{one of "param" (default), "state", "noise" or "obs", the variable type to summarise}
+\item{type}{one of "param" (default), "state", "noise" or "obs", the variable
+type to summarise}
 
-\item{quantiles}{quantiles to calculate (default: quartiles); minimum, median, mean and maximum are always calculated}
+\item{quantiles}{quantiles to calculate (default: quartiles); minimum,
+median, mean and maximum are always calculated}
 
-\item{na.rm}{logical; if true, any \code{na} and \code{NaN}'s are removed before calculations are performed}
+\item{na.rm}{logical; if true, any \code{na} and \code{NaN}'s are removed
+before calculations are performed}
 
 \item{...}{ignored}
 }
@@ -28,5 +31,6 @@
 nothing (invisible NULL)
 }
 \description{
-This reads in the output file of the \code{\link{libbi}} object (which has been run before) and prints summary information of parameters
+This reads in the output file of the \code{\link{libbi}} object (which has
+  been run before) and prints summary information of parameters
 }

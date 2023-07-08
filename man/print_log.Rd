@@ -7,7 +7,8 @@
 print_log(x)
 }
 \arguments{
-\item{x}{a \code{\link{libbi}} object, or the name of the log file of a \code{\link{libbi}} run.}
+\item{x}{a \code{\link{libbi}} object, or the name of the log file of a
+\code{\link{libbi}} run.}
 }
 \value{
 nothing (invisible NULL)

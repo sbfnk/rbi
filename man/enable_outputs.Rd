@@ -9,16 +9,18 @@ enable_outputs(x, type = "all")
 \arguments{
 \item{x}{a \code{\link{bi_model}} object}
 
-\item{type}{either "all" (default), or a vector of variable types that are to have outputs enabled}
+\item{type}{either "all" (default), or a vector of variable types that are to
+have outputs enabled}
 }
 \value{
 the updated \code{bi_model} object
 }
 \description{
-Any variable type given will have any 'has_output=0' option removed in the given model..
+Any variable type given will have any 'has_output=0' option removed in the
+  given model.
 }
 \examples{
-model_file_name <- system.file(package="rbi", "PZ.bi")
+model_file_name <- system.file(package = "rbi", "PZ.bi")
 PZ <- bi_model(filename = model_file_name)
 PZ[6] <- "param mu (has_output=0)"
 PZ <- enable_outputs(PZ)

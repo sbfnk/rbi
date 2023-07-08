@@ -16,7 +16,8 @@ object, either 'all' must be TRUE or a model given}
 'run' is given as a \code{\link{libbi}} object or 'all' is set
 to TRUE}
 
-\item{burnin}{proportion of iterations to discard as burn-in (if between 0 and 1), or number of samples to discard (if >1)}
+\item{burnin}{proportion of iterations to discard as burn-in (if between 0
+and 1), or number of samples to discard (if >1)}
 
 \item{all}{whether all variables in the run file should be
 considered (otherwise, just parameters)}

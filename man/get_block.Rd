@@ -12,7 +12,9 @@
 
 \item{name}{name of the block}
 
-\item{shell}{if TRUE (default:FALSE), will return the shell (i.e., the definition of the block) as well as content; this is useful, e.g., to see options passed to a \code{transition} or \code{ode} block}
+\item{shell}{if TRUE (default:FALSE), will return the shell (i.e., the
+definition of the block) as well as content; this is useful, e.g., to see
+options passed to a \code{transition} or \code{ode} block}
 
 \item{...}{ignored}
 }

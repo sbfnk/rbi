@@ -7,13 +7,15 @@
 installed_libbi_version(...)
 }
 \arguments{
-\item{...}{any arguments for \code{\link{locate_libbi}} (esp. \code{path_to_libbi})}
+\item{...}{any arguments for \code{\link{locate_libbi}} (esp.
+\code{path_to_libbi})}
 }
 \value{
 a character string with the installed version
 }
 \description{
-This tries to find the libbi executable to determine the installed version of LibBi
+This tries to find the libbi executable to determine the installed version
+of LibBi
 }
 \author{
 Sebastian Funk

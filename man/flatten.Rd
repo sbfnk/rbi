@@ -3,7 +3,8 @@
 \name{flatten}
 \alias{flatten}
 \title{Flatten list of data frames
-This function takes a list of data frames (such as, for example, returned by \code{\link{bi_read}}) and converts it to a flat data frame}
+This function takes a list of data frames (such as, for example, returned by
+  \code{\link{bi_read}}) and converts it to a flat data frame}
 \usage{
 flatten(x)
 }
@@ -15,5 +16,6 @@ a data frame containing the flattened data
 }
 \description{
 Flatten list of data frames
-This function takes a list of data frames (such as, for example, returned by \code{\link{bi_read}}) and converts it to a flat data frame
+This function takes a list of data frames (such as, for example, returned by
+  \code{\link{bi_read}}) and converts it to a flat data frame
 }

@@ -13,5 +13,6 @@ option_list(...)
 a list of options and values
 }
 \description{
-This function is used to convert an option string into a list of options. If a list is given, it will be kept as is
+This function is used to convert an option string into a list of options. If
+  a list is given, it will be kept as is
 }

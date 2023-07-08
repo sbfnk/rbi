@@ -16,7 +16,10 @@
 a vector of log-likelihood
 }
 \description{
-The method \code{logLik} extracts the log-likelihood of a \code{libbi} object. This can be done, for example, after a call to \code{\link[rbi]{sample}} to inspect the chain log-likelihoods.
+The method \code{logLik} extracts the log-likelihood of a \code{libbi}
+  object. This can be done, for example, after a call to
+  \code{\link[rbi]{sample}} to inspect the chain log-likelihoods.
 
-For the help page of the base R \code{logLik} function, see \code{\link[stats]{logLik}}.
+For the help page of the base R \code{logLik} function, see
+  \code{\link[stats]{logLik}}.
 }

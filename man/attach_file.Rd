@@ -3,18 +3,22 @@
 \name{attach_file}
 \alias{attach_file}
 \alias{attach_file.libbi}
-\title{Deprecated (use 'attach' instead). Attach a new file or data set to a \code{\link{libbi}} object}
+\title{Deprecated (use 'attach' instead). Attach a new file or data set to a
+  \code{\link{libbi}} object}
 \usage{
 \method{attach_file}{libbi}(x, file, data, force = FALSE, ...)
 }
 \arguments{
 \item{x}{a \code{\link{libbi}} object}
 
-\item{file}{the type of the file to attach, one of "output", "obs", "input" or "init"}
+\item{file}{the type of the file to attach, one of "output", "obs", "input"
+or "init"}
 
-\item{data}{name of the file to attach, or a list of data frames that contain the outputs}
+\item{data}{name of the file to attach, or a list of data frames that contain
+the outputs}
 
-\item{force}{attach the file even if one like this already exists in the libbi object}
+\item{force}{attach the file even if one like this already exists in the
+libbi object}
 
 \item{...}{any options to \code{\link{bi_write}} (e.g., 'time_dim')}
 }
@@ -22,6 +26,9 @@
 an updated \code{\link{libbi}} object
 }
 \description{
-Deprecated (use 'attach' instead). Adds an (output, obs, etc.) file to a \code{\link{libbi}} object. This is useful to recreate a \code{\link{libbi}} object from the model and output files of a previous run
+Deprecated (use 'attach' instead). Adds an (output, obs, etc.) file to a
+  \code{\link{libbi}} object. This is useful to recreate a
+  \code{\link{libbi}} object from the model and output files of a previous
+  run
 }
 \keyword{internal}

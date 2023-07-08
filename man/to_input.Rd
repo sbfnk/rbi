@@ -15,7 +15,8 @@ to_input(x, vars)
 the updated \code{bi_model} object
 }
 \description{
-Used for predictions, if one doesn't want to re-simulate state/noise trajectories
+Used for predictions, if one doesn't want to re-simulate state/noise
+  trajectories
 }
 \seealso{
 \code{\link{bi_model}}
