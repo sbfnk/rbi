@@ -91,13 +91,13 @@ interest.</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &gt; ### This demo shows how to generate data from a model using bi_generate_dataset</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &gt; </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &gt; # the PZ model file is included in rbi and can be found there:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &gt; model_file_name &lt;- system.file(package="rbi", "PZ.bi")</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &gt; model_file_name &lt;- system.file(package = "rbi", "PZ.bi")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &gt; # assign model variable</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &gt; PZ &lt;- bi_model(model_file_name)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &gt; pz &lt;- bi_model(model_file_name)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &gt; # look at the model</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &gt; PZ</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &gt; pz</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> bi_model:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> =========</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  1: model PZ {</span>
@@ -117,7 +117,7 @@ interest.</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 15:   }</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 16:   sub proposal_parameter {</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 17:     mu ~ gaussian(mu, 0.02)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 18:     sigma ~ gaussian(sigma, 0.01)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18:     sigma ~ truncated_gaussian(sigma, 0.01, lower = 0)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 19:   }</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 20:   sub initial {</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 21:     P ~ log_normal(log(2.0), 0.2)</span>
@@ -135,14 +135,14 @@ interest.</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 33:   }</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 34: }</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &gt; T &lt;- 100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &gt; tf &lt;- 100</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &gt; # First let's generate a dataset without specifying parameters</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &gt; # so the parameters and initial conditions are drawn from the prior distribution</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &gt; # which is specified in the model file.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &gt; # if libbi throws an error here, try passing the "working_folder" argument to</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &gt; # 'bi_generate_dataset' and look for the issue in the ".PZ" subdirectory</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &gt; dataset1 &lt;- bi_generate_dataset(model=PZ, end_time=T, noutputs=T)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &gt; dataset1 &lt;- bi_generate_dataset(pz, end_time = tf, noutputs = tf)</span>
 <span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in locate_libbi(x$path_to_libbi):</span> Could not find libbi executable at '/libbi'</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/demo.html" class="external-link">demo</a></span><span class="op">(</span><span class="va">PZ_PMMH</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -153,13 +153,13 @@ interest.</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &gt; ### This demo shows how to perform filtering on a simple </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &gt; ### synthetic dataset using libbi.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &gt; # the PZ model file is included in rbi and can be found there:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &gt; model_file_name &lt;- system.file(package="rbi", "PZ.bi")</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &gt; model_file_name &lt;- system.file(package = "rbi", "PZ.bi")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &gt; # assign model variable</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &gt; PZ &lt;- bi_model(model_file_name)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &gt; pz &lt;- bi_model(model_file_name)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &gt; # look at the model</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &gt; PZ</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &gt; pz</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> bi_model:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> =========</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  1: model PZ {</span>
@@ -179,7 +179,7 @@ interest.</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 15:   }</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 16:   sub proposal_parameter {</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 17:     mu ~ gaussian(mu, 0.02)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 18:     sigma ~ gaussian(sigma, 0.01)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18:     sigma ~ truncated_gaussian(sigma, 0.01, lower = 0)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 19:   }</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 20:   sub initial {</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 21:     P ~ log_normal(log(2.0), 0.2)</span>
@@ -197,13 +197,14 @@ interest.</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 33:   }</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 34: }</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &gt; T &lt;- 50</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &gt; tf &lt;- 50</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &gt; init_parameters &lt;- list(P = 2, Z = 2, mu = 0.5, sigma = 0.3)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &gt; # First let's generate a dataset from the model</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &gt; synthetic_dataset &lt;- bi_generate_dataset(model=PZ, end_time=T, noutputs=T, </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> +                                          init=init_parameters)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &gt; synthetic_dataset &lt;- bi_generate_dataset(</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> +   pz, end_time = tf, noutputs = tf, init = init_parameters</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> + )</span>
 <span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in locate_libbi(x$path_to_libbi):</span> Could not find libbi executable at '/libbi'</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/demo.html" class="external-link">demo</a></span><span class="op">(</span><span class="va">PZ_SMC2</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -212,13 +213,13 @@ interest.</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 	---- ~~~~~~~</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &gt; # the PZ model file is included in rbi and can be found there:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &gt; model_file_name &lt;- system.file(package="rbi", "PZ.bi")</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &gt; model_file_name &lt;- system.file(package = "rbi", "PZ.bi")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &gt; # assign model variable</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &gt; PZ &lt;- bi_model(model_file_name)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &gt; pz &lt;- bi_model(model_file_name)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &gt; # look at the model</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &gt; PZ</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &gt; pz</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> bi_model:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> =========</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  1: model PZ {</span>
@@ -238,7 +239,7 @@ interest.</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 15:   }</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 16:   sub proposal_parameter {</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 17:     mu ~ gaussian(mu, 0.02)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 18:     sigma ~ gaussian(sigma, 0.01)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18:     sigma ~ truncated_gaussian(sigma, 0.01, lower = 0)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 19:   }</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 20:   sub initial {</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 21:     P ~ log_normal(log(2.0), 0.2)</span>
@@ -256,13 +257,14 @@ interest.</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 33:   }</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 34: }</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &gt; T &lt;- 50</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &gt; tf &lt;- 50</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &gt; init_parameters &lt;- list(P = 2, Z = 2, mu = 0.5, sigma = 0.3)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &gt; # First let's generate a dataset from the model</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &gt; synthetic_dataset &lt;- bi_generate_dataset(model=PZ, end_time=T, noutputs=T,</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> +                                          init=init_parameters)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &gt; synthetic_dataset &lt;- bi_generate_dataset(</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> +   pz, end_time = tf, noutputs = tf, init = init_parameters</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> + )</span>
 <span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in locate_libbi(x$path_to_libbi):</span> Could not find libbi executable at '/libbi'</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/demo.html" class="external-link">demo</a></span><span class="op">(</span><span class="va">PZ_filtering</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -270,16 +272,16 @@ interest.</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 	demo(PZ_filtering)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 	---- ~~~~~~~~~~~~</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &gt; ### This demo shows how to perform filtering on a simple </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &gt; ### This demo shows how to perform filtering on a simple</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &gt; ### synthetic dataset using libbi.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &gt; # the PZ model file is included in rbi and can be found there:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &gt; model_file_name &lt;- system.file(package="rbi", "PZ.bi")</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &gt; model_file_name &lt;- system.file(package = "rbi", "PZ.bi")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &gt; # assign model variable</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &gt; PZ &lt;- bi_model(model_file_name)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &gt; pz &lt;- bi_model(model_file_name)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &gt; # look at the model</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &gt; PZ</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &gt; pz</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> bi_model:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> =========</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  1: model PZ {</span>
@@ -299,7 +301,7 @@ interest.</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 15:   }</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 16:   sub proposal_parameter {</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 17:     mu ~ gaussian(mu, 0.02)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 18:     sigma ~ gaussian(sigma, 0.01)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18:     sigma ~ truncated_gaussian(sigma, 0.01, lower = 0)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 19:   }</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 20:   sub initial {</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 21:     P ~ log_normal(log(2.0), 0.2)</span>
@@ -317,13 +319,14 @@ interest.</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 33:   }</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 34: }</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &gt; T &lt;- 100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &gt; tf &lt;- 100</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &gt; init_parameters &lt;- list(P = 2, Z = 2, mu = 0.5, sigma = 0.3)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &gt; # First let's generate a dataset from the model</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &gt; synthetic_dataset &lt;- bi_generate_dataset(model=PZ, end_time=T,</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> +                                          init=init_parameters)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &gt; synthetic_dataset &lt;- bi_generate_dataset(</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> +   pz, end_time = tf, init = init_parameters</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> + )</span>
 <span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in locate_libbi(x$path_to_libbi):</span> Could not find libbi executable at '/libbi'</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
