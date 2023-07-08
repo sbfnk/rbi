@@ -32,7 +32,7 @@ jobs:
 
       - uses: r-lib/actions/setup-pandoc@v2
 
-      - name: Install libbi (linux/windows)
+      - name: Install libbi (linux)
         if: runner.os == 'linux'
         run: |
           sudo apt-get install build-essential libblas-dev liblapack-dev \
