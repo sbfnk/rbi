@@ -757,7 +757,8 @@ attach_data <- function(x, ...) UseMethod("attach_data")
 #'   preserved except for variables that exist in the passed \code{data}.
 #' @param x a \code{\link{libbi}} object
 #' @param file the type of the file to attach, one of "output", "obs", "input"
-#'   or "init" @param data name of the file to attach, or a list of data frames
+#'   or "init"
+#' @param data name of the file to attach, or a list of data frames
 #'   that contain the outputs; it will be assumed that this is already thinned
 #' @param in_place if TRUE, replace the file in place if it already exists in
 #'   the libbi object; this can speed up the operation if append=TRUE as
