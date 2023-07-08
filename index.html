@@ -71,7 +71,7 @@
 </h1></div>
 <!-- badges: start -->
 
-<p><strong>rbi</strong> is an <code>R</code> interface to <a href="http://libbi.org" class="external-link">libbi</a>, a library for Bayesian inference.</p>
+<p><a href="https://github.com/sbfnk/rbi" class="external-link">rbi</a> is an <code>R</code> interface to <a href="http://libbi.org" class="external-link">libbi</a>, a library for Bayesian inference.</p>
 <p>It mainly contains: * various functions to retrieve and process the results from libbi (which are in NetCDF format) * a <code>bi_model</code> class, to manipulate libbi models * a <code>libbi</code> wrapper class, to perform Bayesian using libbi inference from within R,</p>
 </div>
 <div class="section level1">
@@ -84,12 +84,12 @@
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># install.packages("remotes")</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://remotes.r-lib.org" class="external-link">"remotes"</a></span><span class="op">)</span></span>
-<span><span class="fu">install_github</span><span class="op">(</span><span class="st">"sbfnk/RBi"</span><span class="op">)</span></span></code></pre></div>
-<p>The <strong>RBi</strong> package has only been tested on GNU/Linux and OS X, but it should mostly work everywhere <code>R</code> works.</p>
-<p>If you want to use <strong>RBi</strong> as a wrapper to <strong>LibBi</strong> then you need a working version of <a href="https://github.com/lawmurray/LibBi" class="external-link">LibBi</a>. To install <strong>LibBi</strong> on a Mac, the easiest way is to install <a href="https://brew.sh" class="external-link">Homebrew</a>, followed by (using a command shell, i.e. Terminal or similar):</p>
+<span><span class="fu">install_github</span><span class="op">(</span><span class="st">"sbfnk/rbi"</span><span class="op">)</span></span></code></pre></div>
+<p>The <strong>rbi</strong> package has only been tested on GNU/Linux and OS X, but it should mostly work everywhere <code>R</code> works.</p>
+<p>If you want to use <strong>rbi</strong> as a wrapper to <strong>LibBi</strong> then you need a working version of <a href="https://github.com/lawmurray/LibBi" class="external-link">LibBi</a>. To install <strong>LibBi</strong> on a Mac, the easiest way is to install <a href="https://brew.sh" class="external-link">Homebrew</a>, followed by (using a command shell, i.e. Terminal or similar):</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">brew</span> install libbi</span></code></pre></div>
 <p>On linux, follow the <a href="https://github.com/lawmurray/LibBi/blob/master/INSTALL_LINUX.md" class="external-link">instructions</a> provided with LibBi.</p>
-<p>The path to <code>libbi</code> script can be passed as an argument to <strong>RBi</strong>, otherwise the package tries to find it automatically using the <code>which</code> linux/unix command.</p>
+<p>The path to <code>libbi</code> script can be passed as an argument to <strong>rbi</strong>, otherwise the package tries to find it automatically using the <code>which</code> linux/unix command.</p>
 <p>If you just want to process the output from <strong>LibBi</strong>, then you do not need to have <strong>LibBi</strong> installed.</p>
 </div>
 <div class="section level1">
@@ -111,7 +111,7 @@
 <div class="section level1">
 <h1 id="other-packages">Other packages<a class="anchor" aria-label="anchor" href="#other-packages"></a>
 </h1>
-<p>For higher-level methods to interact with <a href="https://github.com/lawmurray/LibBi" class="external-link">LibBi</a>, have a look at <a href="https://github.com/sbfnk/RBi.helpers" class="external-link">RBi.helpers</a>.</p>
+<p>For higher-level methods to interact with <a href="https://github.com/lawmurray/LibBi" class="external-link">LibBi</a>, have a look at <a href="https://github.com/sbfnk/RBi.helpers" class="external-link">rbi.helpers</a>.</p>
 </div>
 
   </div>
@@ -154,7 +154,7 @@
 <h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
 <li><a href="https://github.com/sbfnk/rbi/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/sbfnk/rbi/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
-<li><a href="https://codecov.io/github/sbfnk/RBi" class="external-link"><img src="https://codecov.io/github/sbfnk/RBi/branch/master/graphs/badge.svg" alt="codecov"></a></li>
+<li><a href="https://codecov.io/github/sbfnk/rbi" class="external-link"><img src="https://codecov.io/github/sbfnk/rbi/branch/master/graphs/badge.svg" alt="codecov"></a></li>
 <li><a href="https://www.gnu.org/licenses/gpl-3.0" class="external-link"><img src="https://img.shields.io/badge/License-GPLv3-blue.svg" alt="License: GPL v3"></a></li>
 </ul>
 </div>
