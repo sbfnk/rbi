@@ -1,7 +1,7 @@
 <%@meta language="R-vignette" content="--------------------------------
   DIRECTIVES FOR R:
 
-  %\VignetteIndexEntry{Introduction to RBi}
+  %\VignetteIndexEntry{Introduction to rbi}
   %\VignetteAuthor{Sebastian Funk}
   %\VignetteKeyword{rbi}
   %\VignetteKeyword{package}
@@ -24,7 +24,7 @@ pre code {
 
 <%@meta name="author"%> on <%=format(as.Date(Sys.Date()), format="%B %d, %Y")%>
 
-[RBi](https://github.com/sbfnk/RBi) is an `R` interface to [LibBi](http://libbi.org), a library for Bayesian inference with state-space models using high-performance computer hardware.
+[rbi](https://github.com/sbfnk/rbi) is an `R` interface to [LibBi](http://libbi.org), a library for Bayesian inference with state-space models using high-performance computer hardware.
 
 ### Latest Version: _0.10.4_
 
@@ -38,22 +38,16 @@ On linux, follow the [instructions](https://github.com/lawmurray/LibBi/blob/mast
 
 If you have any trouble installing **LibBi** you can get help on the [LibBi Users](https://groups.google.com/forum/#!forum/libbi-users) mailing list.
 
-The path to the `libbi` script can be passed as an argument to **RBi**, otherwise the package tries to find it automatically using the `which` linux/unix command.
+The path to the `libbi` script can be passed as an argument to **rbi**, otherwise the package tries to find it automatically using the `which` linux/unix command.
 
 If you just want to process the output from **LibBi**, then you do not need to have **LibBi** installed.
 
 # Installation
 
-The **RBi** package requires `R` (>= 3.2.0) as well as the packages:
-
-- `reshape2`
-- `ncdf4`
-- `data.table`
-
-The easiest way to install the latest stable version of **RBi** is via CRAN. The package name is `rbi` (all lowercase):
+The easiest way to install the latest stable version of **rbi** is via CRAN.
 
 ```{r eval=FALSE}
-install.packages('rbi')
+install.packages("rbi")
 ```
 
 Alternatively, the current development version can be installed using the `devtools` package
@@ -61,7 +55,7 @@ Alternatively, the current development version can be installed using the `devto
 ```{r eval=FALSE}
 # install.packages("devtools")
 library('devtools')
-install_github("sbfnk/RBi")
+install_github("sbfnk/rbi")
 ```
 
 # Loading the package
@@ -79,15 +73,15 @@ to load the package.
 
 # Getting started
 
-The main computational engine and model grammar behind **RBi** is provided by **LibBi**. The [LibBi manual](http://libbi.org/docs/LibBi-Manual.pdf) is a good place to start for finding out everything there is to know about **LibBi** models and inference methods.
+The main computational engine and model grammar behind **rbi** is provided by **LibBi**. The [LibBi manual](http://libbi.org/docs/LibBi-Manual.pdf) is a good place to start for finding out everything there is to know about **LibBi** models and inference methods.
 
-The **RBi** package mainly provides two classes: `bi_model` and `libbi`. The `bi_model` class is used to load, view and manipulate **LibBi** model files. The `libbi` class is used to run LibBi and perform inference.
+The **rbi** package mainly provides two classes: `bi_model` and `libbi`. The `bi_model` class is used to load, view and manipulate **LibBi** model files. The `libbi` class is used to run LibBi and perform inference.
 
 The package also provides two methods for interacting with the [NetCDF](https://www.unidata.ucar.edu/software/netcdf/) files used by **LibBi**, `bi_read` and `bi_write`. Lastly, it provides a `get_traces` function to analyse Markov-chain Monte Carlo (MCMC) traces using the [coda](https://cran.r-project.org/package=coda) package.
 
 # The `bi_model` class
 
-As an example, we consider a simplified version of the SIR model discussed in [Del Moral et al. (2014)](https://arxiv.org/abs/1405.4081). This is included with the **RBi** package and can be loaded with
+As an example, we consider a simplified version of the SIR model discussed in [Del Moral et al. (2014)](https://arxiv.org/abs/1405.4081). This is included with the **rbi** package and can be loaded with
 
 ```{R}
 model_file <- system.file(package="rbi", "SIR.bi")
@@ -307,7 +301,7 @@ Any particular posterior sample can be viewed with `extract_sample` (with indice
 extract_sample(bi, 314)
 ```
 
-To analyse MCMC outputs, we can use the **coda** package and the `get_traces` function of **RBi**. Note that, to get exactly the same traces, you would have to set the seed as above.
+To analyse MCMC outputs, we can use the **coda** package and the `get_traces` function of **rbi**. Note that, to get exactly the same traces, you would have to set the seed as above.
 
 ```{R}
 library('coda')
@@ -363,7 +357,7 @@ dataset$Incidence
 
 # Filtering
 
-The other so-called clients of LibBi (besides sample`) are supported through commands of the same name: `filter, optimise and rewrite. For example, to run a particle filter on the last posterior sample generated above, you can use:
+The other so-called clients of LibBi (besides `sample`) are supported through commands of the same name: `filter, optimise and rewrite. For example, to run a particle filter on the last posterior sample generated above, you can use:
 
 ```{R eval=FALSE}
 bi_filtered <- filter(bi)
@@ -405,7 +399,7 @@ ggplot(os, aes(x=time))+
 
 # Saving and loading `libbi` objects
 
-**RBi** provides its own versions of the `saveRDS` and `readRDS` functions called `save_libbi` and `read_libbi`. These make sure that all information (including any options, input, init and observation files) is stored in the object.
+**rbi** provides its own versions of the `saveRDS` and `readRDS` functions called `save_libbi` and `read_libbi`. These make sure that all information (including any options, input, init and observation files) is stored in the object.
 
 ```{R}
 save_libbi(bi, "bi.rds")
@@ -439,7 +433,7 @@ This generates the internal representation of the model for LibBi. It doesn't ma
 
 # Related packages
 
-[RBi.helpers](https://github.com/sbfnk/RBi.helpers) contains higher-level methods to interact with **LibBi**, including methods for plotting the results of libbi runs and for adapting the proposal distribution and number of particles. For more information, see the [RBi.helpers vignette](http://sbfnk.github.io/rbi/rbi_helpers.html).
+[rbi.helpers](https://github.com/sbfnk/rbi.helpers) contains higher-level methods to interact with **LibBi**, including methods for plotting the results of libbi runs and for adapting the proposal distribution and number of particles. For more information, see the [rbi.helpers vignette](http://sbfnk.github.io/rbi/rbi_helpers.html).
 
 # References
  * Murray, L.M. (2013). [Bayesian state-space modelling on high-performance hardware using LibBi](https://arxiv.org/abs/1306.3277).

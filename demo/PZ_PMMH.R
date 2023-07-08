@@ -1,4 +1,4 @@
-### This demo shows how to perform filtering on a simple 
+### This demo shows how to perform filtering on a simple
 ### synthetic dataset using libbi.
 # the PZ model file is included in rbi and can be found there:
 model_file_name <- system.file(package = "rbi", "PZ.bi")
@@ -13,7 +13,8 @@ tf <- 50
 init_parameters <- list(P = 2, Z = 2, mu = 0.5, sigma = 0.3)
 # First let's generate a dataset from the model
 synthetic_dataset <- bi_generate_dataset(
-  pz, end_time = tf, noutputs = tf, init = init_parameters
+  pz,
+  end_time = tf, noutputs = tf, init = init_parameters
 )
 # Settings
 bi_object <- libbi(model = pz)
@@ -22,7 +23,8 @@ bi_object
 
 # launch libbi.
 bi_object <- sample(
-  bi_object, obs = synthetic_dataset, init = init_parameters,
+  bi_object,
+  obs = synthetic_dataset, init = init_parameters,
   end_time = tf, noutputs = tf, nsamples = 128, nparticles = 128,
   nthreads = 1,
   log_file_name = tempfile(pattern = "pmmhoutput", fileext = ".txt")

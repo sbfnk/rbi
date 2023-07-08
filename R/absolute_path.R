@@ -9,15 +9,15 @@
 #' @param dirname name of a folder where the file is supposed to be
 #' @return a character string containing the absolute path
 #' @keywords internal
-absolute_path <- function(filename, dirname){
-  if (missing(dirname)){
+absolute_path <- function(filename, dirname) {
+  if (missing(dirname)) {
     dirname <- ""
   }
-  if (substr(filename, 1, 1) == "/"){
-    #the filename is already absolute
+  if (substr(filename, 1, 1) == "/") {
+    # the filename is already absolute
     result <- normalizePath(filename, "/", FALSE)
   } else {
-    if (nchar(dirname) == 0){
+    if (nchar(dirname) == 0) {
       result <- normalizePath(filename, "/", FALSE)
     } else {
       result <- normalizePath(paste(dirname, filename, sep = "/"), "/", FALSE)

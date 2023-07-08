@@ -23,14 +23,16 @@ sigma1 <- output1[["sigma"]]
 
 par(mfrow = c(2, 1))
 plot(
-  seq_along(p_obs1), p_obs1, type = "l", col = "orange", xlab = "time",
+  seq_along(p_obs1), p_obs1,
+  type = "l", col = "orange", xlab = "time",
   ylab = paste("P_obs with sigma=", round(sigma1, 2))
 )
 
 # Then generate dataset with a specified set of parameter values;
 # the parameters left unspecified are drawn from the prior.
 dataset2 <- bi_generate_dataset(
-  pz, end_time = tf, noutputs = tf, init = list(sigma = 0.5)
+  pz,
+  end_time = tf, noutputs = tf, init = list(sigma = 0.5)
 )
 output2 <- bi_read(dataset2, c("P_obs", "sigma"))
 
@@ -38,6 +40,7 @@ p_obs2 <- output2[["P_obs"]]$value
 sigma2 <- output2[["sigma"]]
 
 plot(
-  seq_along(p_obs2), p_obs2, type = "l", col = "orange", xlab = "time",
+  seq_along(p_obs2), p_obs2,
+  type = "l", col = "orange", xlab = "time",
   ylab = paste("P_obs with sigma=", round(sigma2, 2))
 )
