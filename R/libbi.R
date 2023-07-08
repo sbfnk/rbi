@@ -98,7 +98,7 @@ run <- function(x, ...) UseMethod("run")
 #' @examples
 #' bi_object <- libbi(model = system.file(package="rbi", "PZ.bi"))
 #' \donttest{
-#'   run(bi_object, client="sample", target="prior")
+#'   bi_object <- run(bi_object, client = "sample", target = "prior")
 #'   bi_file_summary(bi_object)
 #' }
 #' @return an updated \code{\link{libbi}} object, except if \code{client} is 'rewrite', in which case invisible NULL will be returned but the rewritten model code printed
