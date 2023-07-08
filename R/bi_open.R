@@ -12,15 +12,15 @@
 #' @importFrom ncdf4 nc_open
 bi_open <- function(x, file = "output")
 {
-  if (!missing(file) && class(x) != "libbi") {
+  if (!missing(file) && !inherits(x, "libbi")) {
     warning("'file' given to 'bi_open' although 'x' is not a 'libbi' object; will be ignored")
   }
 
   if (typeof(x) == "character"){
     nc <- nc_open(tools::file_path_as_absolute(x))
-  } else if (class(x) == "ncdf4") {
+  } else if (inherits(x, "ncdf4")) {
     nc <- x
-  } else if (class(x) == "libbi"){
+  } else if (inherits(x, "libbi")) {
     if (!(missing(file) || file == "output")) {
       opt_name <- paste(file, "file", sep="-")
       if (!(opt_name %in% names(x$options))) {
