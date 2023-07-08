@@ -16,10 +16,13 @@ v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/li
 [rbi](https://github.com/sbfnk/rbi) is an `R` interface to
 [libbi](http://libbi.org), a library for Bayesian inference.
 
-It mainly contains: \* various functions to retrieve and process the
-results from libbi (which are in NetCDF format) \* a `bi_model` class,
-to manipulate libbi models \* a `libbi` wrapper class, to perform
-Bayesian using libbi inference from within R,
+It mainly contains:
+
+- various functions to retrieve and process the results from libbi
+  (which are in NetCDF format)
+- a `bi_model` class, to manipulate libbi models
+- a `libbi` wrapper class, to perform Bayesian using libbi inference
+  from within R,
 
 # Installation
 
