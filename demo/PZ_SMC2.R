@@ -23,7 +23,8 @@ bi_object
 bi_object <- sample(
   bi_object, end_time = tf, noutputs = tf, nsamples = 128, nparticles = 128,
   nthreads = 1, obs = synthetic_dataset, init = init_parameters,
-  log_file_name = tempfile(pattern = "smc2output", fileext = ".txt")
+  log_file_name = tempfile(pattern = "smc2output", fileext = ".txt"),
+  resampler = "metropolis"
 )
 # It can be a good idea to look at the result file
 bi_file_summary(bi_object$output_file_name)
