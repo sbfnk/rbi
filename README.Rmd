@@ -5,12 +5,12 @@ output: github_document
 
 <!-- badges: start -->
 ![GitHub R package version](https://img.shields.io/github/r-package/v/epiverse-trace/bpmodels)
-[![codecov](https://codecov.io/github/sbfnk/RBi/branch/master/graphs/badge.svg)](https://codecov.io/github/sbfnk/RBi) 
-![GitHub contributors](https://img.shields.io/github/contributors/sbfnk/RBi)
+[![codecov](https://codecov.io/github/sbfnk/rbi/branch/master/graphs/badge.svg)](https://codecov.io/github/sbfnk/rbi) 
+![GitHub contributors](https://img.shields.io/github/contributors/sbfnk/rbi)
  [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 <!-- badges: end -->
 
-[rbi](https://github.com/sbfnk/RBi) is an `R` interface to [libbi](http://libbi.org), a library for Bayesian inference.
+[rbi](https://github.com/sbfnk/rbi) is an `R` interface to [libbi](http://libbi.org), a library for Bayesian inference.
 
 It mainly contains:
 * various functions to retrieve and process the results from libbi (which are in NetCDF format)
@@ -70,4 +70,4 @@ Using coda
 Other packages
 ==============
 
-For higher-level methods to interact with [LibBi](https://github.com/lawmurray/LibBi), have a look at [RBi.helpers](https://github.com/sbfnk/RBi.helpers).
+For higher-level methods to interact with [LibBi](https://github.com/lawmurray/LibBi), have a look at [rbi.helpers](https://github.com/sbfnk/RBi.helpers).
