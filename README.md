@@ -4,7 +4,7 @@ Bayesian inference for state-space models with R
 <!-- badges: start -->
 
 ![GitHub R package
-version](https://img.shields.io/github/r-package/v/epiverse-trace/bpmodels)
+version](https://img.shields.io/github/r-package/v/sbfnk/rbi)
 [![R-CMD-check](https://github.com/sbfnk/rbi/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/sbfnk/rbi/actions/workflows/R-CMD-check.yaml)
 [![codecov](https://codecov.io/github/sbfnk/rbi/branch/master/graphs/badge.svg)](https://codecov.io/github/sbfnk/rbi)
 ![GitHub
