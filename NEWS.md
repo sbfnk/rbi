@@ -1,3 +1,7 @@
+# rbi 0.10.4.9000
+
+* add github actions for package checking and testing
+
 # rbi 0.10.4
 
 * add `markdown` Suggests to pass CRAN check
