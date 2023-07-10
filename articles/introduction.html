@@ -63,7 +63,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/sbfnk/RBi/" class="external-link">
+  <a href="https://github.com/sbfnk/rbi/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -86,7 +86,7 @@
 Funk</h4>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/sbfnk/RBi/blob/HEAD/vignettes/introduction.Rmd" class="external-link"><code>vignettes/introduction.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/sbfnk/rbi/blob/HEAD/vignettes/introduction.Rmd" class="external-link"><code>vignettes/introduction.Rmd</code></a></small>
       <div class="hidden name"><code>introduction.Rmd</code></div>
 
     </div>
@@ -94,7 +94,7 @@ Funk</h4>
     
     
 <p><a href="https://github.com/sbfnk/rbi" class="external-link">rbi</a> is an <code>R</code>
-interface to <a href="http://libbi.org" class="external-link">LibBi</a>, a library for
+interface to <a href="https://libbi.org" class="external-link">LibBi</a>, a library for
 Bayesian inference with state-space models using high-performance
 computer hardware.</p>
 <p>The package has been tested on macOS and Linux. It requires a working
@@ -129,15 +129,15 @@ the <code>remotes</code> package</p>
 </h2>
 <p>Use</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/sbfnk/RBi" class="external-link">"rbi"</a></span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/sbfnk/rbi" class="external-link">"rbi"</a></span><span class="op">)</span></span></code></pre></div>
 <p>to load the package.</p>
 </div>
 <div class="section level2">
 <h2 id="getting-started">Getting started<a class="anchor" aria-label="anchor" href="#getting-started"></a>
 </h2>
 <p>The main computational engine and model grammar behind
-<strong>rbi</strong> is provided by <strong>LibBi</strong>. The <a href="http://libbi.org/docs/LibBi-Manual.pdf" class="external-link">LibBi manual</a> is a good
-place to start for finding out everything there is to know about
+<strong>rbi</strong> is provided by <strong>LibBi</strong>. The <a href="https://libbi.org/docs/LibBi-Manual.pdf" class="external-link">LibBi manual</a> is a
+good place to start for finding out everything there is to know about
 <strong>LibBi</strong> models and inference methods.</p>
 <p>The <strong>rbi</strong> package mainly provides two classes:
 <code>bi_model</code> and <code>libbi</code>. The <code>bi_model</code>
@@ -160,8 +160,8 @@ and can be loaded with</p>
 <code class="sourceCode R"><span><span class="va">model_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span>package <span class="op">=</span> <span class="st">"rbi"</span>, <span class="st">"SIR.bi"</span><span class="op">)</span></span>
 <span><span class="va">sir_model</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/bi_model.html">bi_model</a></span><span class="op">(</span><span class="va">model_file</span><span class="op">)</span> <span class="co"># load model</span></span></code></pre></div>
 <p>Other ways of implementing a (deterministic or stochastic) SIR model
-can be found in the <a href="http://sbfnk.github.io/rbi/idd_models.html" class="external-link">collection of SIR
-models for LibBi</a>, where you also find how to load them into a
+can be found in the <a href="idd_models">collection of SIR models for
+LibBi</a>, where you also find how to load them into a
 <code>bi_model</code> object, e.g. <code>sir_model</code>. Feel free to
 run the commands below with different versions of the model.</p>
 <p>The <code>sir_model</code> object now contains the model, which can
@@ -268,7 +268,7 @@ second time, it should run much faster.</p>
 <span><span class="co">#&gt; Wrapper around LibBi</span></span>
 <span><span class="co">#&gt; ======================</span></span>
 <span><span class="co">#&gt; Model:  SIR </span></span>
-<span><span class="co">#&gt; Run time:  0.002734  seconds</span></span>
+<span><span class="co">#&gt; Run time:  0.002481  seconds</span></span>
 <span><span class="co">#&gt; Number of samples:  1 </span></span>
 <span><span class="co">#&gt; State trajectories recorded:  S I R Z </span></span>
 <span><span class="co">#&gt; Noise trajectories recorded:  n_transmission n_recovery </span></span>
@@ -364,7 +364,7 @@ at the <code>bi</code> object:</p>
 <span><span class="co">#&gt; Wrapper around LibBi</span></span>
 <span><span class="co">#&gt; ======================</span></span>
 <span><span class="co">#&gt; Model:  SIR </span></span>
-<span><span class="co">#&gt; Run time:  0.085516  seconds</span></span>
+<span><span class="co">#&gt; Run time:  0.087714  seconds</span></span>
 <span><span class="co">#&gt; Number of samples:  1000 </span></span>
 <span><span class="co">#&gt; State trajectories recorded:  S I R Z </span></span>
 <span><span class="co">#&gt; Noise trajectories recorded:  n_transmission n_recovery </span></span>
@@ -374,32 +374,32 @@ at the <code>bi</code> object:</p>
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">bi_prior</span><span class="op">)</span></span>
 <span><span class="co">#&gt; List of 21</span></span>
 <span><span class="co">#&gt;  $ options         :List of 5</span></span>
-<span><span class="co">#&gt;   ..$ build-dir: chr "/tmp/RtmpcYlHa6/SIR442618a82d82"</span></span>
+<span><span class="co">#&gt;   ..$ build-dir: chr "/tmp/RtmpvpAZJ5/SIR44701ec11456"</span></span>
 <span><span class="co">#&gt;   ..$ seed     : num 3.33e+08</span></span>
 <span><span class="co">#&gt;   ..$ nsamples : num 1000</span></span>
 <span><span class="co">#&gt;   ..$ end-time : num 112</span></span>
 <span><span class="co">#&gt;   ..$ noutputs : num 16</span></span>
 <span><span class="co">#&gt;  $ path_to_libbi   : chr "/usr/local/bin/libbi"</span></span>
 <span><span class="co">#&gt;  $ model           : 'bi_model' chr [1:50] "model SIR {" "const h = 7" "const N = 1000" "const d_infection = 14" ...</span></span>
-<span><span class="co">#&gt;  $ model_file_name : chr "/tmp/RtmpcYlHa6/SIR442618a82d82/SIR.bi"</span></span>
+<span><span class="co">#&gt;  $ model_file_name : chr "/tmp/RtmpvpAZJ5/SIR44701ec11456/SIR.bi"</span></span>
 <span><span class="co">#&gt;  $ dims            : list()</span></span>
 <span><span class="co">#&gt;  $ time_dim        : chr(0) </span></span>
 <span><span class="co">#&gt;  $ coord_dims      : list()</span></span>
 <span><span class="co">#&gt;  $ thin            : num 1</span></span>
 <span><span class="co">#&gt;  $ output_every    : num NA</span></span>
 <span><span class="co">#&gt;  $ debug           : logi FALSE</span></span>
-<span><span class="co">#&gt;  $ command         : chr "/usr/local/bin/libbi sample --build-dir /tmp/RtmpcYlHa6/SIR442618a82d82 --seed 332755949 --target prior --nsamp"| __truncated__</span></span>
-<span><span class="co">#&gt;  $ output_file_name: chr "/tmp/RtmpcYlHa6/SIR442618a82d82/SIR_output442653e6a49f.nc"</span></span>
-<span><span class="co">#&gt;  $ log_file_name   : chr "/tmp/RtmpcYlHa6/SIR442618a82d82/output442640c6542e.txt"</span></span>
+<span><span class="co">#&gt;  $ command         : chr "/usr/local/bin/libbi sample --build-dir /tmp/RtmpvpAZJ5/SIR44701ec11456 --seed 332755949 --target prior --nsamp"| __truncated__</span></span>
+<span><span class="co">#&gt;  $ output_file_name: chr "/tmp/RtmpvpAZJ5/SIR44701ec11456/SIR_output44706c3f6359.nc"</span></span>
+<span><span class="co">#&gt;  $ log_file_name   : chr "/tmp/RtmpvpAZJ5/SIR44701ec11456/output4470163c7c0f.txt"</span></span>
 <span><span class="co">#&gt;  $ user_log_file   : logi FALSE</span></span>
 <span><span class="co">#&gt;  $ timestamp       :List of 1</span></span>
-<span><span class="co">#&gt;   ..$ output: POSIXct[1:1], format: "2023-07-10 14:09:45"</span></span>
+<span><span class="co">#&gt;   ..$ output: POSIXct[1:1], format: "2023-07-10 16:16:14"</span></span>
 <span><span class="co">#&gt;  $ run_flag        : logi TRUE</span></span>
 <span><span class="co">#&gt;  $ error_flag      : logi FALSE</span></span>
 <span><span class="co">#&gt;  $ use_cache       : logi TRUE</span></span>
 <span><span class="co">#&gt;  $ supplement      : NULL</span></span>
-<span><span class="co">#&gt;  $ .gc_env         :&lt;environment: 0x55e5e87df788&gt; </span></span>
-<span><span class="co">#&gt;  $ .cache          :&lt;environment: 0x55e5e6371f38&gt; </span></span>
+<span><span class="co">#&gt;  $ .gc_env         :&lt;environment: 0x5613064106d8&gt; </span></span>
+<span><span class="co">#&gt;  $ .cache          :&lt;environment: 0x561303fa2390&gt; </span></span>
 <span><span class="co">#&gt;  - attr(*, "class")= chr "libbi"</span></span></code></pre></div>
 <p>We can see the object contains 14 fields, including the model, the
 path to the <code>libbi</code> script, and the command used to run libbi
@@ -409,7 +409,7 @@ the ones we passed to <code>sample</code></p>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bi_prior</span><span class="op">$</span><span class="va">options</span></span>
 <span><span class="co">#&gt; $`build-dir`</span></span>
-<span><span class="co">#&gt; [1] "/tmp/RtmpcYlHa6/SIR442618a82d82"</span></span>
+<span><span class="co">#&gt; [1] "/tmp/RtmpvpAZJ5/SIR44701ec11456"</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $seed</span></span>
 <span><span class="co">#&gt; [1] 332755949</span></span>
@@ -428,7 +428,7 @@ object, including the model used, the command used to run
 name:</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bi_prior</span><span class="op">$</span><span class="va">output_file_name</span></span>
-<span><span class="co">#&gt; [1] "/tmp/RtmpcYlHa6/SIR442618a82d82/SIR_output442653e6a49f.nc"</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] "/tmp/RtmpvpAZJ5/SIR44701ec11456/SIR_output44706c3f6359.nc"</span></span></code></pre></div>
 <p>We can get the results of the sampling run using
 <code>bi_read</code></p>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
@@ -471,7 +471,7 @@ data. Let’s look at the returned object</p>
 <span><span class="co">#&gt;  $ p_R0          :'data.frame':  1000 obs. of  2 variables:</span></span>
 <span><span class="co">#&gt;   ..$ np   : num [1:1000] 0 1 2 3 4 5 6 7 8 9 ...</span></span>
 <span><span class="co">#&gt;   ..$ value: num [1:1000] 1.7 1.6 2.63 1.08 2.83 ...</span></span>
-<span><span class="co">#&gt;  $ clock         : num 85516</span></span></code></pre></div>
+<span><span class="co">#&gt;  $ clock         : num 87714</span></span></code></pre></div>
 <p>This is a list of 9 objects, 8 representing each of the (noise/state)
 variables and parameters in the file, and one number <code>clock</code>,
 representing the time spent running the model in microseconds.</p>
@@ -508,7 +508,7 @@ for example</p>
 <span><span class="va">bi_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sample.html">sample</a></span><span class="op">(</span></span>
 <span>  <span class="va">bi_prior</span>, target <span class="op">=</span> <span class="st">"posterior"</span>, nparticles <span class="op">=</span> <span class="fl">32</span>, obs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>Incidence <span class="op">=</span> <span class="va">df</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p>Input, init and observation files (see the <a href="http://libbi.org/docs/LibBi-Manual.pdf" class="external-link">LibBi manual</a> for
+<p>Input, init and observation files (see the <a href="https://libbi.org/docs/LibBi-Manual.pdf" class="external-link">LibBi manual</a> for
 details) can be specified using the <code>init</code>,
 <code>input</code>, <code>obs</code> options, respectively. They can
 each be specified either as the name of a NetCDF file containing the
@@ -530,7 +530,7 @@ dimensions/columns in the passed options will be interpreted as
 additional dimensions in the data, and stored in the <code>dims</code>
 field of the <code>libbi</code> object.</p>
 <p>Any other options (apart from <code>log_file_name</code>, see the <a href="#debugging">Debugging</a> section) will be passed on to the
-command <code>libbi</code> – for a complete list, see the <a href="http://libbi.org/docs/LibBi-Manual.pdf" class="external-link">LibBi manual</a>. Hyphens
+command <code>libbi</code> – for a complete list, see the <a href="https://libbi.org/docs/LibBi-Manual.pdf" class="external-link">LibBi manual</a>. Hyphens
 can be replaced by underscores so as not to confuse R (see
 <code>end_time</code>). Any arguments starting with
 <code>enable</code>/<code>disable</code> can be specified as boolean
@@ -581,7 +581,7 @@ command:</p>
 <span><span class="co">#&gt;  $ p_R0          :'data.frame':  1000 obs. of  2 variables:</span></span>
 <span><span class="co">#&gt;   ..$ np   : num [1:1000] 0 1 2 3 4 5 6 7 8 9 ...</span></span>
 <span><span class="co">#&gt;   ..$ value: num [1:1000] 2.38 2.42 2.32 2.32 2.32 ...</span></span>
-<span><span class="co">#&gt;  $ clock         : num 6314572</span></span>
+<span><span class="co">#&gt;  $ clock         : num 6375743</span></span>
 <span><span class="co">#&gt;  $ loglikelihood :'data.frame':  1000 obs. of  2 variables:</span></span>
 <span><span class="co">#&gt;   ..$ np   : num [1:1000] 0 1 2 3 4 5 6 7 8 9 ...</span></span>
 <span><span class="co">#&gt;   ..$ value: num [1:1000] -39.7 -36 -33.3 -33.3 -33.3 ...</span></span>
@@ -641,7 +641,7 @@ also worth considering.</p>
 <p>We can use the <code>predict</code> function to re-simulate the
 fitted model using the estimated parameters, that is to generate samples
 from <span class="math inline">\(p(x_t|\theta)\)</span> where the <span class="math inline">\(\theta\)</span> are distributed according to the
-marginal posterior distribution <span class="math inline">\(p(\theta|y^*_t)\)</span> (here: <span class="math inline">\(\theta\)</span> are fixed parameters, <span class="math inline">\(x_t\)</span> are state trajectories and <span class="math inline">\(y^*_t\)</span> observed data points, as in the <a href="http://libbi.org/docs/LibBi-Manual.pdf" class="external-link">LibBi manual</a>). This
+marginal posterior distribution <span class="math inline">\(p(\theta|y^*_t)\)</span> (here: <span class="math inline">\(\theta\)</span> are fixed parameters, <span class="math inline">\(x_t\)</span> are state trajectories and <span class="math inline">\(y^*_t\)</span> observed data points, as in the <a href="https://libbi.org/docs/LibBi-Manual.pdf" class="external-link">LibBi manual</a>). This
 can be useful, for example, for comparing typical model trajectories to
 the data, or for running the model beyond the last data point.</p>
 <div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
@@ -653,7 +653,7 @@ the data, or for running the model beyond the last data point.</p>
 treat observations as a state variable, that is to randomly generate
 observations, i.e. samples from <span class="math inline">\(p(y_t|\theta)\)</span> where, again, <span class="math inline">\(theta\)</span> are distributed according to the
 posterior distribution <span class="math inline">\(p(\theta|y^*_t)\)</span> (see the
-<code>with-transform-obs-to-state</code> option in the <a href="http://libbi.org/docs/LibBi-Manual.pdf" class="external-link">LibBi manual</a>).</p>
+<code>with-transform-obs-to-state</code> option in the <a href="https://libbi.org/docs/LibBi-Manual.pdf" class="external-link">LibBi manual</a>).</p>
 </div>
 <div class="section level2">
 <h2 id="sample-observations">Sample observations<a class="anchor" aria-label="anchor" href="#sample-observations"></a>
@@ -739,7 +739,7 @@ files) is stored in the object.</p>
 <span><span class="co">#&gt; Wrapper around LibBi</span></span>
 <span><span class="co">#&gt; ======================</span></span>
 <span><span class="co">#&gt; Model:  SIR </span></span>
-<span><span class="co">#&gt; Run time:  6.314572  seconds</span></span>
+<span><span class="co">#&gt; Run time:  6.375743  seconds</span></span>
 <span><span class="co">#&gt; Number of samples:  1000 </span></span>
 <span><span class="co">#&gt; State trajectories recorded:  S I R Z </span></span>
 <span><span class="co">#&gt; Noise trajectories recorded:  n_transmission n_recovery </span></span>
@@ -785,7 +785,7 @@ file).</p>
 contains higher-level methods to interact with <strong>LibBi</strong>,
 including methods for plotting the results of libbi runs and for
 adapting the proposal distribution and number of particles. For more
-information, see the <a href="http://sbfnk.github.io/rbi/rbi_helpers.html" class="external-link">rbi.helpers
+information, see the <a href="http://sbfnk.github.io/rbi.helpers/articles/introduction.html" class="external-link">rbi.helpers
 vignette</a>.</p>
 </div>
 <div class="section level2">
