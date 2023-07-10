@@ -1526,7 +1526,7 @@ update <- function(x, ...) UseMethod("update")
 #' @title Update a libbi object
 #' @description
 #' This updates all the time stamps in a libbi object; it is useful after
-# (input, output, etc.) files have been changed outside the object itself.
+#' (input, output, etc.) files have been changed outside the object itself.
 #'
 #' @param x a \code{\link{libbi}} object
 #' @param ... ignored
