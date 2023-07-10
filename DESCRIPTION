@@ -1,37 +1,37 @@
 Package: rbi
 Version: 0.10.4
 Title: Interface to 'LibBi'
-Authors@R: c(
-  person("Pierre E.", "Jacob",
-         email = "pierre.jacob.work@gmail.com", role = "aut"),
-  person("Anthony", "Lee",
-         email = "awllee@gmail.com", role = "ctb"),
-  person("Lawrence M.", "Murray",
-         email = "lawrence.murray@csiro.au", role = "ctb"),
-  person("Sebastian", "Funk",
-         email = "sebastian.funk@lshtm.ac.uk", role = c("aut", "cre")),
-  person("Sam", "Abbott",
-         email = "contact@samabbott.co.uk", role = c("ctb"))
-)
+Authors@R:
+    c(
+      person("Pierre E.", "Jacob",
+             email = "pierre.jacob.work@gmail.com", role = "aut"),
+      person("Anthony", "Lee",
+             email = "awllee@gmail.com", role = "ctb"),
+      person("Lawrence M.", "Murray",
+             email = "lawrence.murray@csiro.au", role = "ctb"),
+      person("Sebastian", "Funk",
+             email = "sebastian.funk@lshtm.ac.uk", role = c("aut", "cre")),
+      person("Sam", "Abbott",
+             email = "contact@samabbott.co.uk", role = c("ctb"))
+    )
 Imports:
-  data.table,
-  ncdf4,
-  processx,
-  reshape2
+    data.table,
+    ncdf4,
+    processx,
+    reshape2
 Suggests:
-  coda,
-  covr (>= 3.2.0),
-  rmarkdown,
-  stringi,
-  testthat,
-  ggplot2
-Description:
-  Provides a complete interface to 'LibBi', a library for Bayesian inference
-  (see <http://libbi.org> and Murray, 2015 <doi:10.18637/jss.v067.i10> for more
-  information). This includes functions for manipulating 'LibBi' models, for
-  reading and writing 'LibBi' input/output files, for converting 'LibBi' output
-  to provide traces for use with the coda package, and for running 'LibBi' to
-  conduct inference.
+    coda,
+    covr (>= 3.2.0),
+    rmarkdown,
+    stringi,
+    testthat,
+    ggplot2
+Description: Provides a complete interface to 'LibBi', a library for Bayesian
+    inference (see <http://libbi.org> and Murray, 2015
+    <doi:10.18637/jss.v067.i10> for more information). This includes functions
+    for manipulating 'LibBi' models, for reading and writing 'LibBi'
+    input/output files, for converting 'LibBi' output to provide traces for use
+    with the coda package, and for running 'LibBi' to conduct inference.
 License: GPL-3
 URL: https://github.com/sbfnk/RBi
 BugReports: https://github.com/sbfnk/RBi/issues
