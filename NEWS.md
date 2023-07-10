@@ -1,6 +1,7 @@
 # rbi 0.11.0
 
 * add github actions for package checking and testing
+* add a vignette with example implementations of the SIR epidemic model
 
 # rbi 0.10.4
 
