@@ -4,6 +4,12 @@
     <loc>https://sbfnk.github.io/rbi/404.html</loc>
   </url>
   <url>
+    <loc>https://sbfnk.github.io/rbi/articles/index.html</loc>
+  </url>
+  <url>
+    <loc>https://sbfnk.github.io/rbi/articles/introduction.html</loc>
+  </url>
+  <url>
     <loc>https://sbfnk.github.io/rbi/authors.html</loc>
   </url>
   <url>
@@ -88,6 +94,9 @@
     <loc>https://sbfnk.github.io/rbi/reference/flatten.html</loc>
   </url>
   <url>
+    <loc>https://sbfnk.github.io/rbi/reference/generate_dataset.html</loc>
+  </url>
+  <url>
     <loc>https://sbfnk.github.io/rbi/reference/get_block.html</loc>
   </url>
   <url>
@@ -146,9 +155,6 @@
   </url>
   <url>
     <loc>https://sbfnk.github.io/rbi/reference/propose_prior.html</loc>
-  </url>
-  <url>
-    <loc>https://sbfnk.github.io/rbi/reference/rbi-package.html</loc>
   </url>
   <url>
     <loc>https://sbfnk.github.io/rbi/reference/read_libbi.html</loc>

@@ -25,6 +25,18 @@
       <ul class="nav navbar-nav"><li>
   <a href="../reference/index.html">Reference</a>
 </li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu"><li class="divider">
+    <li class="dropdown-header">Package vignette</li>
+    <li>
+      <a href="../articles/introduction.html">Introduction to rbi</a>
+    </li>
+  </ul></li>
 <li>
   <a href="../news/index.html">Changelog</a>
 </li>
@@ -47,8 +59,197 @@
     </div>
 
     <table class="ref-index"><colgroup><col class="alias"><col class="title"></colgroup><tbody><tr><th colspan="2">
-          <h2 id="all-functions">All functions <a href="#all-functions" class="anchor" aria-hidden="true"></a></h2>
+          <h2 id="run-libbi-and-analyse-results">Run LibBi and analyse results <a href="#run-libbi-and-analyse-results" class="anchor" aria-hidden="true"></a></h2>
           <p class="section-desc"></p>
+        </th>
+      </tr></tbody><tbody><tr><th colspan="2">
+          <h3 id="libbi-operations">LibBi operations <a href="#libbi-operations" class="anchor" aria-hidden="true"></a></h3>
+          <p class="section-desc"></p><p>Functions for running LibBi.</p>
+        </th>
+      </tr></tbody><tbody><tr><td>
+          <p><code><a href="filter.html">filter(<i>&lt;libbi&gt;</i>)</a></code> <code><a href="filter.html">filter(<i>&lt;bi_model&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Using the LibBi wrapper to filter</p></td>
+      </tr><tr><td>
+          <p><code><a href="generate_dataset.html">generate_dataset()</a></code> </p>
+        </td>
+        <td><p>Generate Dataset</p></td>
+      </tr><tr><td>
+          <p><code><a href="optimise.html">optimise(<i>&lt;libbi&gt;</i>)</a></code> <code><a href="optimise.html">optimise(<i>&lt;bi_model&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Using the LibBi wrapper to optimise</p></td>
+      </tr><tr><td>
+          <p><code><a href="libbi.html">libbi()</a></code> </p>
+        </td>
+        <td><p>LibBi Wrapper</p></td>
+      </tr><tr><td>
+          <p><code><a href="predict.html">predict(<i>&lt;libbi&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Using the LibBi wrapper to predict</p></td>
+      </tr><tr><td>
+          <p><code><a href="run.html">run(<i>&lt;libbi&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Using the LibBi wrapper to launch LibBi</p></td>
+      </tr><tr><td>
+          <p><code><a href="sample.html">sample(<i>&lt;libbi&gt;</i>)</a></code> <code><a href="sample.html">sample(<i>&lt;bi_model&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Using the LibBi wrapper to sample</p></td>
+      </tr><tr><td>
+          <p><code><a href="sample_obs.html">sample_obs()</a></code> </p>
+        </td>
+        <td><p>Sample observations from a LibBi model that has been run</p></td>
+      </tr><tr><td>
+          <p><code><a href="simulate.html">simulate(<i>&lt;libbi&gt;</i>)</a></code> <code><a href="simulate.html">simulate(<i>&lt;bi_model&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Using the LibBi wrapper to simulate</p></td>
+      </tr></tbody><tbody><tr><th colspan="2">
+          <h3 id="read-and-write-libbi-inputs-outputs">Read and write LibBi inputs/outputs <a href="#read-and-write-libbi-inputs-outputs" class="anchor" aria-hidden="true"></a></h3>
+          <p class="section-desc"></p><p>Functions for interacting with the NetCDF files used by LibBi.</p>
+        </th>
+      </tr></tbody><tbody><tr><td>
+          <p><code><a href="bi_contents.html">bi_contents()</a></code> </p>
+        </td>
+        <td><p>Bi contents</p></td>
+      </tr><tr><td>
+          <p><code><a href="bi_file_summary.html">bi_file_summary()</a></code> </p>
+        </td>
+        <td><p>NetCDF File Summary</p></td>
+      </tr><tr><td>
+          <p><code><a href="bi_read.html">bi_read()</a></code> </p>
+        </td>
+        <td><p>Bi Read</p></td>
+      </tr><tr><td>
+          <p><code><a href="bi_write.html">bi_write()</a></code> </p>
+        </td>
+        <td><p>Create (e.g., init or observation) files for LibBi</p></td>
+      </tr></tbody><tbody><tr><th colspan="2">
+          <h3 id="analyse-libbi-outputs">Analyse LibBi outputs <a href="#analyse-libbi-outputs" class="anchor" aria-hidden="true"></a></h3>
+          <p class="section-desc"></p><p>Functions for analysing LibBi results.</p>
+        </th>
+      </tr></tbody><tbody><tr><td>
+          <p><code><a href="extract_sample.html">extract_sample()</a></code> </p>
+        </td>
+        <td><p>Extract a sample from a <code>LibBi</code> run.</p></td>
+      </tr><tr><td>
+          <p><code><a href="get_traces.html">get_traces()</a></code> </p>
+        </td>
+        <td><p>Get the parameter traces</p></td>
+      </tr><tr><td>
+          <p><code><a href="summary.html">summary(<i>&lt;libbi&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Print summary information about a <code>libbi</code> object</p></td>
+      </tr><tr><td>
+          <p><code><a href="logLik.html">logLik(<i>&lt;libbi&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Using the LibBi wrapper to logLik</p></td>
+      </tr></tbody><tbody><tr><th colspan="2">
+          <h3 id="manipulate-libbi-inputs-outputs">Manipulate LibBi inputs/outputs <a href="#manipulate-libbi-inputs-outputs" class="anchor" aria-hidden="true"></a></h3>
+          <p class="section-desc"></p><p>Functions for updating and saving LibBi objects.</p>
+        </th>
+      </tr></tbody><tbody><tr><td>
+          <p><code><a href="attach_data.html">attach_data(<i>&lt;libbi&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Attach a new file or data set to a <code>libbi</code> object</p></td>
+      </tr><tr><td>
+          <p><code><a href="join.html">join(<i>&lt;libbi&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Join multiple <code>libbi</code> objects</p></td>
+      </tr><tr><td>
+          <p><code><a href="read_libbi.html">read_libbi()</a></code> </p>
+        </td>
+        <td><p>Read results of a <code>LibBi</code> run from an RDS file or from a folder.
+  This completely reconstructs the saved <code>LibBi</code> object</p></td>
+      </tr><tr><td>
+          <p><code><a href="save_libbi.html">save_libbi(<i>&lt;libbi&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Write results of a <code>LibBi</code> run to an RDS file</p></td>
+      </tr><tr><td>
+          <p><code><a href="update.html">update(<i>&lt;libbi&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Update a libbi object</p></td>
+      </tr></tbody><tbody><tr><th colspan="2">
+          <h2 id="construct-show-and-manipulate-libbi-models">Construct, show and manipulate LibBi models <a href="#construct-show-and-manipulate-libbi-models" class="anchor" aria-hidden="true"></a></h2>
+          <p class="section-desc"></p>
+        </th>
+      </tr></tbody><tbody><tr><th colspan="2">
+          <h3 id="create-a-model">Create a model <a href="#create-a-model" class="anchor" aria-hidden="true"></a></h3>
+          <p class="section-desc"></p><p>Function for creating a LibBi model.</p>
+        </th>
+      </tr></tbody><tbody><tr><td>
+          <p><code><a href="bi_model.html">bi_model()</a></code> </p>
+        </td>
+        <td><p>Bi Model</p></td>
+      </tr></tbody><tbody><tr><th colspan="2">
+          <h3 id="show-models">Show models <a href="#show-models" class="anchor" aria-hidden="true"></a></h3>
+          <p class="section-desc"></p><p>Functions for getting information from LibBi models.</p>
+        </th>
+      </tr></tbody><tbody><tr><td>
+          <p><code><a href="get_block.html">get_block(<i>&lt;bi_model&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Get the contents of a block in a LibBi model</p></td>
+      </tr><tr><td>
+          <p><code><a href="get_const.html">get_const()</a></code> </p>
+        </td>
+        <td><p>Get constants in a LibBi model</p></td>
+      </tr><tr><td>
+          <p><code><a href="get_dims.html">get_dims()</a></code> </p>
+        </td>
+        <td><p>Get dimensions in a LibBi model</p></td>
+      </tr><tr><td>
+          <p><code><a href="get_name.html">get_name(<i>&lt;bi_model&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Get the name of a bi model</p></td>
+      </tr><tr><td>
+          <p><code><a href="rewrite.html">rewrite(<i>&lt;libbi&gt;</i>)</a></code> <code><a href="rewrite.html">rewrite(<i>&lt;bi_model&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Using the LibBi wrapper to rewrite</p></td>
+      </tr><tr><td>
+          <p><code><a href="var_names.html">var_names()</a></code> </p>
+        </td>
+        <td><p>Get variable names in a LibBi model</p></td>
+      </tr></tbody><tbody><tr><th colspan="2">
+          <h3 id="manipulate-models">Manipulate models <a href="#manipulate-models" class="anchor" aria-hidden="true"></a></h3>
+          <p class="section-desc"></p><p>Functions for manipulating LibBi models.</p>
+        </th>
+      </tr></tbody><tbody><tr><td>
+          <p><code><a href="add_block.html">add_block(<i>&lt;bi_model&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Add a block to a LibBi model</p></td>
+      </tr><tr><td>
+          <p><code><a href="enable_outputs.html">enable_outputs()</a></code> </p>
+        </td>
+        <td><p>Enable outputting variables in a <code>bi_model</code></p></td>
+      </tr><tr><td>
+          <p><code><a href="fix.html">fix(<i>&lt;bi_model&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Fix noise term, state or parameter of a libbi model</p></td>
+      </tr><tr><td>
+          <p><code><a href="insert_lines.html">insert_lines(<i>&lt;bi_model&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Insert lines in a LibBi model</p></td>
+      </tr><tr><td>
+          <p><code><a href="remove_lines.html">remove_lines(<i>&lt;bi_model&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Remove line(s) and/or block(s) in a libbi model</p></td>
+      </tr><tr><td>
+          <p><code><a href="remove_vars.html">remove_vars()</a></code> </p>
+        </td>
+        <td><p>Remove variables</p></td>
+      </tr><tr><td>
+          <p><code><a href="replace_all.html">replace_all(<i>&lt;bi_model&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Replace all instances of a string with another in a model</p></td>
+      </tr><tr><td>
+          <p><code><a href="set_name.html">set_name(<i>&lt;bi_model&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Set the name of a bi model</p></td>
+      </tr><tr><td>
+          <p><code><a href="write_model.html">write_model(<i>&lt;bi_model&gt;</i>)</a></code> <code><a href="write_model.html">write_model(<i>&lt;libbi&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Writes a bi model to a file.</p></td>
+      </tr></tbody><tbody><tr><th colspan="2">
+          <h3 id="model-operators">Model operators <a href="#model-operators" class="anchor" aria-hidden="true"></a></h3>
+          <p class="section-desc"></p><p>Operators for LibBi models</p>
         </th>
       </tr></tbody><tbody><tr><td>
           <p><code><a href="Equals.bi_model.html">`==`(<i>&lt;bi_model&gt;</i>)</a></code> </p>
@@ -66,189 +267,32 @@
           <p><code><a href="Unequals.bi_model.html">`!=`(<i>&lt;bi_model&gt;</i>)</a></code> </p>
         </td>
         <td><p>Check if two models are unequal</p></td>
-      </tr><tr><td>
-          <p><code><a href="add_block.html">add_block(<i>&lt;bi_model&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Add a block to a LibBi model</p></td>
-      </tr><tr><td>
-          <p><code><a href="attach_data.html">attach_data(<i>&lt;libbi&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Attach a new file or data set to a <code>libbi</code> object</p></td>
-      </tr><tr><td>
-          <p><code><a href="bi_contents.html">bi_contents()</a></code> </p>
-        </td>
-        <td><p>Bi contents</p></td>
-      </tr><tr><td>
-          <p><code><a href="bi_dim_len.html">bi_dim_len()</a></code> </p>
-        </td>
-        <td><p>NetCDF dimension length</p></td>
-      </tr><tr><td>
-          <p><code><a href="bi_file_summary.html">bi_file_summary()</a></code> </p>
-        </td>
-        <td><p>NetCDF File Summary</p></td>
-      </tr><tr><td>
-          <p><code><a href="bi_generate_dataset.html">bi_generate_dataset()</a></code> </p>
-        </td>
-        <td><p>Bi Generate Dataset</p></td>
-      </tr><tr><td>
-          <p><code><a href="bi_model.html">bi_model()</a></code> </p>
-        </td>
-        <td><p>Bi Model</p></td>
-      </tr><tr><td>
-          <p><code><a href="bi_open.html">bi_open()</a></code> </p>
-        </td>
-        <td><p>Bi open</p></td>
-      </tr><tr><td>
-          <p><code><a href="bi_read.html">bi_read()</a></code> </p>
-        </td>
-        <td><p>Bi Read</p></td>
-      </tr><tr><td>
-          <p><code><a href="bi_write.html">bi_write()</a></code> </p>
-        </td>
-        <td><p>Create (e.g., init or observation) files for LibBi</p></td>
-      </tr><tr><td>
-          <p><code><a href="enable_outputs.html">enable_outputs()</a></code> </p>
-        </td>
-        <td><p>Enable outputting variables in a <code>bi_model</code></p></td>
-      </tr><tr><td>
-          <p><code><a href="extract_sample.html">extract_sample()</a></code> </p>
-        </td>
-        <td><p>Extract a sample from a <code>LibBi</code> run.</p></td>
-      </tr><tr><td>
-          <p><code><a href="filter.html">filter(<i>&lt;libbi&gt;</i>)</a></code> <code><a href="filter.html">filter(<i>&lt;bi_model&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Using the LibBi wrapper to filter</p></td>
-      </tr><tr><td>
-          <p><code><a href="fix.html">fix(<i>&lt;bi_model&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Fix noise term, state or parameter of a libbi model</p></td>
-      </tr><tr><td>
+      </tr></tbody><tbody><tr><th colspan="2">
+          <h2 id="other-functions">Other functions <a href="#other-functions" class="anchor" aria-hidden="true"></a></h2>
+          <p class="section-desc"></p>
+        </th>
+      </tr></tbody><tbody><tr><th colspan="2">
+          <h3 id="utility-functions">Utility functions <a href="#utility-functions" class="anchor" aria-hidden="true"></a></h3>
+          <p class="section-desc"></p><p>Useful additional functions.</p>
+        </th>
+      </tr></tbody><tbody><tr><td>
           <p><code><a href="flatten.html">flatten()</a></code> </p>
         </td>
         <td><p>Flatten list of data frames
 This function takes a list of data frames (such as, for example, returned by
   <code>bi_read</code>) and converts it to a flat data frame</p></td>
       </tr><tr><td>
-          <p><code><a href="get_block.html">get_block(<i>&lt;bi_model&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Get the contents of a block in a LibBi model</p></td>
-      </tr><tr><td>
-          <p><code><a href="get_const.html">get_const()</a></code> </p>
-        </td>
-        <td><p>Get constants in a LibBi model</p></td>
-      </tr><tr><td>
-          <p><code><a href="get_dims.html">get_dims()</a></code> </p>
-        </td>
-        <td><p>Get dimensions in a LibBi model</p></td>
-      </tr><tr><td>
-          <p><code><a href="get_name.html">get_name(<i>&lt;bi_model&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Get the name of a bi model</p></td>
-      </tr><tr><td>
-          <p><code><a href="get_traces.html">get_traces()</a></code> </p>
-        </td>
-        <td><p>Get the parameter traces</p></td>
-      </tr><tr><td>
-          <p><code><a href="insert_lines.html">insert_lines(<i>&lt;bi_model&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Insert lines in a LibBi model</p></td>
-      </tr><tr><td>
-          <p><code><a href="join.html">join(<i>&lt;libbi&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Join multiple <code>libbi</code> objects</p></td>
-      </tr><tr><td>
-          <p><code><a href="libbi.html">libbi()</a></code> </p>
-        </td>
-        <td><p>LibBi Wrapper</p></td>
-      </tr><tr><td>
-          <p><code><a href="logLik.html">logLik(<i>&lt;libbi&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Using the LibBi wrapper to logLik</p></td>
-      </tr><tr><td>
-          <p><code><a href="optimise.html">optimise(<i>&lt;libbi&gt;</i>)</a></code> <code><a href="optimise.html">optimise(<i>&lt;bi_model&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Using the LibBi wrapper to optimise</p></td>
-      </tr><tr><td>
-          <p><code><a href="option_list.html">option_list()</a></code> </p>
-        </td>
-        <td><p>Convert string to option list</p></td>
-      </tr><tr><td>
-          <p><code><a href="option_string.html">option_string()</a></code> </p>
-        </td>
-        <td><p>Convert Options</p></td>
-      </tr><tr><td>
-          <p><code><a href="predict.html">predict(<i>&lt;libbi&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Using the LibBi wrapper to predict</p></td>
-      </tr><tr><td>
           <p><code><a href="print_log.html">print_log()</a></code> </p>
         </td>
         <td><p>Print the log file a <code>libbi</code> object</p></td>
-      </tr><tr><td>
-          <p><code><a href="rbi-package.html">rbi-package</a></code> <code><a href="rbi-package.html">rbi</a></code> <code><a href="rbi-package.html">RBi</a></code> </p>
+      </tr></tbody><tbody><tr><th colspan="2">
+          <h3 id="deprecated-functions">Deprecated functions <a href="#deprecated-functions" class="anchor" aria-hidden="true"></a></h3>
+          <p class="section-desc"></p><p>To be removed in the next version of rbi.</p>
+        </th>
+      </tr></tbody><tbody><tr><td>
+          <p><code><a href="bi_generate_dataset.html">bi_generate_dataset()</a></code> </p>
         </td>
-        <td><p>RBi - R interface for <code>libbi</code></p></td>
-      </tr><tr><td>
-          <p><code><a href="read_libbi.html">read_libbi()</a></code> </p>
-        </td>
-        <td><p>Read results of a <code>LibBi</code> run from an RDS file or from a folder.
-  This completely reconstructs the saved <code>LibBi</code> object</p></td>
-      </tr><tr><td>
-          <p><code><a href="remove_lines.html">remove_lines(<i>&lt;bi_model&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Remove line(s) and/or block(s) in a libbi model</p></td>
-      </tr><tr><td>
-          <p><code><a href="remove_vars.html">remove_vars()</a></code> </p>
-        </td>
-        <td><p>Remove variables</p></td>
-      </tr><tr><td>
-          <p><code><a href="replace_all.html">replace_all(<i>&lt;bi_model&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Replace all instances of a string with another in a model</p></td>
-      </tr><tr><td>
-          <p><code><a href="rewrite.html">rewrite(<i>&lt;libbi&gt;</i>)</a></code> <code><a href="rewrite.html">rewrite(<i>&lt;bi_model&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Using the LibBi wrapper to rewrite</p></td>
-      </tr><tr><td>
-          <p><code><a href="run.html">run(<i>&lt;libbi&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Using the LibBi wrapper to launch LibBi</p></td>
-      </tr><tr><td>
-          <p><code><a href="sample.html">sample(<i>&lt;libbi&gt;</i>)</a></code> <code><a href="sample.html">sample(<i>&lt;bi_model&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Using the LibBi wrapper to sample</p></td>
-      </tr><tr><td>
-          <p><code><a href="sample_obs.html">sample_obs()</a></code> </p>
-        </td>
-        <td><p>Sample observations from a LibBi model that has been run</p></td>
-      </tr><tr><td>
-          <p><code><a href="save_libbi.html">save_libbi(<i>&lt;libbi&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Write results of a <code>LibBi</code> run to an RDS file</p></td>
-      </tr><tr><td>
-          <p><code><a href="set_name.html">set_name(<i>&lt;bi_model&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Set the name of a bi model</p></td>
-      </tr><tr><td>
-          <p><code><a href="simulate.html">simulate(<i>&lt;libbi&gt;</i>)</a></code> <code><a href="simulate.html">simulate(<i>&lt;bi_model&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Using the LibBi wrapper to simulate</p></td>
-      </tr><tr><td>
-          <p><code><a href="summary.html">summary(<i>&lt;libbi&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Print summary information about a <code>libbi</code> object</p></td>
-      </tr><tr><td>
-          <p><code><a href="update.html">update(<i>&lt;libbi&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Update a libbi object</p></td>
-      </tr><tr><td>
-          <p><code><a href="var_names.html">var_names()</a></code> </p>
-        </td>
-        <td><p>Get variable names in a LibBi model</p></td>
-      </tr><tr><td>
-          <p><code><a href="write_model.html">write_model(<i>&lt;bi_model&gt;</i>)</a></code> <code><a href="write_model.html">write_model(<i>&lt;libbi&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Writes a bi model to a file.</p></td>
+        <td><p>Bi Generate Dataset</p></td>
       </tr></tbody></table></div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
