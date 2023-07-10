@@ -81,7 +81,7 @@ reference:
       - Extract_assign
       - Unequals
 
-articles
+articles:
   - title: Introduction
     navbar: Package vignette
     contents:
