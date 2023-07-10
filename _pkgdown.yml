@@ -76,10 +76,10 @@ reference:
   - subtitle: "Model operators"
     desc: "Operators for LibBi models"
     contents:
-      - Equals
-      - Extract
-      - Extract_assign
-      - Unequals
+      - `==`.bi_model
+      - `[`.`bi_model
+      - `[<-`.`bi_model
+      - `!=`.bi_model
 
 articles:
   - title: Introduction
