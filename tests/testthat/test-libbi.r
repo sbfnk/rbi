@@ -157,8 +157,7 @@ test_that("deprecated options are reported", {
 })
 
 test_that("deprecated functions are reported", {
-  skip_on_cran()
-  expect_warning(generate_dataset(bi_run, end_time = 50), "deprecated")
+  expect_warning(bi_generate_dataset(bi, end_time = 50), "deprecated")
 })
 
 test_that("warnings are given", {
