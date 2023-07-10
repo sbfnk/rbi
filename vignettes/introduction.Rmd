@@ -333,7 +333,7 @@ obs_bi <- sample_obs(bi)
 
 Compare this to the data:
 
-```{r, eval = NOT_CRAN, results = "asis"}
+```{r, eval = NOT_CRAN)
 summary(obs_bi, type = "obs")
 dataset$Incidence
 ```
