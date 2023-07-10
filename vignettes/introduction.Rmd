@@ -295,7 +295,7 @@ traces <- mcmc(get_traces(bi))
 
 We can, for example, visualise parameter traces and densities with
 
-```{r, eval = NOT_CRAN fig.width = 8, fig.height = 8}
+```{r, eval = NOT_CRAN, fig.width = 8, fig.height = 8}
 plot(traces)
 ```
 
