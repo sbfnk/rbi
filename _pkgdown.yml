@@ -37,6 +37,7 @@ reference:
 
   - subtitle: "Manipulate LibBi inputs/outputs"
     desc: "Functions for updating and saving LibBi objects."
+    contents:
       - attach_data
       - join
       - read_libbi
