@@ -81,7 +81,7 @@ run <- function(x, ...) UseMethod("run")
 #' @title Using the LibBi wrapper to launch LibBi
 #' @description
 #' The method \code{run} launches \code{LibBi} with a particular set of command
-#'   line #' arguments. Normally, this function would not be run by the user,
+#'   line arguments. Normally, this function would not be run by the user,
 #'   but instead one of the client functions \code{\link{sample}},
 #'   \code{\link{filter}}, or \code{\link{optimise}}, or \code{\link{rewrite}},
 #'   which pass any options on to \code{run}. Note that any options specified
@@ -167,7 +167,7 @@ run <- function(x, ...) UseMethod("run")
 #' @importFrom ncdf4 nc_open nc_close ncvar_rename
 #' @importFrom stats runif
 #' @importFrom processx run
-#' @keywords internal
+#' @export
 run.libbi <- function(x, client, proposal = c("model", "prior"), model, fix,
                       options, config, log_file_name = character(0), init,
                       input, obs, time_dim = character(0), coord_dims = list(),
