@@ -14,6 +14,7 @@ knitr::opts_chunk$set(
   cache.path = "cache/introduction/", fig.cap = "", fig.align = "center",
   message = FALSE, warning = FALSE
 )
+library("rbi")
 ```
 
 # Deterministic SIR model, observations of prevalence
