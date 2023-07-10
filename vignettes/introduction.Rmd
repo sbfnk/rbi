@@ -1,36 +1,17 @@
-<%@meta language="R-vignette" content="--------------------------------
-  DIRECTIVES FOR R:
+---
+title: Introduction to rbi
+author: Sebastian Funk
+---
 
-  %\VignetteIndexEntry{Introduction to rbi}
-  %\VignetteAuthor{Sebastian Funk}
-  %\VignetteKeyword{rbi}
-  %\VignetteKeyword{package}
-  %\VignetteKeyword{vignette}
-  %\VignetteTangle{FALSE}
-  %\VignetteEngine{R.rsp::rsp}
---------------------------------------------------------------------"%>
-
-<style>
-pre {
-  overflow-x: auto;
-}
-pre code {
-  word-wrap: normal;
-  white-space: pre;
-}
-</style>
-
-# <%@meta name="title"%>
-
-<%@meta name="author"%> on <%=format(as.Date(Sys.Date()), format="%B %d, %Y")%>
+```{r, echo = FALSE}
+NOT_CRAN <- identical(tolower(Sys.getenv("NOT_CRAN")), "true")
+```
 
 [rbi](https://github.com/sbfnk/rbi) is an `R` interface to [LibBi](http://libbi.org), a library for Bayesian inference with state-space models using high-performance computer hardware.
 
-### Latest Version: _0.10.4_
+The package has been tested on macOS and Linux. It requires a working installation of **LibBi**. On macOS, this is easiest done using the `brew` command: Install [Homebrew](https://brew.sh), then issue the following command (using a command shell, i.e. Terminal or similar):
 
-The package has been tested on macOS/OSX and Linux. It requires a working installation of **LibBi**. On macOS, this is easiest done using the the `brew` command: Install [Homebrew](https://brew.sh), then issue the following command (using a command shell, i.e. Terminal or similar):
-
-```{sh eval=FALSE}
+```{sh eval = FALSE}
 brew install libbi
 ```
 
@@ -46,13 +27,13 @@ If you just want to process the output from **LibBi**, then you do not need to h
 
 The easiest way to install the latest stable version of **rbi** is via CRAN.
 
-```{r eval=FALSE}
+```{r, eval = FALSE}
 install.packages("rbi")
 ```
 
 Alternatively, the current development version can be installed using the `devtools` package
 
-```{r eval=FALSE}
+```{r, eval = FALSE}
 # install.packages("devtools")
 library('devtools')
 install_github("sbfnk/rbi")
@@ -62,12 +43,12 @@ install_github("sbfnk/rbi")
 
 Use
 
-```{R eval=FALSE}
-library('rbi')
+```{r, eval = FALSE}
+library("rbi")
 ```
 
-```{R echo=FALSE}
-suppressPackageStartupMessages(library('rbi'))
+```{r, echo = FALSE}
+suppressPackageStartupMessages(library("rbi"))
 ```
 to load the package.
 
@@ -83,7 +64,7 @@ The package also provides two methods for interacting with the [NetCDF](https://
 
 As an example, we consider a simplified version of the SIR model discussed in [Del Moral et al. (2014)](https://arxiv.org/abs/1405.4081). This is included with the **rbi** package and can be loaded with
 
-```{R}
+```{r}
 model_file <- system.file(package="rbi", "SIR.bi")
 SIRmodel <- bi_model(model_file) # load model
 ```
@@ -92,25 +73,25 @@ Other ways of implementing a (deterministic or stochastic) SIR model can be foun
 
 The `SIRmodel` object now contains the model, which can be displayed with
 
-```{R}
+```{r}
 SIRmodel
 ```
 
 A part of the model can be shown with, for example,
 
-```{R}
+```{r}
 SIRmodel[35:38]
 ```
 
 or, for example,
 
-```{R}
+```{r}
 get_block(SIRmodel, "parameter")
 ```
 
 To get a list of certain variables, you can use the `var_names` function. For example, to get a list of states, you can use
 
-```{R}
+```{r}
 var_names(SIRmodel, type="state")
 ```
 
@@ -118,7 +99,7 @@ There are also various methods for manipulating a model, such as `remove_lines`,
 
 The `fix` method fixes a variable to one value. This can be useful, for example, to run the deterministic equivalent of a stochastic model for testing purposes:
 
-```{R}
+```{r}
 det_SIR_model <- fix(SIRmodel, n_transmission=0, n_recovery=0)
 ```
 
@@ -128,29 +109,29 @@ To get documentation for any of these methods, use the links in the documentatio
 
 First, let's create a data set from the SIR model.
 
-```{R}
+```{r, eval = NOT_CRAN}
 set.seed(1001912)
-SIRdata <- bi_generate_dataset(SIRmodel, end_time=16*7, noutputs=16)
+SIRdata <- generate_dataset(SIRmodel, end_time=16*7, noutputs=16)
 ```
 
 This simulates the model a single time from time 0 until time 16\*7 (say, 16 weeks with a daily time step), producing 16 outputs (one a week). Note that we have specified a random seed to make this document reproducible. If you omit the `set.seed` command or set it to a different number, the results will be different even when run with the same set of commands. Also note that *LibBi* compiles the model code only the first time it is run. If you run the command above a second time, it should run much faster.
 
-The `bi_generate_dataset` function returns a `libbi` object:
+The `generate_dataset` function returns a `libbi` object:
 
-```{R}
+```{r, eval = NOT_CRAN}
 SIRdata
 ```
 
 The generated dataset can be viewed and/or stored in a variable using `bi_read`:
 
-```{R}
+```{r, eval = NOT_CRAN}
 dataset <- bi_read(SIRdata)
 ```
 
 The `bi_read` function takes the name of a NetCDF file or a `libbi` object (in which case it locates the output file) and stores the contents in a list of data frames or vectors, depending on the dimensionality of the contents. Note that, if no `working_folder` is specified, the model and output files will be stored in a temporary folder.
 
 
-```{R}
+```{r, eval = NOT_CRAN}
 names(dataset)
 dataset$p_R0
 dataset$Incidence
@@ -158,7 +139,7 @@ dataset$Incidence
 
 We can visualise the generated incidence data with
 
-```{R}
+```{r, eval = NOT_CRAN}
 plot(dataset$Incidence$time, dataset$Incidence$value)
 lines(dataset$Incidence$time, dataset$Incidence$value)
 ```
@@ -167,76 +148,73 @@ lines(dataset$Incidence$time, dataset$Incidence$value)
 
 The `libbi` class manages the interaction with **LibBi** such as sampling from the prior or posterior distribution. For example, the `SIRdata` object above is of type `libbi`:
 
-```{R}
+```{r, eval = NOT_CRAN}
 class(SIRdata)
 ```
 
 Th `bi_generate_dataset` is one particular way of generating a `libbi` object, used only to generate test data from a model. The standard way of creating a `libbi` object for Bayesian inference is using the `libbi` command
 
-```{R}
+```{r}
 bi <- libbi(SIRmodel)
 ```
 
 This initialises a `libbi` object with the model created earlier and assigns it to the variable `bi`.
 
-```{R}
+```{r}
 class(bi)
 ```
 
 Let's sample from the prior of the SIR model:
 
-```{R eval=FALSE}
+```{r, eval = NOT_CRAN}
 bi_prior <- sample(bi, target="prior", nsamples=1000, end_time=16*7, noutputs=16)
-```
-```{R echo=FALSE}
-bi_prior <- rbi::sample(bi, target="prior", nsamples=1000, end_time=16*7, noutputs=16)
 ```
 
 This step calls **LibBi** to sample from the prior distribution of the previously specified model, generating 1,000 samples and each time running the model for 16 * 7 = 112 time steps and writing 16 outputs (i.e., every 7 time steps). **LibBi** parses the model, creates C++ code, compiles it and run the model. If the model is run again, it should do so much quicker because it will use the already compiled C++ code to run the model:
 
-```{R eval=FALSE}
+```{r, eval = FALSE}
 bi_prior <- sample(bi_prior)
 ```
 
 The `sample` command returns an updated `libbi` object which, in this case, we just assign again to the `bi` object. Any call of `sample` preserves options passed to the previous call of `sample` and `libbi`, unless they are overwritten by arguments passed to `sample` (e.g., passing a new `nsamples` argument). Let's have a closer look at the `bi` object:
 
-```{R}
+```{r, eval = NOT_CRAN}
 bi_prior
 ```
 
 To see even more detail, try
 
-```{R}
+```{r, eval = NOT_CRAN}
 str(bi_prior)
 ```
 
 We can see the object contains 14 fields, including the model, the path to the `libbi` script, and the command used to run libbi (`bi$command`); the `options` field contains all the options that **LibBi** was called with. This includes the ones we passed to `sample`
 
-```{R}
+```{r, eval = NOT_CRAN}
 bi_prior$options
 ```
 
 The other fields contain various bits of information about the object, including the model used, the command used to run **LibBi** (`bi$command`) and the output file name:
 
-```{R}
+```{r, eval = NOT_CRAN}
 bi_prior$output_file_name
 ```
 
 We can get the results of the sampling run using `bi_read`
 
-```{R}
+```{r, eval = NOT_CRAN}
 prior <- bi_read(bi_prior$output_file_name)
 ```
 
 or with the shorthand
 
-```{R}
+```{r, eval = NOT_CRAN}
 prior <- bi_read(bi_prior)
 ```
 
 which looks at the `output_file_name` field to read in the data. Let's look at the returned object
 
-```{R}
+```{r, eval = NOT_CRAN}
 str(prior)
 ```
 
@@ -248,21 +226,19 @@ We can see that the time-varying variables are represented as data frames with t
 
 Let's perform inference using Particle Markov-chain Metropolis Hastings (PMMH). The following command will generate 16 * 10,000 = 160,000 simulations and therefore may take a little while to run (if you want to see the samples progress, use `verbose=TRUE` in the `sample` call).
 
-```{R eval=FALSE}
+```{r, eval = NOT_CRAN}
 bi <- sample(bi_prior, target="posterior", nparticles=32, obs=SIRdata)
 ```
-```{R echo=FALSE}
-bi <- rbi::sample(bi_prior,target="posterior", nparticles=32, obs=SIRdata)
-```
-
 This samples from the posterior distribution. Remember that options are preserved from previous runs (because we passed the `bi`) as first argument, so we don't need to specify `nsamples`, `end_time` and `noutputs` again, unless we want to change them. The `nparticles` option specifies the number of particles. 
 
 You can also pass a list of data frames (each element of the list corresponding to one observed variable as the `obs` argument, for example
 
-```{R eval=FALSE}
-df <- data.frame(time = c(0,7,14,21,28,35,42,49,56,63,70,77,84,91,98,105,112),
-                 value = c(1,6,2,26,99,57,78,57,15,9,4,1,1,1,0,2,0))
-bi_df <- sample(bi_prior, target="posterior", nparticles=32, obs=list(Incidence=df))
+```{r, eval = NOT_CRAN}
+df <- data.frame(
+  time = c(0, 7, 14, 21, 28, 35, 42, 49, 56, 63, 70, 77, 84, 91, 98, 105, 112), 
+  value = c(1, 6, 2, 26, 99, 57, 78, 57, 15, 9, 4, 1, 1, 1, 0, 2, 0)
+)
+bi_df <- sample(bi_prior, target = "posterior", nparticles = 32, obs = list(Incidence = df))
 ```
 
 Input, init and observation files (see the [LibBi manual](http://libbi.org/docs/LibBi-Manual.pdf) for details) can be specified using the `init`, `input`, `obs` options, respectively. They can each be specified either as the name of a NetCDF file containing the data, or a `libbi` object (in which case the output file will be taken) or directly via an appropriate `R` object containing the data (e.g., a character vector of length one, or a list of data frames or numeric vectors). In the case of the command above, `init` is specified as a list, and `obs` as a `libbi` object. The `Incidence` variable of the `SIRdata` object will be taken as observations. 
@@ -275,7 +251,7 @@ Any other options (apart from `log_file_name`, see the [Debugging](#debugging) s
 
 Let's get the results of the preceding `sample` command:
 
-```{R}
+```{r, eval = NOT_CRAN}
 bi_contents(bi)
 posterior <- bi_read(bi)
 str(posterior)
@@ -285,57 +261,49 @@ We can see that this has two more objects than previously when we specified `tar
 
 To get a summary of the parameters sampled, use
 
-```{R}
+```{r, eval = NOT_CRAN}
 summary(bi)
 ```
 
 A summary of sampled trajectories can be obtained using
 
-```{R eval=FALSE}
+```{r, eval = NOT_CRAN, results = "hide"}
 summary(bi, type="state")
 ```
 
 Any particular posterior sample can be viewed with `extract_sample` (with indices running from 0 to (`nsamples`-1)):
 
-```{R eval=FALSE}
+```{r, results = "hide"}
 extract_sample(bi, 314)
 ```
 
 To analyse MCMC outputs, we can use the **coda** package and the `get_traces` function of **rbi**. Note that, to get exactly the same traces, you would have to set the seed as above.
 
-```{R}
+```{r, eval = NOT_CRAN}
 library('coda')
 traces <- mcmc(get_traces(bi))
 ```
 
 We can, for example, visualise parameter traces and densities with
 
-```{R fig.width=8, fig.height=8}
+```{r, eval = NOT_CRAN fig.width = 8, fig.height = 8}
 plot(traces)
 ```
 
 Compare this to the marginal posterior distributions to the "correct" parameters used to generate the data set:
 
-```{R}
+```{r, eval = NOT_CRAN}
 bi_read(SIRdata, type="param")
 ```
 
 For more details on using **coda** to further analyse the chains, see the website of the [coda package](https://cran.r-project.org/package=coda). For more plotting functionality, the [ggmcmc package](https://cran.r-project.org/package=ggmcmc) is also worth considering.
 
-```{R echo=FALSE}
-obs_bi <- rbi::sample_obs(bi)
-```
-
 # Predictions
 
 We can use the `predict` function to re-simulate the fitted model using the estimated parameters, that is to generate samples from $p(x_t|\theta)$ where the $\theta$ are distributed according to the marginal posterior distribution $p(\theta|y^*_t)$ (here: $\theta$ are fixed parameters, $x_t$ are state trajectories and $y^*_t$ observed data points, as in the [LibBi manual](http://libbi.org/docs/LibBi-Manual.pdf)). This can be useful, for example, for comparing typical model trajectories to the data, or for running the model beyond the last data point.
 
-```{R eval=FALSE}
+```{r, eval = NOT_CRAN}
 pred_bi <- predict(bi, start_time=0, end_time=20*7, output_every=7, with=c("transform-obs-to-state")
-```
-
-```{R echo=FALSE}
-pred_bi <- rbi::predict(bi, start_time=0, end_time=20*7, output_every=7, with=c("transform-obs-to-state"))
 ```
 
 where `with=c("transform-obs-to-state")` tells LibBi to treat observations as a state variable, that is to randomly generate observations, i.e. samples from $p(y_t|\theta)$ where, again, $theta$ are distributed according to the posterior distribution $p(\theta|y^*_t)$ (see the `with-transform-obs-to-state` option in the [LibBi manual](http://libbi.org/docs/LibBi-Manual.pdf)).
@@ -344,13 +312,13 @@ where `with=c("transform-obs-to-state")` tells LibBi to treat observations as a 
 
 To sample observations from sampled posterior state trajectories, that is samples from $p(y_t|x_t)$ where the $x_t$ are distributed according to the posterior distribution $p(x_t | y_t)$, you can use.
 
-```{R eval=FALSE}
+```{r, eval = NOT_CRAN}
 obs_bi <- sample_obs(bi)
 ```
 
 Compare this to the data:
 
-```{R eval=FALSE}
+```{r, eval = NOT_CRAN, results = "asis"}
 summary(obs_bi, type="obs")
 dataset$Incidence
 ```
@@ -359,19 +327,15 @@ dataset$Incidence
 
 The other so-called clients of LibBi (besides `sample`) are supported through commands of the same name: `filter, optimise and rewrite. For example, to run a particle filter on the last posterior sample generated above, you can use:
 
-```{R eval=FALSE}
+```{r, eval = NOT_CRAN}
 bi_filtered <- filter(bi)
-```
-
-```{R echo=FALSE}
-bi_filtered <- rbi::filter(bi)
 ```
 
 # Plotting
 
 Output form LibBi runs can be visualised using standard R plotting routines or plotting packages such as `ggplot2`. The `summary` function can help with this. For example, to plot observations randomly generated from the posterior distribution of the parameters and compare them to the data we can use
 
-```{R}
+```{r, eval = NOT_CRAN}
 
 ps <- summary(pred_bi, type="obs")
 
@@ -385,14 +349,14 @@ ggplot(ps, aes(x=time))+
 
 where we have plotted the median fit as a black line, the interquartile range as a grey ribbon, and the data points as dark red dots. Compare this to observations randomly generated from the posterior distribution of trajectories:
 
-```{R}
+```{r, eval = NOT_CRAN}
 
-os <- summary(obs_bi, type="obs")
+os <- summary(obs_bi, type = "obs")
 
-ggplot(os, aes(x=time))+
-    geom_line(aes(y=Median)) +
-    geom_ribbon(aes(ymin=`1st Qu.`, ymax=`3rd Qu.`), alpha=0.5) +
-    geom_point(aes(y=value), dataset$Incidence, color="darkred") +
+ggplot(os, aes(x = time))+
+    geom_line(aes(y = Median)) +
+    geom_ribbon(aes(ymin = `1st Qu.`, ymax = `3rd Qu.`), alpha = 0.5) +
+    geom_point(aes(y = value), dataset$Incidence, color = "darkred") +
     ylab("cases")
 ```
 
@@ -401,7 +365,7 @@ ggplot(os, aes(x=time))+
 
 **rbi** provides its own versions of the `saveRDS` and `readRDS` functions called `save_libbi` and `read_libbi`. These make sure that all information (including any options, input, init and observation files) is stored in the object.
 
-```{R}
+```{r, eval = NOT_CRAN}
 save_libbi(bi, "bi.rds")
 bi <- read_libbi("bi.rds")
 bi
@@ -412,9 +376,9 @@ bi
 To recreate a `libbi` object from a previous R session, use `attach_data`.
 For example, one could use the following code to get the acceptance rate for a *LibBi* run with a given output and model file:
 
-```{R}
-PZ_run_output <- bi_read(system.file(package="rbi", "example_output.nc"))
-PZ_model_file <- system.file(package="rbi", "PZ.bi")
+```{r}
+PZ_run_output <- bi_read(system.file(package = "rbi", "example_output.nc"))
+PZ_model_file <- system.file(package = "rbi", "PZ.bi")
 PZ_posterior <- attach_data(libbi(PZ_model_file), "output", PZ_run_output)
 traces <- mcmc(get_traces(PZ_posterior))
 a <- 1 - rejectionRate(traces) 
@@ -425,7 +389,7 @@ a
 
 For a general check of model syntax, the `rewrite` command is useful:
 
-```{R eval=FALSE}
+```{r, eval = FALSE}
 rewrite(SIRmodel)
 ```
 

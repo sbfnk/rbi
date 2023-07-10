@@ -78,3 +78,9 @@ reference:
       - `[`.`bi_model
       - `[<-`.`bi_model
       - `!=`.bi_model
+
+articles
+- title: Introduction
+  navbar: Package vignette
+  contents:
+    - introduction
