@@ -40,12 +40,10 @@ The easiest way to install the latest stable version of **rbi** is via CRAN.
 install.packages("rbi")
 ```
 
-Alternatively, the current development version can be installed using the `devtools` package
+Alternatively, the current development version can be installed using the `remotes` package
 
 ```{r, eval = FALSE}
-# install.packages("devtools")
-library("devtools")
-install_github("sbfnk/rbi")
+remotes::install_github("sbfnk/rbi")
 ```
 
 # Loading the package
@@ -75,33 +73,33 @@ As an example, we consider a simplified version of the SIR model discussed in [D
 
 ```{r}
 model_file <- system.file(package = "rbi", "SIR.bi")
-SIRmodel <- bi_model(model_file) # load model
+sir_model <- bi_model(model_file) # load model
 ```
 
-Other ways of implementing a (deterministic or stochastic) SIR model can be found in the [collection of SIR models for LibBi](http://sbfnk.github.io/rbi/idd_models.html), where you also find how to load them into a `bi_model` object, e.g. `SIRmodel`. Feel free to run the commands below with different versions of the model.
+Other ways of implementing a (deterministic or stochastic) SIR model can be found in the [collection of SIR models for LibBi](http://sbfnk.github.io/rbi/idd_models.html), where you also find how to load them into a `bi_model` object, e.g. `sir_model`. Feel free to run the commands below with different versions of the model.
 
-The `SIRmodel` object now contains the model, which can be displayed with
+The `sir_model` object now contains the model, which can be displayed with
 
 ```{r}
-SIRmodel
+sir_model
 ```
 
 A part of the model can be shown with, for example,
 
 ```{r}
-SIRmodel[35:38]
+sir_model[35:38]
 ```
 
 or, for example,
 
 ```{r}
-get_block(SIRmodel, "parameter")
+get_block(sir_model, "parameter")
 ```
 
 To get a list of certain variables, you can use the `var_names` function. For example, to get a list of states, you can use
 
 ```{r}
-var_names(SIRmodel, type = "state")
+var_names(sir_model, type = "state")
 ```
 
 There are also various methods for manipulating a model, such as `remove_lines`, `insert_line`, `replace_all`.
@@ -109,7 +107,7 @@ There are also various methods for manipulating a model, such as `remove_lines`,
 The `fix` method fixes a variable to one value. This can be useful, for example, to run the deterministic equivalent of a stochastic model for testing purposes:
 
 ```{r}
-det_SIR_model <- fix(SIRmodel, n_transmission = 0, n_recovery = 0)
+det_SIR_model <- fix(sir_model, n_transmission = 0, n_recovery = 0)
 ```
 
 To get documentation for any of these methods, use the links in the documentation for `bi_model`.
@@ -120,7 +118,7 @@ First, let's create a data set from the SIR model.
 
 ```{r, eval = NOT_CRAN}
 set.seed(1001912)
-SIRdata <- generate_dataset(SIRmodel, end_time = 16 * 7, noutputs = 16)
+SIRdata <- generate_dataset(sir_model, end_time = 16 * 7, noutputs = 16)
 ```
 
 This simulates the model a single time from time 0 until time 16\*7 (say, 16 weeks with a daily time step), producing 16 outputs (one a week). Note that we have specified a random seed to make this document reproducible. If you omit the `set.seed` command or set it to a different number, the results will be different even when run with the same set of commands. Also note that *LibBi* compiles the model code only the first time it is run. If you run the command above a second time, it should run much faster.
@@ -164,7 +162,7 @@ class(SIRdata)
 Th `bi_generate_dataset` is one particular way of generating a `libbi` object, used only to generate test data from a model. The standard way of creating a `libbi` object for Bayesian inference is using the `libbi` command
 
 ```{r}
-bi <- libbi(SIRmodel)
+bi <- libbi(sir_model)
 ```
 
 This initialises a `libbi` object with the model created earlier and assigns it to the variable `bi`.
@@ -317,7 +315,10 @@ For more details on using **coda** to further analyse the chains, see the websit
 We can use the `predict` function to re-simulate the fitted model using the estimated parameters, that is to generate samples from $p(x_t|\theta)$ where the $\theta$ are distributed according to the marginal posterior distribution $p(\theta|y^*_t)$ (here: $\theta$ are fixed parameters, $x_t$ are state trajectories and $y^*_t$ observed data points, as in the [LibBi manual](http://libbi.org/docs/LibBi-Manual.pdf)). This can be useful, for example, for comparing typical model trajectories to the data, or for running the model beyond the last data point.
 
 ```{r, eval = NOT_CRAN}
-pred_bi <- predict(bi, start_time = 0, end_time = 20 * 7, output_every = 7, with = c("transform-obs-to-state"))
+pred_bi <- predict(
+  bi, start_time = 0, end_time = 20 * 7, output_every = 7, 
+  with = c("transform-obs-to-state")
+)
 ```
 
 where `with=c("transform-obs-to-state")` tells LibBi to treat observations as a state variable, that is to randomly generate observations, i.e. samples from $p(y_t|\theta)$ where, again, $theta$ are distributed according to the posterior distribution $p(\theta|y^*_t)$ (see the `with-transform-obs-to-state` option in the [LibBi manual](http://libbi.org/docs/LibBi-Manual.pdf)).
@@ -389,9 +390,9 @@ To recreate a `libbi` object from a previous R session, use `attach_data`.
 For example, one could use the following code to get the acceptance rate for a *LibBi* run with a given output and model file:
 
 ```{r}
-PZ_run_output <- bi_read(system.file(package = "rbi", "example_output.nc"))
-PZ_model_file <- system.file(package = "rbi", "PZ.bi")
-PZ_posterior <- attach_data(libbi(PZ_model_file), "output", PZ_run_output)
+pz_run_output <- bi_read(system.file(package = "rbi", "example_output.nc"))
+pz_model_file <- system.file(package = "rbi", "PZ.bi")
+pz_posterior <- attach_data(libbi(pz_model_file), "output", pz_run_output)
 traces <- mcmc(get_traces(PZ_posterior))
 a <- 1 - rejectionRate(traces)
 a
@@ -402,7 +403,7 @@ a
 For a general check of model syntax, the `rewrite` command is useful:
 
 ```{r, eval = FALSE}
-rewrite(SIRmodel)
+rewrite(sir_model)
 ```
 
 This generates the internal representation of the model for LibBi. It doesn't matter so much what this looks like, but it will throw an error if there is a problem. If `libbi` throws an error, it is best to investigate with `debug = TRUE`, and setting `working_folder` to a folder that one can then use for debugging. Output of the `libbi` call can be saved in a file using the `log_file_name` option (by default a temporary file).
