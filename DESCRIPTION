@@ -34,8 +34,8 @@ Description: Provides a complete interface to 'LibBi', a library for Bayesian
     input/output files, for converting 'LibBi' output to provide traces for use
     with the coda package, and for running 'LibBi' to conduct inference.
 License: GPL-3
-URL: https://github.com/sbfnk/RBi
-BugReports: https://github.com/sbfnk/RBi/issues
+URL: https://github.com/sbfnk/rbi
+BugReports: https://github.com/sbfnk/rbi/issues
 SystemRequirements: LibBi (>= 1.4.2)
 LazyLoad: no
 RoxygenNote: 7.2.3
