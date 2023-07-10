@@ -9,7 +9,7 @@ vignette: >
 ---
 
 ```{r, include = FALSE}
-NOT_CRAN <- identical(tolower(Sys.getenv("NOT_CRAN")), "true")
+NOT_CRAN <- identical(tolower(Sys.getenv("NOT_CRAN")), "true") # nolint
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
@@ -20,7 +20,7 @@ knitr::opts_chunk$set(
 
 The package has been tested on macOS and Linux. It requires a working installation of **LibBi**. On macOS, this is easiest done using the `brew` command: Install [Homebrew](https://brew.sh), then issue the following command (using a command shell, i.e. Terminal or similar):
 
-```{sh eval = FALSE}
+```{sh, eval = FALSE}
 brew install libbi
 ```
 
@@ -44,7 +44,7 @@ Alternatively, the current development version can be installed using the `devto
 
 ```{r, eval = FALSE}
 # install.packages("devtools")
-library('devtools')
+library("devtools")
 install_github("sbfnk/rbi")
 ```
 
@@ -74,7 +74,7 @@ The package also provides two methods for interacting with the [NetCDF](https://
 As an example, we consider a simplified version of the SIR model discussed in [Del Moral et al. (2014)](https://arxiv.org/abs/1405.4081). This is included with the **rbi** package and can be loaded with
 
 ```{r}
-model_file <- system.file(package="rbi", "SIR.bi")
+model_file <- system.file(package = "rbi", "SIR.bi")
 SIRmodel <- bi_model(model_file) # load model
 ```
 
@@ -101,7 +101,7 @@ get_block(SIRmodel, "parameter")
 To get a list of certain variables, you can use the `var_names` function. For example, to get a list of states, you can use
 
 ```{r}
-var_names(SIRmodel, type="state")
+var_names(SIRmodel, type = "state")
 ```
 
 There are also various methods for manipulating a model, such as `remove_lines`, `insert_line`, `replace_all`.
@@ -109,7 +109,7 @@ There are also various methods for manipulating a model, such as `remove_lines`,
 The `fix` method fixes a variable to one value. This can be useful, for example, to run the deterministic equivalent of a stochastic model for testing purposes:
 
 ```{r}
-det_SIR_model <- fix(SIRmodel, n_transmission=0, n_recovery=0)
+det_SIR_model <- fix(SIRmodel, n_transmission = 0, n_recovery = 0)
 ```
 
 To get documentation for any of these methods, use the links in the documentation for `bi_model`.
@@ -120,7 +120,7 @@ First, let's create a data set from the SIR model.
 
 ```{r, eval = NOT_CRAN}
 set.seed(1001912)
-SIRdata <- generate_dataset(SIRmodel, end_time=16*7, noutputs=16)
+SIRdata <- generate_dataset(SIRmodel, end_time = 16 * 7, noutputs = 16)
 ```
 
 This simulates the model a single time from time 0 until time 16\*7 (say, 16 weeks with a daily time step), producing 16 outputs (one a week). Note that we have specified a random seed to make this document reproducible. If you omit the `set.seed` command or set it to a different number, the results will be different even when run with the same set of commands. Also note that *LibBi* compiles the model code only the first time it is run. If you run the command above a second time, it should run much faster.
@@ -176,8 +176,11 @@ class(bi)
 Let's sample from the prior of the SIR model:
 
 ```{r, eval = NOT_CRAN}
-bi_prior <- sample(bi, target="prior", nsamples=1000, end_time=16*7, noutputs=16)
+bi_prior <- sample(
+  bi, target = "prior", nsamples = 1000, end_time = 16 * 7, noutputs = 16
+)
 ```
+
 
 This step calls **LibBi** to sample from the prior distribution of the previously specified model, generating 1,000 samples and each time running the model for 16 * 7 = 112 time steps and writing 16 outputs (i.e., every 7 time steps). **LibBi** parses the model, creates C++ code, compiles it and run the model. If the model is run again, it should do so much quicker because it will use the already compiled C++ code to run the model:
 
@@ -236,7 +239,7 @@ We can see that the time-varying variables are represented as data frames with t
 Let's perform inference using Particle Markov-chain Metropolis Hastings (PMMH). The following command will generate 16 * 10,000 = 160,000 simulations and therefore may take a little while to run (if you want to see the samples progress, use `verbose=TRUE` in the `sample` call).
 
 ```{r, eval = NOT_CRAN}
-bi <- sample(bi_prior, target="posterior", nparticles=32, obs=SIRdata)
+bi <- sample(bi_prior, target = "posterior", nparticles = 32, obs = SIRdata)
 ```
 This samples from the posterior distribution. Remember that options are preserved from previous runs (because we passed the `bi`) as first argument, so we don't need to specify `nsamples`, `end_time` and `noutputs` again, unless we want to change them. The `nparticles` option specifies the number of particles. 
 
@@ -244,10 +247,12 @@ You can also pass a list of data frames (each element of the list corresponding 
 
 ```{r, eval = NOT_CRAN}
 df <- data.frame(
-  time = c(0, 7, 14, 21, 28, 35, 42, 49, 56, 63, 70, 77, 84, 91, 98, 105, 112), 
+  time = c(0, 7, 14, 21, 28, 35, 42, 49, 56, 63, 70, 77, 84, 91, 98, 105, 112),
   value = c(1, 6, 2, 26, 99, 57, 78, 57, 15, 9, 4, 1, 1, 1, 0, 2, 0)
 )
-bi_df <- sample(bi_prior, target = "posterior", nparticles = 32, obs = list(Incidence = df))
+bi_df <- sample(
+  bi_prior, target = "posterior", nparticles = 32, obs = list(Incidence = df)
+)
 ```
 
 Input, init and observation files (see the [LibBi manual](http://libbi.org/docs/LibBi-Manual.pdf) for details) can be specified using the `init`, `input`, `obs` options, respectively. They can each be specified either as the name of a NetCDF file containing the data, or a `libbi` object (in which case the output file will be taken) or directly via an appropriate `R` object containing the data (e.g., a character vector of length one, or a list of data frames or numeric vectors). In the case of the command above, `init` is specified as a list, and `obs` as a `libbi` object. The `Incidence` variable of the `SIRdata` object will be taken as observations. 
@@ -277,7 +282,7 @@ summary(bi)
 A summary of sampled trajectories can be obtained using
 
 ```{r, eval = NOT_CRAN, results = "hide"}
-summary(bi, type="state")
+summary(bi, type = "state")
 ```
 
 Any particular posterior sample can be viewed with `extract_sample` (with indices running from 0 to (`nsamples`-1)):
@@ -289,7 +294,7 @@ extract_sample(bi, 314)
 To analyse MCMC outputs, we can use the **coda** package and the `get_traces` function of **rbi**. Note that, to get exactly the same traces, you would have to set the seed as above.
 
 ```{r, eval = NOT_CRAN}
-library('coda')
+library("coda")
 traces <- mcmc(get_traces(bi))
 ```
 
@@ -302,7 +307,7 @@ plot(traces)
 Compare this to the marginal posterior distributions to the "correct" parameters used to generate the data set:
 
 ```{r, eval = NOT_CRAN}
-bi_read(SIRdata, type="param")
+bi_read(SIRdata, type = "param")
 ```
 
 For more details on using **coda** to further analyse the chains, see the website of the [coda package](https://cran.r-project.org/package=coda). For more plotting functionality, the [ggmcmc package](https://cran.r-project.org/package=ggmcmc) is also worth considering.
@@ -312,7 +317,7 @@ For more details on using **coda** to further analyse the chains, see the websit
 We can use the `predict` function to re-simulate the fitted model using the estimated parameters, that is to generate samples from $p(x_t|\theta)$ where the $\theta$ are distributed according to the marginal posterior distribution $p(\theta|y^*_t)$ (here: $\theta$ are fixed parameters, $x_t$ are state trajectories and $y^*_t$ observed data points, as in the [LibBi manual](http://libbi.org/docs/LibBi-Manual.pdf)). This can be useful, for example, for comparing typical model trajectories to the data, or for running the model beyond the last data point.
 
 ```{r, eval = NOT_CRAN}
-pred_bi <- predict(bi, start_time=0, end_time=20*7, output_every=7, with=c("transform-obs-to-state")
+pred_bi <- predict(bi, start_time = 0, end_time = 20 * 7, output_every = 7, with = c("transform-obs-to-state"))
 ```
 
 where `with=c("transform-obs-to-state")` tells LibBi to treat observations as a state variable, that is to randomly generate observations, i.e. samples from $p(y_t|\theta)$ where, again, $theta$ are distributed according to the posterior distribution $p(\theta|y^*_t)$ (see the `with-transform-obs-to-state` option in the [LibBi manual](http://libbi.org/docs/LibBi-Manual.pdf)).
@@ -328,7 +333,7 @@ obs_bi <- sample_obs(bi)
 Compare this to the data:
 
 ```{r, eval = NOT_CRAN, results = "asis"}
-summary(obs_bi, type="obs")
+summary(obs_bi, type = "obs")
 dataset$Incidence
 ```
 
@@ -345,28 +350,26 @@ bi_filtered <- filter(bi)
 Output form LibBi runs can be visualised using standard R plotting routines or plotting packages such as `ggplot2`. The `summary` function can help with this. For example, to plot observations randomly generated from the posterior distribution of the parameters and compare them to the data we can use
 
 ```{r, eval = NOT_CRAN}
+ps <- summary(pred_bi, type = "obs")
 
-ps <- summary(pred_bi, type="obs")
-
-library('ggplot2')
-ggplot(ps, aes(x=time))+
-    geom_line(aes(y=Median)) +
-    geom_ribbon(aes(ymin=`1st Qu.`, ymax=`3rd Qu.`), alpha=0.5) +
-    geom_point(aes(y=value), dataset$Incidence, color="darkred") +
-    ylab("cases")
+library("ggplot2")
+ggplot(ps, aes(x = time)) +
+  geom_line(aes(y = Median)) +
+  geom_ribbon(aes(ymin = `1st Qu.`, ymax = `3rd Qu.`), alpha = 0.5) +
+  geom_point(aes(y = value), dataset$Incidence, color = "darkred") +
+  ylab("cases")
 ```
 
 where we have plotted the median fit as a black line, the interquartile range as a grey ribbon, and the data points as dark red dots. Compare this to observations randomly generated from the posterior distribution of trajectories:
 
 ```{r, eval = NOT_CRAN}
-
 os <- summary(obs_bi, type = "obs")
 
-ggplot(os, aes(x = time))+
-    geom_line(aes(y = Median)) +
-    geom_ribbon(aes(ymin = `1st Qu.`, ymax = `3rd Qu.`), alpha = 0.5) +
-    geom_point(aes(y = value), dataset$Incidence, color = "darkred") +
-    ylab("cases")
+ggplot(os, aes(x = time)) +
+  geom_line(aes(y = Median)) +
+  geom_ribbon(aes(ymin = `1st Qu.`, ymax = `3rd Qu.`), alpha = 0.5) +
+  geom_point(aes(y = value), dataset$Incidence, color = "darkred") +
+  ylab("cases")
 ```
 
 
@@ -390,7 +393,7 @@ PZ_run_output <- bi_read(system.file(package = "rbi", "example_output.nc"))
 PZ_model_file <- system.file(package = "rbi", "PZ.bi")
 PZ_posterior <- attach_data(libbi(PZ_model_file), "output", PZ_run_output)
 traces <- mcmc(get_traces(PZ_posterior))
-a <- 1 - rejectionRate(traces) 
+a <- 1 - rejectionRate(traces)
 a
 ```
 
