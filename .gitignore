@@ -11,3 +11,4 @@ Rplots.pdf
 *.Rproj
 revdep/
 inst/doc
+docs/

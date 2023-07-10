@@ -13,7 +13,8 @@ propose_prior(x)
 the updated \code{bi_model} object
 }
 \description{
-Generates a version of the model where the proposal blocks are replaced by the prior blocks. This is useful for exploration of the likelihood surface.
+Generates a version of the model where the proposal blocks are replaced by
+  the prior blocks. This is useful for exploration of the likelihood surface.
 }
 \seealso{
 \code{\link{bi_model}}

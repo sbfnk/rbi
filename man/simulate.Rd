@@ -11,7 +11,8 @@
 \method{simulate}{bi_model}(x, ...)
 }
 \arguments{
-\item{x}{a \code{\link{libbi}} or \code{\link{bi_model}} object, or the name of a file containing the model}
+\item{x}{a \code{\link{libbi}} or \code{\link{bi_model}} object, or the name
+of a file containing the model}
 
 \item{...}{options to be passed to \code{\link{run.libbi}}}
 }
@@ -19,7 +20,9 @@
 an updated \code{\link{bi_model}} object
 }
 \description{
-The method \code{simulate} launches \code{LibBi} to simulate a model by passing `target="joint"` to \code{LibBi}
+The method \code{simulate} launches \code{LibBi} to simulate a model by
+  passing `target="joint"` to \code{LibBi}
 
-If \code{x} is given as a 'bi_model', a \code{\link{libbi}} object will be created from the model
+If \code{x} is given as a 'bi_model', a \code{\link{libbi}} object will be
+  created from the model
 }

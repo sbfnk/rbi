@@ -15,11 +15,13 @@
 
 \item{spaces}{number of spaces for indentation}
 
-\item{screen}{whether to print to screen (default: TRUE). In that case, line numbers will be added; otherwise, a character vector will be returned.}
+\item{screen}{whether to print to screen (default: TRUE). In that case, line
+numbers will be added; otherwise, a character vector will be returned.}
 
 \item{...}{ignored}
 
-\item{verbose}{logical; if TRUE, locations of files and working folder should be printed}
+\item{verbose}{logical; if TRUE, locations of files and working folder should
+be printed}
 }
 \value{
 if \code{screen} is \code{FALSE}, a character vector of model lines

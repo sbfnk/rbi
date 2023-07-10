@@ -11,7 +11,8 @@
 \method{write_model}{libbi}(x, filename, ...)
 }
 \arguments{
-\item{x}{a \code{\link{bi_model}} object, or a \code{\link{libbi}} object containing a model}
+\item{x}{a \code{\link{bi_model}} object, or a \code{\link{libbi}} object
+containing a model}
 
 \item{filename}{name of the file to be written}
 
@@ -23,10 +24,11 @@
 the return value of the \code{\link{writeLines}} call.
 }
 \description{
-Writes a bi model to a file given by \code{filename}. The extension '.bi' will be added if necessary.
+Writes a bi model to a file given by \code{filename}. The extension '.bi'
+  will be added if necessary.
 }
 \examples{
-model_file_name <- system.file(package="rbi", "PZ.bi")
+model_file_name <- system.file(package = "rbi", "PZ.bi")
 PZ <- bi_model(filename = model_file_name)
 new_file_name <- tempfile("PZ", fileext = ".bi")
 write_model(PZ, new_file_name)

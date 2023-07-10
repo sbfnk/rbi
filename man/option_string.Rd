@@ -7,8 +7,10 @@
 option_string(...)
 }
 \arguments{
-\item{...}{any number of lists of options, or strings (which will be left unmodified). If lists are given, later arguments will override earlier ones}
+\item{...}{any number of lists of options, or strings (which will be left
+unmodified). If lists are given, later arguments will override earlier ones}
 }
 \description{
-This function is used to convert a list of options into an options string. If a string is given,  it will be taken as such.
+This function is used to convert a list of options into an options string. If
+  a string is given,  it will be taken as such.
 }

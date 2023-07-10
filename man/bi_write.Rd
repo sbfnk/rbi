@@ -24,30 +24,40 @@ bi_write(
 will be overwritten if it already exists. If necessary, ".nc" will be added
 to the file name}
 
-\item{variables}{a \code{list} object, the names of which should be the variable names and values should be either single values or data frames}
+\item{variables}{a \code{list} object, the names of which should be the
+variable names and values should be either single values or data frames}
 
 \item{timed}{deprecated; timed variables should be given as data frames}
 
 \item{append}{if TRUE, will append variables if file exists; default: FALSE}
 
-\item{overwrite}{if TRUE, will overwrite variables if file exists; default: FALSE}
+\item{overwrite}{if TRUE, will overwrite variables if file exists; default:
+FALSE}
 
-\item{time_dim}{the name of the time dimension, if one exists; default: "time"}
+\item{time_dim}{the name of the time dimension, if one exists; default:
+"time"}
 
-\item{coord_dims}{the names of the coordinate dimension, if any; should be a named list of character vectors, they are matched to variables names}
+\item{coord_dims}{the names of the coordinate dimension, if any; should be a
+named list of character vectors, they are matched to variables names}
 
-\item{dim_factors}{factors that dimensions have; this corresponds to the \code{dims} element of a \code{\link{libbi}} object}
+\item{dim_factors}{factors that dimensions have; this corresponds to the
+\code{dims} element of a \code{\link{libbi}} object}
 
-\item{value_column}{if any \code{variables} are data frames, which column contains the values (default: "value")}
+\item{value_column}{if any \code{variables} are data frames, which column
+contains the values (default: "value")}
 
-\item{guess_time}{whether to guess time dimension; this would be a numerical column in the data frame given which is not the \code{value_column}; only one such column must exist}
+\item{guess_time}{whether to guess time dimension; this would be a numerical
+column in the data frame given which is not the \code{value_column}; only
+one such column must exist}
 
-\item{guess_coord}{whether to guess the coordinate dimension; this would be a column with varying value which is not the time or value column}
+\item{guess_coord}{whether to guess the coordinate dimension; this would be a
+column with varying value which is not the time or value column}
 
 \item{verbose}{if TRUE, will print variables as they are read}
 }
 \value{
-A list of the time and coord dims, and factors in extra dimensions, if any
+A list of the time and coord dims, and factors in extra dimensions,
+  if any
 }
 \description{
 This function creates (or appends to) a NetCDF file for LibBi from the given
@@ -60,8 +70,8 @@ This function creates (or appends to) a NetCDF file for LibBi from the given
 The list of variables must follow the following rules. Each element
 of the list must itself be one of:
 
-1) a data frame with a \code{value_column} column (see option 'value_column') and any number of other
-columns indicating one or more dimensions
+1) a data frame with a \code{value_column} column (see option 'value_column')
+  and any number of other columns indicating one or more dimensions
 
 2) a numeric vector of length one, with no dimensions
 
@@ -69,10 +79,12 @@ The name of the list elements itself is used to create the
 corresponding variable in the NetCDF file.
 }
 \examples{
-filename <- tempfile(pattern="dummy", fileext=".nc")
+filename <- tempfile(pattern = "dummy", fileext = ".nc")
 a <- 3
-b <- data.frame(dim_a = rep(1:3, time = 2), dim_b = rep(1:2, each = 3), value = 1:6)
-variables <- list(a=a, b=b)
+b <- data.frame(
+  dim_a = rep(1:3, time = 2), dim_b = rep(1:2, each = 3), value = 1:6
+)
+variables <- list(a = a, b = b)
 bi_write(filename, variables)
 bi_file_summary(filename)
 }

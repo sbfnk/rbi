@@ -11,7 +11,8 @@ tf <- 50
 init_parameters <- list(P = 2, Z = 2, mu = 0.5, sigma = 0.3)
 # First let's generate a dataset from the model
 synthetic_dataset <- bi_generate_dataset(
-  pz, end_time = tf, noutputs = tf, init = init_parameters
+  pz,
+  end_time = tf, noutputs = tf, init = init_parameters
 )
 
 # Settings
@@ -21,7 +22,8 @@ bi_object
 
 # Once happy with the settings, launch bi.
 bi_object <- sample(
-  bi_object, end_time = tf, noutputs = tf, nsamples = 128, nparticles = 128,
+  bi_object,
+  end_time = tf, noutputs = tf, nsamples = 128, nparticles = 128,
   nthreads = 1, obs = synthetic_dataset, init = init_parameters,
   log_file_name = tempfile(pattern = "smc2output", fileext = ".txt"),
   resampler = "metropolis"

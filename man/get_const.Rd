@@ -13,5 +13,7 @@ get_const(model)
 a list of constants (as names) and their values
 }
 \description{
-Get constants contained in a LibBi model and their values. This will attempt to evaluate any calculation on the right hand side. Failing that, it will be returned verbatim.
+Get constants contained in a LibBi model and their values. This will attempt
+  to evaluate any calculation on the right hand side. Failing that, it will
+  be returned verbatim.
 }

@@ -56,10 +56,10 @@ Getting started
 A good starting point is to look at the included demos:
 
 ```{r eval = FALSE}
- demo(PZ_generate_dataset) ## generating a data set from a model
- demo(PZ_PMMH)             ## particle Markov-chain Metropolis-Hastings
- demo(PZ_SMC2)             ## SMC^2
- demo(PZ_filtering)        ## filtering
+demo(PZ_generate_dataset) ## generating a data set from a model
+demo(PZ_PMMH) ## particle Markov-chain Metropolis-Hastings
+demo(PZ_SMC2) ## SMC^2
+demo(PZ_filtering) ## filtering
 ```
 
 For further information, have a look at the introductory vignette from the link from the [rbi CRAN package](https://CRAN.R-project.org/package=rbi).

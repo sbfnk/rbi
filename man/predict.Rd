@@ -16,7 +16,10 @@
 an updated \code{\link{libbi}} object
 }
 \description{
-The method \code{predict} is an alias for \code{sample(target="prediction")}. Usually, an \code{init} object or file should be given containing posterior samples.
+The method \code{predict} is an alias for \code{sample(target="prediction")}.
+  Usually, an \code{init} object or file should be given containing posterior
+  samples.
 
-For the help page of the base R \code{optimise} function, see \code{\link[stats]{optimise}}.
+For the help page of the base R \code{optimise} function, see
+  \code{\link[stats]{optimise}}.
 }

@@ -12,13 +12,15 @@
 
 \item{name}{of the block to find}
 
-\item{inner}{only return the inner part of the block (not the block definition)}
+\item{inner}{only return the inner part of the block (not the block
+definition)}
 }
 \value{
 an integerr vector, the range of line numbers
 }
 \description{
-Finds a block and returns the range of line numbers encompassed by that block.
+Finds a block and returns the range of line numbers encompassed by that
+  block.
 }
 \seealso{
 \code{\link{bi_model}}

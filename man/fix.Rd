@@ -16,12 +16,15 @@
 the updated \code{bi_model} object
 }
 \description{
-Replaces all variables with fixed values as given ; note that this will not replace differential equations and lead to an error if applied to states that are changed inside an "ode" block
+Replaces all variables with fixed values as given ; note that this will not
+  replace differential equations and lead to an error if applied to states
+  that are changed inside an "ode" block
 
-For the help page of the base R \code{fix} function, see \code{\link[utils]{fix}}.
+For the help page of the base R \code{fix} function, see
+  \code{\link[utils]{fix}}.
 }
 \examples{
-model_file_name <- system.file(package="rbi", "PZ.bi")
+model_file_name <- system.file(package = "rbi", "PZ.bi")
 PZ <- bi_model(filename = model_file_name)
 PZ <- fix(PZ, alpha = 0)
 }

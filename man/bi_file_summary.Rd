@@ -7,7 +7,8 @@
 bi_file_summary(...)
 }
 \arguments{
-\item{...}{Any extra parameters to \code{\link{bi_open}}, especially \code{x} and \code{file}}
+\item{...}{Any extra parameters to \code{\link{bi_open}}, especially \code{x}
+and \code{file}}
 }
 \value{
 No return value
@@ -18,6 +19,6 @@ of a NetCDF file, as well as its creation time. You can
 then retrieve variables of interest using \code{\link{bi_read}}.
 }
 \examples{
-example_output_file <- system.file(package="rbi", "example_output.nc")
+example_output_file <- system.file(package = "rbi", "example_output.nc")
 bi_file_summary(example_output_file)
 }

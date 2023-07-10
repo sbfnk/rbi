@@ -7,11 +7,13 @@
 libbi(model, path_to_libbi, dims, use_cache = TRUE, ...)
 }
 \arguments{
-\item{model}{either a character vector giving the path to a model file (typically ending in ".bi"), or a \code{bi_model} object}
+\item{model}{either a character vector giving the path to a model file
+(typically ending in ".bi"), or a \code{bi_model} object}
 
-\item{path_to_libbi}{path to \code{LibBi} binary; by default it tries to locate the \code{libbi} binary
-using the \code{which} Unix command, after having loaded "~/.bashrc" if present;
-if unsuccessful it tries "~/PathToBiBin/libbi"; if unsuccessful again it fails.}
+\item{path_to_libbi}{path to \code{LibBi} binary; by default it tries to
+locate the \code{libbi} binary using the \code{which} Unix command, after
+having loaded "~/.bashrc" if present; if unsuccessful it tries
+"~/PathToBiBin/libbi"; if unsuccessful again it fails.}
 
 \item{dims}{any named dimensions, as list of character vectors}
 
@@ -25,12 +27,16 @@ a new \code{\link{libbi}} object
 \description{
 \code{libbi} allows to call \code{LibBi}.
 Upon creating a new libbi object, the following arguments can be given.
-Once the instance is created, \code{LibBi} can be run through the \code{\link[rbi]{sample}}, \code{\link[rbi]{filter}}, or \code{\link{optimise}}, or \code{\link{rewrite}}
-methods. Note that \code{\link{libbi}} objects can be plotted using \code{\link{plot}} if the \code{rbi.helpers} package is loaded.
+Once the instance is created, \code{LibBi} can be run through the
+  \code{\link[rbi]{sample}}, \code{\link[rbi]{filter}}, or
+  \code{\link{optimise}}, or \code{\link{rewrite}} methods. Note that
+  \code{\link{libbi}} objects can be plotted using \code{\link{plot}} if the
+  \code{rbi.helpers} package is loaded.
 }
 \examples{
-bi_object <- libbi(model = system.file(package="rbi", "PZ.bi"))
+bi_object <- libbi(model = system.file(package = "rbi", "PZ.bi"))
 }
 \seealso{
-\code{\link{sample}}, \code{\link{filter}}, \code{\link{optimise}}, \code{\link{rewrite}}
+\code{\link{sample}}, \code{\link{filter}}, \code{\link{optimise}},
+  \code{\link{rewrite}}
 }

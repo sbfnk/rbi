@@ -11,7 +11,8 @@ extract_sample(x, np, ...)
 list of data frames containing parameter traces (as returned by
 from \code{bi_read})}
 
-\item{np}{iteration to extract; if set to "last", the last sample will be extracted. If not given a random sample will be extracted}
+\item{np}{iteration to extract; if set to "last", the last sample will be
+extracted. If not given a random sample will be extracted}
 
 \item{...}{parameters to \code{bi_read} (e.g., dimensions)}
 }

@@ -12,14 +12,16 @@ tf <- 100
 init_parameters <- list(P = 2, Z = 2, mu = 0.5, sigma = 0.3)
 # First let's generate a dataset from the model
 synthetic_dataset <- bi_generate_dataset(
-  pz, end_time = tf, init = init_parameters
+  pz,
+  end_time = tf, init = init_parameters
 )
 # Settings
 bi_object <- libbi(model = pz)
 bi_object
 # Once happy with the settings, launch bi.
 bi_object <- filter(
-  bi_object, nparticles = 8192, nthreads = 1, end_time = tf, noutputs = tf,
+  bi_object,
+  nparticles = 8192, nthreads = 1, end_time = tf, noutputs = tf,
   obs = synthetic_dataset, init = init_parameters
 )
 # It can be a good idea to look at the result file
@@ -36,7 +38,7 @@ p <- output$P$value
 z <- output$Z$value
 
 # Then compute the filtering means
-log2normw <- function(lw){
+log2normw <- function(lw) {
   w <- exp(lw - max(lw))
   return(w / sum(w))
 }
@@ -53,18 +55,22 @@ z_original <- synthetic_data$Z$value
 
 par(mfrow = c(2, 1))
 plot(
-  seq_along(p_means), p_means, type = "l", col = "red", xlab = "time",
+  seq_along(p_means), p_means,
+  type = "l", col = "red", xlab = "time",
   ylab = "P"
 )
 lines(seq_along(p_means), p_original, col = "blue")
 legend(
-  0, max(p_means), c("P", "P_original"), lty = c(1, 1), col = c("red", "blue")
+  0, max(p_means), c("P", "P_original"),
+  lty = c(1, 1), col = c("red", "blue")
 )
 plot(
-  seq_along(z_means), z_means, type = "l", col = "red", xlab = "time",
+  seq_along(z_means), z_means,
+  type = "l", col = "red", xlab = "time",
   ylab = "Z"
 )
 lines(seq_along(z_means), z_original, col = "blue")
 legend(
-  0, max(z_means), c("Z", "Z_original"), lty = c(1, 1), col = c("red", "blue")
+  0, max(z_means), c("Z", "Z_original"),
+  lty = c(1, 1), col = c("red", "blue")
 )

@@ -11,7 +11,8 @@
 \method{sample}{bi_model}(x, ...)
 }
 \arguments{
-\item{x}{a \code{\link{libbi}} or \code{\link{bi_model}} object, or the name of a file containing the model}
+\item{x}{a \code{\link{libbi}} or \code{\link{bi_model}} object, or the name
+of a file containing the model}
 
 \item{...}{options to be passed to \code{\link{run.libbi}}}
 }
@@ -19,8 +20,13 @@
 an updated \code{\link{libbi}} object
 }
 \description{
-The method \code{sample} launches \code{libbi} to sample from a (prior, posterior or joint) distribution. See the options to \code{\link{run.libbi}} for how to specify the various components of sampling with LibBi, and the LibBi manual for all options that can be passed when the client is \code{sample}.
+The method \code{sample} launches \code{libbi} to sample from a (prior,
+  posterior or joint) distribution. See the options to
+  \code{\link{run.libbi}} for how to specify the various components of
+  sampling with LibBi, and the LibBi manual for all options that can be
+  passed when the client is \code{sample}.
 
-If \code{x} is given as a 'bi_model', a \code{\link{libbi}} object will be created from the model
-For the help page of the base R \code{sample} function, see \code{\link[base]{sample}}.
+If \code{x} is given as a 'bi_model', a \code{\link{libbi}} object will be
+  created from the model For the help page of the base R \code{sample}
+  function, see \code{\link[base]{sample}}.
 }

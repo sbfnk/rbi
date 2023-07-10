@@ -7,7 +7,9 @@
 bi_contents(read, ...)
 }
 \arguments{
-\item{read}{either a path to a NetCDF file, or a NetCDF connection created using \code{nc_open}, or a \code{\link{libbi}} object from which to read the output}
+\item{read}{either a path to a NetCDF file, or a NetCDF connection created
+using \code{nc_open}, or a \code{\link{libbi}} object from which to read
+the output}
 
 \item{...}{any parameters for \code{\link{bi_open}} (especially "file")}
 }
@@ -15,9 +17,10 @@ bi_contents(read, ...)
 character vector of variable names
 }
 \description{
-This function gets the name of all the variables in the passed file, list or \code{\link{libbi}} object
+This function gets the name of all the variables in the passed file, list or
+  \code{\link{libbi}} object
 }
 \examples{
-example_output_file <- system.file(package="rbi", "example_output.nc")
+example_output_file <- system.file(package = "rbi", "example_output.nc")
 bi_contents(example_output_file)
 }
