@@ -9,7 +9,7 @@ vignette: >
 ---
 
 ```{r, include = FALSE}
-NOT_CRAN <- identical(tolower(Sys.getenv("NOT_CRAN")), "true") # nolint
+NOT_CRAN <- interactive() || identical(tolower(Sys.getenv("NOT_CRAN")), "true") # nolint
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
@@ -107,7 +107,7 @@ There are also various methods for manipulating a model, such as `remove_lines`,
 The `fix` method fixes a variable to one value. This can be useful, for example, to run the deterministic equivalent of a stochastic model for testing purposes:
 
 ```{r}
-det_SIR_model <- fix(sir_model, n_transmission = 0, n_recovery = 0)
+det_sir_model <- fix(sir_model, n_transmission = 0, n_recovery = 0)
 ```
 
 To get documentation for any of these methods, use the links in the documentation for `bi_model`.
@@ -118,7 +118,7 @@ First, let's create a data set from the SIR model.
 
 ```{r, eval = NOT_CRAN}
 set.seed(1001912)
-SIRdata <- generate_dataset(sir_model, end_time = 16 * 7, noutputs = 16)
+sir_data <- generate_dataset(sir_model, end_time = 16 * 7, noutputs = 16)
 ```
 
 This simulates the model a single time from time 0 until time 16\*7 (say, 16 weeks with a daily time step), producing 16 outputs (one a week). Note that we have specified a random seed to make this document reproducible. If you omit the `set.seed` command or set it to a different number, the results will be different even when run with the same set of commands. Also note that *LibBi* compiles the model code only the first time it is run. If you run the command above a second time, it should run much faster.
@@ -126,13 +126,13 @@ This simulates the model a single time from time 0 until time 16\*7 (say, 16 wee
 The `generate_dataset` function returns a `libbi` object:
 
 ```{r, eval = NOT_CRAN}
-SIRdata
+sir_data
 ```
 
 The generated dataset can be viewed and/or stored in a variable using `bi_read`:
 
 ```{r, eval = NOT_CRAN}
-dataset <- bi_read(SIRdata)
+dataset <- bi_read(sir_data)
 ```
 
 The `bi_read` function takes the name of a NetCDF file or a `libbi` object (in which case it locates the output file) and stores the contents in a list of data frames or vectors, depending on the dimensionality of the contents. Note that, if no `working_folder` is specified, the model and output files will be stored in a temporary folder.
@@ -153,10 +153,10 @@ lines(dataset$Incidence$time, dataset$Incidence$value)
 
 # The `libbi` class
 
-The `libbi` class manages the interaction with **LibBi** such as sampling from the prior or posterior distribution. For example, the `SIRdata` object above is of type `libbi`:
+The `libbi` class manages the interaction with **LibBi** such as sampling from the prior or posterior distribution. For example, the `sir_data` object above is of type `libbi`:
 
 ```{r, eval = NOT_CRAN}
-class(SIRdata)
+class(sir_data)
 ```
 
 Th `bi_generate_dataset` is one particular way of generating a `libbi` object, used only to generate test data from a model. The standard way of creating a `libbi` object for Bayesian inference is using the `libbi` command
@@ -237,7 +237,7 @@ We can see that the time-varying variables are represented as data frames with t
 Let's perform inference using Particle Markov-chain Metropolis Hastings (PMMH). The following command will generate 16 * 10,000 = 160,000 simulations and therefore may take a little while to run (if you want to see the samples progress, use `verbose=TRUE` in the `sample` call).
 
 ```{r, eval = NOT_CRAN}
-bi <- sample(bi_prior, target = "posterior", nparticles = 32, obs = SIRdata)
+bi <- sample(bi_prior, target = "posterior", nparticles = 32, obs = sir_data)
 ```
 This samples from the posterior distribution. Remember that options are preserved from previous runs (because we passed the `bi`) as first argument, so we don't need to specify `nsamples`, `end_time` and `noutputs` again, unless we want to change them. The `nparticles` option specifies the number of particles. 
 
@@ -253,7 +253,7 @@ bi_df <- sample(
 )
 ```
 
-Input, init and observation files (see the [LibBi manual](http://libbi.org/docs/LibBi-Manual.pdf) for details) can be specified using the `init`, `input`, `obs` options, respectively. They can each be specified either as the name of a NetCDF file containing the data, or a `libbi` object (in which case the output file will be taken) or directly via an appropriate `R` object containing the data (e.g., a character vector of length one, or a list of data frames or numeric vectors). In the case of the command above, `init` is specified as a list, and `obs` as a `libbi` object. The `Incidence` variable of the `SIRdata` object will be taken as observations. 
+Input, init and observation files (see the [LibBi manual](http://libbi.org/docs/LibBi-Manual.pdf) for details) can be specified using the `init`, `input`, `obs` options, respectively. They can each be specified either as the name of a NetCDF file containing the data, or a `libbi` object (in which case the output file will be taken) or directly via an appropriate `R` object containing the data (e.g., a character vector of length one, or a list of data frames or numeric vectors). In the case of the command above, `init` is specified as a list, and `obs` as a `libbi` object. The `Incidence` variable of the `sir_data` object will be taken as observations. 
 
 The time dimension (or column, if a data frame) in the passed `init`, `input` and/or `obs` files can be specified using the `time_dim` option. If this is not given, it will be assumed to be `time`, if such a dimension exists or, if not, any numeric column not called `value` (or the contents of the `value_column` option). If this does not produce a unique column name, an error will be thrown. All other dimensions/columns in the passed options will be interpreted as additional dimensions in the data, and stored in the `dims` field of the `libbi` object.
 
@@ -305,7 +305,7 @@ plot(traces)
 Compare this to the marginal posterior distributions to the "correct" parameters used to generate the data set:
 
 ```{r, eval = NOT_CRAN}
-bi_read(SIRdata, type = "param")
+bi_read(sir_data, type = "param")
 ```
 
 For more details on using **coda** to further analyse the chains, see the website of the [coda package](https://cran.r-project.org/package=coda). For more plotting functionality, the [ggmcmc package](https://cran.r-project.org/package=ggmcmc) is also worth considering.
@@ -316,7 +316,7 @@ We can use the `predict` function to re-simulate the fitted model using the esti
 
 ```{r, eval = NOT_CRAN}
 pred_bi <- predict(
-  bi, start_time = 0, end_time = 20 * 7, output_every = 7, 
+  bi, start_time = 0, end_time = 20 * 7, output_every = 7,
   with = c("transform-obs-to-state")
 )
 ```
@@ -393,7 +393,7 @@ For example, one could use the following code to get the acceptance rate for a *
 pz_run_output <- bi_read(system.file(package = "rbi", "example_output.nc"))
 pz_model_file <- system.file(package = "rbi", "PZ.bi")
 pz_posterior <- attach_data(libbi(pz_model_file), "output", pz_run_output)
-traces <- mcmc(get_traces(PZ_posterior))
+traces <- mcmc(get_traces(pz_posterior))
 a <- 1 - rejectionRate(traces)
 a
 ```
