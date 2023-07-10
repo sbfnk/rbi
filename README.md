@@ -6,7 +6,7 @@ Bayesian inference for state-space models with R
 ![GitHub R package
 version](https://img.shields.io/github/r-package/v/sbfnk/rbi)
 [![R-CMD-check](https://github.com/sbfnk/rbi/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/sbfnk/rbi/actions/workflows/R-CMD-check.yaml)
-[![codecov](https://codecov.io/github/sbfnk/rbi/branch/master/graphs/badge.svg)](https://codecov.io/github/sbfnk/rbi)
+[![codecov](https://app.codecov.io/github/sbfnk/rbi)](https://app.codecov.io/github/sbfnk/rbi)
 ![GitHub
 contributors](https://img.shields.io/github/contributors/sbfnk/rbi)
 [![License: GPL
@@ -14,7 +14,7 @@ v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/li
 <!-- badges: end -->
 
 [rbi](https://github.com/sbfnk/rbi) is an `R` interface to
-[libbi](http://libbi.org), a library for Bayesian inference.
+[libbi](https://libbi.org), a library for Bayesian inference.
 
 It mainly contains:
 
@@ -71,10 +71,10 @@ need to have **LibBi** installed.
 A good starting point is to look at the included demos:
 
 ``` r
- demo(PZ_generate_dataset) ## generating a data set from a model
- demo(PZ_PMMH)             ## particle Markov-chain Metropolis-Hastings
- demo(PZ_SMC2)             ## SMC^2
- demo(PZ_filtering)        ## filtering
+demo(PZ_generate_dataset) ## generating a data set from a model
+demo(PZ_PMMH) ## particle Markov-chain Metropolis-Hastings
+demo(PZ_SMC2) ## SMC^2
+demo(PZ_filtering) ## filtering
 ```
 
 For further information, have a look at the introductory vignette from

@@ -16,7 +16,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-[rbi](https://github.com/sbfnk/rbi) is an `R` interface to [LibBi](http://libbi.org), a library for Bayesian inference with state-space models using high-performance computer hardware.
+[rbi](https://github.com/sbfnk/rbi) is an `R` interface to [LibBi](https://libbi.org), a library for Bayesian inference with state-space models using high-performance computer hardware.
 
 The package has been tested on macOS and Linux. It requires a working installation of **LibBi**. On macOS, this is easiest done using the `brew` command: Install [Homebrew](https://brew.sh), then issue the following command (using a command shell, i.e. Terminal or similar):
 
@@ -61,7 +61,7 @@ to load the package.
 
 # Getting started
 
-The main computational engine and model grammar behind **rbi** is provided by **LibBi**. The [LibBi manual](http://libbi.org/docs/LibBi-Manual.pdf) is a good place to start for finding out everything there is to know about **LibBi** models and inference methods.
+The main computational engine and model grammar behind **rbi** is provided by **LibBi**. The [LibBi manual](https://libbi.org/docs/LibBi-Manual.pdf) is a good place to start for finding out everything there is to know about **LibBi** models and inference methods.
 
 The **rbi** package mainly provides two classes: `bi_model` and `libbi`. The `bi_model` class is used to load, view and manipulate **LibBi** model files. The `libbi` class is used to run LibBi and perform inference.
 
@@ -76,7 +76,7 @@ model_file <- system.file(package = "rbi", "SIR.bi")
 sir_model <- bi_model(model_file) # load model
 ```
 
-Other ways of implementing a (deterministic or stochastic) SIR model can be found in the [collection of SIR models for LibBi](http://sbfnk.github.io/rbi/idd_models.html), where you also find how to load them into a `bi_model` object, e.g. `sir_model`. Feel free to run the commands below with different versions of the model.
+Other ways of implementing a (deterministic or stochastic) SIR model can be found in the [collection of SIR models for LibBi](idd_models), where you also find how to load them into a `bi_model` object, e.g. `sir_model`. Feel free to run the commands below with different versions of the model.
 
 The `sir_model` object now contains the model, which can be displayed with
 
@@ -253,11 +253,11 @@ bi_df <- sample(
 )
 ```
 
-Input, init and observation files (see the [LibBi manual](http://libbi.org/docs/LibBi-Manual.pdf) for details) can be specified using the `init`, `input`, `obs` options, respectively. They can each be specified either as the name of a NetCDF file containing the data, or a `libbi` object (in which case the output file will be taken) or directly via an appropriate `R` object containing the data (e.g., a character vector of length one, or a list of data frames or numeric vectors). In the case of the command above, `init` is specified as a list, and `obs` as a `libbi` object. The `Incidence` variable of the `sir_data` object will be taken as observations. 
+Input, init and observation files (see the [LibBi manual](https://libbi.org/docs/LibBi-Manual.pdf) for details) can be specified using the `init`, `input`, `obs` options, respectively. They can each be specified either as the name of a NetCDF file containing the data, or a `libbi` object (in which case the output file will be taken) or directly via an appropriate `R` object containing the data (e.g., a character vector of length one, or a list of data frames or numeric vectors). In the case of the command above, `init` is specified as a list, and `obs` as a `libbi` object. The `Incidence` variable of the `sir_data` object will be taken as observations. 
 
 The time dimension (or column, if a data frame) in the passed `init`, `input` and/or `obs` files can be specified using the `time_dim` option. If this is not given, it will be assumed to be `time`, if such a dimension exists or, if not, any numeric column not called `value` (or the contents of the `value_column` option). If this does not produce a unique column name, an error will be thrown. All other dimensions/columns in the passed options will be interpreted as additional dimensions in the data, and stored in the `dims` field of the `libbi` object.
 
-Any other options (apart from `log_file_name`, see the [Debugging](#debugging) section) will be passed on to the command `libbi` -- for a complete list, see the [LibBi manual](http://libbi.org/docs/LibBi-Manual.pdf). Hyphens can be replaced by underscores so as not to confuse R (see `end_time`). Any arguments starting with `enable`/`disable` can be specified as boolean (e.g., `assert=TRUE`). Any `dry-` options can be specified with a `"dry"` argument, e.g., `parse="dry"`.
+Any other options (apart from `log_file_name`, see the [Debugging](#debugging) section) will be passed on to the command `libbi` -- for a complete list, see the [LibBi manual](https://libbi.org/docs/LibBi-Manual.pdf). Hyphens can be replaced by underscores so as not to confuse R (see `end_time`). Any arguments starting with `enable`/`disable` can be specified as boolean (e.g., `assert=TRUE`). Any `dry-` options can be specified with a `"dry"` argument, e.g., `parse="dry"`.
 
 # Analysing an MCMC run
 
@@ -312,7 +312,7 @@ For more details on using **coda** to further analyse the chains, see the websit
 
 # Predictions
 
-We can use the `predict` function to re-simulate the fitted model using the estimated parameters, that is to generate samples from $p(x_t|\theta)$ where the $\theta$ are distributed according to the marginal posterior distribution $p(\theta|y^*_t)$ (here: $\theta$ are fixed parameters, $x_t$ are state trajectories and $y^*_t$ observed data points, as in the [LibBi manual](http://libbi.org/docs/LibBi-Manual.pdf)). This can be useful, for example, for comparing typical model trajectories to the data, or for running the model beyond the last data point.
+We can use the `predict` function to re-simulate the fitted model using the estimated parameters, that is to generate samples from $p(x_t|\theta)$ where the $\theta$ are distributed according to the marginal posterior distribution $p(\theta|y^*_t)$ (here: $\theta$ are fixed parameters, $x_t$ are state trajectories and $y^*_t$ observed data points, as in the [LibBi manual](https://libbi.org/docs/LibBi-Manual.pdf)). This can be useful, for example, for comparing typical model trajectories to the data, or for running the model beyond the last data point.
 
 ```{r, eval = NOT_CRAN}
 pred_bi <- predict(
@@ -321,7 +321,7 @@ pred_bi <- predict(
 )
 ```
 
-where `with=c("transform-obs-to-state")` tells LibBi to treat observations as a state variable, that is to randomly generate observations, i.e. samples from $p(y_t|\theta)$ where, again, $theta$ are distributed according to the posterior distribution $p(\theta|y^*_t)$ (see the `with-transform-obs-to-state` option in the [LibBi manual](http://libbi.org/docs/LibBi-Manual.pdf)).
+where `with=c("transform-obs-to-state")` tells LibBi to treat observations as a state variable, that is to randomly generate observations, i.e. samples from $p(y_t|\theta)$ where, again, $theta$ are distributed according to the posterior distribution $p(\theta|y^*_t)$ (see the `with-transform-obs-to-state` option in the [LibBi manual](https://libbi.org/docs/LibBi-Manual.pdf)).
 
 # Sample observations
 
@@ -410,7 +410,7 @@ This generates the internal representation of the model for LibBi. It doesn't ma
 
 # Related packages
 
-[rbi.helpers](https://github.com/sbfnk/rbi.helpers) contains higher-level methods to interact with **LibBi**, including methods for plotting the results of libbi runs and for adapting the proposal distribution and number of particles. For more information, see the [rbi.helpers vignette](http://sbfnk.github.io/rbi/rbi_helpers.html).
+[rbi.helpers](https://github.com/sbfnk/rbi.helpers) contains higher-level methods to interact with **LibBi**, including methods for plotting the results of libbi runs and for adapting the proposal distribution and number of particles. For more information, see the [rbi.helpers vignette](http://sbfnk.github.io/rbi.helpers/articles/introduction.html).
 
 # References
  * Murray, L.M. (2013). [Bayesian state-space modelling on high-performance hardware using LibBi](https://arxiv.org/abs/1306.3277).
