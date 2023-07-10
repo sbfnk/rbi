@@ -7,14 +7,8 @@
 #'
 #' @param ... any number of strings to convert
 #' @return a list of options and values
-#' @export
+#' @keywords internal
 option_list <- function(...) {
-
-  warning(
-    "`option_list` has been deprecated and will be removed from ",
-    "future versions of `rbi`. Specify options directly in calls to ",
-    "`libbi`, `sample`, etc."
-  )
 
   options <- list()
 
