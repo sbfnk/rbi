@@ -10,9 +10,9 @@ vignette: >
 
 ```{r setup, echo=FALSE}
 knitr::opts_chunk$set(
-  cache = TRUE, fig.path = "figure/introduction/", 
-  cache.path = "cache/introduction/", fig.cap = "", fig.align = "center", 
-  message = FALSE, tidy = TRUE, warning = FALSE
+  cache = TRUE, fig.path = "figure/introduction/",
+  cache.path = "cache/introduction/", fig.cap = "", fig.align = "center",
+  message = FALSE, warning = FALSE
 )
 ```
 
