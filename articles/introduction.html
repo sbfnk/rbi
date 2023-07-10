@@ -268,7 +268,7 @@ second time, it should run much faster.</p>
 <span><span class="co">#&gt; Wrapper around LibBi</span></span>
 <span><span class="co">#&gt; ======================</span></span>
 <span><span class="co">#&gt; Model:  SIR </span></span>
-<span><span class="co">#&gt; Run time:  0.002481  seconds</span></span>
+<span><span class="co">#&gt; Run time:  0.002522  seconds</span></span>
 <span><span class="co">#&gt; Number of samples:  1 </span></span>
 <span><span class="co">#&gt; State trajectories recorded:  S I R Z </span></span>
 <span><span class="co">#&gt; Noise trajectories recorded:  n_transmission n_recovery </span></span>
@@ -364,7 +364,7 @@ at the <code>bi</code> object:</p>
 <span><span class="co">#&gt; Wrapper around LibBi</span></span>
 <span><span class="co">#&gt; ======================</span></span>
 <span><span class="co">#&gt; Model:  SIR </span></span>
-<span><span class="co">#&gt; Run time:  0.087714  seconds</span></span>
+<span><span class="co">#&gt; Run time:  0.084108  seconds</span></span>
 <span><span class="co">#&gt; Number of samples:  1000 </span></span>
 <span><span class="co">#&gt; State trajectories recorded:  S I R Z </span></span>
 <span><span class="co">#&gt; Noise trajectories recorded:  n_transmission n_recovery </span></span>
@@ -374,32 +374,32 @@ at the <code>bi</code> object:</p>
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">bi_prior</span><span class="op">)</span></span>
 <span><span class="co">#&gt; List of 21</span></span>
 <span><span class="co">#&gt;  $ options         :List of 5</span></span>
-<span><span class="co">#&gt;   ..$ build-dir: chr "/tmp/RtmpvpAZJ5/SIR44701ec11456"</span></span>
+<span><span class="co">#&gt;   ..$ build-dir: chr "/tmp/RtmpzrHSQU/SIR442b6faef95e"</span></span>
 <span><span class="co">#&gt;   ..$ seed     : num 3.33e+08</span></span>
 <span><span class="co">#&gt;   ..$ nsamples : num 1000</span></span>
 <span><span class="co">#&gt;   ..$ end-time : num 112</span></span>
 <span><span class="co">#&gt;   ..$ noutputs : num 16</span></span>
 <span><span class="co">#&gt;  $ path_to_libbi   : chr "/usr/local/bin/libbi"</span></span>
 <span><span class="co">#&gt;  $ model           : 'bi_model' chr [1:50] "model SIR {" "const h = 7" "const N = 1000" "const d_infection = 14" ...</span></span>
-<span><span class="co">#&gt;  $ model_file_name : chr "/tmp/RtmpvpAZJ5/SIR44701ec11456/SIR.bi"</span></span>
+<span><span class="co">#&gt;  $ model_file_name : chr "/tmp/RtmpzrHSQU/SIR442b6faef95e/SIR.bi"</span></span>
 <span><span class="co">#&gt;  $ dims            : list()</span></span>
 <span><span class="co">#&gt;  $ time_dim        : chr(0) </span></span>
 <span><span class="co">#&gt;  $ coord_dims      : list()</span></span>
 <span><span class="co">#&gt;  $ thin            : num 1</span></span>
 <span><span class="co">#&gt;  $ output_every    : num NA</span></span>
 <span><span class="co">#&gt;  $ debug           : logi FALSE</span></span>
-<span><span class="co">#&gt;  $ command         : chr "/usr/local/bin/libbi sample --build-dir /tmp/RtmpvpAZJ5/SIR44701ec11456 --seed 332755949 --target prior --nsamp"| __truncated__</span></span>
-<span><span class="co">#&gt;  $ output_file_name: chr "/tmp/RtmpvpAZJ5/SIR44701ec11456/SIR_output44706c3f6359.nc"</span></span>
-<span><span class="co">#&gt;  $ log_file_name   : chr "/tmp/RtmpvpAZJ5/SIR44701ec11456/output4470163c7c0f.txt"</span></span>
+<span><span class="co">#&gt;  $ command         : chr "/usr/local/bin/libbi sample --build-dir /tmp/RtmpzrHSQU/SIR442b6faef95e --seed 332755949 --target prior --nsamp"| __truncated__</span></span>
+<span><span class="co">#&gt;  $ output_file_name: chr "/tmp/RtmpzrHSQU/SIR442b6faef95e/SIR_output442be91ab9f.nc"</span></span>
+<span><span class="co">#&gt;  $ log_file_name   : chr "/tmp/RtmpzrHSQU/SIR442b6faef95e/output442b4373e7c5.txt"</span></span>
 <span><span class="co">#&gt;  $ user_log_file   : logi FALSE</span></span>
 <span><span class="co">#&gt;  $ timestamp       :List of 1</span></span>
-<span><span class="co">#&gt;   ..$ output: POSIXct[1:1], format: "2023-07-10 16:16:14"</span></span>
+<span><span class="co">#&gt;   ..$ output: POSIXct[1:1], format: "2023-07-10 17:55:51"</span></span>
 <span><span class="co">#&gt;  $ run_flag        : logi TRUE</span></span>
 <span><span class="co">#&gt;  $ error_flag      : logi FALSE</span></span>
 <span><span class="co">#&gt;  $ use_cache       : logi TRUE</span></span>
 <span><span class="co">#&gt;  $ supplement      : NULL</span></span>
-<span><span class="co">#&gt;  $ .gc_env         :&lt;environment: 0x5613064106d8&gt; </span></span>
-<span><span class="co">#&gt;  $ .cache          :&lt;environment: 0x561303fa2390&gt; </span></span>
+<span><span class="co">#&gt;  $ .gc_env         :&lt;environment: 0x55c3cf5cfea8&gt; </span></span>
+<span><span class="co">#&gt;  $ .cache          :&lt;environment: 0x55c3d0393ef8&gt; </span></span>
 <span><span class="co">#&gt;  - attr(*, "class")= chr "libbi"</span></span></code></pre></div>
 <p>We can see the object contains 14 fields, including the model, the
 path to the <code>libbi</code> script, and the command used to run libbi
@@ -409,7 +409,7 @@ the ones we passed to <code>sample</code></p>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bi_prior</span><span class="op">$</span><span class="va">options</span></span>
 <span><span class="co">#&gt; $`build-dir`</span></span>
-<span><span class="co">#&gt; [1] "/tmp/RtmpvpAZJ5/SIR44701ec11456"</span></span>
+<span><span class="co">#&gt; [1] "/tmp/RtmpzrHSQU/SIR442b6faef95e"</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $seed</span></span>
 <span><span class="co">#&gt; [1] 332755949</span></span>
@@ -428,7 +428,7 @@ object, including the model used, the command used to run
 name:</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bi_prior</span><span class="op">$</span><span class="va">output_file_name</span></span>
-<span><span class="co">#&gt; [1] "/tmp/RtmpvpAZJ5/SIR44701ec11456/SIR_output44706c3f6359.nc"</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] "/tmp/RtmpzrHSQU/SIR442b6faef95e/SIR_output442be91ab9f.nc"</span></span></code></pre></div>
 <p>We can get the results of the sampling run using
 <code>bi_read</code></p>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
@@ -471,7 +471,7 @@ data. Let’s look at the returned object</p>
 <span><span class="co">#&gt;  $ p_R0          :'data.frame':  1000 obs. of  2 variables:</span></span>
 <span><span class="co">#&gt;   ..$ np   : num [1:1000] 0 1 2 3 4 5 6 7 8 9 ...</span></span>
 <span><span class="co">#&gt;   ..$ value: num [1:1000] 1.7 1.6 2.63 1.08 2.83 ...</span></span>
-<span><span class="co">#&gt;  $ clock         : num 87714</span></span></code></pre></div>
+<span><span class="co">#&gt;  $ clock         : num 84108</span></span></code></pre></div>
 <p>This is a list of 9 objects, 8 representing each of the (noise/state)
 variables and parameters in the file, and one number <code>clock</code>,
 representing the time spent running the model in microseconds.</p>
@@ -581,7 +581,7 @@ command:</p>
 <span><span class="co">#&gt;  $ p_R0          :'data.frame':  1000 obs. of  2 variables:</span></span>
 <span><span class="co">#&gt;   ..$ np   : num [1:1000] 0 1 2 3 4 5 6 7 8 9 ...</span></span>
 <span><span class="co">#&gt;   ..$ value: num [1:1000] 2.38 2.42 2.32 2.32 2.32 ...</span></span>
-<span><span class="co">#&gt;  $ clock         : num 6375743</span></span>
+<span><span class="co">#&gt;  $ clock         : num 5980412</span></span>
 <span><span class="co">#&gt;  $ loglikelihood :'data.frame':  1000 obs. of  2 variables:</span></span>
 <span><span class="co">#&gt;   ..$ np   : num [1:1000] 0 1 2 3 4 5 6 7 8 9 ...</span></span>
 <span><span class="co">#&gt;   ..$ value: num [1:1000] -39.7 -36 -33.3 -33.3 -33.3 ...</span></span>
@@ -665,22 +665,7 @@ according to the posterior distribution <span class="math inline">\(p(x_t | y_t)
 <div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">obs_bi</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sample_obs.html">sample_obs</a></span><span class="op">(</span><span class="va">bi</span><span class="op">)</span></span></code></pre></div>
 <p>Compare this to the data:</p>
-<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/summary.html">summary</a></span><span class="op">(</span><span class="va">obs_bi</span>, type <span class="op">=</span> <span class="st">"obs"</span><span class="op">)</span></span></code></pre></div>
-<pre><code>     var time Min. 1st Qu. Median   Mean 3rd Qu. Max.</code></pre>
-<p>1 Incidence 0 0 0 0 0.463 1 4 2 Incidence 7 0 0 0 0.577 1 5 3
-Incidence 14 0 0 1 1.104 2 6 4 Incidence 21 0 3 4 4.961 7 20 5 Incidence
-28 0 8 10 10.984 14 30 6 Incidence 35 0 5 7 8.019 10 21 7 Incidence 42 0
-4 6 6.398 8 18 8 Incidence 49 0 3 4 4.430 6 14 9 Incidence 56 0 0 1
-1.190 2 7 10 Incidence 63 0 0 0 0.260 0 5 11 Incidence 70 0 0 0 0.167 0
-4 12 Incidence 77 0 0 0 0.140 0 3 13 Incidence 84 0 0 0 0.161 0 5 14
-Incidence 91 0 0 0 0.111 0 3 15 Incidence 98 0 0 0 0.133 0 3 16
-Incidence 105 0 0 0 0.170 0 4 17 Incidence 112 0 0 0 0.239 0 6</p>
-<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">dataset</span><span class="op">$</span><span class="va">Incidence</span></span></code></pre></div>
-<p>time value 1 0 0 2 7 0 3 14 0 4 21 5 5 28 13 6 35 9 7 42 7 8 49 4 9
-56 1 10 63 0 11 70 0 12 77 0 13 84 0 14 91 0 15 98 0 16 105 0 17 112
-0</p>
+<p><code>{r, eval = NOT_CRAN) summary(obs_bi, type = "obs") dataset$Incidence</code></p>
 </div>
 <div class="section level2">
 <h2 id="filtering">Filtering<a class="anchor" aria-label="anchor" href="#filtering"></a>
@@ -689,7 +674,7 @@ Incidence 105 0 0 0 0.170 0 4 17 Incidence 112 0 0 0 0.239 0 6</p>
 are supported through commands of the same name: `filter, optimise and
 rewrite. For example, to run a particle filter on the last posterior
 sample generated above, you can use:</p>
-<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bi_filtered</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/filter.html">filter</a></span><span class="op">(</span><span class="va">bi</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
@@ -700,7 +685,7 @@ routines or plotting packages such as <code>ggplot2</code>. The
 <code>summary</code> function can help with this. For example, to plot
 observations randomly generated from the posterior distribution of the
 parameters and compare them to the data we can use</p>
-<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ps</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/summary.html">summary</a></span><span class="op">(</span><span class="va">pred_bi</span>, type <span class="op">=</span> <span class="st">"obs"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://ggplot2.tidyverse.org" class="external-link">"ggplot2"</a></span><span class="op">)</span></span>
@@ -709,12 +694,12 @@ parameters and compare them to the data we can use</p>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_ribbon.html" class="external-link">geom_ribbon</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>ymin <span class="op">=</span> <span class="va">`1st Qu.`</span>, ymax <span class="op">=</span> <span class="va">`3rd Qu.`</span><span class="op">)</span>, alpha <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">value</span><span class="op">)</span>, <span class="va">dataset</span><span class="op">$</span><span class="va">Incidence</span>, color <span class="op">=</span> <span class="st">"darkred"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ylab</a></span><span class="op">(</span><span class="st">"cases"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="introduction_files/figure-html/unnamed-chunk-43-1.png" width="700"></p>
+<p><img src="introduction_files/figure-html/unnamed-chunk-42-1.png" width="700"></p>
 <p>where we have plotted the median fit as a black line, the
 interquartile range as a grey ribbon, and the data points as dark red
 dots. Compare this to observations randomly generated from the posterior
 distribution of trajectories:</p>
-<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">os</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/summary.html">summary</a></span><span class="op">(</span><span class="va">obs_bi</span>, type <span class="op">=</span> <span class="st">"obs"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">os</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">time</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
@@ -722,7 +707,7 @@ distribution of trajectories:</p>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_ribbon.html" class="external-link">geom_ribbon</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>ymin <span class="op">=</span> <span class="va">`1st Qu.`</span>, ymax <span class="op">=</span> <span class="va">`3rd Qu.`</span><span class="op">)</span>, alpha <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">value</span><span class="op">)</span>, <span class="va">dataset</span><span class="op">$</span><span class="va">Incidence</span>, color <span class="op">=</span> <span class="st">"darkred"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ylab</a></span><span class="op">(</span><span class="st">"cases"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="introduction_files/figure-html/unnamed-chunk-44-1.png" width="700"></p>
+<p><img src="introduction_files/figure-html/unnamed-chunk-43-1.png" width="700"></p>
 </div>
 <div class="section level2">
 <h2 id="saving-and-loading-libbi-objects">Saving and loading <code>libbi</code> objects<a class="anchor" aria-label="anchor" href="#saving-and-loading-libbi-objects"></a>
@@ -732,14 +717,14 @@ distribution of trajectories:</p>
 <code>save_libbi</code> and <code>read_libbi</code>. These make sure
 that all information (including any options, input, init and observation
 files) is stored in the object.</p>
-<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/save_libbi.html">save_libbi</a></span><span class="op">(</span><span class="va">bi</span>, <span class="st">"bi.rds"</span><span class="op">)</span></span>
 <span><span class="va">bi</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_libbi.html">read_libbi</a></span><span class="op">(</span><span class="st">"bi.rds"</span><span class="op">)</span></span>
 <span><span class="va">bi</span></span>
 <span><span class="co">#&gt; Wrapper around LibBi</span></span>
 <span><span class="co">#&gt; ======================</span></span>
 <span><span class="co">#&gt; Model:  SIR </span></span>
-<span><span class="co">#&gt; Run time:  6.375743  seconds</span></span>
+<span><span class="co">#&gt; Run time:  5.980412  seconds</span></span>
 <span><span class="co">#&gt; Number of samples:  1000 </span></span>
 <span><span class="co">#&gt; State trajectories recorded:  S I R Z </span></span>
 <span><span class="co">#&gt; Noise trajectories recorded:  n_transmission n_recovery </span></span>
@@ -752,7 +737,7 @@ files) is stored in the object.</p>
 use <code>attach_data</code>. For example, one could use the following
 code to get the acceptance rate for a <em>LibBi</em> run with a given
 output and model file:</p>
-<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pz_run_output</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/bi_read.html">bi_read</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span>package <span class="op">=</span> <span class="st">"rbi"</span>, <span class="st">"example_output.nc"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">pz_model_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span>package <span class="op">=</span> <span class="st">"rbi"</span>, <span class="st">"PZ.bi"</span><span class="op">)</span></span>
 <span><span class="va">pz_posterior</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/attach_data.html">attach_data</a></span><span class="op">(</span><span class="fu"><a href="../reference/libbi.html">libbi</a></span><span class="op">(</span><span class="va">pz_model_file</span><span class="op">)</span>, <span class="st">"output"</span>, <span class="va">pz_run_output</span><span class="op">)</span></span>
@@ -767,7 +752,7 @@ output and model file:</p>
 </h2>
 <p>For a general check of model syntax, the <code>rewrite</code> command
 is useful:</p>
-<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/rewrite.html">rewrite</a></span><span class="op">(</span><span class="va">sir_model</span><span class="op">)</span></span></code></pre></div>
 <p>This generates the internal representation of the model for LibBi. It
 doesn’t matter so much what this looks like, but it will throw an error
