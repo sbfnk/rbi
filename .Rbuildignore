@@ -1,7 +1,7 @@
 ^CRAN-RELEASE$
 cran-comments.md
 ^revdep$
-.travis.yml
+^codecov.yml$
 docker
 ^.*\.Rproj$
 ^\.Rproj\.user$
