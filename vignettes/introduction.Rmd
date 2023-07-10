@@ -3,24 +3,17 @@ title: Introduction to rbi
 author: Sebastian Funk
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{introduction}
+  %\VignetteIndexEntry{Introduction to rbi}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
 ```{r, include = FALSE}
+NOT_CRAN <- identical(tolower(Sys.getenv("NOT_CRAN")), "true")
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
-```
-
-```{r setup}
-library(rbi)
-```
-
-```{r, echo = FALSE}
-NOT_CRAN <- identical(tolower(Sys.getenv("NOT_CRAN")), "true")
 ```
 
 [rbi](https://github.com/sbfnk/rbi) is an `R` interface to [LibBi](http://libbi.org), a library for Bayesian inference with state-space models using high-performance computer hardware.
