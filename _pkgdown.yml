@@ -82,7 +82,7 @@ reference:
       - Unequals
 
 articles
-- title: Introduction
-  navbar: Package vignette
-  contents:
-    - introduction
+  - title: Introduction
+    navbar: Package vignette
+    contents:
+      - introduction
