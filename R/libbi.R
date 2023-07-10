@@ -167,7 +167,7 @@ run <- function(x, ...) UseMethod("run")
 #' @importFrom ncdf4 nc_open nc_close ncvar_rename
 #' @importFrom stats runif
 #' @importFrom processx run
-#' @export
+#' @keywords internal
 run.libbi <- function(x, client, proposal = c("model", "prior"), model, fix,
                       options, config, log_file_name = character(0), init,
                       input, obs, time_dim = character(0), coord_dims = list(),

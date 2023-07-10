@@ -143,3 +143,4 @@ bi_file_summary(bi_object)
 \seealso{
 \code{\link{libbi}}
 }
+\keyword{internal}

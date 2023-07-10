@@ -99,6 +99,7 @@ option_list <- function(...) {
 #' @param ... any number of lists of options, or strings (which will be left
 #'   unmodified). If lists are given, later arguments will override earlier ones
 #
+#' @keywords internal
 option_string <- function(...) {
   list_options <- list()
 

@@ -17,3 +17,4 @@ a number, the dimension length
 \description{
 This function returns the length of a dimension in a NetCDF file.
 }
+\keyword{internal}
