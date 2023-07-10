@@ -6,6 +6,10 @@ on:
 
 name: lint-changed-files
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   lint-changed-files:
     runs-on: ubuntu-latest
