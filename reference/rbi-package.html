@@ -56,13 +56,15 @@
     <div id="details">
     <h2>Details</h2>
     <p>The package includes a wrapper for the <code>libbi</code> script, allowing
-to launch the <code>libbi</code> command from within R. 
-It also provides various utility functions to browse the output from <code>libbi</code>,
+to launch the <code>libbi</code> command from within R.
+It also provides various utility functions to browse the output from
+<code>libbi</code>,
 for instance to plot the results.</p>
 <p>The package is made of various components:</p><ul><li><p>A wrapper around <code>libbi</code> called <code><a href="libbi.html">libbi</a></code>.</p></li>
-<li><p>A <code><a href="bi_model.html">bi_model</a></code> class that can be used to load and manipulate <code>libbi</code> models</p></li>
-<li><p>Functions to manipulate the results of the <code>libbi</code> command,
-which are stored in NetCDF files. Those functions allow to extract variables of
+<li><p>A <code><a href="bi_model.html">bi_model</a></code> class that can be used to load and manipulate
+<code>libbi</code> models</p></li>
+<li><p>Functions to manipulate the results of the <code>libbi</code> command, which
+are stored in NetCDF files. Those functions allow to extract variables of
 interest.</p></li>
 </ul></div>
     <div id="references">
@@ -75,13 +77,16 @@ interest.</p></li>
     </div>
     <div id="author">
     <h2>Author</h2>
-    <p>Pierre E. Jacob <a href="mailto:pierre.jacob.work@gmail.com">pierre.jacob.work@gmail.com</a>, Anthony Lee <a href="mailto:awllee@gmail.com">awllee@gmail.com</a>, Lawrence Murray <a href="mailto:lawrence.murray@csiro.au">lawrence.murray@csiro.au</a>, Sebastian Funk <a href="mailto:sebastian.funk@lshtm.ac.uk">sebastian.funk@lshtm.ac.uk</a></p>
+    <p>Pierre E. Jacob <a href="mailto:pierre.jacob.work@gmail.com">pierre.jacob.work@gmail.com</a>, Anthony Lee
+  <a href="mailto:awllee@gmail.com">awllee@gmail.com</a>, Lawrence Murray <a href="mailto:lawrence.murray@csiro.au">lawrence.murray@csiro.au</a>,
+  Sebastian Funk <a href="mailto:sebastian.funk@lshtm.ac.uk">sebastian.funk@lshtm.ac.uk</a></p>
     </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## examples for running libbi from rbi (will take a few minutes)</span></span></span>
+<span class="r-in"><span><span class="co"># \donttest{</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/demo.html" class="external-link">demo</a></span><span class="op">(</span><span class="va">PZ_generate_dataset</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -144,13 +149,15 @@ interest.</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &gt; # 'bi_generate_dataset' and look for the issue in the ".PZ" subdirectory</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &gt; dataset1 &lt;- bi_generate_dataset(pz, end_time = tf, noutputs = tf)</span>
 <span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in locate_libbi(x$path_to_libbi):</span> Could not find libbi executable at '/libbi'</span>
+<span class="r-in"><span><span class="co"># }</span></span></span>
+<span class="r-in"><span><span class="co"># \donttest{</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/demo.html" class="external-link">demo</a></span><span class="op">(</span><span class="va">PZ_PMMH</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 	demo(PZ_PMMH)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 	---- ~~~~~~~</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &gt; ### This demo shows how to perform filtering on a simple </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &gt; ### This demo shows how to perform filtering on a simple</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &gt; ### synthetic dataset using libbi.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &gt; # the PZ model file is included in rbi and can be found there:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &gt; model_file_name &lt;- system.file(package = "rbi", "PZ.bi")</span>
@@ -203,9 +210,12 @@ interest.</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &gt; # First let's generate a dataset from the model</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &gt; synthetic_dataset &lt;- bi_generate_dataset(</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> +   pz, end_time = tf, noutputs = tf, init = init_parameters</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> +   pz,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> +   end_time = tf, noutputs = tf, init = init_parameters</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> + )</span>
 <span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in locate_libbi(x$path_to_libbi):</span> Could not find libbi executable at '/libbi'</span>
+<span class="r-in"><span><span class="co"># }</span></span></span>
+<span class="r-in"><span><span class="co"># \donttest{</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/demo.html" class="external-link">demo</a></span><span class="op">(</span><span class="va">PZ_SMC2</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -263,9 +273,12 @@ interest.</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &gt; # First let's generate a dataset from the model</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &gt; synthetic_dataset &lt;- bi_generate_dataset(</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> +   pz, end_time = tf, noutputs = tf, init = init_parameters</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> +   pz,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> +   end_time = tf, noutputs = tf, init = init_parameters</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> + )</span>
 <span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in locate_libbi(x$path_to_libbi):</span> Could not find libbi executable at '/libbi'</span>
+<span class="r-in"><span><span class="co"># }</span></span></span>
+<span class="r-in"><span><span class="co"># \donttest{</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/demo.html" class="external-link">demo</a></span><span class="op">(</span><span class="va">PZ_filtering</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -325,9 +338,11 @@ interest.</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &gt; # First let's generate a dataset from the model</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &gt; synthetic_dataset &lt;- bi_generate_dataset(</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> +   pz, end_time = tf, init = init_parameters</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> +   pz,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> +   end_time = tf, init = init_parameters</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> + )</span>
 <span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in locate_libbi(x$path_to_libbi):</span> Could not find libbi executable at '/libbi'</span>
+<span class="r-in"><span><span class="co"># }</span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
