@@ -10,7 +10,7 @@ tf <- 50
 
 init_parameters <- list(P = 2, Z = 2, mu = 0.5, sigma = 0.3)
 # First let's generate a dataset from the model
-synthetic_dataset <- bi_generate_dataset(
+synthetic_dataset <- generate_dataset(
   pz,
   end_time = tf, noutputs = tf, init = init_parameters
 )

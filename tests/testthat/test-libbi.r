@@ -84,7 +84,7 @@ test_that("we can run libbi and analyse results", {
     output_every = 2, end_time = 10
   )
   dry <- sample(model, dry = c("run", "gen", "parse", "build"))
-  dataset <- bi_generate_dataset(bi_run, end_time = 50)
+  dataset <- generate_dataset(bi_run, end_time = 50)
   dataset_r <- bi_read(dataset)
   invisible(
     capture.output(
@@ -154,6 +154,11 @@ test_that("deprecated options are reported", {
     ), "deprecated"
   )
   expect_warning(attach_file(bi, "input", test_output), "deprecated")
+})
+
+test_that("deprecated functions are reported", {
+  skip_on_cran()
+  expect_warning(generate_dataset(bi_run, end_time = 50), "deprecated")
 })
 
 test_that("warnings are given", {
