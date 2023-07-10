@@ -1,4 +1,4 @@
-# rbi 0.10.4.9000
+# rbi 0.11.0
 
 * add github actions for package checking and testing
 
