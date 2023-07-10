@@ -22,10 +22,11 @@ Imports:
 Suggests:
     coda,
     covr (>= 3.2.0),
-    rmarkdown,
     stringi,
     testthat,
-    ggplot2
+    ggplot2,
+    knitr,
+    rmarkdown
 Description: Provides a complete interface to 'LibBi', a library for Bayesian
     inference (see <http://libbi.org> and Murray, 2015
     <doi:10.18637/jss.v067.i10> for more information). This includes functions
@@ -38,6 +39,6 @@ BugReports: https://github.com/sbfnk/RBi/issues
 SystemRequirements: LibBi (>= 1.4.2)
 LazyLoad: no
 RoxygenNote: 7.2.3
-VignetteBuilder: rmarkdown
 Language: en-GB
 Encoding: UTF-8
+VignetteBuilder: knitr
