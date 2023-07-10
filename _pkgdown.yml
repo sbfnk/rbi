@@ -13,6 +13,7 @@ reference:
       - filter
       - generate_dataset
       - optimise
+      - libbi
       - predict
       - run
       - sample
@@ -72,6 +73,7 @@ reference:
       - remove_vars
       - replace_all
       - set_name
+      - write_model
 
   - subtitle: "Model operators"
     desc: "Operators for LibBi models"
@@ -80,6 +82,19 @@ reference:
       - "`[.bi_model`"
       - "`[<-.bi_model`"
       - "`!=.bi_model`"
+
+  - title: "Other functions"
+
+  - subtitle: "Utility functions"
+    desc: "Useful additional functions."
+    contents:
+      - flatten
+      - print_log
+
+  - subtitle: "Deprecated functions"
+    desc: "To be removed in the next version of rbi."
+    contents:
+      - bi_generate_dataset
 
 articles:
   - title: Introduction
