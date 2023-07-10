@@ -3,3 +3,101 @@ url: https://sbfnk.github.io/rbi
 template:
   params:
     bootswatch: cerulean
+
+reference:
+  - title: "Run LibBi and analyse results"
+
+  - subtitle: "LibBi operations"
+    desc: "Functions for running LibBi."
+    contents:
+      - filter
+      - generate_dataset
+      - optimise
+      - libbi
+      - predict
+      - run
+      - sample
+      - sample_obs
+      - simulate
+
+  - subtitle: "Read and write LibBi inputs/outputs"
+    desc: "Functions for interacting with the NetCDF files used by LibBi."
+    contents:
+      - bi_contents
+      - bi_file_summary
+      - bi_read
+      - bi_write
+
+  - subtitle: "Analyse LibBi outputs"
+    desc: "Functions for analysing LibBi results."
+    contents:
+      - extract_sample
+      - get_traces
+      - summary
+      - logLik
+
+  - subtitle: "Manipulate LibBi inputs/outputs"
+    desc: "Functions for updating and saving LibBi objects."
+    contents:
+      - attach_data
+      - join
+      - read_libbi
+      - save_libbi
+      - update
+
+  - title: "Construct, show and manipulate LibBi models"
+
+  - subtitle: "Create a model"
+    desc: "Function for creating a LibBi model."
+    contents:
+      - bi_model
+
+  - subtitle: "Show models"
+    desc: "Functions for getting information from LibBi models."
+    contents:
+      - get_block
+      - get_const
+      - get_dims
+      - get_name
+      - rewrite
+      - var_names
+
+  - subtitle: "Manipulate models"
+    desc: "Functions for manipulating LibBi models."
+    contents:
+      - add_block
+      - enable_outputs
+      - fix
+      - insert_lines
+      - remove_lines
+      - remove_vars
+      - replace_all
+      - set_name
+      - write_model
+
+  - subtitle: "Model operators"
+    desc: "Operators for LibBi models"
+    contents:
+      - "`==.bi_model`"
+      - "`[.bi_model`"
+      - "`[<-.bi_model`"
+      - "`!=.bi_model`"
+
+  - title: "Other functions"
+
+  - subtitle: "Utility functions"
+    desc: "Useful additional functions."
+    contents:
+      - flatten
+      - print_log
+
+  - subtitle: "Deprecated functions"
+    desc: "To be removed in the next version of rbi."
+    contents:
+      - bi_generate_dataset
+
+articles:
+  - title: Introduction
+    navbar: Package vignette
+    contents:
+      - introduction

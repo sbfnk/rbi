@@ -14,3 +14,4 @@ unmodified). If lists are given, later arguments will override earlier ones}
 This function is used to convert a list of options into an options string. If
   a string is given,  it will be taken as such.
 }
+\keyword{internal}

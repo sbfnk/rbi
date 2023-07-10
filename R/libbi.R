@@ -81,7 +81,7 @@ run <- function(x, ...) UseMethod("run")
 #' @title Using the LibBi wrapper to launch LibBi
 #' @description
 #' The method \code{run} launches \code{LibBi} with a particular set of command
-#'   line #' arguments. Normally, this function would not be run by the user,
+#'   line arguments. Normally, this function would not be run by the user,
 #'   but instead one of the client functions \code{\link{sample}},
 #'   \code{\link{filter}}, or \code{\link{optimise}}, or \code{\link{rewrite}},
 #'   which pass any options on to \code{run}. Note that any options specified
@@ -1526,7 +1526,7 @@ update <- function(x, ...) UseMethod("update")
 #' @title Update a libbi object
 #' @description
 #' This updates all the time stamps in a libbi object; it is useful after
-# (input, output, etc.) files have been changed outside the object itself.
+#' (input, output, etc.) files have been changed outside the object itself.
 #'
 #' @param x a \code{\link{libbi}} object
 #' @param ... ignored

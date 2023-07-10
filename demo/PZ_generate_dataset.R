@@ -1,4 +1,4 @@
-### This demo shows how to generate data from a model using bi_generate_dataset
+### This demo shows how to generate data from a model using generate_dataset
 
 # the PZ model file is included in rbi and can be found there:
 model_file_name <- system.file(package = "rbi", "PZ.bi")
@@ -13,8 +13,8 @@ tf <- 100
 # so the parameters and initial conditions are drawn from the prior distribution
 # which is specified in the model file.
 # if libbi throws an error here, try passing the "working_folder" argument to
-# 'bi_generate_dataset' and look for the issue in the ".PZ" subdirectory
-dataset1 <- bi_generate_dataset(pz, end_time = tf, noutputs = tf)
+# 'generate_dataset' and look for the issue in the ".PZ" subdirectory
+dataset1 <- generate_dataset(pz, end_time = tf, noutputs = tf)
 # Read results
 output1 <- bi_read(dataset1, c("P_obs", "sigma"))
 
@@ -30,7 +30,7 @@ plot(
 
 # Then generate dataset with a specified set of parameter values;
 # the parameters left unspecified are drawn from the prior.
-dataset2 <- bi_generate_dataset(
+dataset2 <- generate_dataset(
   pz,
   end_time = tf, noutputs = tf, init = list(sigma = 0.5)
 )

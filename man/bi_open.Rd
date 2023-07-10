@@ -2,7 +2,7 @@
 % Please edit documentation in R/bi_open.R
 \name{bi_open}
 \alias{bi_open}
-\title{Bi open}
+\title{Bi Open}
 \usage{
 bi_open(x, file = "output")
 }
@@ -23,3 +23,4 @@ This function opens an NetCDF file
 The file can be specified as a string to the filepath, in which
 case a NetCDF connection is opened, or directly as a NetCDF connection.
 }
+\keyword{internal}

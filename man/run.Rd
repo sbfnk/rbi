@@ -126,7 +126,7 @@ an updated \code{\link{libbi}} object, except if \code{client} is
 }
 \description{
 The method \code{run} launches \code{LibBi} with a particular set of command
-  line #' arguments. Normally, this function would not be run by the user,
+  line arguments. Normally, this function would not be run by the user,
   but instead one of the client functions \code{\link{sample}},
   \code{\link{filter}}, or \code{\link{optimise}}, or \code{\link{rewrite}},
   which pass any options on to \code{run}. Note that any options specified

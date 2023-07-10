@@ -1,6 +1,6 @@
 #' @rdname bi_open
 #' @name bi_open
-#' @title Bi open
+#' @title Bi Open
 #' @description
 #' This function opens an NetCDF file
 #' The file can be specified as a string to the filepath, in which
@@ -14,6 +14,7 @@
 #'   file
 #' @return an open NetCDF connection
 #' @importFrom ncdf4 nc_open
+#' @keywords internal
 bi_open <- function(x, file = "output") {
   if (!missing(file) && !inherits(x, "libbi")) {
     warning(

@@ -17,4 +17,5 @@ a \code{\link{libbi}} object with updated timestamps
 }
 \description{
 This updates all the time stamps in a libbi object; it is useful after
+(input, output, etc.) files have been changed outside the object itself.
 }
