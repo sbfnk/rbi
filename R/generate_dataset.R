@@ -9,7 +9,7 @@
 #' @inheritParams run
 #' @return a \code{libbi} object, the generated data set
 #' @export
-bi_generate_dataset <- function(..., output_every=1){
+bi_generate_dataset <- function(..., output_every = 1) {
 
   warning(
     "`bi_generate_dataset` has been deprecated and will be removed from ",
@@ -45,7 +45,7 @@ bi_generate_dataset <- function(..., output_every=1){
 #' @inheritParams run
 #' @return a \code{libbi} object, the generated data set
 #' @export
-generate_dataset <- function(..., output_every=1){
+generate_dataset <- function(..., output_every = 1) {
 
   options <- list(...)
 
