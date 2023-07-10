@@ -77,7 +77,7 @@ reference:
     desc: "Operators for LibBi models"
     contents:
       - "`==.bi_model`"
-      - "`[.`bi_model`"
+      - "`[.bi_model`"
       - "`[<-.bi_model`"
       - "`!=.bi_model`"
 
