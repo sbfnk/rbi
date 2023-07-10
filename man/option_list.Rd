@@ -16,3 +16,4 @@ a list of options and values
 This function is used to convert an option string into a list of options. If
   a list is given, it will be kept as is
 }
+\keyword{internal}
