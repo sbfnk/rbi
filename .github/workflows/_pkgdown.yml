@@ -11,10 +11,6 @@ on:
 
 name: pkgdown
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
-
 jobs:
   pkgdown:
     runs-on: ubuntu-latest
