@@ -19,7 +19,7 @@ knitr::opts_chunk$set(
 # Deterministic SIR model, observations of prevalence
 
 ```{r deter_prev}
-model_str <- readLines(url("bi/SIR_deter_prev.bi"))
+model_str <- readLines("bi/SIR_deter_prev.bi")
 cat(paste(model_str, "\n"))
 sir_model <- bi_model(lines = model_str)
 ```
@@ -27,7 +27,7 @@ sir_model <- bi_model(lines = model_str)
 # Deterministic SIR model, observations of incidence
 
 ```{r deter_inc}
-model_str <- readLines(url("bi/SIR_deter.bi"))
+model_str <- readLines("bi/SIR_deter.bi")
 cat(paste(model_str, "\n"))
 sir_model <- bi_model(lines = model_str)
 ```
@@ -35,7 +35,7 @@ sir_model <- bi_model(lines = model_str)
 # Stochastic SIR model (SDE), observations of incidence
 
 ```{r stoch_sde}
-model_str <- readLines(url("bi/SIR_stoch_SDE.bi"))
+model_str <- readLines("bi/SIR_stoch_SDE.bi")
 cat(paste(model_str, "\n"))
 sir_model <- bi_model(lines = model_str)
 ```
@@ -43,7 +43,7 @@ sir_model <- bi_model(lines = model_str)
 # Stochastic SIR model (jump), observations of incidence
 
 ```{r stoch_jump}
-model_str <- readLines(url("bi/SIR_stoch_jump.bi"))
+model_str <- readLines("bi/SIR_stoch_jump.bi")
 cat(paste(model_str, "\n"))
 sir_model <- bi_model(lines = model_str)
 ```
