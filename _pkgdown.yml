@@ -101,3 +101,8 @@ articles:
     navbar: Package vignette
     contents:
       - introduction
+
+  - title: Collection of SIR models for LibBi
+    navbar: Examples
+    contents:
+      - idd_models
