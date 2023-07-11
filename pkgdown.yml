@@ -2,8 +2,9 @@ pandoc: 2.19.2
 pkgdown: 2.0.7
 pkgdown_sha: ~
 articles:
+  idd_models: idd_models.html
   introduction: introduction.html
-last_built: 2023-07-10T18:00Z
+last_built: 2023-07-11T09:43Z
 urls:
   reference: https://sbfnk.github.io/rbi/reference
   article: https://sbfnk.github.io/rbi/articles
