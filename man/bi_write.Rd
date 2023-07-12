@@ -15,7 +15,6 @@ bi_write(
   dim_factors,
   value_column = "value",
   guess_time = FALSE,
-  guess_coord = FALSE,
   verbose
 )
 }
@@ -49,9 +48,6 @@ contains the values (default: "value")}
 \item{guess_time}{whether to guess time dimension; this would be a numerical
 column in the data frame given which is not the \code{value_column}; only
 one such column must exist}
-
-\item{guess_coord}{whether to guess the coordinate dimension; this would be a
-column with varying value which is not the time or value column}
 
 \item{verbose}{if TRUE, will print variables as they are read}
 }

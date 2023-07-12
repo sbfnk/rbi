@@ -35,7 +35,7 @@
 #' @param init.to.param deprecated; use init_to_param instead
 #' @return a list of data frames and/or numbers that have been read
 #' @importFrom ncdf4 nc_close ncvar_get
-#' @importFrom data.table setkeyv setnames setDF is.data.table :=
+#' @importFrom data.table setkeyv setnames setDF is.data.table := dcast
 #' @importFrom reshape2 melt
 #' @examples
 #' example_output_file <- system.file(package = "rbi", "example_output.nc")
@@ -94,9 +94,26 @@ bi_read <- function(x, vars, dims, model, type, file, missval_threshold,
         clear_cache <- TRUE ## clear if reading with different dimensions
       }
     }
+    if (missing(coord_dims) || is.null(coord_dims)) {
+      coord_dims <- x$coord_dims
+    } else {
+      if (length(x$coord_dims) > 0) {
+        unequal <- vapply(names(x$coord_dims), function(y) {
+          any(x$coord_dims[[y]] != coord_dims[[y]])
+        }, FALSE)
+        if (any(unequal)) {
+          warning(
+            "Given 'coord_dims' will override coord dimensions in passed ",
+            "libbi object"
+          )
+        }
+        clear_cache <- TRUE ## clear if reading with different dimensions
+      }
+    }
+
     for (coord_dim in names(coord_dims)) {
       if (!is.null(x$coord_dims[[coord_dim]]) &&
-        x$coord_dims[[coord_dim]] != coord_dims[[coord_dim]]) {
+          any(x$coord_dims[[coord_dim]] != coord_dims[[coord_dim]])) {
         warning(
           "Given coord dimension ", coord_dim, " will override a coord ",
           "dimension of the same name in passed libbi object"
@@ -241,7 +258,7 @@ bi_read <- function(x, vars, dims, model, type, file, missval_threshold,
       }
 
       if (!is.null(dim(all_values))) {
-        mav <- data.table::data.table(reshape2::melt(
+        mav <- data.table(melt(
           all_values, varnames = dim_var_names
         ))
         ## remove any extraneous dimensions from melting
@@ -261,19 +278,26 @@ bi_read <- function(x, vars, dims, model, type, file, missval_threshold,
           all_matching_dims <- union(all_matching_dims, matching_dims)
           if (length(matching_vars) == 1) {
             merge_values <- ncvar_get(nc, matching_vars)
-            if (var_type == "coord" && !is.null(coord_dims[[var_name]])) {
-              if (length(dim(merge_values)) == 1) {
-                merge_values <- data.table::data.table(coord = merge_values)
+            if (var_type == "coord") {
+              if (length(coord_dims[[var_name]]) == 1) {
+                dim(merge_values) <- c(dim(merge_values), 1)
               }
-              colnames(merge_values) <- coord_dims[[var_name]]
-              merge_values <- apply(merge_values, 2, as.integer)
-              mav <- cbind(merge_values, mav)
-            } else {
-              mav_merge <- data.table::data.table(reshape2::melt(
-                merge_values, varnames = matching_dims, value.name = var_type
+              dimnames(merge_values)[[length(dim(merge_values))]] <-
+                coord_dims[[var_name]]
+              mav_merge <- data.table(melt(
+                merge_values, varnames = c(matching_dims, "variable"),
+                value.name = var_type
               ))
-              mav <- merge(mav_merge, mav, by = unname(matching_dims))
+              mav_merge <- data.table(dcast(
+                mav_merge, ... ~ variable, value.var = "coord"
+              ))
+            } else {
+              mav_merge <- data.table(melt(
+                merge_values, varnames = c(matching_dims),
+                value.name = var_type
+              ))
             }
+            mav <- merge(mav_merge, mav)
           } else if (length(matching_vars) > 1) {
             stop(
               "Found multiple matching ", var_type, " variables for ",
