@@ -78,7 +78,7 @@ model_file <- system.file(package = "rbi", "SIR.bi")
 sir_model <- bi_model(model_file) # load model
 ```
 
-Other ways of implementing a (deterministic or stochastic) SIR model can be found in the [collection of SIR models for LibBi](idd_models), where you also find how to load them into a `bi_model` object, e.g. `sir_model`. Feel free to run the commands below with different versions of the model.
+Other ways of implementing a (deterministic or stochastic) SIR model can be found in the [collection of SIR models for LibBi](idd_models.html), where you also find how to load them into a `bi_model` object, e.g. `sir_model`. Feel free to run the commands below with different versions of the model.
 
 The `sir_model` object now contains the model, which can be displayed with
 
