@@ -150,6 +150,8 @@ test_that("saved and re-loaded objects are the same", {
 })
 
 test_that("basic I/O functions work", {
+  bi <- attach_data(bi, file = "init", test_output[c("e", "m")])
+  bi <- attach_data(bi, "obs", test_output_sparse[c("M", "e")])
   expect_gt(length(bi_contents(bi)), 0)
   expect_gt(bi_dim_len(bi$output_file_name, "np"), 0)
   expect_equal(bi_dim_len(bi$output_file_name, "dummy"), 0)
@@ -262,9 +264,6 @@ test_that("guessing time and coordinate dimensions works", {
 })
 
 test_that("data can be attached to libbi objects", {
-  bi <- attach_data(bi, "obs", test_output_sparse[c("M", "e")])
-  bi <- attach_data(bi, file = "init", test_output[c("e", "m")])
-
   expect_equal(class(attach_data(bi, "output", bi$output_file_name)), "libbi")
   expect_equal(
     class(attach_data(bi, "output", bi$output_file_name, append = TRUE)),
