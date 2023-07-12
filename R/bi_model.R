@@ -571,7 +571,7 @@ write_model.libbi <- function(x, filename, ...) {
   write_model(x$model, filename = filename, ...)
 }
 
-#' @export
+#' @keywords internal
 find_block <- function(x, ...) UseMethod("find_block")
 #' @name find_block
 #' @title Find a block in a LibBi model
