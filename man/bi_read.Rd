@@ -13,14 +13,11 @@ bi_read(
   file,
   missval_threshold,
   coord_dims = list(),
-  vector,
   thin,
   verbose = FALSE,
   clear_cache = FALSE,
   init_to_param = FALSE,
-  burn = 0,
-  missval.threshold,
-  init.to.param = FALSE
+  burn = 0
 )
 }
 \arguments{
@@ -48,9 +45,6 @@ object): one of "output" (default), "init", "input", "obs"}
 character vectors, where each element corresponds to the variable of the
 same name, and the character vector are the \code{coord} dimensions}
 
-\item{vector}{deprecated; if TRUE, will return results as vectors, not
-data.frames}
-
 \item{thin}{thinning (keep only 1/thin of samples)}
 
 \item{verbose}{if TRUE, will print variables as they are read}
@@ -61,10 +55,6 @@ cached data exists}
 \item{init_to_param}{logical; if TRUE, convert states to initial values}
 
 \item{burn}{number of initial samples to discard; default: 0}
-
-\item{missval.threshold}{deprecated; use missval_threshold instead}
-
-\item{init.to.param}{deprecated; use init_to_param instead}
 }
 \value{
 a list of data frames and/or numbers that have been read

@@ -7,7 +7,6 @@
 bi_write(
   filename,
   variables,
-  timed,
   append = FALSE,
   overwrite = FALSE,
   time_dim,
@@ -25,8 +24,6 @@ to the file name}
 
 \item{variables}{a \code{list} object, the names of which should be the
 variable names and values should be either single values or data frames}
-
-\item{timed}{deprecated; timed variables should be given as data frames}
 
 \item{append}{if TRUE, will append variables if file exists; default: FALSE}
 

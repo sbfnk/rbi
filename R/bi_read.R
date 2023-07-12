@@ -23,16 +23,12 @@
 #' @param coord_dims any \code{coord} dimensions, given as a named list of
 #'   character vectors, where each element corresponds to the variable of the
 #'   same name, and the character vector are the \code{coord} dimensions
-#' @param vector deprecated; if TRUE, will return results as vectors, not
-#'   data.frames
 #' @param thin thinning (keep only 1/thin of samples)
 #' @param verbose if TRUE, will print variables as they are read
 #' @param clear_cache if TRUE, will clear the cache and re-read the file even if
 #'   cached data exists
 #' @param init_to_param logical; if TRUE, convert states to initial values
 #' @param burn number of initial samples to discard; default: 0
-#' @param missval.threshold deprecated; use missval_threshold instead
-#' @param init.to.param deprecated; use init_to_param instead
 #' @return a list of data frames and/or numbers that have been read
 #' @importFrom ncdf4 nc_close ncvar_get
 #' @importFrom data.table setkeyv setnames setDF is.data.table := dcast
@@ -42,33 +38,8 @@
 #' d <- bi_read(example_output_file)
 #' @export
 bi_read <- function(x, vars, dims, model, type, file, missval_threshold,
-                    coord_dims = list(), vector, thin, verbose = FALSE,
-                    clear_cache = FALSE, init_to_param = FALSE, burn = 0,
-                    missval.threshold, init.to.param = FALSE) { # nolint
-  if (!missing(missval.threshold)) {
-    warning("missval.threshold is deprecated. Use 'missval_threshold' instead.")
-    if (missing(missval_threshold)) {
-      missval_threshold <- missval.threshold
-    } else {
-      stop("Can't give 'missval.threshold' and 'missval_threshold'.")
-    }
-  } else if (missing(missval_threshold)) {
-    missval_threshold <- NULL
-  }
-
-  if (!missing(init.to.param)) {
-    warning("init.to.param is deprecated. Use 'init_to_param' instead.")
-    if (missing(init_to_param)) {
-      init_to_param <- init.to.param
-    } else {
-      stop("Can't give 'init.to.param' and 'init_to_param'.")
-    }
-  }
-
-  if (!missing(vector) && vector) {
-    warning("'vector' is deprecated. Will return data frame")
-  }
-
+                    coord_dims = list(), thin, verbose = FALSE,
+                    clear_cache = FALSE, init_to_param = FALSE, burn = 0) {
   if (missing(file)) {
     nc <- bi_open(x)
   } else {

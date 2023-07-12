@@ -142,20 +142,6 @@ test_that("we can rewrite a model", {
   expect_output(rewrite(model), "Action")
 })
 
-test_that("deprecated options are reported", {
-  expect_warning(libbi(bi$model, sample_obs = TRUE), "deprecated")
-  expect_warning(libbi(bi$model, output_all = TRUE), "deprecated")
-  expect_warning(
-    libbi(
-      bi$model,
-      options = list(
-        "--enable-cuda", "--nsamples=100", "--with-transform-obs-to-state"
-      )
-    ), "deprecated"
-  )
-  expect_warning(attach_file(bi, "input", test_output), "deprecated")
-})
-
 test_that("deprecated functions are reported", {
   expect_warning(bi_generate_dataset(bi, end_time = 50), "deprecated")
 })
