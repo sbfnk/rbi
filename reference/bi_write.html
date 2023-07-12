@@ -81,7 +81,6 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">bi_write</span><span class="op">(</span></span>
 <span>  <span class="va">filename</span>,</span>
 <span>  <span class="va">variables</span>,</span>
-<span>  <span class="va">timed</span>,</span>
 <span>  append <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  overwrite <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  <span class="va">time_dim</span>,</span>
@@ -104,10 +103,6 @@ to the file name</p></dd>
 <dt>variables</dt>
 <dd><p>a <code>list</code> object, the names of which should be the
 variable names and values should be either single values or data frames</p></dd>
-
-
-<dt>timed</dt>
-<dd><p>deprecated; timed variables should be given as data frames</p></dd>
 
 
 <dt>append</dt>
@@ -188,7 +183,7 @@ corresponding variable in the NetCDF file.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> list()</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="fu"><a href="bi_file_summary.html">bi_file_summary</a></span><span class="op">(</span><span class="va">filename</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> File /tmp/RtmpmTsgMz/dummy37805b73e4b3.nc (NC_FORMAT_CLASSIC):</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> File /tmp/RtmpXJ8h3L/dummy376778e011c5.nc (NC_FORMAT_CLASSIC):</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      2 variables (excluding dimension variables):</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         float a[]   </span>

@@ -85,14 +85,11 @@ case a NetCDF connection is opened, or directly as a NetCDF connection.</p>
 <span>  <span class="va">file</span>,</span>
 <span>  <span class="va">missval_threshold</span>,</span>
 <span>  coord_dims <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>  <span class="va">vector</span>,</span>
 <span>  <span class="va">thin</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  clear_cache <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  init_to_param <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  burn <span class="op">=</span> <span class="fl">0</span>,</span>
-<span>  <span class="va">missval.threshold</span>,</span>
-<span>  init.to.param <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  burn <span class="op">=</span> <span class="fl">0</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -138,11 +135,6 @@ character vectors, where each element corresponds to the variable of the
 same name, and the character vector are the <code>coord</code> dimensions</p></dd>
 
 
-<dt>vector</dt>
-<dd><p>deprecated; if TRUE, will return results as vectors, not
-data.frames</p></dd>
-
-
 <dt>thin</dt>
 <dd><p>thinning (keep only 1/thin of samples)</p></dd>
 
@@ -162,14 +154,6 @@ cached data exists</p></dd>
 
 <dt>burn</dt>
 <dd><p>number of initial samples to discard; default: 0</p></dd>
-
-
-<dt>missval.threshold</dt>
-<dd><p>deprecated; use missval_threshold instead</p></dd>
-
-
-<dt>init.to.param</dt>
-<dd><p>deprecated; use init_to_param instead</p></dd>
 
 </dl></div>
     <div id="value">
