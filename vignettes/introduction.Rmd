@@ -16,6 +16,8 @@ knitr::opts_chunk$set(
 )
 ```
 
+This vignette gives an introduction to using **rbi**. For the best viewing experience, use the [version on the rbi website](https://sbfnk.github.io/rbi/articles/introduction.html).
+
 [rbi](https://github.com/sbfnk/rbi) is an `R` interface to [LibBi](https://libbi.org), a library for Bayesian inference with state-space models using high-performance computer hardware.
 
 The package has been tested on macOS and Linux. It requires a working installation of **LibBi**. On macOS, this is easiest done using the `brew` command: Install [Homebrew](https://brew.sh), then issue the following command (using a command shell, i.e. Terminal or similar):
@@ -285,7 +287,7 @@ summary(bi, type = "state")
 
 Any particular posterior sample can be viewed with `extract_sample` (with indices running from 0 to (`nsamples`-1)):
 
-```{r, results = "hide"}
+```{r, eval = NOT_CRAN, results = "hide"}
 extract_sample(bi, 314)
 ```
 
@@ -389,7 +391,7 @@ bi
 To recreate a `libbi` object from a previous R session, use `attach_data`.
 For example, one could use the following code to get the acceptance rate for a *LibBi* run with a given output and model file:
 
-```{r}
+```{r, eval =  NOT_CRAN}
 pz_run_output <- bi_read(system.file(package = "rbi", "example_output.nc"))
 pz_model_file <- system.file(package = "rbi", "PZ.bi")
 pz_posterior <- attach_data(libbi(pz_model_file), "output", pz_run_output)
