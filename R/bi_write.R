@@ -415,10 +415,6 @@ create_coord_var <- function(name, dims, dim_factors, coord_dim, index_table,
         dim_factors[[loop_coord_dim]] <- union(
           dim_factors[[loop_coord_dim]], levels(dim_index)
         )
-      } else {
-        dim_factors[[loop_coord_dim]] <- union(
-          dim_factors[[loop_coord_dim]], unique(dim_index)
-        )
       }
       index_table[[loop_coord_dim]] <- as.integer(factor(
         dim_index, levels = dim_factors[[loop_coord_dim]]
