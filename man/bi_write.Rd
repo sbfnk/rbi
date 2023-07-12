@@ -7,7 +7,6 @@
 bi_write(
   filename,
   variables,
-  timed,
   append = FALSE,
   overwrite = FALSE,
   time_dim,

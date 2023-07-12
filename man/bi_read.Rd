@@ -13,7 +13,6 @@ bi_read(
   file,
   missval_threshold,
   coord_dims = list(),
-  vector,
   thin,
   verbose = FALSE,
   clear_cache = FALSE,
