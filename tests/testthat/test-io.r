@@ -326,13 +326,6 @@ test_that("I/O errors/warnings are recognised", {
   expect_error(read_libbi(), "specify a file")
 })
 
-test_that("deprecated options are recognised", {
-  expect_error(bi_write(tmpfile, list(test = df), timed = TRUE), "deprecated")
-  expect_warning(bi_read(bi, vector = TRUE), "deprecated")
-  expect_warning(bi_read(bi, missval.threshold = 1e+20), "deprecated")
-  expect_warning(bi_read(bi, init.to.param = TRUE), "deprecated")
-})
-
 test_that("an error is thrown if duplicate options are given", {
   expect_error(
     suppressWarnings(

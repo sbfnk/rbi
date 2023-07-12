@@ -12,7 +12,6 @@
 #'   to the file name
 #' @param variables a \code{list} object, the names of which should be the
 #'   variable names and values should be either single values or data frames
-#' @param timed deprecated; timed variables should be given as data frames
 #' @param append if TRUE, will append variables if file exists; default: FALSE
 #' @param overwrite if TRUE, will overwrite variables if file exists; default:
 #'   FALSE
@@ -61,13 +60,6 @@ bi_write <- function(filename, variables, timed, append = FALSE,
                      value_column = "value", guess_time = FALSE, verbose) {
   if (!grepl("\\.nc$", filename)) {
     filename <- paste(filename, "nc", sep = ".")
-  }
-
-  if (!missing(timed)) {
-    stop(
-      "'timed' is deprecated; all timed variables should be given as ",
-      "data frames in 'variables'"
-    )
   }
 
   if (!("list" %in% class(variables)) || length(variables) == 0) {

@@ -46,9 +46,6 @@ use any model given in \code{x}}
 
 \item{fix}{any variable to fix, as a named vector}
 
-\item{options}{deprecated; pass options directly, see documentation for
-\code{...}}
-
 \item{config}{path to a configuration file, containing multiple arguments}
 
 \item{log_file_name}{path to a file to text file to report the output of
@@ -78,17 +75,6 @@ guessed from the given observation}
 \item{coord_dims}{The coord dimension(s) in any \code{obs} R objects that
 have been passed; if NULL (default), will be guessed from the given
 observation file given}
-
-\item{working_folder}{deprecated; path to a folder from which to run
-\code{LibBi}; default to a temporary folder. Use the \code{build_dir}
-option instead, which will be translated into the \code{--build-dir} option
-of LibBi instead}
-
-\item{output_all}{deprecated; if set to TRUE, all parameters, states and
-observations will be saved; good for debugging}
-
-\item{sample_obs}{deprecated; if set to TRUE, will sample observations. Use
-the \code{sample_obs} function instead.}
 
 \item{thin}{any thinning of MCMC chains (1 means all will be kept, 2 skips
 every other sample etc.); note that \code{LibBi} itself will write all data

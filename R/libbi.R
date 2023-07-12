@@ -98,8 +98,6 @@ run <- function(x, ...) UseMethod("run")
 #'   (typically ending in ".bi"), or a \code{bi_model} object; by default, will
 #'   use any model given in \code{x}
 #' @param fix any variable to fix, as a named vector
-#' @param options deprecated; pass options directly, see documentation for
-#'   \code{...}
 #' @param config path to a configuration file, containing multiple arguments
 #' @param log_file_name path to a file to text file to report the output of
 #'   \code{LibBi}; if set to an empty vector (\code{character(0)}) or an empty
@@ -123,14 +121,6 @@ run <- function(x, ...) UseMethod("run")
 #' @param coord_dims The coord dimension(s) in any \code{obs} R objects that
 #'   have been passed; if NULL (default), will be guessed from the given
 #'   observation file given
-#' @param working_folder deprecated; path to a folder from which to run
-#'   \code{LibBi}; default to a temporary folder. Use the \code{build_dir}
-#'   option instead, which will be translated into the \code{--build-dir} option
-#'   of LibBi instead
-#' @param output_all deprecated; if set to TRUE, all parameters, states and
-#'   observations will be saved; good for debugging
-#' @param sample_obs deprecated; if set to TRUE, will sample observations. Use
-#'   the \code{sample_obs} function instead.
 #' @param thin any thinning of MCMC chains (1 means all will be kept, 2 skips
 #'   every other sample etc.); note that \code{LibBi} itself will write all data
 #'   to the disk. Only when the results are read in with \code{\link{bi_read}}
@@ -216,10 +206,6 @@ run.libbi <- function(x, client, proposal = c("model", "prior"), model, fix,
     x <- libbi(norun = TRUE)
   }
 
-  if (!missing(output_all)) {
-    warning("'output_all' is deprecated. Use 'debug = TRUE'.")
-  }
-
   ## assign stored arguments
   if (!missing(thin)) {
     x$thin <- thin
@@ -232,23 +218,6 @@ run.libbi <- function(x, client, proposal = c("model", "prior"), model, fix,
   }
 
   new_options <- list(...)
-  if (!missing(options)) {
-    warning(
-      "argument `options` is deprecated; pass options as arguments directly, ",
-      "e.g. `sample(model, cuda = TRUE, nsamples = 100, nparticles = 15, ",
-      "with = \"transform-obs-to-state\")`."
-    )
-    legacy_opts <- do.call(option_list, options)
-    legacy_opts[names(new_options)] <- new_options
-    new_options <- legacy_opts
-  }
-
-  if (!missing(sample_obs)) {
-    warning(
-      "argument `sample_obs` is deprecated; please use the `sample_obs` ",
-      "function instead.", call. = FALSE
-    )
-  }
 
   if (missing(config) || config == "") {
     config_file_options <- list()
@@ -273,15 +242,6 @@ run.libbi <- function(x, client, proposal = c("model", "prior"), model, fix,
     libbi_seed <- seed
   }
   if (length(libbi_seed) > 0) new_options[["seed"]] <- libbi_seed
-
-  if (!missing(working_folder)) {
-    warning("'working_folder' is deprecated. Use 'build_dir'.")
-    if ("build-dir" %in% names(new_options)) {
-      stop("Can't specify working folder and build_dir")
-    } else {
-      new_options[["build-dir"]] <- absolute_path(working_folder)
-    }
-  }
 
   if (is.null(getOption("libbi_args"))) {
     libbi_option_args <- list()
@@ -920,80 +880,6 @@ attach_data.libbi <- function(x, file, data, in_place = FALSE, append = FALSE,
     x$options[[paste0(file, "-file")]] <- target_file_name
     x$timestamp[[file]] <- file.mtime(target_file_name)
   }
-  return(x)
-}
-
-#' @export
-attach_file <- function(x, ...) UseMethod("attach_file")
-#' @name attach_file
-#' @rdname attach_file
-#' @title Deprecated (use 'attach' instead). Attach a new file or data set to a
-#'   \code{\link{libbi}} object
-#' @description
-#' Deprecated (use 'attach' instead). Adds an (output, obs, etc.) file to a
-#'   \code{\link{libbi}} object. This is useful to recreate a
-#'   \code{\link{libbi}} object from the model and output files of a previous
-#'   run
-#' @param x a \code{\link{libbi}} object
-#' @param file the type of the file to attach, one of "output", "obs", "input"
-#'   or "init"
-#' @param data name of the file to attach, or a list of data frames that contain
-#'   the outputs
-#' @param force attach the file even if one like this already exists in the
-#'   libbi object
-#' @param ... any options to \code{\link{bi_write}} (e.g., 'time_dim')
-#' @return an updated \code{\link{libbi}} object
-#' @keywords internal
-#' @export
-attach_file.libbi <- function(x, file, data, force = FALSE, ...) {
-  warning("'attach_file' is deprecated. Use 'attach_data' instead.")
-
-  if (file == "output") {
-    target_file_name <- x[["output_file_name"]]
-  } else {
-    target_file_name <- x[["options"]][[paste0(file, "-file")]]
-  }
-
-  if (is.character(data)) {
-    if (!force) {
-      stop(
-        "libbi object already contains ", file, " file; if you want to ",
-        "overwrite this,  use `force=TRUE`."
-      )
-    }
-    target_file_name <- data
-  } else {
-    if (is.null(target_file_name)) {
-      target_file_name <- tempfile(
-        pattern = paste(get_name(x$model), file, sep = "_"),
-        fileext = ".nc", tmpdir = absolute_path(x$options[["build-dir"]])
-      )
-    }
-
-    write_opts <- list(filename = target_file_name, variables = data)
-    if (file == "obs" && "coord_dims" %in% names(x)) {
-      write_opts[["coord_dims"]] <- x$coord_dims
-    }
-    if (length(x$time_dim) > 0) {
-      write_opts[["time_dim"]] <- x$time_dim
-    }
-    added_options <- list(...)
-    for (option_name in names(added_options)) {
-      write_opts[[option_name]] <- added_options[[option_name]]
-    }
-    do.call(bi_write, write_opts)
-  }
-
-  if (file == "output") {
-    x$output_file_name <- target_file_name
-    x$run_flag <- TRUE
-    x$.cache <- new.env(parent = emptyenv())
-    x$thin <- 1 ## output file will already be thinned
-  } else {
-    if (is.null(x$options)) x$options <- list()
-    x$options[[paste0(file, "-file")]] <- target_file_name
-  }
-  x <- update(x)
   return(x)
 }
 
