@@ -279,25 +279,18 @@ bi_read <- function(x, vars, dims, model, type, file, missval_threshold,
           if (length(matching_vars) == 1) {
             merge_values <- ncvar_get(nc, matching_vars)
             if (var_type == "coord") {
-              if (length(dim(merge_values)) == 1) {
-                mav_merge <- data.table(melt(
-                  merge_values, varnames = c(matching_dims),
-                  value.name = coord_dims[[var_name]]
-                ))
-              } else {
-                if (length(coord_dims[[var_name]]) == 1) {
-                 dim(merge_values) <- c(dim(merge_values), 1)
-                }
-                dimnames(merge_values)[[length(dim(merge_values))]] <-
-                  coord_dims[[var_name]]
-                mav_merge <- data.table(melt(
-                  merge_values, varnames = c(matching_dims, "variable"),
-                  value.name = var_type
-                ))
-                mav_merge <- data.table(dcast(
-                  mav_merge, ... ~ variable, value.var = "coord"
-                ))
+              if (length(coord_dims[[var_name]]) == 1) {
+                dim(merge_values) <- c(dim(merge_values), 1)
               }
+              dimnames(merge_values)[[length(dim(merge_values))]] <-
+                coord_dims[[var_name]]
+              mav_merge <- data.table(melt(
+                merge_values, varnames = c(matching_dims, "variable"),
+                value.name = var_type
+              ))
+              mav_merge <- data.table(dcast(
+                mav_merge, ... ~ variable, value.var = "coord"
+              ))
             } else {
               mav_merge <- data.table(melt(
                 merge_values, varnames = c(matching_dims),
