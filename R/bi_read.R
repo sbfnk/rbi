@@ -38,7 +38,7 @@
 #' d <- bi_read(example_output_file)
 #' @export
 bi_read <- function(x, vars, dims, model, type, file, missval_threshold,
-                    coord_dims = list(), vector, thin, verbose = FALSE,
+                    coord_dims = list(), thin, verbose = FALSE,
                     clear_cache = FALSE, init_to_param = FALSE, burn = 0) {
   if (missing(file)) {
     nc <- bi_open(x)

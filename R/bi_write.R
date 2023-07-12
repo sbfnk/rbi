@@ -55,9 +55,9 @@
 #' bi_write(filename, variables)
 #' bi_file_summary(filename)
 #' @export
-bi_write <- function(filename, variables, timed, append = FALSE,
-                     overwrite = FALSE, time_dim, coord_dims, dim_factors,
-                     value_column = "value", guess_time = FALSE, verbose) {
+bi_write <- function(filename, variables, append = FALSE, overwrite = FALSE,
+                     time_dim, coord_dims, dim_factors, value_column = "value",
+                     guess_time = FALSE, verbose) {
   if (!grepl("\\.nc$", filename)) {
     filename <- paste(filename, "nc", sep = ".")
   }
