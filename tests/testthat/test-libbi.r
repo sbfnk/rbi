@@ -143,6 +143,7 @@ test_that("we can rewrite a model", {
 })
 
 test_that("deprecated functions are reported", {
+  skip_on_cran()
   expect_warning(bi_generate_dataset(bi, end_time = 50), "deprecated")
 })
 

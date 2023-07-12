@@ -1229,7 +1229,7 @@ summary.libbi <- function(object, type = c("param", "state", "noise", "obs"),
   return(summary_table)
 }
 
-#' @export
+#' @keywords internal
 assert_files <- function(x, ...) UseMethod("assert_files")
 #' @name assert_files
 #' @rdname assert_files

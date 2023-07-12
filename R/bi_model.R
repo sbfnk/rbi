@@ -586,8 +586,9 @@ find_block <- function(x, ...) UseMethod("find_block")
 #' @param name of the block to find
 #' @param inner only return the inner part of the block (not the block
 #'   definition)
+#' @param ... ignored
 #' @rdname find_block
-find_block.bi_model <- function(x, name, inner = FALSE) {
+find_block.bi_model <- function(x, name, inner = FALSE, ...) {
   lines <- as.character(x)
   sub_regexp <- paste0(
     "^[[:space:]]*(sub[[:space:]]+)?[[:space:]]*", name,

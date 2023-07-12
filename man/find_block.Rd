@@ -5,7 +5,7 @@
 \alias{find_block.bi_model}
 \title{Find a block in a LibBi model}
 \usage{
-\method{find_block}{bi_model}(x, name, inner = FALSE)
+\method{find_block}{bi_model}(x, name, inner = FALSE, ...)
 }
 \arguments{
 \item{x}{a \code{\link{bi_model}} object}
@@ -14,6 +14,8 @@
 
 \item{inner}{only return the inner part of the block (not the block
 definition)}
+
+\item{...}{ignored}
 }
 \value{
 an integerr vector, the range of line numbers
