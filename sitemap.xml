@@ -73,7 +73,13 @@
     <loc>https://sbfnk.github.io/rbi/reference/bi_write.html</loc>
   </url>
   <url>
+    <loc>https://sbfnk.github.io/rbi/reference/check_sparse_var.html</loc>
+  </url>
+  <url>
     <loc>https://sbfnk.github.io/rbi/reference/clean_model.html</loc>
+  </url>
+  <url>
+    <loc>https://sbfnk.github.io/rbi/reference/create_coord_var.html</loc>
   </url>
   <url>
     <loc>https://sbfnk.github.io/rbi/reference/create_working_folder.html</loc>
