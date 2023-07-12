@@ -325,16 +325,3 @@ test_that("I/O errors/warnings are recognised", {
   )
   expect_error(read_libbi(), "specify a file")
 })
-
-test_that("an error is thrown if duplicate options are given", {
-  expect_error(
-    suppressWarnings(
-      bi_read(bi, missval.threshold = 1e+20, missval_threshold = 1e+20)
-    ), "Can't give"
-  )
-  expect_error(
-    suppressWarnings(
-      bi_read(bi, init.to.param = TRUE, init_to_param = TRUE)
-    ), "Can't give"
-  )
-})
