@@ -6,7 +6,7 @@ Bayesian inference for state-space models with R
 ![GitHub R package
 version](https://img.shields.io/github/r-package/v/sbfnk/rbi)
 [![R-CMD-check](https://github.com/sbfnk/rbi/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/sbfnk/rbi/actions/workflows/R-CMD-check.yaml)
-[![codecov](https://app.codecov.io/github/sbfnk/rbi)](https://app.codecov.io/github/sbfnk/rbi)
+[![codecov](https://codecov.io/github/sbfnk/rbi/branch/main/graph/badge.svg?token=vK4TWfgYo0)](https://codecov.io/github/sbfnk/rbi)
 ![GitHub
 contributors](https://img.shields.io/github/contributors/sbfnk/rbi)
 [![License: GPL
