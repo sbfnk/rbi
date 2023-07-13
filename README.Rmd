@@ -6,7 +6,7 @@ output: github_document
 <!-- badges: start -->
 ![GitHub R package version](https://img.shields.io/github/r-package/v/sbfnk/rbi)
 [![R-CMD-check](https://github.com/sbfnk/rbi/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/sbfnk/rbi/actions/workflows/R-CMD-check.yaml)
-[![codecov](https://app.codecov.io/github/sbfnk/rbi)](https://app.codecov.io/github/sbfnk/rbi) 
+[![codecov](https://codecov.io/github/sbfnk/rbi/branch/master/graph/badge.svg?token=vK4TWfgYo0)](https://codecov.io/github/sbfnk/rbi)
 ![GitHub contributors](https://img.shields.io/github/contributors/sbfnk/rbi)
  [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 <!-- badges: end -->
@@ -24,13 +24,13 @@ Installation
 
 The easiest way to install the latest stable version of **rbi** is via [CRAN](https://cran.r-project.org/package=rbi):
 
-```{r eval = FALSE}
+```{r install-cran, eval = FALSE}
 install.packages("rbi")
 ```
 
 Alternatively, the current development version can be installed using the `remotes` package
 
-```{r eval = FALSE}
+```{r install-github, eval = FALSE}
 # install.packages("remotes")
 library("remotes")
 install_github("sbfnk/rbi")
@@ -40,7 +40,7 @@ The **rbi** package has only been tested on GNU/Linux and OS X, but it should mo
 
 If you want to use **rbi** as a wrapper to **LibBi** then you need a working version of [LibBi](https://github.com/lawmurray/LibBi). To install **LibBi** on a Mac, the easiest way is to install [Homebrew](https://brew.sh), followed by (using a command shell, i.e. Terminal or similar):
 
-```{sh eval = FALSE}
+```{sh install-libbi, eval = FALSE}
 brew install libbi
 ``` 
 
@@ -55,7 +55,7 @@ Getting started
 
 A good starting point is to look at the included demos:
 
-```{r eval = FALSE}
+```{r demos, eval = FALSE}
 demo(PZ_generate_dataset) ## generating a data set from a model
 demo(PZ_PMMH) ## particle Markov-chain Metropolis-Hastings
 demo(PZ_SMC2) ## SMC^2
