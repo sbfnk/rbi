@@ -277,7 +277,7 @@ second time, it should run much faster.</p>
 <span><span class="co">#&gt; Wrapper around LibBi</span></span>
 <span><span class="co">#&gt; ======================</span></span>
 <span><span class="co">#&gt; Model:  SIR </span></span>
-<span><span class="co">#&gt; Run time:  0.002668  seconds</span></span>
+<span><span class="co">#&gt; Run time:  0.002572  seconds</span></span>
 <span><span class="co">#&gt; Number of samples:  1 </span></span>
 <span><span class="co">#&gt; State trajectories recorded:  S I R Z </span></span>
 <span><span class="co">#&gt; Noise trajectories recorded:  n_transmission n_recovery </span></span>
@@ -373,7 +373,7 @@ at the <code>bi</code> object:</p>
 <span><span class="co">#&gt; Wrapper around LibBi</span></span>
 <span><span class="co">#&gt; ======================</span></span>
 <span><span class="co">#&gt; Model:  SIR </span></span>
-<span><span class="co">#&gt; Run time:  0.080126  seconds</span></span>
+<span><span class="co">#&gt; Run time:  0.084588  seconds</span></span>
 <span><span class="co">#&gt; Number of samples:  1000 </span></span>
 <span><span class="co">#&gt; State trajectories recorded:  S I R Z </span></span>
 <span><span class="co">#&gt; Noise trajectories recorded:  n_transmission n_recovery </span></span>
@@ -383,32 +383,32 @@ at the <code>bi</code> object:</p>
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">bi_prior</span><span class="op">)</span></span>
 <span><span class="co">#&gt; List of 21</span></span>
 <span><span class="co">#&gt;  $ options         :List of 5</span></span>
-<span><span class="co">#&gt;   ..$ build-dir: chr "/tmp/RtmpS5fusG/SIR44a538decc44"</span></span>
+<span><span class="co">#&gt;   ..$ build-dir: chr "/tmp/Rtmp0t9oTi/SIR44c3ad3c0a5"</span></span>
 <span><span class="co">#&gt;   ..$ seed     : num 3.33e+08</span></span>
 <span><span class="co">#&gt;   ..$ nsamples : num 1000</span></span>
 <span><span class="co">#&gt;   ..$ end-time : num 112</span></span>
 <span><span class="co">#&gt;   ..$ noutputs : num 16</span></span>
 <span><span class="co">#&gt;  $ path_to_libbi   : chr "/usr/local/bin/libbi"</span></span>
 <span><span class="co">#&gt;  $ model           : 'bi_model' chr [1:50] "model SIR {" "const h = 7" "const N = 1000" "const d_infection = 14" ...</span></span>
-<span><span class="co">#&gt;  $ model_file_name : chr "/tmp/RtmpS5fusG/SIR44a538decc44/SIR.bi"</span></span>
+<span><span class="co">#&gt;  $ model_file_name : chr "/tmp/Rtmp0t9oTi/SIR44c3ad3c0a5/SIR.bi"</span></span>
 <span><span class="co">#&gt;  $ dims            : list()</span></span>
 <span><span class="co">#&gt;  $ time_dim        : chr(0) </span></span>
 <span><span class="co">#&gt;  $ coord_dims      : list()</span></span>
 <span><span class="co">#&gt;  $ thin            : num 1</span></span>
 <span><span class="co">#&gt;  $ output_every    : num NA</span></span>
 <span><span class="co">#&gt;  $ debug           : logi FALSE</span></span>
-<span><span class="co">#&gt;  $ command         : chr "/usr/local/bin/libbi sample --build-dir /tmp/RtmpS5fusG/SIR44a538decc44 --seed 332755949 --target prior --nsamp"| __truncated__</span></span>
-<span><span class="co">#&gt;  $ output_file_name: chr "/tmp/RtmpS5fusG/SIR44a538decc44/SIR_output44a58804de0.nc"</span></span>
-<span><span class="co">#&gt;  $ log_file_name   : chr "/tmp/RtmpS5fusG/SIR44a538decc44/output44a57925e452.txt"</span></span>
+<span><span class="co">#&gt;  $ command         : chr "/usr/local/bin/libbi sample --build-dir /tmp/Rtmp0t9oTi/SIR44c3ad3c0a5 --seed 332755949 --target prior --nsampl"| __truncated__</span></span>
+<span><span class="co">#&gt;  $ output_file_name: chr "/tmp/Rtmp0t9oTi/SIR44c3ad3c0a5/SIR_output44c34a563c7.nc"</span></span>
+<span><span class="co">#&gt;  $ log_file_name   : chr "/tmp/Rtmp0t9oTi/SIR44c3ad3c0a5/output44c37db65572.txt"</span></span>
 <span><span class="co">#&gt;  $ user_log_file   : logi FALSE</span></span>
 <span><span class="co">#&gt;  $ timestamp       :List of 1</span></span>
-<span><span class="co">#&gt;   ..$ output: POSIXct[1:1], format: "2023-07-12 21:54:16"</span></span>
+<span><span class="co">#&gt;   ..$ output: POSIXct[1:1], format: "2023-07-13 08:58:48"</span></span>
 <span><span class="co">#&gt;  $ run_flag        : logi TRUE</span></span>
 <span><span class="co">#&gt;  $ error_flag      : logi FALSE</span></span>
 <span><span class="co">#&gt;  $ use_cache       : logi TRUE</span></span>
 <span><span class="co">#&gt;  $ supplement      : NULL</span></span>
-<span><span class="co">#&gt;  $ .gc_env         :&lt;environment: 0x5592b78e2f18&gt; </span></span>
-<span><span class="co">#&gt;  $ .cache          :&lt;environment: 0x5592b86d4558&gt; </span></span>
+<span><span class="co">#&gt;  $ .gc_env         :&lt;environment: 0x55b048ce43d0&gt; </span></span>
+<span><span class="co">#&gt;  $ .cache          :&lt;environment: 0x55b046c5c638&gt; </span></span>
 <span><span class="co">#&gt;  - attr(*, "class")= chr "libbi"</span></span></code></pre></div>
 <p>We can see the object contains 14 fields, including the model, the
 path to the <code>libbi</code> script, and the command used to run libbi
@@ -418,7 +418,7 @@ the ones we passed to <code>sample</code></p>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bi_prior</span><span class="op">$</span><span class="va">options</span></span>
 <span><span class="co">#&gt; $`build-dir`</span></span>
-<span><span class="co">#&gt; [1] "/tmp/RtmpS5fusG/SIR44a538decc44"</span></span>
+<span><span class="co">#&gt; [1] "/tmp/Rtmp0t9oTi/SIR44c3ad3c0a5"</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $seed</span></span>
 <span><span class="co">#&gt; [1] 332755949</span></span>
@@ -437,7 +437,7 @@ object, including the model used, the command used to run
 name:</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bi_prior</span><span class="op">$</span><span class="va">output_file_name</span></span>
-<span><span class="co">#&gt; [1] "/tmp/RtmpS5fusG/SIR44a538decc44/SIR_output44a58804de0.nc"</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] "/tmp/Rtmp0t9oTi/SIR44c3ad3c0a5/SIR_output44c34a563c7.nc"</span></span></code></pre></div>
 <p>We can get the results of the sampling run using
 <code>bi_read</code></p>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
@@ -480,7 +480,7 @@ data. Let’s look at the returned object</p>
 <span><span class="co">#&gt;  $ p_R0          :'data.frame':  1000 obs. of  2 variables:</span></span>
 <span><span class="co">#&gt;   ..$ np   : num [1:1000] 0 1 2 3 4 5 6 7 8 9 ...</span></span>
 <span><span class="co">#&gt;   ..$ value: num [1:1000] 1.7 1.6 2.63 1.08 2.83 ...</span></span>
-<span><span class="co">#&gt;  $ clock         : num 80126</span></span></code></pre></div>
+<span><span class="co">#&gt;  $ clock         : num 84588</span></span></code></pre></div>
 <p>This is a list of 9 objects, 8 representing each of the (noise/state)
 variables and parameters in the file, and one number <code>clock</code>,
 representing the time spent running the model in microseconds.</p>
@@ -590,7 +590,7 @@ command:</p>
 <span><span class="co">#&gt;  $ p_R0          :'data.frame':  1000 obs. of  2 variables:</span></span>
 <span><span class="co">#&gt;   ..$ np   : num [1:1000] 0 1 2 3 4 5 6 7 8 9 ...</span></span>
 <span><span class="co">#&gt;   ..$ value: num [1:1000] 2.38 2.42 2.32 2.32 2.32 ...</span></span>
-<span><span class="co">#&gt;  $ clock         : num 7777193</span></span>
+<span><span class="co">#&gt;  $ clock         : num 6365645</span></span>
 <span><span class="co">#&gt;  $ loglikelihood :'data.frame':  1000 obs. of  2 variables:</span></span>
 <span><span class="co">#&gt;   ..$ np   : num [1:1000] 0 1 2 3 4 5 6 7 8 9 ...</span></span>
 <span><span class="co">#&gt;   ..$ value: num [1:1000] -39.7 -36 -33.3 -33.3 -33.3 ...</span></span>
@@ -733,7 +733,7 @@ files) is stored in the object.</p>
 <span><span class="co">#&gt; Wrapper around LibBi</span></span>
 <span><span class="co">#&gt; ======================</span></span>
 <span><span class="co">#&gt; Model:  SIR </span></span>
-<span><span class="co">#&gt; Run time:  7.777193  seconds</span></span>
+<span><span class="co">#&gt; Run time:  6.365645  seconds</span></span>
 <span><span class="co">#&gt; Number of samples:  1000 </span></span>
 <span><span class="co">#&gt; State trajectories recorded:  S I R Z </span></span>
 <span><span class="co">#&gt; Noise trajectories recorded:  n_transmission n_recovery </span></span>
