@@ -6,7 +6,7 @@ output: github_document
 <!-- badges: start -->
 ![GitHub R package version](https://img.shields.io/github/r-package/v/sbfnk/rbi)
 [![R-CMD-check](https://github.com/sbfnk/rbi/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/sbfnk/rbi/actions/workflows/R-CMD-check.yaml)
-[![codecov](https://codecov.io/github/sbfnk/rbi/branch/master/graph/badge.svg?token=vK4TWfgYo0)](https://codecov.io/github/sbfnk/rbi)
+[![codecov](https://codecov.io/github/sbfnk/rbi/branch/main/graph/badge.svg?token=vK4TWfgYo0)](https://codecov.io/github/sbfnk/rbi)
 ![GitHub contributors](https://img.shields.io/github/contributors/sbfnk/rbi)
  [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 <!-- badges: end -->
