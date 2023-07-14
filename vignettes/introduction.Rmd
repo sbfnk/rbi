@@ -285,7 +285,7 @@ A summary of sampled trajectories can be obtained using
 summary(bi, type = "state")
 ```
 
-Any particular posterior sample can be viewed with `extract_sample` (with indices running from 0 to (`nsamples`-1)):
+Any particular posterior sample can be viewed with `extract_sample` (with indices running from 0 to `nsamples - 1`):
 
 ```{r, eval = NOT_CRAN, results = "hide"}
 extract_sample(bi, 314)
