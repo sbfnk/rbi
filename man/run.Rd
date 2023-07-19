@@ -115,13 +115,6 @@ The method \code{run} launches \code{LibBi} with a particular set of command
   here are stored in the \code{\link{libbi}} object and do not have to be
   specified again if another command is run on the object.
 }
-\examples{
-bi_object <- libbi(model = system.file(package = "rbi", "PZ.bi"))
-\donttest{
-bi_object <- run(bi_object, client = "sample", target = "prior")
-bi_file_summary(bi_object)
-}
-}
 \seealso{
 \code{\link{libbi}}
 }
