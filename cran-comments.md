@@ -8,3 +8,7 @@ There were no ERRORs or WARNINGs, or NOTEs.
 
 ## Downstream dependencies
 0 packages with problems.
+
+## Updates after initial submission.
+
+2 NOTEs (moved link and stray file) have been fixed.
