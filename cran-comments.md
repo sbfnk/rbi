@@ -11,4 +11,6 @@ There were no ERRORs or WARNINGs, or NOTEs.
 
 ## Updates after initial submission.
 
-2 NOTEs (moved link and stray file) have been fixed.
+This is a resubmission. 2 NOTEs (moved link and stray file) have been fixed.
+
+The donttest issue in the previous version has also been fixed.
