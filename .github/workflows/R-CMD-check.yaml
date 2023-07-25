@@ -36,6 +36,12 @@ jobs:
 
       - uses: r-lib/actions/setup-pandoc@v2
 
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: ${{ matrix.config.r }}
+          http-user-agent: ${{ matrix.config.http-user-agent }}
+          use-public-rspm: true
+
       - name: Install libbi (linux)
         if: runner.os == 'linux'
         run: |
@@ -53,12 +59,6 @@ jobs:
       - name: Install libbi (mac)
         if: runner.os == 'macOS'
         run: brew install libbi
-
-      - uses: r-lib/actions/setup-r@v2
-        with:
-          r-version: ${{ matrix.config.r }}
-          http-user-agent: ${{ matrix.config.http-user-agent }}
-          use-public-rspm: true
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
