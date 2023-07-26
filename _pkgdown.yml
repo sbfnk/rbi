@@ -2,8 +2,6 @@ url: https://sbfnk.github.io/rbi
 
 template:
   bootstrap: 5
-  bslib:
-    font_weight_base: 300
 
 reference:
   - title: "Run LibBi and analyse results"
