@@ -99,9 +99,9 @@ reference:
 
 articles:
   - title: Introduction
-    navbar: Package vignette
+    navbar: ~
     contents:
-      - introduction
+      - rbi
 
   - title: Collection of SIR models for LibBi
     navbar: Examples
