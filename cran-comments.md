@@ -10,7 +10,4 @@ There were no ERRORs or WARNINGs, or NOTEs.
 0 packages with problems.
 
 ## Updates after initial submission.
-
-This is a resubmission. 2 NOTEs (moved link and stray file) have been fixed.
-
-The donttest issue in the previous version has also been fixed.
+A reverse dependency issue with rbi.helpers is expected and being fixed by submitting an updated version of rbi.helpers to CRAN.
