@@ -3,6 +3,8 @@ Bayesian inference for state-space models with R
 
 <!-- badges: start -->
 
+[![CRAN
+version](https://www.r-pkg.org/badges/version-ago/rbi)](https://cran.r-project.org/package=rbi)
 ![GitHub R package
 version](https://img.shields.io/github/r-package/v/sbfnk/rbi)
 [![R-CMD-check](https://github.com/sbfnk/rbi/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/sbfnk/rbi/actions/workflows/R-CMD-check.yaml)

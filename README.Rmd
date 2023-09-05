@@ -4,6 +4,7 @@ output: github_document
 ---
 
 <!-- badges: start -->
+[![CRAN version](https://www.r-pkg.org/badges/version-ago/rbi)](https://cran.r-project.org/package=rbi)
 ![GitHub R package version](https://img.shields.io/github/r-package/v/sbfnk/rbi)
 [![R-CMD-check](https://github.com/sbfnk/rbi/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/sbfnk/rbi/actions/workflows/R-CMD-check.yaml)
 [![codecov](https://codecov.io/github/sbfnk/rbi/branch/main/graph/badge.svg?token=vK4TWfgYo0)](https://app.codecov.io/github/sbfnk/rbi)
