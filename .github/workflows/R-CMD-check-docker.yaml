@@ -11,6 +11,10 @@ name: R-CMD-check
 jobs:
   R-CMD-check:
     runs-on: ubuntu-latest
+    # Source DOCKERFILE for this container is
+    # https://github.com/lawmurray/LibBi/blob/master/docker/Dockerfile
+    # It is automatically rebuilt and redeployed on push via
+    # https://github.com/lawmurray/LibBi/blob/master/.github/workflows/build-and-push-image.yaml
     container: ghcr.io/lawmurray/libbi:master
     name: docker
     env:
