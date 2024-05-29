@@ -314,6 +314,11 @@ run.libbi <- function(x, client, proposal = c("model", "prior"), model, fix,
   file_args <- intersect(names(args), file_types)
   ## assign file args to global options
   for (arg in file_args) x$options[[arg]] <- get(arg)
+  list_args <- file_args[vapply(x$options[file_args], is.list, logical(1))]
+  if (length(list_args) > 0) {
+    levels <- do.call(get_char_levels, x$options[list_args])
+    x$options[list_args] <- lapply(x$options[list_args], factorise, levels)
+  }
 
   if (x$run_flag && length(x$output_file_name) == 1 &&
     file.exists(x$output_file_name)) {

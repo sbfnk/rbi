@@ -307,7 +307,11 @@ bi_read <- function(x, vars, dims, model, type, file, missval_threshold,
           ## strip trailing numbers, these indicate duplicate dimensions
           dim_col <- sub("\\.[0-9]+$", "", col)
           if (!missing(dims) && !is.null(dims) && dim_col %in% names(dims)) {
-            mav[[col]] <- factor(mav[[col]], labels = dims[[dim_col]])
+            mav[[col]] <- factor(
+              mav[[col]] - 1L,
+              levels = seq_along(dims[[dim_col]]) - 1L,
+              labels = dims[[dim_col]]
+            )
           } else if (dim_col %in% var_dims[["other"]][[var_name]]) {
             mav[[col]] <- mav[[col]] - 1
           }
