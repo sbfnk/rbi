@@ -1,5 +1,7 @@
 # rbi (development version)
 
+* work with character columns in sparse input data
+
 # rbi 1.0.0
 
 * add github actions for package checking and testing
