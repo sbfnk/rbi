@@ -80,6 +80,9 @@ bi_write <- function(filename, variables, append = FALSE, overwrite = FALSE,
     stop("'time_dim' must not be given if guess_time is TRUE")
   }
 
+  levels <- get_char_levels(variables)
+  variables <- factorise(variables, levels)
+
   ## initialise variables
   dims <- list() ## dimension variables created with nc_dim
   if (missing(dim_factors)) {
