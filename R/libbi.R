@@ -321,11 +321,11 @@ run.libbi <- function(x, client, proposal = c("model", "prior"), model, fix,
   }
 
   if (x$run_flag && length(x$output_file_name) == 1 &&
-    file.exists(x$output_file_name)) {
+        file.exists(x$output_file_name)) {
     added_options <- option_list(new_options)
     init_file_given <-
       ("init" %in% file_args && !is.null(x$options[["init"]])) ||
-        "init-file" %in% names(added_options)
+      "init-file" %in% names(added_options)
     init_np_given <- "init-np" %in% names(added_options)
     init_given <- init_file_given || init_np_given
     if (missing(chain)) { ## if chain not specified, only chain if no init
@@ -346,7 +346,7 @@ run.libbi <- function(x, client, proposal = c("model", "prior"), model, fix,
         )
       }
       if ("target" %in% names(all_options) &&
-        all_options[["target"]] == "prediction") {
+            all_options[["target"]] == "prediction") {
         read_init <- bi_read(x, type = c("param", "state", "obs"))
         np_dims <- bi_dim_len(x$output_file_name, "np")
         x$options[["nsamples"]] <- floor(np_dims / x$thin)
@@ -801,7 +801,7 @@ attach_data.libbi <- function(x, file, data, in_place = FALSE, append = FALSE,
       if (length(coord_dims) > 0) {
         for (coord_dim in names(coord_dims)) {
           if (!is.null(x$coord_dims[[coord_dim]]) &&
-            any(x$coord_dims[[coord_dim]] != coord_dims[[coord_dim]])) {
+                any(x$coord_dims[[coord_dim]] != coord_dims[[coord_dim]])) {
             warning(
               "Given coord dimension ", coord_dim,
               " will override a coord dimension of the same name in",
@@ -839,8 +839,8 @@ attach_data.libbi <- function(x, file, data, in_place = FALSE, append = FALSE,
   }
 
   if ((append || overwrite || "list" %in% class(data) ||
-       file %in% c("obs", "input")) &&
-    length(vars) > 0) {
+         file %in% c("obs", "input")) &&
+        length(vars) > 0) {
     write_opts <- list(filename = target_file_name, variables = vars)
     if (length(x$time_dim) == 0) {
       write_opts[["guess_time"]] <- TRUE
@@ -1033,7 +1033,7 @@ read_libbi <- function(name, ...) {
 
   for (option in pass_options) {
     if (!(option %in% names(libbi_options)) &&
-      option %in% names(read_obj)) {
+          option %in% names(read_obj)) {
       libbi_options[[option]] <- read_obj[[option]]
     }
   }
@@ -1252,7 +1252,7 @@ assert_files.libbi <- function(x, ...) {
     stop("The libbi object does not contain an output file.")
   } else {
     if ("output" %in% names(x$timestamp) &&
-      x$timestamp[["output"]] < file.mtime(x$output_file_name)) {
+          x$timestamp[["output"]] < file.mtime(x$output_file_name)) {
       stop(
         "Output file ", x$output_file_name,
         " has been modified since LibBi was run."
@@ -1264,7 +1264,7 @@ assert_files.libbi <- function(x, ...) {
     file_type <- sub("-file$", "", file_option)
     if (file.exists(x$options[[file_option]])) {
       if (file_type %in% names(x$timestamp) &&
-        x$timestamp[[file_type]] < file.mtime(x$options[[file_option]])) {
+            x$timestamp[[file_type]] < file.mtime(x$options[[file_option]])) {
         stop(
           file_type, " file ", x$options[[file_option]],
           " has been modified since LibBi was run. You can use",

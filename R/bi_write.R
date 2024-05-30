@@ -324,8 +324,8 @@ bi_write <- function(filename, variables, append = FALSE, overwrite = FALSE,
 
   for (name in names(vars)) {
     if ((!(append || overwrite)) ||
-      (append && !(name %in% existing_vars)) ||
-      (overwrite && (name %in% existing_vars))) {
+          (append && !(name %in% existing_vars)) ||
+          (overwrite && (name %in% existing_vars))) {
       if (!missing(verbose) && verbose) {
         message(date(), " Writing ", name)
       }
@@ -411,8 +411,8 @@ create_coord_var <- function(name, dims, dim_factors, coord_dim, index_table,
   for (loop_coord_dim in coord_dim) {
     dim_index <- index_table[[loop_coord_dim]]
     if (!((is.integer(dim_index) || is.numeric(dim_index)) &&
-          length(setdiff(as.integer(dim_index), dim_index)) == 0 &&
-          length(setdiff(seq_len(max(dim_index)), unique(dim_index))) == 0)) {
+            length(setdiff(as.integer(dim_index), dim_index)) == 0 &&
+            length(setdiff(seq_len(max(dim_index)), unique(dim_index))) == 0)) {
       if (any(class(dim_index) == "factor")) {
         dim_factors[[loop_coord_dim]] <- union(
           dim_factors[[loop_coord_dim]], levels(dim_index)

@@ -84,7 +84,7 @@ bi_read <- function(x, vars, dims, model, type, file, missval_threshold,
 
     for (coord_dim in names(coord_dims)) {
       if (!is.null(x$coord_dims[[coord_dim]]) &&
-          any(x$coord_dims[[coord_dim]] != coord_dims[[coord_dim]])) {
+            any(x$coord_dims[[coord_dim]] != coord_dims[[coord_dim]])) {
         warning(
           "Given coord dimension ", coord_dim, " will override a coord ",
           "dimension of the same name in passed libbi object"
@@ -152,7 +152,7 @@ bi_read <- function(x, vars, dims, model, type, file, missval_threshold,
 
   ## cache
   if ("libbi" %in% class(x) && x$use_cache &&
-    (missing(file) || file == "output")) {
+        (missing(file) || file == "output")) {
     if (clear_cache) {
       x$.cache$data <- NULL
       x$.cache$thin <- NULL
@@ -295,11 +295,11 @@ bi_read <- function(x, vars, dims, model, type, file, missval_threshold,
         rownames(mav) <- seq_len(nrow(mav))
 
         if ("libbi" %in% class(x) && length(x$coord_dims) > 0 &&
-          var_name %in% names(x$coord_dims) && "coord" %in% colnames(mav)) {
+              var_name %in% names(x$coord_dims) && "coord" %in% colnames(mav)) {
           setnames(mav, "coord", x$coord_dims[[var_name]])
         }
         if ("libbi" %in% class(x) && length(x$time_dim) == 1 &&
-          "time" %in% colnames(mav)) {
+              "time" %in% colnames(mav)) {
           setnames(mav, "time", x$time_dim)
         }
 
@@ -343,7 +343,7 @@ bi_read <- function(x, vars, dims, model, type, file, missval_threshold,
   if (any(class(x) %in% c("character", "libbi"))) nc_close(nc)
 
   if ("libbi" %in% class(x) && x$use_cache &&
-    (missing(file) || file == "output")) {
+        (missing(file) || file == "output")) {
     if (is.null(x$.cache[["data"]])) {
       x$.cache$data <- list()
     }
