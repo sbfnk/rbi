@@ -149,6 +149,34 @@ test_that("saved and re-loaded objects are the same", {
   expect_true(all(unlist(values1) - unlist(values2) < 1e-5))
 })
 
+test_that("IO works with character strings", {
+  test_char <- lapply(test_output, function(df) {
+    if ("a" %in% colnames(df)) df$a <- as.character(df$a)
+    return(df)
+  })
+  filename <- tempfile(fileext = ".nc")
+  out <- bi_write(filename, test_char, guess_time = TRUE)
+  test_output2 <- bi_read(
+    filename, coord_dims = out$coord_dims, dims = out$dims
+  )
+  lists <- vapply(test_output, is.list, logical(1))
+  list_names <- names(lists[lists])
+  list_cols <- lapply(list_names, function(x) {
+    setdiff(colnames(test_output[[x]]), "value")
+  })
+  names(list_cols) <- list_names
+
+  for (name in list_names) {
+    setorderv(test_output[[name]], list_cols[[name]])
+    setorderv(test_output2[[name]], list_cols[[name]])
+  }
+
+  values1 <- lapply(test_output[list_names], function(x) x[["value"]])
+  values2 <- lapply(test_output2[list_names], function(x) x[["value"]])
+
+  expect_true(all(unlist(values1) - unlist(values2) < 1e-5))
+})
+
 test_that("basic I/O functions work", {
   bi <- attach_data(bi, file = "init", test_output[c("e", "m")])
   bi <- attach_data(bi, "obs", test_output_sparse[c("M", "e")])

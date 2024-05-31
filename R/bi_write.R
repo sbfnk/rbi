@@ -43,7 +43,7 @@
 #' @return A list of the time and coord dims, and factors in extra dimensions,
 #'   if any
 #' @importFrom ncdf4 nc_close ncdim_def ncvar_def nc_create ncvar_put ncvar_add
-#' @importFrom data.table data.table copy
+#' @importFrom data.table data.table copy rbindlist
 #' @importFrom reshape2 melt
 #' @examples
 #' filename <- tempfile(pattern = "dummy", fileext = ".nc")
@@ -79,6 +79,9 @@ bi_write <- function(filename, variables, append = FALSE, overwrite = FALSE,
   } else if (guess_time) {
     stop("'time_dim' must not be given if guess_time is TRUE")
   }
+
+  levels <- get_char_levels(variables)
+  variables <- factorise(variables, levels)
 
   ## initialise variables
   dims <- list() ## dimension variables created with nc_dim
@@ -242,7 +245,11 @@ bi_write <- function(filename, variables, append = FALSE, overwrite = FALSE,
         dim_name <- col
         ## strip trailing numbers, these indicate duplicate dimensions
         dim_name <- sub("\\.[0-9]+$", "", dim_name)
-        dim_values <- unique(element[[col]])
+        if (is.factor(element[[col]])) {
+          dim_values <- levels(element[[col]])
+        } else {
+          dim_values <- unique(element[[col]])
+        }
         if (dim_name %in% names(dims)) {
           if (length(dim_values) != dims[[dim_name]]$len) {
             stop(
@@ -250,7 +257,7 @@ bi_write <- function(filename, variables, append = FALSE, overwrite = FALSE,
             )
           }
         } else {
-          new_dim <- ncdim_def(dim_name, "", seq_along(unique(dim_values)) - 1)
+          new_dim <- ncdim_def(dim_name, "", seq_along(dim_values) - 1)
           dims[[dim_name]] <- new_dim
           if (!(class(dim_values) %in% c("numeric", "integer") &&
             length(setdiff(as.integer(dim_values), dim_values)) == 0 &&
@@ -320,8 +327,8 @@ bi_write <- function(filename, variables, append = FALSE, overwrite = FALSE,
 
   for (name in names(vars)) {
     if ((!(append || overwrite)) ||
-      (append && !(name %in% existing_vars)) ||
-      (overwrite && (name %in% existing_vars))) {
+          (append && !(name %in% existing_vars)) ||
+          (overwrite && (name %in% existing_vars))) {
       if (!missing(verbose) && verbose) {
         message(date(), " Writing ", name)
       }
@@ -357,6 +364,7 @@ check_sparse_var <- function(x, coord_cols, value_column) {
   setorderv(check, coord_cols)
 
   all_values <- lapply(coord_cols, function(x) unique(check[[x]]))
+  names(all_values) <- coord_cols
   all_combinations <- do.call(CJ, all_values)
 
   ## check if for all combinations of other calls the values of coord_cols
@@ -366,7 +374,12 @@ check_sparse_var <- function(x, coord_cols, value_column) {
       all(.SD[, coord_cols, with = FALSE] == all_combinations)
   ), by = other_cols]
 
-  return(any(!all[["all_equal"]]))
+  ## all_factors
+  all_factors <- vapply(coord_cols, function(x) {
+    length(setdiff(levels(all_values[[x]]), all_values[[x]])) == 0
+  }, logical(1))
+
+  return(any(!all[["all_equal"]]) || any(!all_factors))
 }
 
 ##' Create a coordinate variable
@@ -401,8 +414,8 @@ create_coord_var <- function(name, dims, dim_factors, coord_dim, index_table,
   for (loop_coord_dim in coord_dim) {
     dim_index <- index_table[[loop_coord_dim]]
     if (!((is.integer(dim_index) || is.numeric(dim_index)) &&
-          length(setdiff(as.integer(dim_index), dim_index)) == 0 &&
-          length(setdiff(seq_len(max(dim_index)), unique(dim_index))) == 0)) {
+            length(setdiff(as.integer(dim_index), dim_index)) == 0 &&
+            length(setdiff(seq_len(max(dim_index)), unique(dim_index))) == 0)) {
       if (any(class(dim_index) == "factor")) {
         dim_factors[[loop_coord_dim]] <- union(
           dim_factors[[loop_coord_dim]], levels(dim_index)
@@ -448,4 +461,52 @@ create_coord_var <- function(name, dims, dim_factors, coord_dim, index_table,
     name = coord_var, values = values, var = var,
     dim = coord_index_dim, dim_factors = dim_factors
   ))
+}
+
+##' Get the factor levels of all character columns in data
+##'
+##' @param ... variable lists
+##' @return a list with elements that represent the factor levels present in
+##'   character columns
+##' @author Sebastian Funk
+get_char_levels <- function(...) {
+  levels <- list()
+  for (variables in list(...)) {
+    ## convert character strings to factors
+    data_frames <- names(variables)[
+      vapply(variables, is.data.frame, logical(1))
+    ]
+    if (length(data_frames) > 0) {
+      common <- rbindlist(variables[data_frames], fill = TRUE)
+      char_cols <- colnames(common)[vapply(common, is.character, logical(1))]
+      for (col in char_cols) {
+        levels[[col]] <- union(levels[[col]], unique(na.omit(common[[col]])))
+      }
+    }
+  }
+  return(levels)
+}
+
+##' Convert character columns to factors in data
+##'
+##' @param levels factor levels, as a named list, each representing one column
+##' @inheritParams bi_write
+##' @return the \code{variables} argument with factorised columns
+##' @author Sebastian Funk
+factorise <- function(variables, levels) {
+  data_frames <- names(variables)[
+    vapply(variables, is.data.frame, logical(1))
+  ]
+  if (length(data_frames) > 0) {
+    for (col in names(levels)) {
+      ## convert character strings to factors
+      variables[data_frames] <- lapply(variables[data_frames], function(df) {
+        if (col %in% colnames(df)) {
+          df[[col]] <- factor(df[[col]], levels = levels[[col]])
+        }
+        return(df)
+      })
+    }
+  }
+  return(variables)
 }
