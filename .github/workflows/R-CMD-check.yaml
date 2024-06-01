@@ -59,7 +59,9 @@ jobs:
 
       - name: Install libbi (mac)
         if: runner.os == 'macOS'
-        run: brew install libbi
+        run: |
+          brew update
+          brew install libbi
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
