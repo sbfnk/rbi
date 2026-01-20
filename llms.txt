@@ -1,0 +1,280 @@
+# Bayesian inference for state-space models with R
+
+[rbi](https://github.com/sbfnk/rbi) is an `R` interface to
+[libbi](https://libbi.org), a library for Bayesian inference.
+
+It mainly contains:
+
+- various functions to retrieve and process the results from libbi
+  (which are in NetCDF format)
+- a `bi_model` class, to manipulate libbi models
+- a `libbi` wrapper class, to perform Bayesian using libbi inference
+  from within R,
+
+# Installation
+
+The easiest way to install the latest stable version of **rbi** is via
+[CRAN](https://cran.r-project.org/package=rbi):
+
+``` r
+install.packages("rbi")
+```
+
+Alternatively, the current development version can be installed using
+the `remotes` package
+
+``` r
+# install.packages("remotes")
+library("remotes")
+install_github("sbfnk/rbi")
+```
+
+The **rbi** package has only been tested on GNU/Linux and OS X, but it
+should mostly work everywhere `R` works.
+
+If you want to use **rbi** as a wrapper to **LibBi** then you need a
+working version of [LibBi](https://github.com/lawmurray/LibBi). To
+install **LibBi** on a Mac, the easiest way is to install
+[Homebrew](https://brew.sh), followed by (using a command shell,
+i.e. Terminal or similar):
+
+``` sh
+brew install libbi
+```
+
+On linux, follow the
+[instructions](https://github.com/lawmurray/LibBi/blob/master/INSTALL_LINUX.md)
+provided with LibBi.
+
+The path to `libbi` script can be passed as an argument to **rbi**,
+otherwise the package tries to find it automatically using the `which`
+linux/unix command.
+
+If you just want to process the output from **LibBi**, then you do not
+need to have **LibBi** installed.
+
+# Getting started
+
+A good starting point is to look at the included demos:
+
+``` r
+demo(PZ_generate_dataset) ## generating a data set from a model
+demo(PZ_PMMH) ## particle Markov-chain Metropolis-Hastings
+demo(PZ_SMC2) ## SMC^2
+demo(PZ_filtering) ## filtering
+```
+
+For further information, have a look at the introductory vignette from
+the link from the [rbi CRAN
+package](https://CRAN.R-project.org/package=rbi).
+
+# Using coda
+
+**LibBi** contains the `get_traces` method which provides an interface
+to [coda](https://cran.r-project.org/package=coda).
+
+# Other packages
+
+For higher-level methods to interact with
+[LibBi](https://github.com/lawmurray/LibBi), have a look at
+[rbi.helpers](https://github.com/sbfnk/RBi.helpers).
+
+# Package index
+
+## Run LibBi and analyse results
+
+### LibBi operations
+
+Functions for running LibBi.
+
+- [`filter(`*`<libbi>`*`)`](https://sbfnk.github.io/rbi/reference/filter.md)
+  [`filter(`*`<bi_model>`*`)`](https://sbfnk.github.io/rbi/reference/filter.md)
+  : Using the LibBi wrapper to filter
+- [`generate_dataset()`](https://sbfnk.github.io/rbi/reference/generate_dataset.md)
+  : Generate Dataset
+- [`optimise(`*`<libbi>`*`)`](https://sbfnk.github.io/rbi/reference/optimise.md)
+  [`optimise(`*`<bi_model>`*`)`](https://sbfnk.github.io/rbi/reference/optimise.md)
+  : Using the LibBi wrapper to optimise
+- [`libbi()`](https://sbfnk.github.io/rbi/reference/libbi.md) : LibBi
+  Wrapper
+- [`predict(`*`<libbi>`*`)`](https://sbfnk.github.io/rbi/reference/predict.md)
+  : Using the LibBi wrapper to predict
+- [`run(`*`<libbi>`*`)`](https://sbfnk.github.io/rbi/reference/run.md) :
+  Using the LibBi wrapper to launch LibBi
+- [`sample(`*`<libbi>`*`)`](https://sbfnk.github.io/rbi/reference/sample.md)
+  [`sample(`*`<bi_model>`*`)`](https://sbfnk.github.io/rbi/reference/sample.md)
+  : Using the LibBi wrapper to sample
+- [`sample_obs()`](https://sbfnk.github.io/rbi/reference/sample_obs.md)
+  : Sample observations from a LibBi model that has been run
+- [`simulate(`*`<libbi>`*`)`](https://sbfnk.github.io/rbi/reference/simulate.md)
+  [`simulate(`*`<bi_model>`*`)`](https://sbfnk.github.io/rbi/reference/simulate.md)
+  : Using the LibBi wrapper to simulate
+
+### Read and write LibBi inputs/outputs
+
+Functions for interacting with the NetCDF files used by LibBi.
+
+- [`bi_contents()`](https://sbfnk.github.io/rbi/reference/bi_contents.md)
+  : Bi contents
+- [`bi_file_summary()`](https://sbfnk.github.io/rbi/reference/bi_file_summary.md)
+  : NetCDF File Summary
+- [`bi_read()`](https://sbfnk.github.io/rbi/reference/bi_read.md) : Bi
+  Read
+- [`bi_write()`](https://sbfnk.github.io/rbi/reference/bi_write.md) :
+  Create (e.g., init or observation) files for LibBi
+
+### Analyse LibBi outputs
+
+Functions for analysing LibBi results.
+
+- [`extract_sample()`](https://sbfnk.github.io/rbi/reference/extract_sample.md)
+  :
+
+  Extract a sample from a `LibBi` run.
+
+- [`get_traces()`](https://sbfnk.github.io/rbi/reference/get_traces.md)
+  : Get the parameter traces
+
+- [`summary(`*`<libbi>`*`)`](https://sbfnk.github.io/rbi/reference/summary.md)
+  :
+
+  Print summary information about a `libbi` object
+
+- [`logLik(`*`<libbi>`*`)`](https://sbfnk.github.io/rbi/reference/logLik.md)
+  : Using the LibBi wrapper to logLik
+
+### Manipulate LibBi inputs/outputs
+
+Functions for updating and saving LibBi objects.
+
+- [`attach_data(`*`<libbi>`*`)`](https://sbfnk.github.io/rbi/reference/attach_data.md)
+  :
+
+  Attach a new file or data set to a `libbi` object
+
+- [`join(`*`<libbi>`*`)`](https://sbfnk.github.io/rbi/reference/join.md)
+  :
+
+  Join multiple `libbi` objects
+
+- [`read_libbi()`](https://sbfnk.github.io/rbi/reference/read_libbi.md)
+  :
+
+  Read results of a `LibBi` run from an RDS file or from a folder. This
+  completely reconstructs the saved `LibBi` object
+
+- [`save_libbi(`*`<libbi>`*`)`](https://sbfnk.github.io/rbi/reference/save_libbi.md)
+  :
+
+  Write results of a `LibBi` run to an RDS file
+
+- [`update(`*`<libbi>`*`)`](https://sbfnk.github.io/rbi/reference/update.md)
+  : Update a libbi object
+
+## Construct, show and manipulate LibBi models
+
+### Create a model
+
+Function for creating a LibBi model.
+
+- [`bi_model()`](https://sbfnk.github.io/rbi/reference/bi_model.md) : Bi
+  Model
+
+### Show models
+
+Functions for getting information from LibBi models.
+
+- [`get_block(`*`<bi_model>`*`)`](https://sbfnk.github.io/rbi/reference/get_block.md)
+  : Get the contents of a block in a LibBi model
+- [`get_const()`](https://sbfnk.github.io/rbi/reference/get_const.md) :
+  Get constants in a LibBi model
+- [`get_dims()`](https://sbfnk.github.io/rbi/reference/get_dims.md) :
+  Get dimensions in a LibBi model
+- [`get_name(`*`<bi_model>`*`)`](https://sbfnk.github.io/rbi/reference/get_name.md)
+  : Get the name of a bi model
+- [`rewrite(`*`<libbi>`*`)`](https://sbfnk.github.io/rbi/reference/rewrite.md)
+  [`rewrite(`*`<bi_model>`*`)`](https://sbfnk.github.io/rbi/reference/rewrite.md)
+  : Using the LibBi wrapper to rewrite
+- [`var_names()`](https://sbfnk.github.io/rbi/reference/var_names.md) :
+  Get variable names in a LibBi model
+
+### Manipulate models
+
+Functions for manipulating LibBi models.
+
+- [`add_block(`*`<bi_model>`*`)`](https://sbfnk.github.io/rbi/reference/add_block.md)
+  : Add a block to a LibBi model
+
+- [`enable_outputs()`](https://sbfnk.github.io/rbi/reference/enable_outputs.md)
+  :
+
+  Enable outputting variables in a `bi_model`
+
+- [`fix(`*`<bi_model>`*`)`](https://sbfnk.github.io/rbi/reference/fix.md)
+  : Fix noise term, state or parameter of a libbi model
+
+- [`insert_lines(`*`<bi_model>`*`)`](https://sbfnk.github.io/rbi/reference/insert_lines.md)
+  : Insert lines in a LibBi model
+
+- [`remove_lines(`*`<bi_model>`*`)`](https://sbfnk.github.io/rbi/reference/remove_lines.md)
+  : Remove line(s) and/or block(s) in a libbi model
+
+- [`remove_vars()`](https://sbfnk.github.io/rbi/reference/remove_vars.md)
+  : Remove variables
+
+- [`replace_all(`*`<bi_model>`*`)`](https://sbfnk.github.io/rbi/reference/replace_all.md)
+  : Replace all instances of a string with another in a model
+
+- [`set_name(`*`<bi_model>`*`)`](https://sbfnk.github.io/rbi/reference/set_name.md)
+  : Set the name of a bi model
+
+- [`write_model(`*`<bi_model>`*`)`](https://sbfnk.github.io/rbi/reference/write_model.md)
+  [`write_model(`*`<libbi>`*`)`](https://sbfnk.github.io/rbi/reference/write_model.md)
+  : Writes a bi model to a file.
+
+### Model operators
+
+Operators for LibBi models
+
+- [`` `==`( ``*`<bi_model>`*`)`](https://sbfnk.github.io/rbi/reference/Equals.bi_model.md)
+  : Check if two models are equal
+- [`` `[`( ``*`<bi_model>`*`)`](https://sbfnk.github.io/rbi/reference/Extract.bi_model.md)
+  : Subset model lines
+- [`` `[<-`( ``*`<bi_model>`*`)`](https://sbfnk.github.io/rbi/reference/Extract_assign.bi_model.md)
+  : Subset and replace model lines
+- [`` `!=`( ``*`<bi_model>`*`)`](https://sbfnk.github.io/rbi/reference/Unequals.bi_model.md)
+  : Check if two models are unequal
+
+## Other functions
+
+### Utility functions
+
+Useful additional functions.
+
+- [`flatten()`](https://sbfnk.github.io/rbi/reference/flatten.md) :
+
+  Flatten list of data frames This function takes a list of data frames
+  (such as, for example, returned by `bi_read`) and converts it to a
+  flat data frame
+
+- [`print_log()`](https://sbfnk.github.io/rbi/reference/print_log.md) :
+
+  Print the log file a `libbi` object
+
+### Deprecated functions
+
+To be removed in the next version of rbi.
+
+- [`bi_generate_dataset()`](https://sbfnk.github.io/rbi/reference/bi_generate_dataset.md)
+  : Bi Generate Dataset
+
+# Articles
+
+### Introduction
+
+- [Introduction to rbi](https://sbfnk.github.io/rbi/articles/rbi.md):
+
+### Collection of SIR models for LibBi
+
+- [Collection of SIR models for
+  LibBi](https://sbfnk.github.io/rbi/articles/idd_models.md):
