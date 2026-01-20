@@ -4,7 +4,7 @@ pkgdown_sha: ~
 articles:
   idd_models: idd_models.html
   rbi: rbi.html
-last_built: 2026-01-20T13:49Z
+last_built: 2026-01-20T15:13Z
 urls:
   reference: https://sbfnk.github.io/rbi/reference
   article: https://sbfnk.github.io/rbi/articles
