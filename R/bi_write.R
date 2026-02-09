@@ -468,6 +468,7 @@ create_coord_var <- function(name, dims, dim_factors, coord_dim, index_table,
 ##' @param ... variable lists
 ##' @return a list with elements that represent the factor levels present in
 ##'   character columns
+##' @importFrom stats na.omit
 ##' @author Sebastian Funk
 get_char_levels <- function(...) {
   levels <- list()
