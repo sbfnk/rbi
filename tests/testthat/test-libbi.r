@@ -60,7 +60,7 @@ test_output <-
 bi <- attach_data(bi, "output", test_output)
 
 config_tmp_file <- tempfile(fileext = ".conf")
-writeLines("--enable-assert", config_tmp_file)
+writeLines("--verbose", config_tmp_file)
 log_tmp_file <- tempfile(fileext = ".log")
 output_tmp_file <- tempfile(fileext = ".nc")
 model_tmp_file <- tempfile(fileext = ".bi")
