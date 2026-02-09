@@ -178,6 +178,15 @@ test_that("errors are recognised", {
   expect_error(sample_obs(3), "must be a 'libbi'")
 })
 
+test_that("we can attach init data without time dimension", {
+  bi_fresh <- libbi(model, dims = list(a = c("first", "second")))
+  init_data <- list(
+    m = data.frame(expand.grid(a = c("first", "second"), b = 0:1), value = 1)
+  )
+  bi_with_init <- attach_data(bi_fresh, "init", init_data)
+  expect_true("init-file" %in% names(bi_with_init$options))
+})
+
 test_that("LibBi objects are asserted correctly", {
   bi_no_run_flag <- bi
   bi_no_run_flag$run_flag <- FALSE
