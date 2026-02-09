@@ -510,7 +510,16 @@ run.libbi <- function(x, client, proposal = c("model", "prior"), model, fix,
             )
           )
         )
-      stop_msg <- paste0("LibBi terminated with \"", error_msg[1], "\".")
+      if (length(error_msg) == 0 || is.na(error_msg[1])) {
+        stop_msg <- paste0(
+          "LibBi terminated with exit code ", p$status, "."
+        )
+        if (nchar(p$stderr) > 0) {
+          stop_msg <- paste0(stop_msg, "\nstderr: ", p$stderr)
+        }
+      } else {
+        stop_msg <- paste0("LibBi terminated with \"", error_msg[1], "\".")
+      }
       if (length(x$log_file_name) > 0) {
         stop_msg <- paste0(
           stop_msg, "\nYou can view a full log using \"print_log('",
