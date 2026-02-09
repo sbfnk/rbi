@@ -2,6 +2,8 @@
 
 * `bi_read()` now correctly handles character columns in sparse input data,
   converting them to factors (#54).
+* Fixed dimension ordering when writing init files for multi-dimensional
+  parameters during chaining.
 
 # rbi 1.0.0
 
