@@ -72,7 +72,7 @@ model files. The `libbi` class is used to run LibBi and perform
 inference.
 
 The package also provides two methods for interacting with the
-[NetCDF](https://www.unidata.ucar.edu/software/netcdf/) files used by
+[NetCDF](https://www.unidata.ucar.edu/software/netcdf) files used by
 **LibBi**, `bi_read` and `bi_write`. Lastly, it provides a `get_traces`
 function to analyse Markov-chain Monte Carlo (MCMC) traces using the
 [coda](https://cran.r-project.org/package=coda) package.
@@ -216,7 +216,7 @@ sir_data
 #> Wrapper around LibBi
 #> ======================
 #> Model:  SIR 
-#> Run time:  0.002274  seconds
+#> Run time:  0.002114  seconds
 #> Number of samples:  1 
 #> State trajectories recorded:  S I R Z 
 #> Noise trajectories recorded:  n_transmission n_recovery 
@@ -336,7 +336,7 @@ bi_prior
 #> Wrapper around LibBi
 #> ======================
 #> Model:  SIR 
-#> Run time:  0.055978  seconds
+#> Run time:  0.056214  seconds
 #> Number of samples:  1000 
 #> State trajectories recorded:  S I R Z 
 #> Noise trajectories recorded:  n_transmission n_recovery 
@@ -349,32 +349,32 @@ To see even more detail, try
 str(bi_prior)
 #> List of 21
 #>  $ options         :List of 5
-#>   ..$ build-dir: chr "/tmp/Rtmpgdlwmo/SIR3ee1513ca80d"
+#>   ..$ build-dir: chr "/tmp/RtmpO2sBkx/SIR3fb95971d969"
 #>   ..$ seed     : num 1.96e+09
 #>   ..$ nsamples : num 1000
 #>   ..$ end-time : num 112
 #>   ..$ noutputs : num 16
 #>  $ path_to_libbi   : chr "/usr/local/bin/libbi"
 #>  $ model           : 'bi_model' chr [1:50] "model SIR {" "const h = 7" "const N = 1000" "const d_infection = 14" ...
-#>  $ model_file_name : chr "/tmp/Rtmpgdlwmo/SIR3ee1513ca80d/SIR.bi"
+#>  $ model_file_name : chr "/tmp/RtmpO2sBkx/SIR3fb95971d969/SIR.bi"
 #>  $ dims            : list()
 #>  $ time_dim        : chr(0) 
 #>  $ coord_dims      : list()
 #>  $ thin            : num 1
 #>  $ output_every    : num NA
 #>  $ debug           : logi FALSE
-#>  $ command         : chr "/usr/local/bin/libbi sample --build-dir /tmp/Rtmpgdlwmo/SIR3ee1513ca80d --seed 1955227312 --target prior --nsam"| __truncated__
-#>  $ output_file_name: chr "/tmp/Rtmpgdlwmo/SIR3ee1513ca80d/SIR_output3ee1246c7fe8.nc"
-#>  $ log_file_name   : chr "/tmp/Rtmpgdlwmo/SIR3ee1513ca80d/output3ee1301e3b08.txt"
+#>  $ command         : chr "/usr/local/bin/libbi sample --build-dir /tmp/RtmpO2sBkx/SIR3fb95971d969 --seed 1955227312 --target prior --nsam"| __truncated__
+#>  $ output_file_name: chr "/tmp/RtmpO2sBkx/SIR3fb95971d969/SIR_output3fb973bc3a2e.nc"
+#>  $ log_file_name   : chr "/tmp/RtmpO2sBkx/SIR3fb95971d969/output3fb95658f4bc.txt"
 #>  $ user_log_file   : logi FALSE
 #>  $ timestamp       :List of 1
-#>   ..$ output: POSIXct[1:1], format: "2026-01-20 15:14:05"
+#>   ..$ output: POSIXct[1:1], format: "2026-02-09 17:16:56"
 #>  $ run_flag        : logi TRUE
 #>  $ error_flag      : logi FALSE
 #>  $ use_cache       : logi TRUE
 #>  $ supplement      : NULL
-#>  $ .gc_env         :<environment: 0x55e623dbf030> 
-#>  $ .cache          :<environment: 0x55e624cadd98> 
+#>  $ .gc_env         :<environment: 0x560d04ded830> 
+#>  $ .cache          :<environment: 0x560d05ce6a00> 
 #>  - attr(*, "class")= chr "libbi"
 ```
 
@@ -386,7 +386,7 @@ with. This includes the ones we passed to `sample`
 ``` r
 bi_prior$options
 #> $`build-dir`
-#> [1] "/tmp/Rtmpgdlwmo/SIR3ee1513ca80d"
+#> [1] "/tmp/RtmpO2sBkx/SIR3fb95971d969"
 #> 
 #> $seed
 #> [1] 1955227312
@@ -407,7 +407,7 @@ including the model used, the command used to run **LibBi**
 
 ``` r
 bi_prior$output_file_name
-#> [1] "/tmp/Rtmpgdlwmo/SIR3ee1513ca80d/SIR_output3ee1246c7fe8.nc"
+#> [1] "/tmp/RtmpO2sBkx/SIR3fb95971d969/SIR_output3fb973bc3a2e.nc"
 ```
 
 We can get the results of the sampling run using `bi_read`
@@ -458,7 +458,7 @@ str(prior)
 #>  $ p_R0          :'data.frame':  1000 obs. of  2 variables:
 #>   ..$ np   : num [1:1000] 0 1 2 3 4 5 6 7 8 9 ...
 #>   ..$ value: num [1:1000] 2.17 2.53 1.95 1.52 1.81 ...
-#>  $ clock         : num 55978
+#>  $ clock         : num 56214
 ```
 
 This is a list of 9 objects, 8 representing each of the (noise/state)
@@ -573,7 +573,7 @@ str(posterior)
 #>  $ p_R0          :'data.frame':  1000 obs. of  2 variables:
 #>   ..$ np   : num [1:1000] 0 1 2 3 4 5 6 7 8 9 ...
 #>   ..$ value: num [1:1000] 1.9 1.85 1.85 1.85 1.85 ...
-#>  $ clock         : num 4885600
+#>  $ clock         : num 4667849
 #>  $ loglikelihood :'data.frame':  1000 obs. of  2 variables:
 #>   ..$ np   : num [1:1000] 0 1 2 3 4 5 6 7 8 9 ...
 #>   ..$ value: num [1:1000] -54.1 -49.8 -49.8 -49.8 -49.8 ...
@@ -791,7 +791,7 @@ bi
 #> Wrapper around LibBi
 #> ======================
 #> Model:  SIR 
-#> Run time:  4.8856  seconds
+#> Run time:  4.667849  seconds
 #> Number of samples:  1000 
 #> State trajectories recorded:  S I R Z 
 #> Noise trajectories recorded:  n_transmission n_recovery 
