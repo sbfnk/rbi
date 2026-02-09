@@ -67,7 +67,7 @@ The main computational engine and model grammar behind **rbi** is provided by **
 
 The **rbi** package mainly provides two classes: `bi_model` and `libbi`. The `bi_model` class is used to load, view and manipulate **LibBi** model files. The `libbi` class is used to run LibBi and perform inference.
 
-The package also provides two methods for interacting with the [NetCDF](https://www.unidata.ucar.edu/software/netcdf/) files used by **LibBi**, `bi_read` and `bi_write`. Lastly, it provides a `get_traces` function to analyse Markov-chain Monte Carlo (MCMC) traces using the [coda](https://cran.r-project.org/package=coda) package.
+The package also provides two methods for interacting with the [NetCDF](https://www.unidata.ucar.edu/software/netcdf) files used by **LibBi**, `bi_read` and `bi_write`. Lastly, it provides a `get_traces` function to analyse Markov-chain Monte Carlo (MCMC) traces using the [coda](https://cran.r-project.org/package=coda) package.
 
 # The `bi_model` class
 
