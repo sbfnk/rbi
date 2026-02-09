@@ -1,6 +1,6 @@
 # rbi 1.0.1
 
-* `bi_read()` now correctly handles character columns in sparse input data,
+* Character columns in sparse input data are now correctly handled by
   converting them to factors (#54).
 
 # rbi 1.0.0
