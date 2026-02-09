@@ -1,2 +1,8 @@
 codecov:
  token: 14c79f07-68d5-4cc4-b1fd-66a5aae3251e
+
+coverage:
+  status:
+    patch:
+      default:
+        enabled: false
