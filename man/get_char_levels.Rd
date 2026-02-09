@@ -19,3 +19,4 @@ Get the factor levels of all character columns in data
 \author{
 Sebastian Funk
 }
+\keyword{internal}

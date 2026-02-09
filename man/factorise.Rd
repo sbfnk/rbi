@@ -21,3 +21,4 @@ Convert character columns to factors in data
 \author{
 Sebastian Funk
 }
+\keyword{internal}

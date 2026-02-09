@@ -340,7 +340,7 @@ bi_write <- function(filename, variables, append = FALSE, overwrite = FALSE,
 
   nc_close(nc)
 
-  return(list(time_dim = time_dim, coord_dims = coord_dims, dims = dim_factors))
+  list(time_dim = time_dim, coord_dims = coord_dims, dims = dim_factors)
 }
 
 ##' Check if a variable is sparse
@@ -379,7 +379,7 @@ check_sparse_var <- function(x, coord_cols, value_column) {
     length(setdiff(levels(all_values[[x]]), all_values[[x]])) == 0
   }, logical(1))
 
-  return(any(!all[["all_equal"]]) || any(!all_factors))
+  any(!all[["all_equal"]]) || any(!all_factors)
 }
 
 ##' Create a coordinate variable
@@ -457,10 +457,10 @@ create_coord_var <- function(name, dims, dim_factors, coord_dim, index_table,
     coord_var_dims <- c(list(ns_dim), coord_var_dims)
   }
   var <- ncvar_def(coord_var, "", coord_var_dims)
-  return(list(
+  list(
     name = coord_var, values = values, var = var,
     dim = coord_index_dim, dim_factors = dim_factors
-  ))
+  )
 }
 
 ##' Get the factor levels of all character columns in data
@@ -469,6 +469,7 @@ create_coord_var <- function(name, dims, dim_factors, coord_dim, index_table,
 ##' @return a list with elements that represent the factor levels present in
 ##'   character columns
 ##' @importFrom stats na.omit
+##' @keywords internal
 ##' @author Sebastian Funk
 get_char_levels <- function(...) {
   levels <- list()
@@ -485,7 +486,7 @@ get_char_levels <- function(...) {
       }
     }
   }
-  return(levels)
+  levels
 }
 
 ##' Convert character columns to factors in data
@@ -493,6 +494,7 @@ get_char_levels <- function(...) {
 ##' @param levels factor levels, as a named list, each representing one column
 ##' @inheritParams bi_write
 ##' @return the \code{variables} argument with factorised columns
+##' @keywords internal
 ##' @author Sebastian Funk
 factorise <- function(variables, levels) {
   data_frames <- names(variables)[
@@ -505,9 +507,9 @@ factorise <- function(variables, levels) {
         if (col %in% colnames(df)) {
           df[[col]] <- factor(df[[col]], levels = levels[[col]])
         }
-        return(df)
+        df
       })
     }
   }
-  return(variables)
+  variables
 }
