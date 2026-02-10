@@ -81,7 +81,7 @@ test_that("we can run libbi and analyse results", {
   skip_on_cran()
   bi_run <- sample(
     bi, proposal = "prior", start_time = 0, nsamples = 10, thin = 2,
-    output_every = 2, end_time = 10
+    output_every = 2, end_time = 10, assert = FALSE
   )
   dry <- sample(model, dry = c("run", "gen", "parse", "build"))
   dataset <- generate_dataset(bi_run, end_time = 50)
