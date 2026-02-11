@@ -15,7 +15,7 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/sbfnk/rbi/blob/release-1.0.1/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/sbfnk/rbi/blob/main/DESCRIPTION)
 
 Jacob P, Funk S (2026). *rbi: Interface to 'LibBi'*. R package version
 1.0.1, <https://github.com/sbfnk/rbi>.
