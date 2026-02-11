@@ -81,7 +81,6 @@ test_that("we can find the installed libbi version", {
 
 test_that("we can run libbi and analyse results", {
   skip_on_cran()
-  skip_on_os("mac") ## LibBi has an upstream bug causing intermittent crashes
   bi_run <- sample(
     bi, proposal = "prior", start_time = 0, nsamples = 10, thin = 2,
     output_every = 2, end_time = 10
