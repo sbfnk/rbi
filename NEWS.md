@@ -1,3 +1,5 @@
+# rbi (development version)
+
 # rbi 1.0.1
 
 * Character columns in sparse input data are now correctly handled by
