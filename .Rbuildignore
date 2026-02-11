@@ -13,3 +13,4 @@ docs/
 ^.lintr$
 ^CRAN-SUBMISSION$
 ^\.claude$
+^\.coderabbit\.yaml$
