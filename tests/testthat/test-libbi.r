@@ -1,5 +1,7 @@
 context("Testing running libbi")
 
+options(libbi_args = list(assert = FALSE))
+
 model_str <- "
 model test {
   const no_a = 2
@@ -60,7 +62,7 @@ test_output <-
 bi <- attach_data(bi, "output", test_output)
 
 config_tmp_file <- tempfile(fileext = ".conf")
-writeLines("--verbose", config_tmp_file)
+writeLines("--disable-assert", config_tmp_file)
 log_tmp_file <- tempfile(fileext = ".log")
 output_tmp_file <- tempfile(fileext = ".nc")
 model_tmp_file <- tempfile(fileext = ".bi")
@@ -81,7 +83,7 @@ test_that("we can run libbi and analyse results", {
   skip_on_cran()
   bi_run <- sample(
     bi, proposal = "prior", start_time = 0, nsamples = 10, thin = 2,
-    output_every = 2, end_time = 10, assert = FALSE
+    output_every = 2, end_time = 10
   )
   dry <- sample(model, dry = c("run", "gen", "parse", "build"))
   dataset <- generate_dataset(bi_run, end_time = 50)
