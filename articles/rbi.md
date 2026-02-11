@@ -216,7 +216,7 @@ sir_data
 #> Wrapper around LibBi
 #> ======================
 #> Model:  SIR 
-#> Run time:  0.002019  seconds
+#> Run time:  0.001997  seconds
 #> Number of samples:  1 
 #> State trajectories recorded:  S I R Z 
 #> Noise trajectories recorded:  n_transmission n_recovery 
@@ -336,7 +336,7 @@ bi_prior
 #> Wrapper around LibBi
 #> ======================
 #> Model:  SIR 
-#> Run time:  0.032919  seconds
+#> Run time:  0.032049  seconds
 #> Number of samples:  1000 
 #> State trajectories recorded:  S I R Z 
 #> Noise trajectories recorded:  n_transmission n_recovery 
@@ -350,32 +350,32 @@ str(bi_prior)
 #> List of 21
 #>  $ options         :List of 6
 #>   ..$ assert   : logi FALSE
-#>   ..$ build-dir: chr "/tmp/Rtmpmx4JkX/SIR3fa0349dab80"
+#>   ..$ build-dir: chr "/tmp/RtmpJlFQFv/SIR3f8b465e6158"
 #>   ..$ seed     : num 1.96e+09
 #>   ..$ nsamples : num 1000
 #>   ..$ end-time : num 112
 #>   ..$ noutputs : num 16
 #>  $ path_to_libbi   : chr "/usr/local/bin/libbi"
 #>  $ model           : 'bi_model' chr [1:50] "model SIR {" "const h = 7" "const N = 1000" "const d_infection = 14" ...
-#>  $ model_file_name : chr "/tmp/Rtmpmx4JkX/SIR3fa0349dab80/SIR.bi"
+#>  $ model_file_name : chr "/tmp/RtmpJlFQFv/SIR3f8b465e6158/SIR.bi"
 #>  $ dims            : list()
 #>  $ time_dim        : chr(0) 
 #>  $ coord_dims      : list()
 #>  $ thin            : num 1
 #>  $ output_every    : num NA
 #>  $ debug           : logi FALSE
-#>  $ command         : chr "/usr/local/bin/libbi sample --disable-assert --build-dir /tmp/Rtmpmx4JkX/SIR3fa0349dab80 --seed 1955227312 --ta"| __truncated__
-#>  $ output_file_name: chr "/tmp/Rtmpmx4JkX/SIR3fa0349dab80/SIR_output3fa01fc31d7.nc"
-#>  $ log_file_name   : chr "/tmp/Rtmpmx4JkX/SIR3fa0349dab80/output3fa043b5aa5e.txt"
+#>  $ command         : chr "/usr/local/bin/libbi sample --disable-assert --build-dir /tmp/RtmpJlFQFv/SIR3f8b465e6158 --seed 1955227312 --ta"| __truncated__
+#>  $ output_file_name: chr "/tmp/RtmpJlFQFv/SIR3f8b465e6158/SIR_output3f8b16fdd1bf.nc"
+#>  $ log_file_name   : chr "/tmp/RtmpJlFQFv/SIR3f8b465e6158/output3f8b35b12b6e.txt"
 #>  $ user_log_file   : logi FALSE
 #>  $ timestamp       :List of 1
-#>   ..$ output: POSIXct[1:1], format: "2026-02-11 16:34:03"
+#>   ..$ output: POSIXct[1:1], format: "2026-02-11 16:38:43"
 #>  $ run_flag        : logi TRUE
 #>  $ error_flag      : logi FALSE
 #>  $ use_cache       : logi TRUE
 #>  $ supplement      : NULL
-#>  $ .gc_env         :<environment: 0x5612d496dbd8> 
-#>  $ .cache          :<environment: 0x5612d5849258> 
+#>  $ .gc_env         :<environment: 0x5596af025208> 
+#>  $ .cache          :<environment: 0x5596aff188c0> 
 #>  - attr(*, "class")= chr "libbi"
 ```
 
@@ -390,7 +390,7 @@ bi_prior$options
 #> [1] FALSE
 #> 
 #> $`build-dir`
-#> [1] "/tmp/Rtmpmx4JkX/SIR3fa0349dab80"
+#> [1] "/tmp/RtmpJlFQFv/SIR3f8b465e6158"
 #> 
 #> $seed
 #> [1] 1955227312
@@ -411,7 +411,7 @@ including the model used, the command used to run **LibBi**
 
 ``` r
 bi_prior$output_file_name
-#> [1] "/tmp/Rtmpmx4JkX/SIR3fa0349dab80/SIR_output3fa01fc31d7.nc"
+#> [1] "/tmp/RtmpJlFQFv/SIR3f8b465e6158/SIR_output3f8b16fdd1bf.nc"
 ```
 
 We can get the results of the sampling run using `bi_read`
@@ -462,7 +462,7 @@ str(prior)
 #>  $ p_R0          :'data.frame':  1000 obs. of  2 variables:
 #>   ..$ np   : num [1:1000] 0 1 2 3 4 5 6 7 8 9 ...
 #>   ..$ value: num [1:1000] 2.17 2.53 1.95 1.52 1.81 ...
-#>  $ clock         : num 32919
+#>  $ clock         : num 32049
 ```
 
 This is a list of 9 objects, 8 representing each of the (noise/state)
@@ -577,7 +577,7 @@ str(posterior)
 #>  $ p_R0          :'data.frame':  1000 obs. of  2 variables:
 #>   ..$ np   : num [1:1000] 0 1 2 3 4 5 6 7 8 9 ...
 #>   ..$ value: num [1:1000] 1.9 1.85 1.85 1.85 1.85 ...
-#>  $ clock         : num 2478742
+#>  $ clock         : num 3021890
 #>  $ loglikelihood :'data.frame':  1000 obs. of  2 variables:
 #>   ..$ np   : num [1:1000] 0 1 2 3 4 5 6 7 8 9 ...
 #>   ..$ value: num [1:1000] -54.1 -49.8 -49.8 -49.8 -49.8 ...
@@ -795,7 +795,7 @@ bi
 #> Wrapper around LibBi
 #> ======================
 #> Model:  SIR 
-#> Run time:  2.478742  seconds
+#> Run time:  3.02189  seconds
 #> Number of samples:  1000 
 #> State trajectories recorded:  S I R Z 
 #> Noise trajectories recorded:  n_transmission n_recovery 
