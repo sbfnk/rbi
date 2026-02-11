@@ -1,5 +1,7 @@
 context("Testing running libbi")
 
+options(libbi_args = list(assert = FALSE))
+
 model_str <- "
 model test {
   const no_a = 2
@@ -60,7 +62,7 @@ test_output <-
 bi <- attach_data(bi, "output", test_output)
 
 config_tmp_file <- tempfile(fileext = ".conf")
-writeLines("--enable-assert", config_tmp_file)
+writeLines("--disable-assert", config_tmp_file)
 log_tmp_file <- tempfile(fileext = ".log")
 output_tmp_file <- tempfile(fileext = ".nc")
 model_tmp_file <- tempfile(fileext = ".bi")

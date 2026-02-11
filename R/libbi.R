@@ -64,13 +64,13 @@ libbi <- function(model, path_to_libbi, dims, use_cache = TRUE, ...) {
   dot_options <- list(...)
   if ("norun" %in% names(dot_options) && dot_options[["norun"]]) {
     new_obj$model <- model
-    return(new_obj)
+    new_obj
   } else {
-    return(do.call(
+    do.call(
       run.libbi, c(
         list(x = new_obj, model = model, client = character(0)), dot_options
       )
-    ))
+    )
   }
 }
 
@@ -510,7 +510,16 @@ run.libbi <- function(x, client, proposal = c("model", "prior"), model, fix,
             )
           )
         )
-      stop_msg <- paste0("LibBi terminated with \"", error_msg[1], "\".")
+      if (length(error_msg) == 0 || is.na(error_msg[1])) {
+        stop_msg <- paste0(
+          "LibBi terminated with exit code ", p$status, "."
+        )
+        if (nchar(p$stderr) > 0) {
+          stop_msg <- paste0(stop_msg, "\nstderr: ", p$stderr)
+        }
+      } else {
+        stop_msg <- paste0("LibBi terminated with \"", error_msg[1], "\".")
+      }
       if (length(x$log_file_name) > 0) {
         stop_msg <- paste0(
           stop_msg, "\nYou can view a full log using \"print_log('",
@@ -533,13 +542,13 @@ run.libbi <- function(x, client, proposal = c("model", "prior"), model, fix,
       x <- update(x)
       ## get original model back if it has been modified
       x$model <- save_model
-      return(x)
+      x
     }
   } else {
     ## if run from the constructor, just write the model and add all the options
     write_model(x)
     x$options <- all_options
-    return(x)
+    x
   }
 }
 
@@ -878,7 +887,7 @@ attach_data.libbi <- function(x, file, data, in_place = FALSE, append = FALSE,
     x$options[[paste0(file, "-file")]] <- target_file_name
     x$timestamp[[file]] <- file.mtime(target_file_name)
   }
-  return(x)
+  x
 }
 
 #' @export
@@ -1063,7 +1072,7 @@ read_libbi <- function(name, ...) {
 
   new_obj$supplement <- read_obj$supplement
 
-  return(new_obj)
+  new_obj
 }
 
 #' @export
@@ -1199,7 +1208,7 @@ summary.libbi <- function(object, type = c("param", "state", "noise", "obs"),
         na.rm = na.rm
       ))
     ), by = summarise_columns]
-    return(dt)
+    dt
   }))
   ## reorder table
   numeric_columns <- c(
@@ -1225,7 +1234,7 @@ summary.libbi <- function(object, type = c("param", "state", "noise", "obs"),
   )
   setDF(summary_table)
 
-  return(summary_table)
+  summary_table
 }
 
 #' @keywords internal
@@ -1336,7 +1345,7 @@ sample_obs <- function(x, ...) {
     x$options[["without-transform-obs-to-state"]]
   pr$model <- x$model
 
-  return(pr)
+  pr
 }
 
 #' @export
@@ -1395,9 +1404,9 @@ logLik.libbi <- function(object, ...) {
   assert_files(object)
   res <- bi_read(object)
   if (is.vector(res$loglikelihood)) {
-    return(res$loglikelihood)
+    res$loglikelihood
   } else {
-    return(res$loglikelihood$value)
+    res$loglikelihood$value
   }
 }
 
@@ -1432,7 +1441,7 @@ update.libbi <- function(x, ...) {
       x$timestamp[["output"]] <- file.mtime(x$output_file_name)
     }
   }
-  return(x)
+  x
 }
 #' @export
 update.default <- function(x, ...) {
@@ -1455,5 +1464,5 @@ create_working_folder <- function(x) {
   reg.finalizer(x$.gc_env, function(env) {
     unlink(env$folder, recursive = TRUE)
   }, onexit = TRUE)
-  return(x)
+  x
 }
