@@ -7,8 +7,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Introduction to rbi • rbi</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Introduction to rbi">
 </head>
@@ -58,8 +58,7 @@
 
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
-
-      <h1>Introduction to rbi</h1>
+      <img src="../logo.svg" class="logo" alt=""><h1>Introduction to rbi</h1>
                         <h4 data-toc-skip class="author">Sebastian
 Funk</h4>
             
@@ -248,7 +247,7 @@ second time, it should run much faster.</p>
 <span><span class="co">#&gt; Wrapper around LibBi</span></span>
 <span><span class="co">#&gt; ======================</span></span>
 <span><span class="co">#&gt; Model:  SIR </span></span>
-<span><span class="co">#&gt; Run time:  0.001997  seconds</span></span>
+<span><span class="co">#&gt; Run time:  0.001311  seconds</span></span>
 <span><span class="co">#&gt; Number of samples:  1 </span></span>
 <span><span class="co">#&gt; State trajectories recorded:  S I R Z </span></span>
 <span><span class="co">#&gt; Noise trajectories recorded:  n_transmission n_recovery </span></span>
@@ -344,7 +343,7 @@ at the <code>bi</code> object:</p>
 <span><span class="co">#&gt; Wrapper around LibBi</span></span>
 <span><span class="co">#&gt; ======================</span></span>
 <span><span class="co">#&gt; Model:  SIR </span></span>
-<span><span class="co">#&gt; Run time:  0.032049  seconds</span></span>
+<span><span class="co">#&gt; Run time:  0.018585  seconds</span></span>
 <span><span class="co">#&gt; Number of samples:  1000 </span></span>
 <span><span class="co">#&gt; State trajectories recorded:  S I R Z </span></span>
 <span><span class="co">#&gt; Noise trajectories recorded:  n_transmission n_recovery </span></span>
@@ -355,32 +354,32 @@ at the <code>bi</code> object:</p>
 <span><span class="co">#&gt; List of 21</span></span>
 <span><span class="co">#&gt;  $ options         :List of 6</span></span>
 <span><span class="co">#&gt;   ..$ assert   : logi FALSE</span></span>
-<span><span class="co">#&gt;   ..$ build-dir: chr "/tmp/RtmpJlFQFv/SIR3f8b465e6158"</span></span>
+<span><span class="co">#&gt;   ..$ build-dir: chr "/tmp/RtmpWjoCLL/SIR3d9c66861379"</span></span>
 <span><span class="co">#&gt;   ..$ seed     : num 1.96e+09</span></span>
 <span><span class="co">#&gt;   ..$ nsamples : num 1000</span></span>
 <span><span class="co">#&gt;   ..$ end-time : num 112</span></span>
 <span><span class="co">#&gt;   ..$ noutputs : num 16</span></span>
 <span><span class="co">#&gt;  $ path_to_libbi   : chr "/usr/local/bin/libbi"</span></span>
 <span><span class="co">#&gt;  $ model           : 'bi_model' chr [1:50] "model SIR {" "const h = 7" "const N = 1000" "const d_infection = 14" ...</span></span>
-<span><span class="co">#&gt;  $ model_file_name : chr "/tmp/RtmpJlFQFv/SIR3f8b465e6158/SIR.bi"</span></span>
+<span><span class="co">#&gt;  $ model_file_name : chr "/tmp/RtmpWjoCLL/SIR3d9c66861379/SIR.bi"</span></span>
 <span><span class="co">#&gt;  $ dims            : list()</span></span>
 <span><span class="co">#&gt;  $ time_dim        : chr(0) </span></span>
 <span><span class="co">#&gt;  $ coord_dims      : list()</span></span>
 <span><span class="co">#&gt;  $ thin            : num 1</span></span>
 <span><span class="co">#&gt;  $ output_every    : num NA</span></span>
 <span><span class="co">#&gt;  $ debug           : logi FALSE</span></span>
-<span><span class="co">#&gt;  $ command         : chr "/usr/local/bin/libbi sample --disable-assert --build-dir /tmp/RtmpJlFQFv/SIR3f8b465e6158 --seed 1955227312 --ta"| __truncated__</span></span>
-<span><span class="co">#&gt;  $ output_file_name: chr "/tmp/RtmpJlFQFv/SIR3f8b465e6158/SIR_output3f8b16fdd1bf.nc"</span></span>
-<span><span class="co">#&gt;  $ log_file_name   : chr "/tmp/RtmpJlFQFv/SIR3f8b465e6158/output3f8b35b12b6e.txt"</span></span>
+<span><span class="co">#&gt;  $ command         : chr "/usr/local/bin/libbi sample --disable-assert --build-dir /tmp/RtmpWjoCLL/SIR3d9c66861379 --seed 1955227312 --ta"| __truncated__</span></span>
+<span><span class="co">#&gt;  $ output_file_name: chr "/tmp/RtmpWjoCLL/SIR3d9c66861379/SIR_output3d9c748f510.nc"</span></span>
+<span><span class="co">#&gt;  $ log_file_name   : chr "/tmp/RtmpWjoCLL/SIR3d9c66861379/output3d9c6adb89b2.txt"</span></span>
 <span><span class="co">#&gt;  $ user_log_file   : logi FALSE</span></span>
 <span><span class="co">#&gt;  $ timestamp       :List of 1</span></span>
-<span><span class="co">#&gt;   ..$ output: POSIXct[1:1], format: "2026-02-11 16:38:43"</span></span>
+<span><span class="co">#&gt;   ..$ output: POSIXct[1:1], format: "2026-08-24 14:04:07"</span></span>
 <span><span class="co">#&gt;  $ run_flag        : logi TRUE</span></span>
 <span><span class="co">#&gt;  $ error_flag      : logi FALSE</span></span>
 <span><span class="co">#&gt;  $ use_cache       : logi TRUE</span></span>
 <span><span class="co">#&gt;  $ supplement      : NULL</span></span>
-<span><span class="co">#&gt;  $ .gc_env         :&lt;environment: 0x5596af025208&gt; </span></span>
-<span><span class="co">#&gt;  $ .cache          :&lt;environment: 0x5596aff188c0&gt; </span></span>
+<span><span class="co">#&gt;  $ .gc_env         :&lt;environment: 0x55709e244ab0&gt; </span></span>
+<span><span class="co">#&gt;  $ .cache          :&lt;environment: 0x55709f1ea5b8&gt; </span></span>
 <span><span class="co">#&gt;  - attr(*, "class")= chr "libbi"</span></span></code></pre></div>
 <p>We can see the object contains 14 fields, including the model, the
 path to the <code>libbi</code> script, and the command used to run libbi
@@ -393,7 +392,7 @@ the ones we passed to <code>sample</code></p>
 <span><span class="co">#&gt; [1] FALSE</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $`build-dir`</span></span>
-<span><span class="co">#&gt; [1] "/tmp/RtmpJlFQFv/SIR3f8b465e6158"</span></span>
+<span><span class="co">#&gt; [1] "/tmp/RtmpWjoCLL/SIR3d9c66861379"</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $seed</span></span>
 <span><span class="co">#&gt; [1] 1955227312</span></span>
@@ -412,7 +411,7 @@ object, including the model used, the command used to run
 name:</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bi_prior</span><span class="op">$</span><span class="va">output_file_name</span></span>
-<span><span class="co">#&gt; [1] "/tmp/RtmpJlFQFv/SIR3f8b465e6158/SIR_output3f8b16fdd1bf.nc"</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] "/tmp/RtmpWjoCLL/SIR3d9c66861379/SIR_output3d9c748f510.nc"</span></span></code></pre></div>
 <p>We can get the results of the sampling run using
 <code>bi_read</code></p>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
@@ -455,7 +454,7 @@ data. Let’s look at the returned object</p>
 <span><span class="co">#&gt;  $ p_R0          :'data.frame':  1000 obs. of  2 variables:</span></span>
 <span><span class="co">#&gt;   ..$ np   : num [1:1000] 0 1 2 3 4 5 6 7 8 9 ...</span></span>
 <span><span class="co">#&gt;   ..$ value: num [1:1000] 2.17 2.53 1.95 1.52 1.81 ...</span></span>
-<span><span class="co">#&gt;  $ clock         : num 32049</span></span></code></pre></div>
+<span><span class="co">#&gt;  $ clock         : num 18585</span></span></code></pre></div>
 <p>This is a list of 9 objects, 8 representing each of the (noise/state)
 variables and parameters in the file, and one number <code>clock</code>,
 representing the time spent running the model in microseconds.</p>
@@ -565,7 +564,7 @@ command:</p>
 <span><span class="co">#&gt;  $ p_R0          :'data.frame':  1000 obs. of  2 variables:</span></span>
 <span><span class="co">#&gt;   ..$ np   : num [1:1000] 0 1 2 3 4 5 6 7 8 9 ...</span></span>
 <span><span class="co">#&gt;   ..$ value: num [1:1000] 1.9 1.85 1.85 1.85 1.85 ...</span></span>
-<span><span class="co">#&gt;  $ clock         : num 3021890</span></span>
+<span><span class="co">#&gt;  $ clock         : num 1585805</span></span>
 <span><span class="co">#&gt;  $ loglikelihood :'data.frame':  1000 obs. of  2 variables:</span></span>
 <span><span class="co">#&gt;   ..$ np   : num [1:1000] 0 1 2 3 4 5 6 7 8 9 ...</span></span>
 <span><span class="co">#&gt;   ..$ value: num [1:1000] -54.1 -49.8 -49.8 -49.8 -49.8 ...</span></span>
@@ -625,11 +624,11 @@ also worth considering.</p>
 <p>We can use the <code>predict</code> function to re-simulate the
 fitted model using the estimated parameters, that is to generate samples
 from
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>x</mi><mi>t</mi></msub><mo stretchy="false" form="prefix">|</mo><mi>θ</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">p(x_t|\theta)</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>x</mi><mi>t</mi></msub><mo stretchy="false" form="prefix">|</mo><mi>θ</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">p(x_t|\theta)</annotation></semantics></math>
 where the
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>
 are distributed according to the marginal posterior distribution
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>θ</mi><mo stretchy="false" form="prefix">|</mo><msubsup><mi>y</mi><mi>t</mi><mo>*</mo></msubsup><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">p(\theta|y^*_t)</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo stretchy="false" form="prefix">(</mo><mi>θ</mi><mo stretchy="false" form="prefix">|</mo><msubsup><mi>y</mi><mi>t</mi><mo>*</mo></msubsup><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">p(\theta|y^*_t)</annotation></semantics></math>
 (here:
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>
 are fixed parameters,
@@ -647,11 +646,11 @@ the data, or for running the model beyond the last data point.</p>
 <p>where <code>with=c("transform-obs-to-state")</code> tells LibBi to
 treat observations as a state variable, that is to randomly generate
 observations, i.e. samples from
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>y</mi><mi>t</mi></msub><mo stretchy="false" form="prefix">|</mo><mi>θ</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">p(y_t|\theta)</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>t</mi></msub><mo stretchy="false" form="prefix">|</mo><mi>θ</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">p(y_t|\theta)</annotation></semantics></math>
 where, again,
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>
 are distributed according to the posterior distribution
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>θ</mi><mo stretchy="false" form="prefix">|</mo><msubsup><mi>y</mi><mi>t</mi><mo>*</mo></msubsup><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">p(\theta|y^*_t)</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo stretchy="false" form="prefix">(</mo><mi>θ</mi><mo stretchy="false" form="prefix">|</mo><msubsup><mi>y</mi><mi>t</mi><mo>*</mo></msubsup><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">p(\theta|y^*_t)</annotation></semantics></math>
 (see the <code>with-transform-obs-to-state</code> option in the <a href="https://libbi.org/docs/LibBi-Manual.pdf" class="external-link">LibBi manual</a>).</p>
 </div>
 <div class="section level2">
@@ -659,11 +658,11 @@ are distributed according to the posterior distribution
 </h2>
 <p>To sample observations from sampled posterior state trajectories,
 that is samples from
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>y</mi><mi>t</mi></msub><mo stretchy="false" form="prefix">|</mo><msub><mi>x</mi><mi>t</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">p(y_t|x_t)</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>t</mi></msub><mo stretchy="false" form="prefix">|</mo><msub><mi>x</mi><mi>t</mi></msub><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">p(y_t|x_t)</annotation></semantics></math>
 where the
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>x</mi><mi>t</mi></msub><annotation encoding="application/x-tex">x_t</annotation></semantics></math>
 are distributed according to the posterior distribution
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>x</mi><mi>t</mi></msub><mo stretchy="false" form="prefix">|</mo><msub><mi>y</mi><mi>t</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">p(x_t | y_t)</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>x</mi><mi>t</mi></msub><mo stretchy="false" form="prefix">|</mo><msub><mi>y</mi><mi>t</mi></msub><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">p(x_t | y_t)</annotation></semantics></math>,
 you can use.</p>
 <div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">obs_bi</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sample_obs.html">sample_obs</a></span><span class="op">(</span><span class="va">bi</span><span class="op">)</span></span></code></pre></div>
@@ -765,7 +764,7 @@ files) is stored in the object.</p>
 <span><span class="co">#&gt; Wrapper around LibBi</span></span>
 <span><span class="co">#&gt; ======================</span></span>
 <span><span class="co">#&gt; Model:  SIR </span></span>
-<span><span class="co">#&gt; Run time:  3.02189  seconds</span></span>
+<span><span class="co">#&gt; Run time:  1.585805  seconds</span></span>
 <span><span class="co">#&gt; Number of samples:  1000 </span></span>
 <span><span class="co">#&gt; State trajectories recorded:  S I R Z </span></span>
 <span><span class="co">#&gt; Noise trajectories recorded:  n_transmission n_recovery </span></span>
@@ -833,7 +832,7 @@ high-performance hardware using LibBi</a>.</li>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer>

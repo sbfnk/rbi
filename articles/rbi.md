@@ -38,6 +38,7 @@ The easiest way to install the latest stable version of **rbi** is via
 CRAN.
 
 ``` r
+
 install.packages("rbi")
 ```
 
@@ -45,6 +46,7 @@ Alternatively, the current development version can be installed using
 the `remotes` package
 
 ``` r
+
 remotes::install_github("sbfnk/rbi")
 ```
 
@@ -53,6 +55,7 @@ remotes::install_github("sbfnk/rbi")
 Use
 
 ``` r
+
 library("rbi")
 ```
 
@@ -84,6 +87,7 @@ discussed in [Del Moral et al. (2014)](https://arxiv.org/abs/1405.4081).
 This is included with the **rbi** package and can be loaded with
 
 ``` r
+
 model_file <- system.file(package = "rbi", "SIR.bi")
 sir_model <- bi_model(model_file) # load model
 ```
@@ -99,6 +103,7 @@ The `sir_model` object now contains the model, which can be displayed
 with
 
 ``` r
+
 sir_model
 #> bi_model:
 #> =========
@@ -157,6 +162,7 @@ sir_model
 A part of the model can be shown with, for example,
 
 ``` r
+
 sir_model[35:38]
 #> [1] "}"                              "}"                             
 #> [3] "sub observation {"              "Incidence ~ poisson(p_rep * Z)"
@@ -165,6 +171,7 @@ sir_model[35:38]
 or, for example,
 
 ``` r
+
 get_block(sir_model, "parameter")
 #> [1] "p_rep ~ uniform(0,1)" "p_R0 ~ uniform(1,3)"
 ```
@@ -173,6 +180,7 @@ To get a list of certain variables, you can use the `var_names`
 function. For example, to get a list of states, you can use
 
 ``` r
+
 var_names(sir_model, type = "state")
 #> [1] "S" "I" "R" "Z"
 ```
@@ -185,6 +193,7 @@ example, to run the deterministic equivalent of a stochastic model for
 testing purposes:
 
 ``` r
+
 det_sir_model <- fix(sir_model, n_transmission = 0, n_recovery = 0)
 ```
 
@@ -196,6 +205,7 @@ documentation for `bi_model`.
 First, let’s create a data set from the SIR model.
 
 ``` r
+
 set.seed(1001912)
 sir_data <- generate_dataset(sir_model, end_time = 16 * 7, noutputs = 16)
 ```
@@ -212,11 +222,12 @@ time, it should run much faster.
 The `generate_dataset` function returns a `libbi` object:
 
 ``` r
+
 sir_data
 #> Wrapper around LibBi
 #> ======================
 #> Model:  SIR 
-#> Run time:  0.001997  seconds
+#> Run time:  0.001311  seconds
 #> Number of samples:  1 
 #> State trajectories recorded:  S I R Z 
 #> Noise trajectories recorded:  n_transmission n_recovery 
@@ -228,6 +239,7 @@ The generated dataset can be viewed and/or stored in a variable using
 `bi_read`:
 
 ``` r
+
 dataset <- bi_read(sir_data)
 ```
 
@@ -239,6 +251,7 @@ specified, the model and output files will be stored in a temporary
 folder.
 
 ``` r
+
 names(dataset)
 #>  [1] "n_transmission" "n_recovery"     "S"              "I"             
 #>  [5] "R"              "Z"              "Incidence"      "p_rep"         
@@ -270,6 +283,7 @@ dataset$Incidence
 We can visualise the generated incidence data with
 
 ``` r
+
 plot(dataset$Incidence$time, dataset$Incidence$value)
 lines(dataset$Incidence$time, dataset$Incidence$value)
 ```
@@ -283,6 +297,7 @@ sampling from the prior or posterior distribution. For example, the
 `sir_data` object above is of type `libbi`:
 
 ``` r
+
 class(sir_data)
 #> [1] "libbi"
 ```
@@ -293,6 +308,7 @@ of creating a `libbi` object for Bayesian inference is using the `libbi`
 command
 
 ``` r
+
 bi <- libbi(sir_model)
 ```
 
@@ -300,6 +316,7 @@ This initialises a `libbi` object with the model created earlier and
 assigns it to the variable `bi`.
 
 ``` r
+
 class(bi)
 #> [1] "libbi"
 ```
@@ -307,6 +324,7 @@ class(bi)
 Let’s sample from the prior of the SIR model:
 
 ``` r
+
 bi_prior <- sample(
   bi, target = "prior", nsamples = 1000, end_time = 16 * 7, noutputs = 16
 )
@@ -321,6 +339,7 @@ should do so much quicker because it will use the already compiled C++
 code to run the model:
 
 ``` r
+
 bi_prior <- sample(bi_prior)
 ```
 
@@ -332,11 +351,12 @@ passing a new `nsamples` argument). Let’s have a closer look at the `bi`
 object:
 
 ``` r
+
 bi_prior
 #> Wrapper around LibBi
 #> ======================
 #> Model:  SIR 
-#> Run time:  0.032049  seconds
+#> Run time:  0.018585  seconds
 #> Number of samples:  1000 
 #> State trajectories recorded:  S I R Z 
 #> Noise trajectories recorded:  n_transmission n_recovery 
@@ -346,36 +366,37 @@ bi_prior
 To see even more detail, try
 
 ``` r
+
 str(bi_prior)
 #> List of 21
 #>  $ options         :List of 6
 #>   ..$ assert   : logi FALSE
-#>   ..$ build-dir: chr "/tmp/RtmpJlFQFv/SIR3f8b465e6158"
+#>   ..$ build-dir: chr "/tmp/RtmpWjoCLL/SIR3d9c66861379"
 #>   ..$ seed     : num 1.96e+09
 #>   ..$ nsamples : num 1000
 #>   ..$ end-time : num 112
 #>   ..$ noutputs : num 16
 #>  $ path_to_libbi   : chr "/usr/local/bin/libbi"
 #>  $ model           : 'bi_model' chr [1:50] "model SIR {" "const h = 7" "const N = 1000" "const d_infection = 14" ...
-#>  $ model_file_name : chr "/tmp/RtmpJlFQFv/SIR3f8b465e6158/SIR.bi"
+#>  $ model_file_name : chr "/tmp/RtmpWjoCLL/SIR3d9c66861379/SIR.bi"
 #>  $ dims            : list()
 #>  $ time_dim        : chr(0) 
 #>  $ coord_dims      : list()
 #>  $ thin            : num 1
 #>  $ output_every    : num NA
 #>  $ debug           : logi FALSE
-#>  $ command         : chr "/usr/local/bin/libbi sample --disable-assert --build-dir /tmp/RtmpJlFQFv/SIR3f8b465e6158 --seed 1955227312 --ta"| __truncated__
-#>  $ output_file_name: chr "/tmp/RtmpJlFQFv/SIR3f8b465e6158/SIR_output3f8b16fdd1bf.nc"
-#>  $ log_file_name   : chr "/tmp/RtmpJlFQFv/SIR3f8b465e6158/output3f8b35b12b6e.txt"
+#>  $ command         : chr "/usr/local/bin/libbi sample --disable-assert --build-dir /tmp/RtmpWjoCLL/SIR3d9c66861379 --seed 1955227312 --ta"| __truncated__
+#>  $ output_file_name: chr "/tmp/RtmpWjoCLL/SIR3d9c66861379/SIR_output3d9c748f510.nc"
+#>  $ log_file_name   : chr "/tmp/RtmpWjoCLL/SIR3d9c66861379/output3d9c6adb89b2.txt"
 #>  $ user_log_file   : logi FALSE
 #>  $ timestamp       :List of 1
-#>   ..$ output: POSIXct[1:1], format: "2026-02-11 16:38:43"
+#>   ..$ output: POSIXct[1:1], format: "2026-08-24 14:04:07"
 #>  $ run_flag        : logi TRUE
 #>  $ error_flag      : logi FALSE
 #>  $ use_cache       : logi TRUE
 #>  $ supplement      : NULL
-#>  $ .gc_env         :<environment: 0x5596af025208> 
-#>  $ .cache          :<environment: 0x5596aff188c0> 
+#>  $ .gc_env         :<environment: 0x55709e244ab0> 
+#>  $ .cache          :<environment: 0x55709f1ea5b8> 
 #>  - attr(*, "class")= chr "libbi"
 ```
 
@@ -385,12 +406,13 @@ the `options` field contains all the options that **LibBi** was called
 with. This includes the ones we passed to `sample`
 
 ``` r
+
 bi_prior$options
 #> $assert
 #> [1] FALSE
 #> 
 #> $`build-dir`
-#> [1] "/tmp/RtmpJlFQFv/SIR3f8b465e6158"
+#> [1] "/tmp/RtmpWjoCLL/SIR3d9c66861379"
 #> 
 #> $seed
 #> [1] 1955227312
@@ -410,19 +432,22 @@ including the model used, the command used to run **LibBi**
 (`bi$command`) and the output file name:
 
 ``` r
+
 bi_prior$output_file_name
-#> [1] "/tmp/RtmpJlFQFv/SIR3f8b465e6158/SIR_output3f8b16fdd1bf.nc"
+#> [1] "/tmp/RtmpWjoCLL/SIR3d9c66861379/SIR_output3d9c748f510.nc"
 ```
 
 We can get the results of the sampling run using `bi_read`
 
 ``` r
+
 prior <- bi_read(bi_prior$output_file_name)
 ```
 
 or with the shorthand
 
 ``` r
+
 prior <- bi_read(bi_prior)
 ```
 
@@ -430,6 +455,7 @@ which looks at the `output_file_name` field to read in the data. Let’s
 look at the returned object
 
 ``` r
+
 str(prior)
 #> List of 9
 #>  $ n_transmission:'data.frame':  17000 obs. of  3 variables:
@@ -462,7 +488,7 @@ str(prior)
 #>  $ p_R0          :'data.frame':  1000 obs. of  2 variables:
 #>   ..$ np   : num [1:1000] 0 1 2 3 4 5 6 7 8 9 ...
 #>   ..$ value: num [1:1000] 2.17 2.53 1.95 1.52 1.81 ...
-#>  $ clock         : num 32049
+#>  $ clock         : num 18585
 ```
 
 This is a list of 9 objects, 8 representing each of the (noise/state)
@@ -482,6 +508,7 @@ simulations and therefore may take a little while to run (if you want to
 see the samples progress, use `verbose=TRUE` in the `sample` call).
 
 ``` r
+
 bi <- sample(bi_prior, target = "posterior", nparticles = 32, obs = sir_data)
 ```
 
@@ -496,6 +523,7 @@ corresponding to one observed variable as the `obs` argument, for
 example
 
 ``` r
+
 df <- data.frame(
   time = c(0, 7, 14, 21, 28, 35, 42, 49, 56, 63, 70, 77, 84, 91, 98, 105, 112),
   value = c(1, 6, 2, 26, 99, 57, 78, 57, 15, 9, 4, 1, 1, 1, 0, 2, 0)
@@ -540,6 +568,7 @@ arguments starting with `enable`/`disable` can be specified as boolean
 Let’s get the results of the preceding `sample` command:
 
 ``` r
+
 bi_contents(bi)
 #>  [1] "time"           "n_transmission" "n_recovery"     "S"             
 #>  [5] "I"              "R"              "Z"              "p_rep"         
@@ -577,7 +606,7 @@ str(posterior)
 #>  $ p_R0          :'data.frame':  1000 obs. of  2 variables:
 #>   ..$ np   : num [1:1000] 0 1 2 3 4 5 6 7 8 9 ...
 #>   ..$ value: num [1:1000] 1.9 1.85 1.85 1.85 1.85 ...
-#>  $ clock         : num 3021890
+#>  $ clock         : num 1585805
 #>  $ loglikelihood :'data.frame':  1000 obs. of  2 variables:
 #>   ..$ np   : num [1:1000] 0 1 2 3 4 5 6 7 8 9 ...
 #>   ..$ value: num [1:1000] -54.1 -49.8 -49.8 -49.8 -49.8 ...
@@ -594,6 +623,7 @@ estimated log-prior density of the parameters at each MCMC step).
 To get a summary of the parameters sampled, use
 
 ``` r
+
 summary(bi)
 #>     var      Min.   1st Qu.    Median      Mean  3rd Qu.      Max.
 #> 1 p_rep 0.3054273 0.4695077 0.5728598 0.5401576 0.637348 0.6792796
@@ -603,6 +633,7 @@ summary(bi)
 A summary of sampled trajectories can be obtained using
 
 ``` r
+
 summary(bi, type = "state")
 ```
 
@@ -610,6 +641,7 @@ Any particular posterior sample can be viewed with `extract_sample`
 (with indices running from 0 to `nsamples - 1`):
 
 ``` r
+
 extract_sample(bi, 314)
 ```
 
@@ -618,6 +650,7 @@ To analyse MCMC outputs, we can use the **coda** package and the
 traces, you would have to set the seed as above.
 
 ``` r
+
 library("coda")
 traces <- mcmc(get_traces(bi))
 ```
@@ -625,6 +658,7 @@ traces <- mcmc(get_traces(bi))
 We can, for example, visualise parameter traces and densities with
 
 ``` r
+
 plot(traces)
 ```
 
@@ -634,6 +668,7 @@ Compare this to the marginal posterior distributions to the “correct”
 parameters used to generate the data set:
 
 ``` r
+
 bi_read(sir_data, type = "param")
 #> $p_rep
 #>       value
@@ -655,15 +690,16 @@ considering.
 
 We can use the `predict` function to re-simulate the fitted model using
 the estimated parameters, that is to generate samples from
-$p\left( x_{t}|\theta \right)$ where the $\theta$ are distributed
-according to the marginal posterior distribution
-$p\left( \theta|y_{t}^{*} \right)$ (here: $\theta$ are fixed parameters,
-$x_{t}$ are state trajectories and $y_{t}^{*}$ observed data points, as
-in the [LibBi manual](https://libbi.org/docs/LibBi-Manual.pdf)). This
-can be useful, for example, for comparing typical model trajectories to
-the data, or for running the model beyond the last data point.
+$`p(x_t|\theta)`$ where the $`\theta`$ are distributed according to the
+marginal posterior distribution $`p(\theta|y^*_t)`$ (here: $`\theta`$
+are fixed parameters, $`x_t`$ are state trajectories and $`y^*_t`$
+observed data points, as in the [LibBi
+manual](https://libbi.org/docs/LibBi-Manual.pdf)). This can be useful,
+for example, for comparing typical model trajectories to the data, or
+for running the model beyond the last data point.
 
 ``` r
+
 pred_bi <- predict(
   bi, start_time = 0, end_time = 20 * 7, output_every = 7,
   with = c("transform-obs-to-state")
@@ -672,26 +708,26 @@ pred_bi <- predict(
 
 where `with=c("transform-obs-to-state")` tells LibBi to treat
 observations as a state variable, that is to randomly generate
-observations, i.e. samples from $p\left( y_{t}|\theta \right)$ where,
-again, $\theta$ are distributed according to the posterior distribution
-$p\left( \theta|y_{t}^{*} \right)$ (see the
-`with-transform-obs-to-state` option in the [LibBi
-manual](https://libbi.org/docs/LibBi-Manual.pdf)).
+observations, i.e. samples from $`p(y_t|\theta)`$ where, again,
+$`\theta`$ are distributed according to the posterior distribution
+$`p(\theta|y^*_t)`$ (see the `with-transform-obs-to-state` option in the
+[LibBi manual](https://libbi.org/docs/LibBi-Manual.pdf)).
 
 ## Sample observations
 
 To sample observations from sampled posterior state trajectories, that
-is samples from $p\left( y_{t}|x_{t} \right)$ where the $x_{t}$ are
-distributed according to the posterior distribution
-$p\left( x_{t}|y_{t} \right)$, you can use.
+is samples from $`p(y_t|x_t)`$ where the $`x_t`$ are distributed
+according to the posterior distribution $`p(x_t | y_t)`$, you can use.
 
 ``` r
+
 obs_bi <- sample_obs(bi)
 ```
 
 Compare this to the data:
 
 ``` r
+
 summary(obs_bi, type = "obs")
 #>          var time Min. 1st Qu. Median    Mean 3rd Qu. Max.
 #> 1  Incidence    0    0       0      0   0.497       1    5
@@ -740,6 +776,7 @@ example, to run a particle filter on the last posterior sample generated
 above, you can use:
 
 ``` r
+
 bi_filtered <- filter(bi)
 ```
 
@@ -752,6 +789,7 @@ from the posterior distribution of the parameters and compare them to
 the data we can use
 
 ``` r
+
 ps <- summary(pred_bi, type = "obs")
 
 library("ggplot2")
@@ -770,6 +808,7 @@ this to observations randomly generated from the posterior distribution
 of trajectories:
 
 ``` r
+
 os <- summary(obs_bi, type = "obs")
 
 ggplot(os, aes(x = time)) +
@@ -789,13 +828,14 @@ information (including any options, input, init and observation files)
 is stored in the object.
 
 ``` r
+
 save_libbi(bi, "bi.rds")
 bi <- read_libbi("bi.rds")
 bi
 #> Wrapper around LibBi
 #> ======================
 #> Model:  SIR 
-#> Run time:  3.02189  seconds
+#> Run time:  1.585805  seconds
 #> Number of samples:  1000 
 #> State trajectories recorded:  S I R Z 
 #> Noise trajectories recorded:  n_transmission n_recovery 
@@ -809,6 +849,7 @@ To recreate a `libbi` object from a previous R session, use
 acceptance rate for a *LibBi* run with a given output and model file:
 
 ``` r
+
 pz_run_output <- bi_read(system.file(package = "rbi", "example_output.nc"))
 pz_model_file <- system.file(package = "rbi", "PZ.bi")
 pz_posterior <- attach_data(libbi(pz_model_file), "output", pz_run_output)
@@ -824,6 +865,7 @@ a
 For a general check of model syntax, the `rewrite` command is useful:
 
 ``` r
+
 rewrite(sir_model)
 ```
 

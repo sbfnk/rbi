@@ -1,4 +1,8 @@
-# Bayesian inference for state-space models with R
+# Installation
+
+Bayesian inference for state-space models with R [![rbi
+website](reference/figures/logo.png)](https://sbfnk.github.io/rbi/)
+================
 
 [rbi](https://github.com/sbfnk/rbi) is an `R` interface to
 [libbi](https://libbi.org), a library for Bayesian inference.
@@ -11,12 +15,11 @@ It mainly contains:
 - a `libbi` wrapper class, to perform Bayesian using libbi inference
   from within R,
 
-# Installation
-
 The easiest way to install the latest stable version of **rbi** is via
 [CRAN](https://cran.r-project.org/package=rbi):
 
 ``` r
+
 install.packages("rbi")
 ```
 
@@ -24,6 +27,7 @@ Alternatively, the current development version can be installed using
 the `remotes` package
 
 ``` r
+
 # install.packages("remotes")
 library("remotes")
 install_github("sbfnk/rbi")
@@ -58,6 +62,7 @@ need to have **LibBi** installed.
 A good starting point is to look at the included demos:
 
 ``` r
+
 demo(PZ_generate_dataset) ## generating a data set from a model
 demo(PZ_PMMH) ## particle Markov-chain Metropolis-Hastings
 demo(PZ_SMC2) ## SMC^2

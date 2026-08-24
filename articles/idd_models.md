@@ -3,6 +3,7 @@
 ## Deterministic SIR model, observations of prevalence
 
 ``` r
+
 model_str <- readLines("bi/SIR_deter_prev.bi")
 cat(paste(model_str, "\n"))
 ```
@@ -43,12 +44,14 @@ cat(paste(model_str, "\n"))
     ##  }
 
 ``` r
+
 sir_model <- bi_model(lines = model_str)
 ```
 
 ## Deterministic SIR model, observations of incidence
 
 ``` r
+
 model_str <- readLines("bi/SIR_deter.bi")
 cat(paste(model_str, "\n"))
 ```
@@ -95,12 +98,14 @@ cat(paste(model_str, "\n"))
     ##  }
 
 ``` r
+
 sir_model <- bi_model(lines = model_str)
 ```
 
 ## Stochastic SIR model (SDE), observations of incidence
 
 ``` r
+
 model_str <- readLines("bi/SIR_stoch_SDE.bi")
 cat(paste(model_str, "\n"))
 ```
@@ -156,12 +161,14 @@ cat(paste(model_str, "\n"))
     ##  }
 
 ``` r
+
 sir_model <- bi_model(lines = model_str)
 ```
 
 ## Stochastic SIR model (jump), observations of incidence
 
 ``` r
+
 model_str <- readLines("bi/SIR_stoch_jump.bi")
 cat(paste(model_str, "\n"))
 ```
@@ -215,12 +222,14 @@ cat(paste(model_str, "\n"))
     ##  }
 
 ``` r
+
 sir_model <- bi_model(lines = model_str)
 ```
 
 ## Example observation data frame
 
 ``` r
+
 obs <- data.frame(
   value = c(1, 6, 2, 26, 99, 57, 78, 57, 15, 9, 4, 1, 1, 1, 0, 2, 0), 
   time = c(0, 7, 14, 21, 28, 35, 42, 49, 56, 63, 70, 77, 84, 91, 98, 105, 112)
