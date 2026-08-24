@@ -1,4 +1,5 @@
 Bayesian inference for state-space models with R
+<a href="https://sbfnk.github.io/rbi/"><img src="man/figures/logo.png" align="right" height="139" alt="rbi website" /></a>
 ================
 
 <!-- badges: start -->
