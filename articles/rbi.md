@@ -2,9 +2,9 @@
 
 This vignette gives an introduction to using **rbi**. For the best
 viewing experience, use the [version on the rbi
-website](https://sbfnk.github.io/rbi/articles/introduction.html).
+website](https://epiforecasts.io/rbi/articles/rbi.html).
 
-[rbi](https://github.com/sbfnk/rbi) is an `R` interface to
+[rbi](https://github.com/epiforecasts/rbi) is an `R` interface to
 [LibBi](https://libbi.org), a library for Bayesian inference with
 state-space models using high-performance computer hardware.
 
@@ -47,7 +47,7 @@ the `remotes` package
 
 ``` r
 
-remotes::install_github("sbfnk/rbi")
+remotes::install_github("epiforecasts/rbi")
 ```
 
 ## Loading the package
@@ -94,7 +94,7 @@ sir_model <- bi_model(model_file) # load model
 
 Other ways of implementing a (deterministic or stochastic) SIR model can
 be found in the [collection of SIR models for
-LibBi](https://sbfnk.github.io/rbi/articles/idd_models.md), where you
+LibBi](https://epiforecasts.io/rbi/articles/idd_models.md), where you
 also find how to load them into a `bi_model` object, e.g. `sir_model`.
 Feel free to run the commands below with different versions of the
 model.
@@ -227,7 +227,7 @@ sir_data
 #> Wrapper around LibBi
 #> ======================
 #> Model:  SIR 
-#> Run time:  0.001311  seconds
+#> Run time:  0.002174  seconds
 #> Number of samples:  1 
 #> State trajectories recorded:  S I R Z 
 #> Noise trajectories recorded:  n_transmission n_recovery 
@@ -356,7 +356,7 @@ bi_prior
 #> Wrapper around LibBi
 #> ======================
 #> Model:  SIR 
-#> Run time:  0.018585  seconds
+#> Run time:  0.035765  seconds
 #> Number of samples:  1000 
 #> State trajectories recorded:  S I R Z 
 #> Noise trajectories recorded:  n_transmission n_recovery 
@@ -371,32 +371,32 @@ str(bi_prior)
 #> List of 21
 #>  $ options         :List of 6
 #>   ..$ assert   : logi FALSE
-#>   ..$ build-dir: chr "/tmp/RtmpWjoCLL/SIR3d9c66861379"
+#>   ..$ build-dir: chr "/tmp/RtmpQkkcjs/SIR3da82729a33"
 #>   ..$ seed     : num 1.96e+09
 #>   ..$ nsamples : num 1000
 #>   ..$ end-time : num 112
 #>   ..$ noutputs : num 16
 #>  $ path_to_libbi   : chr "/usr/local/bin/libbi"
 #>  $ model           : 'bi_model' chr [1:50] "model SIR {" "const h = 7" "const N = 1000" "const d_infection = 14" ...
-#>  $ model_file_name : chr "/tmp/RtmpWjoCLL/SIR3d9c66861379/SIR.bi"
+#>  $ model_file_name : chr "/tmp/RtmpQkkcjs/SIR3da82729a33/SIR.bi"
 #>  $ dims            : list()
 #>  $ time_dim        : chr(0) 
 #>  $ coord_dims      : list()
 #>  $ thin            : num 1
 #>  $ output_every    : num NA
 #>  $ debug           : logi FALSE
-#>  $ command         : chr "/usr/local/bin/libbi sample --disable-assert --build-dir /tmp/RtmpWjoCLL/SIR3d9c66861379 --seed 1955227312 --ta"| __truncated__
-#>  $ output_file_name: chr "/tmp/RtmpWjoCLL/SIR3d9c66861379/SIR_output3d9c748f510.nc"
-#>  $ log_file_name   : chr "/tmp/RtmpWjoCLL/SIR3d9c66861379/output3d9c6adb89b2.txt"
+#>  $ command         : chr "/usr/local/bin/libbi sample --disable-assert --build-dir /tmp/RtmpQkkcjs/SIR3da82729a33 --seed 1955227312 --tar"| __truncated__
+#>  $ output_file_name: chr "/tmp/RtmpQkkcjs/SIR3da82729a33/SIR_output3da8514fef53.nc"
+#>  $ log_file_name   : chr "/tmp/RtmpQkkcjs/SIR3da82729a33/output3da82afba697.txt"
 #>  $ user_log_file   : logi FALSE
 #>  $ timestamp       :List of 1
-#>   ..$ output: POSIXct[1:1], format: "2026-08-24 14:04:07"
+#>   ..$ output: POSIXct[1:1], format: "2026-09-03 18:06:18"
 #>  $ run_flag        : logi TRUE
 #>  $ error_flag      : logi FALSE
 #>  $ use_cache       : logi TRUE
 #>  $ supplement      : NULL
-#>  $ .gc_env         :<environment: 0x55709e244ab0> 
-#>  $ .cache          :<environment: 0x55709f1ea5b8> 
+#>  $ .gc_env         :<environment: 0x556542278de8> 
+#>  $ .cache          :<environment: 0x556543404ab8> 
 #>  - attr(*, "class")= chr "libbi"
 ```
 
@@ -412,7 +412,7 @@ bi_prior$options
 #> [1] FALSE
 #> 
 #> $`build-dir`
-#> [1] "/tmp/RtmpWjoCLL/SIR3d9c66861379"
+#> [1] "/tmp/RtmpQkkcjs/SIR3da82729a33"
 #> 
 #> $seed
 #> [1] 1955227312
@@ -434,7 +434,7 @@ including the model used, the command used to run **LibBi**
 ``` r
 
 bi_prior$output_file_name
-#> [1] "/tmp/RtmpWjoCLL/SIR3d9c66861379/SIR_output3d9c748f510.nc"
+#> [1] "/tmp/RtmpQkkcjs/SIR3da82729a33/SIR_output3da8514fef53.nc"
 ```
 
 We can get the results of the sampling run using `bi_read`
@@ -488,7 +488,7 @@ str(prior)
 #>  $ p_R0          :'data.frame':  1000 obs. of  2 variables:
 #>   ..$ np   : num [1:1000] 0 1 2 3 4 5 6 7 8 9 ...
 #>   ..$ value: num [1:1000] 2.17 2.53 1.95 1.52 1.81 ...
-#>  $ clock         : num 18585
+#>  $ clock         : num 35765
 ```
 
 This is a list of 9 objects, 8 representing each of the (noise/state)
@@ -606,7 +606,7 @@ str(posterior)
 #>  $ p_R0          :'data.frame':  1000 obs. of  2 variables:
 #>   ..$ np   : num [1:1000] 0 1 2 3 4 5 6 7 8 9 ...
 #>   ..$ value: num [1:1000] 1.9 1.85 1.85 1.85 1.85 ...
-#>  $ clock         : num 1585805
+#>  $ clock         : num 3339533
 #>  $ loglikelihood :'data.frame':  1000 obs. of  2 variables:
 #>   ..$ np   : num [1:1000] 0 1 2 3 4 5 6 7 8 9 ...
 #>   ..$ value: num [1:1000] -54.1 -49.8 -49.8 -49.8 -49.8 ...
@@ -835,7 +835,7 @@ bi
 #> Wrapper around LibBi
 #> ======================
 #> Model:  SIR 
-#> Run time:  1.585805  seconds
+#> Run time:  3.339533  seconds
 #> Number of samples:  1000 
 #> State trajectories recorded:  S I R Z 
 #> Noise trajectories recorded:  n_transmission n_recovery 
@@ -879,12 +879,12 @@ temporary file).
 
 ## Related packages
 
-[rbi.helpers](https://github.com/sbfnk/rbi.helpers) contains
+[rbi.helpers](https://github.com/epiforecasts/rbi.helpers) contains
 higher-level methods to interact with **LibBi**, including methods for
 plotting the results of libbi runs and for adapting the proposal
 distribution and number of particles. For more information, see the
 [rbi.helpers
-vignette](http://sbfnk.github.io/rbi.helpers/articles/introduction.md).
+vignette](https://epiforecasts.io/rbi.helpers/articles/introduction.html).
 
 ## References
 

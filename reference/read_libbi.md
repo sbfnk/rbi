@@ -19,9 +19,9 @@ read_libbi(name, ...)
 - ...:
 
   any extra options to pass to
-  [`libbi`](https://sbfnk.github.io/rbi/reference/libbi.md) when
+  [`libbi`](https://epiforecasts.io/rbi/reference/libbi.md) when
   creating the new object
 
 ## Value
 
-a new [`libbi`](https://sbfnk.github.io/rbi/reference/libbi.md) object
+a new [`libbi`](https://epiforecasts.io/rbi/reference/libbi.md) object

@@ -17,8 +17,8 @@ write_model(x, filename, ...)
 
 - x:
 
-  a [`bi_model`](https://sbfnk.github.io/rbi/reference/bi_model.md)
-  object, or a [`libbi`](https://sbfnk.github.io/rbi/reference/libbi.md)
+  a [`bi_model`](https://epiforecasts.io/rbi/reference/bi_model.md)
+  object, or a [`libbi`](https://epiforecasts.io/rbi/reference/libbi.md)
   object containing a model
 
 - filename:
@@ -40,7 +40,7 @@ the return value of the
 
 ## See also
 
-[`bi_model`](https://sbfnk.github.io/rbi/reference/bi_model.md)
+[`bi_model`](https://epiforecasts.io/rbi/reference/bi_model.md)
 
 ## Examples
 

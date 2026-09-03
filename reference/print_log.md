@@ -1,7 +1,7 @@
-# Print the log file a [`libbi`](https://sbfnk.github.io/rbi/reference/libbi.md) object
+# Print the log file a [`libbi`](https://epiforecasts.io/rbi/reference/libbi.md) object
 
 This is useful for diagnosis after a
-[`libbi`](https://sbfnk.github.io/rbi/reference/libbi.md) run
+[`libbi`](https://epiforecasts.io/rbi/reference/libbi.md) run
 
 ## Usage
 
@@ -13,9 +13,9 @@ print_log(x)
 
 - x:
 
-  a [`libbi`](https://sbfnk.github.io/rbi/reference/libbi.md) object, or
+  a [`libbi`](https://epiforecasts.io/rbi/reference/libbi.md) object, or
   the name of the log file of a
-  [`libbi`](https://sbfnk.github.io/rbi/reference/libbi.md) run.
+  [`libbi`](https://epiforecasts.io/rbi/reference/libbi.md) run.
 
 ## Value
 

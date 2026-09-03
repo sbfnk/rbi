@@ -1,7 +1,7 @@
 # Bi contents
 
 This function gets the name of all the variables in the passed file,
-list or [`libbi`](https://sbfnk.github.io/rbi/reference/libbi.md) object
+list or [`libbi`](https://epiforecasts.io/rbi/reference/libbi.md) object
 
 ## Usage
 
@@ -15,13 +15,13 @@ bi_contents(read, ...)
 
   either a path to a NetCDF file, or a NetCDF connection created using
   `nc_open`, or a
-  [`libbi`](https://sbfnk.github.io/rbi/reference/libbi.md) object from
+  [`libbi`](https://epiforecasts.io/rbi/reference/libbi.md) object from
   which to read the output
 
 - ...:
 
   any parameters for
-  [`bi_open`](https://sbfnk.github.io/rbi/reference/bi_open.md)
+  [`bi_open`](https://epiforecasts.io/rbi/reference/bi_open.md)
   (especially "file")
 
 ## Value

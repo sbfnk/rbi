@@ -3,10 +3,10 @@
 `libbi` allows to call `LibBi`. Upon creating a new libbi object, the
 following arguments can be given. Once the instance is created, `LibBi`
 can be run through the
-[`sample`](https://sbfnk.github.io/rbi/reference/sample.md),
-[`filter`](https://sbfnk.github.io/rbi/reference/filter.md), or
-[`optimise`](https://sbfnk.github.io/rbi/reference/optimise.md), or
-[`rewrite`](https://sbfnk.github.io/rbi/reference/rewrite.md) methods.
+[`sample`](https://epiforecasts.io/rbi/reference/sample.md),
+[`filter`](https://epiforecasts.io/rbi/reference/filter.md), or
+[`optimise`](https://epiforecasts.io/rbi/reference/optimise.md), or
+[`rewrite`](https://epiforecasts.io/rbi/reference/rewrite.md) methods.
 Note that `libbi` objects can be plotted using
 [`plot`](https://rdrr.io/r/graphics/plot.default.html) if the
 `rbi.helpers` package is loaded.
@@ -42,7 +42,7 @@ libbi(model, path_to_libbi, dims, use_cache = TRUE, ...)
 - ...:
 
   options passed to
-  [`run.libbi`](https://sbfnk.github.io/rbi/reference/run.md)
+  [`run.libbi`](https://epiforecasts.io/rbi/reference/run.md)
 
 ## Value
 
@@ -50,10 +50,10 @@ a new `libbi` object
 
 ## See also
 
-[`sample`](https://sbfnk.github.io/rbi/reference/sample.md),
-[`filter`](https://sbfnk.github.io/rbi/reference/filter.md),
-[`optimise`](https://sbfnk.github.io/rbi/reference/optimise.md),
-[`rewrite`](https://sbfnk.github.io/rbi/reference/rewrite.md)
+[`sample`](https://epiforecasts.io/rbi/reference/sample.md),
+[`filter`](https://epiforecasts.io/rbi/reference/filter.md),
+[`optimise`](https://epiforecasts.io/rbi/reference/optimise.md),
+[`rewrite`](https://epiforecasts.io/rbi/reference/rewrite.md)
 
 ## Examples
 

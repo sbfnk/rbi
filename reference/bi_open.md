@@ -16,7 +16,7 @@ bi_open(x, file = "output")
 
   either a path to a NetCDF file, or a NetCDF connection created using
   `nc_open`, or a
-  [`libbi`](https://sbfnk.github.io/rbi/reference/libbi.md) object from
+  [`libbi`](https://epiforecasts.io/rbi/reference/libbi.md) object from
   which to read the output
 
 - file:

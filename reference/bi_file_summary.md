@@ -3,7 +3,7 @@
 This function prints a little summary of the content of a NetCDF file,
 as well as its creation time. You can then retrieve variables of
 interest using
-[`bi_read`](https://sbfnk.github.io/rbi/reference/bi_read.md).
+[`bi_read`](https://epiforecasts.io/rbi/reference/bi_read.md).
 
 ## Usage
 
@@ -16,7 +16,7 @@ bi_file_summary(...)
 - ...:
 
   Any extra parameters to
-  [`bi_open`](https://sbfnk.github.io/rbi/reference/bi_open.md),
+  [`bi_open`](https://epiforecasts.io/rbi/reference/bi_open.md),
   especially `x` and `file`
 
 ## Value

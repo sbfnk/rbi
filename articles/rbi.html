@@ -45,7 +45,7 @@
 <li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json">
 </form></li>
-<li class="nav-item"><a class="external-link nav-link" href="https://github.com/sbfnk/rbi/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/epiforecasts/rbi/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul>
 </div>
 
@@ -63,19 +63,19 @@
 Funk</h4>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/sbfnk/rbi/blob/main/vignettes/rbi.Rmd" class="external-link"><code>vignettes/rbi.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/epiforecasts/rbi/blob/main/vignettes/rbi.Rmd" class="external-link"><code>vignettes/rbi.Rmd</code></a></small>
       <div class="d-none name"><code>rbi.Rmd</code></div>
     </div>
 
     
     
 <p>This vignette gives an introduction to using <strong>rbi</strong>.
-For the best viewing experience, use the <a href="https://sbfnk.github.io/rbi/articles/introduction.html">version on
-the rbi website</a>.</p>
-<p><a href="https://github.com/sbfnk/rbi" class="external-link">rbi</a> is an <code>R</code>
-interface to <a href="https://libbi.org" class="external-link">LibBi</a>, a library for
-Bayesian inference with state-space models using high-performance
-computer hardware.</p>
+For the best viewing experience, use the <a href="https://epiforecasts.io/rbi/articles/rbi.html">version on the rbi
+website</a>.</p>
+<p><a href="https://github.com/epiforecasts/rbi" class="external-link">rbi</a> is an
+<code>R</code> interface to <a href="https://libbi.org" class="external-link">LibBi</a>, a
+library for Bayesian inference with state-space models using
+high-performance computer hardware.</p>
 <p>The package has been tested on macOS and Linux. It requires a working
 installation of <strong>LibBi</strong>. On macOS, this is easiest done
 using the <code>brew</code> command: Install <a href="https://brew.sh" class="external-link">Homebrew</a>, then issue the following command
@@ -101,14 +101,14 @@ then you do not need to have <strong>LibBi</strong> installed.</p>
 <p>Alternatively, the current development version can be installed using
 the <code>remotes</code> package</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"sbfnk/rbi"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"epiforecasts/rbi"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="loading-the-package">Loading the package<a class="anchor" aria-label="anchor" href="#loading-the-package"></a>
 </h2>
 <p>Use</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/sbfnk/rbi" class="external-link">"rbi"</a></span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/epiforecasts/rbi" class="external-link">"rbi"</a></span><span class="op">)</span></span></code></pre></div>
 <p>to load the package.</p>
 </div>
 <div class="section level2">
@@ -247,7 +247,7 @@ second time, it should run much faster.</p>
 <span><span class="co">#&gt; Wrapper around LibBi</span></span>
 <span><span class="co">#&gt; ======================</span></span>
 <span><span class="co">#&gt; Model:  SIR </span></span>
-<span><span class="co">#&gt; Run time:  0.001311  seconds</span></span>
+<span><span class="co">#&gt; Run time:  0.002174  seconds</span></span>
 <span><span class="co">#&gt; Number of samples:  1 </span></span>
 <span><span class="co">#&gt; State trajectories recorded:  S I R Z </span></span>
 <span><span class="co">#&gt; Noise trajectories recorded:  n_transmission n_recovery </span></span>
@@ -343,7 +343,7 @@ at the <code>bi</code> object:</p>
 <span><span class="co">#&gt; Wrapper around LibBi</span></span>
 <span><span class="co">#&gt; ======================</span></span>
 <span><span class="co">#&gt; Model:  SIR </span></span>
-<span><span class="co">#&gt; Run time:  0.018585  seconds</span></span>
+<span><span class="co">#&gt; Run time:  0.035765  seconds</span></span>
 <span><span class="co">#&gt; Number of samples:  1000 </span></span>
 <span><span class="co">#&gt; State trajectories recorded:  S I R Z </span></span>
 <span><span class="co">#&gt; Noise trajectories recorded:  n_transmission n_recovery </span></span>
@@ -354,32 +354,32 @@ at the <code>bi</code> object:</p>
 <span><span class="co">#&gt; List of 21</span></span>
 <span><span class="co">#&gt;  $ options         :List of 6</span></span>
 <span><span class="co">#&gt;   ..$ assert   : logi FALSE</span></span>
-<span><span class="co">#&gt;   ..$ build-dir: chr "/tmp/RtmpWjoCLL/SIR3d9c66861379"</span></span>
+<span><span class="co">#&gt;   ..$ build-dir: chr "/tmp/RtmpQkkcjs/SIR3da82729a33"</span></span>
 <span><span class="co">#&gt;   ..$ seed     : num 1.96e+09</span></span>
 <span><span class="co">#&gt;   ..$ nsamples : num 1000</span></span>
 <span><span class="co">#&gt;   ..$ end-time : num 112</span></span>
 <span><span class="co">#&gt;   ..$ noutputs : num 16</span></span>
 <span><span class="co">#&gt;  $ path_to_libbi   : chr "/usr/local/bin/libbi"</span></span>
 <span><span class="co">#&gt;  $ model           : 'bi_model' chr [1:50] "model SIR {" "const h = 7" "const N = 1000" "const d_infection = 14" ...</span></span>
-<span><span class="co">#&gt;  $ model_file_name : chr "/tmp/RtmpWjoCLL/SIR3d9c66861379/SIR.bi"</span></span>
+<span><span class="co">#&gt;  $ model_file_name : chr "/tmp/RtmpQkkcjs/SIR3da82729a33/SIR.bi"</span></span>
 <span><span class="co">#&gt;  $ dims            : list()</span></span>
 <span><span class="co">#&gt;  $ time_dim        : chr(0) </span></span>
 <span><span class="co">#&gt;  $ coord_dims      : list()</span></span>
 <span><span class="co">#&gt;  $ thin            : num 1</span></span>
 <span><span class="co">#&gt;  $ output_every    : num NA</span></span>
 <span><span class="co">#&gt;  $ debug           : logi FALSE</span></span>
-<span><span class="co">#&gt;  $ command         : chr "/usr/local/bin/libbi sample --disable-assert --build-dir /tmp/RtmpWjoCLL/SIR3d9c66861379 --seed 1955227312 --ta"| __truncated__</span></span>
-<span><span class="co">#&gt;  $ output_file_name: chr "/tmp/RtmpWjoCLL/SIR3d9c66861379/SIR_output3d9c748f510.nc"</span></span>
-<span><span class="co">#&gt;  $ log_file_name   : chr "/tmp/RtmpWjoCLL/SIR3d9c66861379/output3d9c6adb89b2.txt"</span></span>
+<span><span class="co">#&gt;  $ command         : chr "/usr/local/bin/libbi sample --disable-assert --build-dir /tmp/RtmpQkkcjs/SIR3da82729a33 --seed 1955227312 --tar"| __truncated__</span></span>
+<span><span class="co">#&gt;  $ output_file_name: chr "/tmp/RtmpQkkcjs/SIR3da82729a33/SIR_output3da8514fef53.nc"</span></span>
+<span><span class="co">#&gt;  $ log_file_name   : chr "/tmp/RtmpQkkcjs/SIR3da82729a33/output3da82afba697.txt"</span></span>
 <span><span class="co">#&gt;  $ user_log_file   : logi FALSE</span></span>
 <span><span class="co">#&gt;  $ timestamp       :List of 1</span></span>
-<span><span class="co">#&gt;   ..$ output: POSIXct[1:1], format: "2026-08-24 14:04:07"</span></span>
+<span><span class="co">#&gt;   ..$ output: POSIXct[1:1], format: "2026-09-03 18:06:18"</span></span>
 <span><span class="co">#&gt;  $ run_flag        : logi TRUE</span></span>
 <span><span class="co">#&gt;  $ error_flag      : logi FALSE</span></span>
 <span><span class="co">#&gt;  $ use_cache       : logi TRUE</span></span>
 <span><span class="co">#&gt;  $ supplement      : NULL</span></span>
-<span><span class="co">#&gt;  $ .gc_env         :&lt;environment: 0x55709e244ab0&gt; </span></span>
-<span><span class="co">#&gt;  $ .cache          :&lt;environment: 0x55709f1ea5b8&gt; </span></span>
+<span><span class="co">#&gt;  $ .gc_env         :&lt;environment: 0x556542278de8&gt; </span></span>
+<span><span class="co">#&gt;  $ .cache          :&lt;environment: 0x556543404ab8&gt; </span></span>
 <span><span class="co">#&gt;  - attr(*, "class")= chr "libbi"</span></span></code></pre></div>
 <p>We can see the object contains 14 fields, including the model, the
 path to the <code>libbi</code> script, and the command used to run libbi
@@ -392,7 +392,7 @@ the ones we passed to <code>sample</code></p>
 <span><span class="co">#&gt; [1] FALSE</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $`build-dir`</span></span>
-<span><span class="co">#&gt; [1] "/tmp/RtmpWjoCLL/SIR3d9c66861379"</span></span>
+<span><span class="co">#&gt; [1] "/tmp/RtmpQkkcjs/SIR3da82729a33"</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $seed</span></span>
 <span><span class="co">#&gt; [1] 1955227312</span></span>
@@ -411,7 +411,7 @@ object, including the model used, the command used to run
 name:</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bi_prior</span><span class="op">$</span><span class="va">output_file_name</span></span>
-<span><span class="co">#&gt; [1] "/tmp/RtmpWjoCLL/SIR3d9c66861379/SIR_output3d9c748f510.nc"</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] "/tmp/RtmpQkkcjs/SIR3da82729a33/SIR_output3da8514fef53.nc"</span></span></code></pre></div>
 <p>We can get the results of the sampling run using
 <code>bi_read</code></p>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
@@ -454,7 +454,7 @@ data. Let’s look at the returned object</p>
 <span><span class="co">#&gt;  $ p_R0          :'data.frame':  1000 obs. of  2 variables:</span></span>
 <span><span class="co">#&gt;   ..$ np   : num [1:1000] 0 1 2 3 4 5 6 7 8 9 ...</span></span>
 <span><span class="co">#&gt;   ..$ value: num [1:1000] 2.17 2.53 1.95 1.52 1.81 ...</span></span>
-<span><span class="co">#&gt;  $ clock         : num 18585</span></span></code></pre></div>
+<span><span class="co">#&gt;  $ clock         : num 35765</span></span></code></pre></div>
 <p>This is a list of 9 objects, 8 representing each of the (noise/state)
 variables and parameters in the file, and one number <code>clock</code>,
 representing the time spent running the model in microseconds.</p>
@@ -564,7 +564,7 @@ command:</p>
 <span><span class="co">#&gt;  $ p_R0          :'data.frame':  1000 obs. of  2 variables:</span></span>
 <span><span class="co">#&gt;   ..$ np   : num [1:1000] 0 1 2 3 4 5 6 7 8 9 ...</span></span>
 <span><span class="co">#&gt;   ..$ value: num [1:1000] 1.9 1.85 1.85 1.85 1.85 ...</span></span>
-<span><span class="co">#&gt;  $ clock         : num 1585805</span></span>
+<span><span class="co">#&gt;  $ clock         : num 3339533</span></span>
 <span><span class="co">#&gt;  $ loglikelihood :'data.frame':  1000 obs. of  2 variables:</span></span>
 <span><span class="co">#&gt;   ..$ np   : num [1:1000] 0 1 2 3 4 5 6 7 8 9 ...</span></span>
 <span><span class="co">#&gt;   ..$ value: num [1:1000] -54.1 -49.8 -49.8 -49.8 -49.8 ...</span></span>
@@ -764,7 +764,7 @@ files) is stored in the object.</p>
 <span><span class="co">#&gt; Wrapper around LibBi</span></span>
 <span><span class="co">#&gt; ======================</span></span>
 <span><span class="co">#&gt; Model:  SIR </span></span>
-<span><span class="co">#&gt; Run time:  1.585805  seconds</span></span>
+<span><span class="co">#&gt; Run time:  3.339533  seconds</span></span>
 <span><span class="co">#&gt; Number of samples:  1000 </span></span>
 <span><span class="co">#&gt; State trajectories recorded:  S I R Z </span></span>
 <span><span class="co">#&gt; Noise trajectories recorded:  n_transmission n_recovery </span></span>
@@ -806,11 +806,11 @@ file).</p>
 <div class="section level2">
 <h2 id="related-packages">Related packages<a class="anchor" aria-label="anchor" href="#related-packages"></a>
 </h2>
-<p><a href="https://github.com/sbfnk/rbi.helpers" class="external-link">rbi.helpers</a>
+<p><a href="https://github.com/epiforecasts/rbi.helpers" class="external-link">rbi.helpers</a>
 contains higher-level methods to interact with <strong>LibBi</strong>,
 including methods for plotting the results of libbi runs and for
 adapting the proposal distribution and number of particles. For more
-information, see the <a href="http://sbfnk.github.io/rbi.helpers/articles/introduction.html" class="external-link">rbi.helpers
+information, see the <a href="https://epiforecasts.io/rbi.helpers/articles/introduction.html">rbi.helpers
 vignette</a>.</p>
 </div>
 <div class="section level2">

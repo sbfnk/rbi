@@ -12,7 +12,7 @@ sample_obs(x, ...)
 
 - x:
 
-  a [`libbi`](https://sbfnk.github.io/rbi/reference/libbi.md) object
+  a [`libbi`](https://epiforecasts.io/rbi/reference/libbi.md) object
 
 - ...:
 
@@ -20,7 +20,7 @@ sample_obs(x, ...)
 
 ## Value
 
-the original [`libbi`](https://sbfnk.github.io/rbi/reference/libbi.md)
+the original [`libbi`](https://epiforecasts.io/rbi/reference/libbi.md)
 object with added variables in the output file for sampled observations
 
 ## Author

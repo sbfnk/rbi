@@ -12,9 +12,9 @@ create_working_folder(x)
 
 - x:
 
-  a [`libbi`](https://sbfnk.github.io/rbi/reference/libbi.md) object
+  a [`libbi`](https://epiforecasts.io/rbi/reference/libbi.md) object
 
 ## Value
 
-a [`libbi`](https://sbfnk.github.io/rbi/reference/libbi.md) object with
+a [`libbi`](https://epiforecasts.io/rbi/reference/libbi.md) object with
 updated working folder

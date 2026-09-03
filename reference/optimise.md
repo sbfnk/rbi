@@ -2,12 +2,12 @@
 
 The method `optimise` launches `libbi` to optimise the parameters with
 respect to the likelihood or posterior distribution. See the options to
-[`run.libbi`](https://sbfnk.github.io/rbi/reference/run.md) for how to
+[`run.libbi`](https://epiforecasts.io/rbi/reference/run.md) for how to
 specify the various components of sampling with LibBi, and the LibBi
 manual for all options that can be passed when the client is `optimise`.
 
 If `x` is given as a 'bi_model', a
-[`libbi`](https://sbfnk.github.io/rbi/reference/libbi.md) object will be
+[`libbi`](https://epiforecasts.io/rbi/reference/libbi.md) object will be
 created from the model For the help page of the base R `optimise`
 function, see [`optimise`](https://rdrr.io/r/stats/optimize.html).
 
@@ -25,15 +25,15 @@ optimise(x, ...)
 
 - x:
 
-  a [`libbi`](https://sbfnk.github.io/rbi/reference/libbi.md) or
+  a [`libbi`](https://epiforecasts.io/rbi/reference/libbi.md) or
   `link{bi_model}` object, or the name of a file containing the model
 
 - ...:
 
   options to be passed to
-  [`run.libbi`](https://sbfnk.github.io/rbi/reference/run.md)
+  [`run.libbi`](https://epiforecasts.io/rbi/reference/run.md)
 
 ## Value
 
-an updated [`libbi`](https://sbfnk.github.io/rbi/reference/libbi.md)
+an updated [`libbi`](https://epiforecasts.io/rbi/reference/libbi.md)
 object

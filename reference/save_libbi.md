@@ -14,7 +14,7 @@ save_libbi(x, name, supplement, split = FALSE, ...)
 
 - x:
 
-  a [`libbi`](https://sbfnk.github.io/rbi/reference/libbi.md) object
+  a [`libbi`](https://epiforecasts.io/rbi/reference/libbi.md) object
 
 - name:
 

@@ -14,7 +14,7 @@ add_block(x, name, lines, options, ...)
 
 - x:
 
-  a [`bi_model`](https://sbfnk.github.io/rbi/reference/bi_model.md)
+  a [`bi_model`](https://epiforecasts.io/rbi/reference/bi_model.md)
   object
 
 - name:
@@ -35,5 +35,5 @@ add_block(x, name, lines, options, ...)
 
 ## Value
 
-a [`bi_model`](https://sbfnk.github.io/rbi/reference/bi_model.md) object
+a [`bi_model`](https://epiforecasts.io/rbi/reference/bi_model.md) object
 containing the new block

@@ -4,7 +4,7 @@ Get variable names of one or more type(s)
 
 This returns all variable names of a certain type ("param", "state",
 "obs", "noise", "const") contained in the model of a
-[`libbi`](https://sbfnk.github.io/rbi/reference/libbi.md) object
+[`libbi`](https://epiforecasts.io/rbi/reference/libbi.md) object
 
 ## Usage
 
@@ -16,7 +16,7 @@ var_names(x, vars, type, dim = FALSE, opt = FALSE, aux = FALSE)
 
 - x:
 
-  a [`bi_model`](https://sbfnk.github.io/rbi/reference/bi_model.md)
+  a [`bi_model`](https://epiforecasts.io/rbi/reference/bi_model.md)
   object
 
 - vars:

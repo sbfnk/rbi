@@ -1,7 +1,7 @@
 # Extract a sample from a `LibBi` run.
 
 This function takes the provided
-[`libbi`](https://sbfnk.github.io/rbi/reference/libbi.md) results and
+[`libbi`](https://epiforecasts.io/rbi/reference/libbi.md) results and
 extracts a data frame.
 
 ## Usage
@@ -14,7 +14,7 @@ extract_sample(x, np, ...)
 
 - x:
 
-  a [`libbi`](https://sbfnk.github.io/rbi/reference/libbi.md) object
+  a [`libbi`](https://epiforecasts.io/rbi/reference/libbi.md) object
   which has been run, or a list of data frames containing parameter
   traces (as returned by from `bi_read`)
 

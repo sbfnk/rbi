@@ -19,7 +19,7 @@ print(x, verbose = FALSE, ...)
 
 - x:
 
-  a [`libbi`](https://sbfnk.github.io/rbi/reference/libbi.md) object
+  a [`libbi`](https://epiforecasts.io/rbi/reference/libbi.md) object
 
 - spaces:
 

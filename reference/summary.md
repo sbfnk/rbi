@@ -1,7 +1,7 @@
-# Print summary information about a [`libbi`](https://sbfnk.github.io/rbi/reference/libbi.md) object
+# Print summary information about a [`libbi`](https://epiforecasts.io/rbi/reference/libbi.md) object
 
 This reads in the output file of the
-[`libbi`](https://sbfnk.github.io/rbi/reference/libbi.md) object (which
+[`libbi`](https://epiforecasts.io/rbi/reference/libbi.md) object (which
 has been run before) and prints summary information of parameters
 
 ## Usage
@@ -21,7 +21,7 @@ summary(
 
 - object:
 
-  a [`libbi`](https://sbfnk.github.io/rbi/reference/libbi.md) object
+  a [`libbi`](https://epiforecasts.io/rbi/reference/libbi.md) object
 
 - type:
 

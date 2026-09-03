@@ -2,8 +2,8 @@
 
 Removes variables from the left-hand side of a model
 
-Used by [`fix`](https://sbfnk.github.io/rbi/reference/fix.md) and
-[`to_input`](https://sbfnk.github.io/rbi/reference/to_input.md)
+Used by [`fix`](https://epiforecasts.io/rbi/reference/fix.md) and
+[`to_input`](https://epiforecasts.io/rbi/reference/to_input.md)
 
 ## Usage
 
@@ -15,7 +15,7 @@ remove_vars(x, vars)
 
 - x:
 
-  a [`bi_model`](https://sbfnk.github.io/rbi/reference/bi_model.md)
+  a [`bi_model`](https://epiforecasts.io/rbi/reference/bi_model.md)
   object
 
 - vars:
@@ -30,4 +30,4 @@ the updated `bi_model` object
 
 ## See also
 
-[`bi_model`](https://sbfnk.github.io/rbi/reference/bi_model.md)
+[`bi_model`](https://epiforecasts.io/rbi/reference/bi_model.md)

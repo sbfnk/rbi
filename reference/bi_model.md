@@ -2,7 +2,7 @@
 
 `bi_model` creates a model object for `Rbi` from a libbi file, URL or
 character vector. Once the instance is created, the model can be fed to
-a [`libbi`](https://sbfnk.github.io/rbi/reference/libbi.md) object.
+a [`libbi`](https://epiforecasts.io/rbi/reference/libbi.md) object.
 
 ## Usage
 
@@ -30,13 +30,13 @@ a `{bi_model}` object containing the newly created model
 
 ## See also
 
-[`fix`](https://sbfnk.github.io/rbi/reference/fix.md),
-[`insert_lines`](https://sbfnk.github.io/rbi/reference/insert_lines.md),
-[`remove_lines`](https://sbfnk.github.io/rbi/reference/remove_lines.md),
-[`replace_all`](https://sbfnk.github.io/rbi/reference/replace_all.md),
-[`get_name`](https://sbfnk.github.io/rbi/reference/get_name.md),
-[`set_name`](https://sbfnk.github.io/rbi/reference/set_name.md),
-[`write_model`](https://sbfnk.github.io/rbi/reference/write_model.md)
+[`fix`](https://epiforecasts.io/rbi/reference/fix.md),
+[`insert_lines`](https://epiforecasts.io/rbi/reference/insert_lines.md),
+[`remove_lines`](https://epiforecasts.io/rbi/reference/remove_lines.md),
+[`replace_all`](https://epiforecasts.io/rbi/reference/replace_all.md),
+[`get_name`](https://epiforecasts.io/rbi/reference/get_name.md),
+[`set_name`](https://epiforecasts.io/rbi/reference/set_name.md),
+[`write_model`](https://epiforecasts.io/rbi/reference/write_model.md)
 
 ## Examples
 

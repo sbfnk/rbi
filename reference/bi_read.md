@@ -1,7 +1,7 @@
 # Bi Read
 
 This function reads all variable from a NetCDF file or the output of a
-[`libbi`](https://sbfnk.github.io/rbi/reference/libbi.md) object. The
+[`libbi`](https://epiforecasts.io/rbi/reference/libbi.md) object. The
 file can be specified as a string to the filepath, in which case a
 NetCDF connection is opened, or directly as a NetCDF connection.
 
@@ -31,7 +31,7 @@ bi_read(
 
   either a path to a NetCDF file, or a NetCDF connection created using
   `nc_open`, or a
-  [`libbi`](https://sbfnk.github.io/rbi/reference/libbi.md) object from
+  [`libbi`](https://epiforecasts.io/rbi/reference/libbi.md) object from
   which to read the output
 
 - vars:
@@ -50,13 +50,13 @@ bi_read(
 
   vector of types of variable to read (out of "param", "state", "noise",
   "obs"). This needs 'x' to be a
-  [`libbi`](https://sbfnk.github.io/rbi/reference/libbi.md) object or
+  [`libbi`](https://epiforecasts.io/rbi/reference/libbi.md) object or
   `model` to be specified
 
 - file:
 
   which file to read (if `x` is given as a
-  [`libbi`](https://sbfnk.github.io/rbi/reference/libbi.md) object): one
+  [`libbi`](https://epiforecasts.io/rbi/reference/libbi.md) object): one
   of "output" (default), "init", "input", "obs"
 
 - missval_threshold:

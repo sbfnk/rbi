@@ -13,11 +13,11 @@ Ignores differences in the model name.
 
 - e1:
 
-  a [`bi_model`](https://sbfnk.github.io/rbi/reference/bi_model.md)
+  a [`bi_model`](https://epiforecasts.io/rbi/reference/bi_model.md)
 
 - e2:
 
-  a [`bi_model`](https://sbfnk.github.io/rbi/reference/bi_model.md)
+  a [`bi_model`](https://epiforecasts.io/rbi/reference/bi_model.md)
 
 - ...:
 

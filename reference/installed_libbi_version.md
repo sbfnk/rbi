@@ -14,7 +14,7 @@ installed_libbi_version(...)
 - ...:
 
   any arguments for
-  [`locate_libbi`](https://sbfnk.github.io/rbi/reference/locate_libbi.md)
+  [`locate_libbi`](https://epiforecasts.io/rbi/reference/locate_libbi.md)
   (esp. `path_to_libbi`)
 
 ## Value

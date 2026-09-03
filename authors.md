@@ -15,15 +15,15 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/sbfnk/rbi/blob/main/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/epiforecasts/rbi/blob/main/DESCRIPTION)
 
 Jacob P, Funk S (2026). *rbi: Interface to 'LibBi'*. R package version
-1.0.1.9000, <https://github.com/sbfnk/rbi>.
+1.0.1.9000, <https://github.com/epiforecasts/rbi>.
 
     @Manual{,
       title = {rbi: Interface to 'LibBi'},
       author = {Pierre E. Jacob and Sebastian Funk},
       year = {2026},
       note = {R package version 1.0.1.9000},
-      url = {https://github.com/sbfnk/rbi},
+      url = {https://github.com/epiforecasts/rbi},
     }

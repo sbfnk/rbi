@@ -17,7 +17,7 @@ insert_lines(x, lines, before, after, at_beginning_of, at_end_of, ...)
 
 - x:
 
-  a [`bi_model`](https://sbfnk.github.io/rbi/reference/bi_model.md)
+  a [`bi_model`](https://epiforecasts.io/rbi/reference/bi_model.md)
   object
 
 - lines:
@@ -50,7 +50,7 @@ the updated `bi_model` object
 
 ## See also
 
-[`bi_model`](https://sbfnk.github.io/rbi/reference/bi_model.md)
+[`bi_model`](https://epiforecasts.io/rbi/reference/bi_model.md)
 
 ## Examples
 

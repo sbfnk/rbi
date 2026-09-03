@@ -1,7 +1,7 @@
-# Join multiple [`libbi`](https://sbfnk.github.io/rbi/reference/libbi.md) objects
+# Join multiple [`libbi`](https://epiforecasts.io/rbi/reference/libbi.md) objects
 
 This function can be used to join multiple
-[`libbi`](https://sbfnk.github.io/rbi/reference/libbi.md) objects into
+[`libbi`](https://epiforecasts.io/rbi/reference/libbi.md) objects into
 one (e.g., parallel MCMC runs into one long change)
 
 ## Usage
@@ -15,7 +15,7 @@ join(x, ...)
 
 - x:
 
-  a [`libbi`](https://sbfnk.github.io/rbi/reference/libbi.md) object
+  a [`libbi`](https://epiforecasts.io/rbi/reference/libbi.md) object
 
 - ...:
 
@@ -23,5 +23,5 @@ join(x, ...)
 
 ## Value
 
-an joined [`libbi`](https://sbfnk.github.io/rbi/reference/libbi.md)
+an joined [`libbi`](https://epiforecasts.io/rbi/reference/libbi.md)
 object

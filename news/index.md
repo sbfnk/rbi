@@ -8,7 +8,7 @@ CRAN release: 2026-02-11
 
 - Character columns in sparse input data are now correctly handled by
   converting them to factors
-  ([\#54](https://github.com/sbfnk/rbi/issues/54)).
+  ([\#54](https://github.com/epiforecasts/rbi/issues/54)).
 
 ## rbi 1.0.0
 
@@ -159,14 +159,14 @@ CRAN release: 2016-10-18
 - Tidy up for CRAN submission
 - Fix finding libbi path
 - Fix handling of config options
-  ([\#2](https://github.com/sbfnk/rbi/issues/2),
+  ([\#2](https://github.com/epiforecasts/rbi/issues/2),
   [@tyler-abbot](https://github.com/tyler-abbot))
 - Fix options in `bi_generate_dataset`
-  ([\#3](https://github.com/sbfnk/rbi/issues/3),
-  [\#5](https://github.com/sbfnk/rbi/issues/5),
+  ([\#3](https://github.com/epiforecasts/rbi/issues/3),
+  [\#5](https://github.com/epiforecasts/rbi/issues/5),
   [@tyler-abbot](https://github.com/tyler-abbot))
-- Fix demos ([\#1](https://github.com/sbfnk/rbi/issues/1),
-  [\#6](https://github.com/sbfnk/rbi/issues/6),
+- Fix demos ([\#1](https://github.com/epiforecasts/rbi/issues/1),
+  [\#6](https://github.com/epiforecasts/rbi/issues/6),
   [@tyler-abbot](https://github.com/tyler-abbot))
 - Remove `stringr` dependency
 

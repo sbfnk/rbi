@@ -2,7 +2,7 @@
 
 The method `logLik` extracts the log-likelihood of a `libbi` object.
 This can be done, for example, after a call to
-[`sample`](https://sbfnk.github.io/rbi/reference/sample.md) to inspect
+[`sample`](https://epiforecasts.io/rbi/reference/sample.md) to inspect
 the chain log-likelihoods.
 
 For the help page of the base R `logLik` function, see
@@ -19,12 +19,12 @@ logLik(object, ...)
 
 - object:
 
-  a [`libbi`](https://sbfnk.github.io/rbi/reference/libbi.md) object
+  a [`libbi`](https://epiforecasts.io/rbi/reference/libbi.md) object
 
 - ...:
 
   options to be passed to
-  [`run.libbi`](https://sbfnk.github.io/rbi/reference/run.md)
+  [`run.libbi`](https://epiforecasts.io/rbi/reference/run.md)
 
 ## Value
 

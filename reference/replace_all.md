@@ -13,7 +13,7 @@ replace_all(x, from, to, ...)
 
 - x:
 
-  a [`bi_model`](https://sbfnk.github.io/rbi/reference/bi_model.md)
+  a [`bi_model`](https://epiforecasts.io/rbi/reference/bi_model.md)
   object
 
 - from:
@@ -34,4 +34,4 @@ the updated `bi_model` object
 
 ## See also
 
-[`bi_model`](https://sbfnk.github.io/rbi/reference/bi_model.md)
+[`bi_model`](https://epiforecasts.io/rbi/reference/bi_model.md)

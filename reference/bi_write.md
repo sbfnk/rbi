@@ -2,7 +2,7 @@
 
 This function creates (or appends to) a NetCDF file for LibBi from the
 given list of vectors and/or data frames. Since any files can be passed
-to [`libbi`](https://sbfnk.github.io/rbi/reference/libbi.md) directly
+to [`libbi`](https://epiforecasts.io/rbi/reference/libbi.md) directly
 via the `init`, `input` and `obs` options, this is mostly used
 internally, this is mostly used internally.
 
@@ -56,7 +56,7 @@ bi_write(
 - dim_factors:
 
   factors that dimensions have; this corresponds to the `dims` element
-  of a [`libbi`](https://sbfnk.github.io/rbi/reference/libbi.md) object
+  of a [`libbi`](https://epiforecasts.io/rbi/reference/libbi.md) object
 
 - value_column:
 
@@ -114,7 +114,7 @@ bi_write(filename, variables)
 #> list()
 #> 
 bi_file_summary(filename)
-#> File /tmp/RtmpwSChWC/dummy38c37ec81081.nc (NC_FORMAT_CLASSIC):
+#> File /tmp/Rtmpn9cHgJ/dummy38d156bbe1f4.nc (NC_FORMAT_CLASSIC):
 #> 
 #>      2 variables (excluding dimension variables):
 #>         float a[]   

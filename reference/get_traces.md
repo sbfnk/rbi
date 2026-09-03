@@ -1,7 +1,7 @@
 # Get the parameter traces
 
 This function takes the provided
-[`libbi`](https://sbfnk.github.io/rbi/reference/libbi.md) object which
+[`libbi`](https://epiforecasts.io/rbi/reference/libbi.md) object which
 has been run and returns a data frame with the parameter traces.
 
 ## Usage
@@ -14,16 +14,16 @@ get_traces(x, model, burnin, all = FALSE, ...)
 
 - x:
 
-  a [`libbi`](https://sbfnk.github.io/rbi/reference/libbi.md) object
+  a [`libbi`](https://epiforecasts.io/rbi/reference/libbi.md) object
   which has been run, or a list of data frames containing parameter
   traces (as returned by `bi_read`); if it is not a
-  [`libbi`](https://sbfnk.github.io/rbi/reference/libbi.md) object,
+  [`libbi`](https://epiforecasts.io/rbi/reference/libbi.md) object,
   either 'all' must be TRUE or a model given
 
 - model:
 
   a model to get the parameter names from; not needed if 'run' is given
-  as a [`libbi`](https://sbfnk.github.io/rbi/reference/libbi.md) object
+  as a [`libbi`](https://epiforecasts.io/rbi/reference/libbi.md) object
   or 'all' is set to TRUE
 
 - burnin:

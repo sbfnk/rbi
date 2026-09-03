@@ -18,14 +18,14 @@ predict(x, ...)
 
 - x:
 
-  a [`libbi`](https://sbfnk.github.io/rbi/reference/libbi.md) object
+  a [`libbi`](https://epiforecasts.io/rbi/reference/libbi.md) object
 
 - ...:
 
   any arguments to be passed to
-  [`sample`](https://sbfnk.github.io/rbi/reference/sample.md)
+  [`sample`](https://epiforecasts.io/rbi/reference/sample.md)
 
 ## Value
 
-an updated [`libbi`](https://sbfnk.github.io/rbi/reference/libbi.md)
+an updated [`libbi`](https://epiforecasts.io/rbi/reference/libbi.md)
 object

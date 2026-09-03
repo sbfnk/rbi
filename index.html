@@ -13,7 +13,7 @@
 <script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Interface to LibBi">
 <meta name="description" content="Provides a complete interface to LibBi, a library for Bayesian inference (see &lt;https://libbi.org&gt; and Murray, 2015 &lt;doi:10.18637/jss.v067.i10&gt; for more information). This includes functions for manipulating LibBi models, for reading and writing LibBi input/output files, for converting LibBi output to provide traces for use with the coda package, and for running LibBi to conduct inference.">
 <meta property="og:description" content="Provides a complete interface to LibBi, a library for Bayesian inference (see &lt;https://libbi.org&gt; and Murray, 2015 &lt;doi:10.18637/jss.v067.i10&gt; for more information). This includes functions for manipulating LibBi models, for reading and writing LibBi input/output files, for converting LibBi output to provide traces for use with the coda package, and for running LibBi to conduct inference.">
-<meta property="og:image" content="https://sbfnk.github.io/rbi/logo.svg">
+<meta property="og:image" content="https://epiforecasts.io/rbi/logo.svg">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -48,7 +48,7 @@
 <li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="search.json">
 </form></li>
-<li class="nav-item"><a class="external-link nav-link" href="https://github.com/sbfnk/rbi/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/epiforecasts/rbi/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul>
 </div>
 
@@ -56,21 +56,24 @@
   </div>
 </nav><div class="container template-home">
 <div class="row">
-  <main id="main" class="col-md-9"><p>Bayesian inference for state-space models with R <a href="https://sbfnk.github.io/rbi/"><img src="reference/figures/logo.png" align="right" height="139" alt="rbi website"></a> ================</p>
+  <main id="main" class="col-md-9"><div class="section level1">
+<div class="page-header">
+<img src="logo.svg" class="logo" alt=""><h1 id="bayesian-inference-for-state-space-models-with-r-">Bayesian inference for state-space models with R 
+<a class="anchor" aria-label="anchor" href="#bayesian-inference-for-state-space-models-with-r-"></a>
+</h1>
+</div>
 <!-- badges: start -->
 
-<p><a href="https://github.com/sbfnk/rbi" class="external-link">rbi</a> is an <code>R</code> interface to <a href="https://libbi.org" class="external-link">libbi</a>, a library for Bayesian inference.</p>
+<p><a href="https://github.com/epiforecasts/rbi" class="external-link">rbi</a> is an <code>R</code> interface to <a href="https://libbi.org" class="external-link">libbi</a>, a library for Bayesian inference.</p>
 <p>It mainly contains:</p>
 <ul>
 <li>various functions to retrieve and process the results from libbi (which are in NetCDF format)</li>
 <li>a <code>bi_model</code> class, to manipulate libbi models</li>
 <li>a <code>libbi</code> wrapper class, to perform Bayesian using libbi inference from within R,</li>
 </ul>
-<div class="section level1">
-<div class="page-header">
-<img src="logo.svg" class="logo" alt=""><h1 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
-</h1>
-</div>
+<div class="section level2">
+<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+</h2>
 <p>The easiest way to install the latest stable version of <strong>rbi</strong> is via <a href="https://cran.r-project.org/package=rbi" class="external-link">CRAN</a>:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"rbi"</span><span class="op">)</span></span></code></pre></div>
@@ -78,7 +81,7 @@
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># install.packages("remotes")</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://remotes.r-lib.org" class="external-link">"remotes"</a></span><span class="op">)</span></span>
-<span><span class="fu">install_github</span><span class="op">(</span><span class="st">"sbfnk/rbi"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">install_github</span><span class="op">(</span><span class="st">"epiforecasts/rbi"</span><span class="op">)</span></span></code></pre></div>
 <p>The <strong>rbi</strong> package has only been tested on GNU/Linux and OS X, but it should mostly work everywhere <code>R</code> works.</p>
 <p>If you want to use <strong>rbi</strong> as a wrapper to <strong>LibBi</strong> then you need a working version of <a href="https://github.com/lawmurray/LibBi" class="external-link">LibBi</a>. To install <strong>LibBi</strong> on a Mac, the easiest way is to install <a href="https://brew.sh" class="external-link">Homebrew</a>, followed by (using a command shell, i.e. Terminal or similar):</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="ex">brew</span> install libbi</span></code></pre></div>
@@ -86,9 +89,9 @@
 <p>The path to <code>libbi</code> script can be passed as an argument to <strong>rbi</strong>, otherwise the package tries to find it automatically using the <code>which</code> linux/unix command.</p>
 <p>If you just want to process the output from <strong>LibBi</strong>, then you do not need to have <strong>LibBi</strong> installed.</p>
 </div>
-<div class="section level1">
-<h1 id="getting-started">Getting started<a class="anchor" aria-label="anchor" href="#getting-started"></a>
-</h1>
+<div class="section level2">
+<h2 id="getting-started">Getting started<a class="anchor" aria-label="anchor" href="#getting-started"></a>
+</h2>
 <p>A good starting point is to look at the included demos:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/demo.html" class="external-link">demo</a></span><span class="op">(</span><span class="va">PZ_generate_dataset</span><span class="op">)</span> <span class="co">## generating a data set from a model</span></span>
@@ -97,23 +100,23 @@
 <span><span class="fu"><a href="https://rdrr.io/r/utils/demo.html" class="external-link">demo</a></span><span class="op">(</span><span class="va">PZ_filtering</span><span class="op">)</span> <span class="co">## filtering</span></span></code></pre></div>
 <p>For further information, have a look at the introductory vignette from the link from the <a href="https://CRAN.R-project.org/package=rbi" class="external-link">rbi CRAN package</a>.</p>
 </div>
-<div class="section level1">
-<h1 id="using-coda">Using coda<a class="anchor" aria-label="anchor" href="#using-coda"></a>
-</h1>
+<div class="section level2">
+<h2 id="using-coda">Using coda<a class="anchor" aria-label="anchor" href="#using-coda"></a>
+</h2>
 <p><strong>LibBi</strong> contains the <code>get_traces</code> method which provides an interface to <a href="https://cran.r-project.org/package=coda" class="external-link">coda</a>.</p>
 </div>
-<div class="section level1">
-<h1 id="other-packages">Other packages<a class="anchor" aria-label="anchor" href="#other-packages"></a>
-</h1>
-<p>For higher-level methods to interact with <a href="https://github.com/lawmurray/LibBi" class="external-link">LibBi</a>, have a look at <a href="https://github.com/sbfnk/RBi.helpers" class="external-link">rbi.helpers</a>.</p>
+<div class="section level2">
+<h2 id="other-packages">Other packages<a class="anchor" aria-label="anchor" href="#other-packages"></a>
+</h2>
+<p>For higher-level methods to interact with <a href="https://github.com/lawmurray/LibBi" class="external-link">LibBi</a>, have a look at <a href="https://github.com/epiforecasts/rbi.helpers" class="external-link">rbi.helpers</a>.</p>
 </div>
-
+</div>
   </main><aside class="col-md-3"><div class="links">
 <h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
 <li><a href="https://cloud.r-project.org/package=rbi" class="external-link">View on CRAN</a></li>
-<li><a href="https://github.com/sbfnk/rbi/" class="external-link">Browse source code</a></li>
-<li><a href="https://github.com/sbfnk/rbi/issues" class="external-link">Report a bug</a></li>
+<li><a href="https://github.com/epiforecasts/rbi/" class="external-link">Browse source code</a></li>
+<li><a href="https://github.com/epiforecasts/rbi/issues" class="external-link">Report a bug</a></li>
 </ul>
 </div>
 
@@ -145,8 +148,8 @@
 <h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
 <li><a href="https://cran.r-project.org/package=rbi" class="external-link"><img src="https://www.r-pkg.org/badges/version-ago/rbi" alt="CRAN version"></a></li>
-<li><a href="https://github.com/sbfnk/rbi/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/sbfnk/rbi/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
-<li><a href="https://app.codecov.io/github/sbfnk/rbi" class="external-link"><img src="https://codecov.io/github/sbfnk/rbi/branch/main/graph/badge.svg?token=vK4TWfgYo0" alt="codecov"></a></li>
+<li><a href="https://github.com/epiforecasts/rbi/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/epiforecasts/rbi/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
+<li><a href="https://app.codecov.io/github/epiforecasts/rbi" class="external-link"><img src="https://codecov.io/github/epiforecasts/rbi/branch/main/graph/badge.svg?token=vK4TWfgYo0" alt="codecov"></a></li>
 <li><a href="https://www.gnu.org/licenses/gpl-3.0" class="external-link"><img src="https://img.shields.io/badge/License-GPLv3-blue.svg" alt="License: GPL v3"></a></li>
 </ul>
 </div>

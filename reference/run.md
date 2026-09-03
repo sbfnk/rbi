@@ -3,12 +3,12 @@
 The method `run` launches `LibBi` with a particular set of command line
 arguments. Normally, this function would not be run by the user, but
 instead one of the client functions
-[`sample`](https://sbfnk.github.io/rbi/reference/sample.md),
-[`filter`](https://sbfnk.github.io/rbi/reference/filter.md), or
-[`optimise`](https://sbfnk.github.io/rbi/reference/optimise.md), or
-[`rewrite`](https://sbfnk.github.io/rbi/reference/rewrite.md), which
+[`sample`](https://epiforecasts.io/rbi/reference/sample.md),
+[`filter`](https://epiforecasts.io/rbi/reference/filter.md), or
+[`optimise`](https://epiforecasts.io/rbi/reference/optimise.md), or
+[`rewrite`](https://epiforecasts.io/rbi/reference/rewrite.md), which
 pass any options on to `run`. Note that any options specified here are
-stored in the [`libbi`](https://sbfnk.github.io/rbi/reference/libbi.md)
+stored in the [`libbi`](https://epiforecasts.io/rbi/reference/libbi.md)
 object and do not have to be specified again if another command is run
 on the object.
 
@@ -42,9 +42,9 @@ run(
 
 - x:
 
-  a [`libbi`](https://sbfnk.github.io/rbi/reference/libbi.md) object; if
+  a [`libbi`](https://epiforecasts.io/rbi/reference/libbi.md) object; if
   this is not given, an empty
-  [`libbi`](https://sbfnk.github.io/rbi/reference/libbi.md) object will
+  [`libbi`](https://epiforecasts.io/rbi/reference/libbi.md) object will
   be created
 
 - client:
@@ -81,7 +81,7 @@ run(
 
   initialisation of the model, either supplied as a list of values
   and/or data frames, or a (netcdf) file name, or a
-  [`libbi`](https://sbfnk.github.io/rbi/reference/libbi.md) object which
+  [`libbi`](https://epiforecasts.io/rbi/reference/libbi.md) object which
   has been run (in which case the output of that run is used). If the
   object given as `x` has been run before, it will be used here with
   `init-np` set to the last iteration of the previous run, unless `init`
@@ -91,14 +91,14 @@ run(
 
   input of the model, either supplied as a list of values and/or data
   frames, or a (netcdf) file name, or a
-  [`libbi`](https://sbfnk.github.io/rbi/reference/libbi.md) object which
+  [`libbi`](https://epiforecasts.io/rbi/reference/libbi.md) object which
   has been run (in which case the output of that run is used as input)
 
 - obs:
 
   observations of the model, either supplied as a list of values and/or
   data frames, or a (netcdf) file name, or a
-  [`libbi`](https://sbfnk.github.io/rbi/reference/libbi.md) object which
+  [`libbi`](https://epiforecasts.io/rbi/reference/libbi.md) object which
   has been run (in which case the output of that run is used as
   observations)
 
@@ -119,7 +119,7 @@ run(
   any thinning of MCMC chains (1 means all will be kept, 2 skips every
   other sample etc.); note that `LibBi` itself will write all data to
   the disk. Only when the results are read in with
-  [`bi_read`](https://sbfnk.github.io/rbi/reference/bi_read.md) will
+  [`bi_read`](https://epiforecasts.io/rbi/reference/bi_read.md) will
   thinning be applied.
 
 - output_every:
@@ -158,10 +158,10 @@ run(
 
 ## Value
 
-an updated [`libbi`](https://sbfnk.github.io/rbi/reference/libbi.md)
+an updated [`libbi`](https://epiforecasts.io/rbi/reference/libbi.md)
 object, except if `client` is 'rewrite', in which case invisible NULL
 will be returned but the rewritten model code printed
 
 ## See also
 
-[`libbi`](https://sbfnk.github.io/rbi/reference/libbi.md)
+[`libbi`](https://epiforecasts.io/rbi/reference/libbi.md)

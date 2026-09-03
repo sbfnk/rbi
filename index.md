@@ -1,10 +1,6 @@
-# Installation
+# Bayesian inference for state-space models with R
 
-Bayesian inference for state-space models with R [![rbi
-website](reference/figures/logo.png)](https://sbfnk.github.io/rbi/)
-================
-
-[rbi](https://github.com/sbfnk/rbi) is an `R` interface to
+[rbi](https://github.com/epiforecasts/rbi) is an `R` interface to
 [libbi](https://libbi.org), a library for Bayesian inference.
 
 It mainly contains:
@@ -14,6 +10,8 @@ It mainly contains:
 - a `bi_model` class, to manipulate libbi models
 - a `libbi` wrapper class, to perform Bayesian using libbi inference
   from within R,
+
+## Installation
 
 The easiest way to install the latest stable version of **rbi** is via
 [CRAN](https://cran.r-project.org/package=rbi):
@@ -30,7 +28,7 @@ the `remotes` package
 
 # install.packages("remotes")
 library("remotes")
-install_github("sbfnk/rbi")
+install_github("epiforecasts/rbi")
 ```
 
 The **rbi** package has only been tested on GNU/Linux and OS X, but it
@@ -57,7 +55,7 @@ linux/unix command.
 If you just want to process the output from **LibBi**, then you do not
 need to have **LibBi** installed.
 
-# Getting started
+## Getting started
 
 A good starting point is to look at the included demos:
 
@@ -73,13 +71,13 @@ For further information, have a look at the introductory vignette from
 the link from the [rbi CRAN
 package](https://CRAN.R-project.org/package=rbi).
 
-# Using coda
+## Using coda
 
 **LibBi** contains the `get_traces` method which provides an interface
 to [coda](https://cran.r-project.org/package=coda).
 
-# Other packages
+## Other packages
 
 For higher-level methods to interact with
 [LibBi](https://github.com/lawmurray/LibBi), have a look at
-[rbi.helpers](https://github.com/sbfnk/RBi.helpers).
+[rbi.helpers](https://github.com/epiforecasts/rbi.helpers).

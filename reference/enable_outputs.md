@@ -1,4 +1,4 @@
-# Enable outputting variables in a [`bi_model`](https://sbfnk.github.io/rbi/reference/bi_model.md)
+# Enable outputting variables in a [`bi_model`](https://epiforecasts.io/rbi/reference/bi_model.md)
 
 Any variable type given will have any 'has_output=0' option removed in
 the given model.
@@ -13,7 +13,7 @@ enable_outputs(x, type = "all")
 
 - x:
 
-  a [`bi_model`](https://sbfnk.github.io/rbi/reference/bi_model.md)
+  a [`bi_model`](https://epiforecasts.io/rbi/reference/bi_model.md)
   object
 
 - type:
@@ -27,7 +27,7 @@ the updated `bi_model` object
 
 ## See also
 
-[`bi_model`](https://sbfnk.github.io/rbi/reference/bi_model.md)
+[`bi_model`](https://epiforecasts.io/rbi/reference/bi_model.md)
 
 ## Examples
 

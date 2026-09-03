@@ -1,7 +1,7 @@
 # Bi Generate Dataset
 
 This function is deprecated and has been renamed to
-[`generate_dataset`](https://sbfnk.github.io/rbi/reference/generate_dataset.md)
+[`generate_dataset`](https://epiforecasts.io/rbi/reference/generate_dataset.md)
 
 ## Usage
 
@@ -14,7 +14,7 @@ bi_generate_dataset(..., output_every = 1)
 - ...:
 
   arguments to be passed to
-  [`sample.libbi`](https://sbfnk.github.io/rbi/reference/sample.md),
+  [`sample.libbi`](https://epiforecasts.io/rbi/reference/sample.md),
   especially 'model', 'end_time' and 'seed'.
 
 - output_every:

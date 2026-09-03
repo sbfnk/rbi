@@ -4,7 +4,7 @@ The method `simulate` launches `LibBi` to simulate a model by passing
 \`target="joint"\` to `LibBi`
 
 If `x` is given as a 'bi_model', a
-[`libbi`](https://sbfnk.github.io/rbi/reference/libbi.md) object will be
+[`libbi`](https://epiforecasts.io/rbi/reference/libbi.md) object will be
 created from the model
 
 ## Usage
@@ -21,16 +21,16 @@ simulate(x, ...)
 
 - x:
 
-  a [`libbi`](https://sbfnk.github.io/rbi/reference/libbi.md) or
-  [`bi_model`](https://sbfnk.github.io/rbi/reference/bi_model.md)
+  a [`libbi`](https://epiforecasts.io/rbi/reference/libbi.md) or
+  [`bi_model`](https://epiforecasts.io/rbi/reference/bi_model.md)
   object, or the name of a file containing the model
 
 - ...:
 
   options to be passed to
-  [`run.libbi`](https://sbfnk.github.io/rbi/reference/run.md)
+  [`run.libbi`](https://epiforecasts.io/rbi/reference/run.md)
 
 ## Value
 
 an updated
-[`bi_model`](https://sbfnk.github.io/rbi/reference/bi_model.md) object
+[`bi_model`](https://epiforecasts.io/rbi/reference/bi_model.md) object
