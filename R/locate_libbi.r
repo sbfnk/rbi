@@ -25,7 +25,7 @@ locate_libbi <- function(path_to_libbi) {
         "the directory that contains the binary in ~/.Renviron or set it in ",
         "your R session via options(path_to_libbi = \"insert_path_here\"). ",
         "For instructions on how to install libbi, look at the rbi github ",
-        "page on https://github.com/sbfnk/rbi."
+        "page on https://github.com/epiforecasts/rbi."
       )
     }
   } else {

@@ -1,21 +1,21 @@
 
-# Bayesian inference for state-space models with R <a href="https://sbfnk.github.io/rbi/"><img src="man/figures/logo.png" align="right" height="139" alt="rbi website" /></a>
+# Bayesian inference for state-space models with R <a href="https://epiforecasts.io/rbi/"><img src="man/figures/logo.png" align="right" height="139" alt="rbi website" /></a>
 
 <!-- badges: start -->
 
 [![CRAN
 version](https://www.r-pkg.org/badges/version-ago/rbi)](https://cran.r-project.org/package=rbi)
 ![GitHub R package
-version](https://img.shields.io/github/r-package/v/sbfnk/rbi)
-[![R-CMD-check](https://github.com/sbfnk/rbi/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/sbfnk/rbi/actions/workflows/R-CMD-check.yaml)
-[![codecov](https://codecov.io/github/sbfnk/rbi/branch/main/graph/badge.svg?token=vK4TWfgYo0)](https://app.codecov.io/github/sbfnk/rbi)
+version](https://img.shields.io/github/r-package/v/epiforecasts/rbi)
+[![R-CMD-check](https://github.com/epiforecasts/rbi/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/epiforecasts/rbi/actions/workflows/R-CMD-check.yaml)
+[![codecov](https://codecov.io/github/epiforecasts/rbi/branch/main/graph/badge.svg?token=vK4TWfgYo0)](https://app.codecov.io/github/epiforecasts/rbi)
 ![GitHub
-contributors](https://img.shields.io/github/contributors/sbfnk/rbi)
+contributors](https://img.shields.io/github/contributors/epiforecasts/rbi)
 [![License: GPL
 v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 <!-- badges: end -->
 
-[rbi](https://github.com/sbfnk/rbi) is an `R` interface to
+[rbi](https://github.com/epiforecasts/rbi) is an `R` interface to
 [libbi](https://libbi.org), a library for Bayesian inference.
 
 It mainly contains:
@@ -41,7 +41,7 @@ the `remotes` package
 ``` r
 # install.packages("remotes")
 library("remotes")
-install_github("sbfnk/rbi")
+install_github("epiforecasts/rbi")
 ```
 
 The **rbi** package has only been tested on GNU/Linux and OS X, but it
@@ -92,4 +92,4 @@ to [coda](https://cran.r-project.org/package=coda).
 
 For higher-level methods to interact with
 [LibBi](https://github.com/lawmurray/LibBi), have a look at
-[rbi.helpers](https://github.com/sbfnk/RBi.helpers).
+[rbi.helpers](https://github.com/epiforecasts/rbi.helpers).

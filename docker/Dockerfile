@@ -49,7 +49,7 @@ RUN install2.r -e \
     rm -rf /tmp/downloaded_packages
 
 RUN installGithub.r \
-    sbfnk/rbi \
-    sbfnk/rbi.helpers
+    epiforecasts/rbi \
+    epiforecasts/rbi.helpers
  
 USER root

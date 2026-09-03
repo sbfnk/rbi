@@ -17,9 +17,9 @@ knitr::opts_chunk$set(
 options(libbi_args = list(assert = FALSE))
 ```
 
-This vignette gives an introduction to using **rbi**. For the best viewing experience, use the [version on the rbi website](https://sbfnk.github.io/rbi/articles/introduction.html).
+This vignette gives an introduction to using **rbi**. For the best viewing experience, use the [version on the rbi website](https://epiforecasts.io/rbi/articles/rbi.html).
 
-[rbi](https://github.com/sbfnk/rbi) is an `R` interface to [LibBi](https://libbi.org), a library for Bayesian inference with state-space models using high-performance computer hardware.
+[rbi](https://github.com/epiforecasts/rbi) is an `R` interface to [LibBi](https://libbi.org), a library for Bayesian inference with state-space models using high-performance computer hardware.
 
 The package has been tested on macOS and Linux. It requires a working installation of **LibBi**. On macOS, this is easiest done using the `brew` command: Install [Homebrew](https://brew.sh), then issue the following command (using a command shell, i.e. Terminal or similar):
 
@@ -46,7 +46,7 @@ install.packages("rbi")
 Alternatively, the current development version can be installed using the `remotes` package
 
 ```{r, eval = FALSE}
-remotes::install_github("sbfnk/rbi")
+remotes::install_github("epiforecasts/rbi")
 ```
 
 # Loading the package
@@ -413,7 +413,7 @@ This generates the internal representation of the model for LibBi. It doesn't ma
 
 # Related packages
 
-[rbi.helpers](https://github.com/sbfnk/rbi.helpers) contains higher-level methods to interact with **LibBi**, including methods for plotting the results of libbi runs and for adapting the proposal distribution and number of particles. For more information, see the [rbi.helpers vignette](http://sbfnk.github.io/rbi.helpers/articles/introduction.html).
+[rbi.helpers](https://github.com/epiforecasts/rbi.helpers) contains higher-level methods to interact with **LibBi**, including methods for plotting the results of libbi runs and for adapting the proposal distribution and number of particles. For more information, see the [rbi.helpers vignette](https://epiforecasts.io/rbi.helpers/articles/introduction.html).
 
 # References
  * Murray, L.M. (2013). [Bayesian state-space modelling on high-performance hardware using LibBi](https://arxiv.org/abs/1306.3277).
