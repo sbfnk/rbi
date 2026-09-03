@@ -1,6 +1,5 @@
-Bayesian inference for state-space models with R
-<a href="https://sbfnk.github.io/rbi/"><img src="man/figures/logo.png" align="right" height="139" alt="rbi website" /></a>
-================
+
+# Bayesian inference for state-space models with R <a href="https://sbfnk.github.io/rbi/"><img src="man/figures/logo.png" align="right" height="139" alt="rbi website" /></a>
 
 <!-- badges: start -->
 
@@ -27,7 +26,7 @@ It mainly contains:
 - a `libbi` wrapper class, to perform Bayesian using libbi inference
   from within R,
 
-# Installation
+## Installation
 
 The easiest way to install the latest stable version of **rbi** is via
 [CRAN](https://cran.r-project.org/package=rbi):
@@ -69,7 +68,7 @@ linux/unix command.
 If you just want to process the output from **LibBi**, then you do not
 need to have **LibBi** installed.
 
-# Getting started
+## Getting started
 
 A good starting point is to look at the included demos:
 
@@ -84,12 +83,12 @@ For further information, have a look at the introductory vignette from
 the link from the [rbi CRAN
 package](https://CRAN.R-project.org/package=rbi).
 
-# Using coda
+## Using coda
 
 **LibBi** contains the `get_traces` method which provides an interface
 to [coda](https://cran.r-project.org/package=coda).
 
-# Other packages
+## Other packages
 
 For higher-level methods to interact with
 [LibBi](https://github.com/lawmurray/LibBi), have a look at
